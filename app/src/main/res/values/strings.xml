@@ -3,6 +3,12 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
+
+    <string name="login_hint_email">Email</string>
+    <string name="login_hint_password">Contraseña</string>
+    <string name="login_image_description">Logo Energigas</string>
+    <string name="login_action_login">Iniciar Sesión</string>
+    <string name="login_message_notaccount">¿No tiene una cuenta?</string>
+
 </resources>
