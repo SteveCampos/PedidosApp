@@ -11,4 +11,18 @@
     <string name="login_action_login">Iniciar Sesión</string>
     <string name="login_message_notaccount">¿No tiene una cuenta?</string>
 
+    <string name="estb_title_name">Estaciones</string>
+    <string name="order_title_name">Pedidos</string>
+    <string name="plan_title_name">Plan</string>
+    <string name="expenses_title_name">Gastos</string>
+    <string name="collect_title_name">Cobranzas</string>
+    <string name="summary_title_name">Resumen</string>
+
+
+    <string name="action_close_account">Cerrar Cuenta</string>
+    <string name="action_close_session">Cerrar Sessión</string>
+
+    <string name="nav_item_account">Cuenta</string>
+
+
 </resources>
