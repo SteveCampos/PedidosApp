@@ -25,4 +25,17 @@
     <string name="nav_item_account">Cuenta</string>
 
 
+
+
+    <!--String Listar Establecimientos-->
+    <string name="estable_default_empresa">Name Empresa</string>
+    <string name="estable_default_name">Name Establecimiento</string>
+    <string name="estable_default_address">Dirección</string>
+    <string name="estable_default_description">4.0</string>
+    <string name="estable_action_attend">Atender</string>
+    <string name="estable_default_marker">7000 kilometros</string>
+
+
+    <!--##############################-->
+
 </resources>

@@ -5,6 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
 
+    <color name="Personalizado4">#78bfe9</color>
+    <color name="grey_300">#e0e0e0</color>
+    <color name="grey_400">#bdbdbd</color>
+    <color name="verde">#2cae32</color>
+    <color name="colordorado">#f7d737</color>
+    <color name="color_blanco">#ddffffff</color>
+
     <color name="white">#FFFFFF</color>
     <color name="dark_grey">#424242</color>
     <color name="medium_grey">#9E9E9E</color>

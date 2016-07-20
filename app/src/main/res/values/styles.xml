@@ -28,4 +28,48 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+
+
+
+    <!-- TextView Empty Base-->
+    <style name="TextViewBody1" parent="TextAppearance.AppCompat.Body1" />
+    <style name="TextViewTitle" parent="TextAppearance.AppCompat.Title" />
+    <style name="TextViewMedium" parent="TextAppearance.AppCompat.Medium" />
+    <style name="TextViewSmall" parent="TextAppearance.AppCompat.Small" />
+
+    <style name="categoriesCardViewButtons">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:fromXDelta">100</item>
+        <item name="android:fromYDelta">400</item>
+    </style>
+
+    <style name="StyleCardView2">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">5dp</item>
+        <!--<item name="cardBackgroundColor">@color/grey_300</item>-->
+        <!--<item name="android:paddingBottom">@dimen/l1LayoutPaddingB</item>-->
+    </style>
+
+    <style name="button_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Button2" parent="Widget.AppCompat.Button.Colored">
+        <!--<item name="colorButtonNormal">@color/color_blanco</item>-->
+        <!--<item name="android:textColor">@color/color_blanco</item>-->
+    </style>
+
 </resources>

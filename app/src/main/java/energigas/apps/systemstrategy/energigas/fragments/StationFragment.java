@@ -28,7 +28,7 @@ public class StationFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        StationAdapter adapter = new StationAdapter(Establishment.getEstablishments(), getActivity());
+        StationAdapter adapter = new StationAdapter(Establishment.getEstablishments(),getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
