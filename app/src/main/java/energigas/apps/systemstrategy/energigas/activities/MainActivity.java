@@ -25,10 +25,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Establishment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
@@ -216,6 +217,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onStationClickListener(Establishment establishment, View view) {
+        Snackbar.make(fab, establishment.getEstVName(), Snackbar.LENGTH_LONG).show();
     }
 
     private static class Adapter extends FragmentPagerAdapter {

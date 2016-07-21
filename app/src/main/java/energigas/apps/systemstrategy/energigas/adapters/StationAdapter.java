@@ -14,7 +14,7 @@ import energigas.apps.systemstrategy.energigas.entities.Establishment;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
- * Created by jairc on 19/07/2016.
+ * Created by Steve on 19/07/2016.
  */
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
@@ -25,10 +25,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     // Store the context for easy access
     private Context mContext;
 
+    public interface OnStationClickListener{
+        void onStationClickListener(Establishment establishment, View view);
+    }
 
-    public StationAdapter(List<Establishment> mListEstablishments, Context mContext) {
+    public OnStationClickListener listener;
+
+    public StationAdapter(List<Establishment> mListEstablishments, Context mContext, OnStationClickListener listener) {
         this.mListEstablishments = mListEstablishments;
         this.mContext = mContext;
+        this.listener = listener;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Get the data model based on position
         //
-        holder.bind(mListEstablishments.get(position), mContext);
+        holder.bind(mListEstablishments.get(position), mContext, listener);
     }
 
     @Override
@@ -77,12 +83,18 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             imageView2 = (ImageView)itemView.findViewById(R.id.imageView2);
 
         }
-        void bind(Establishment establishment, Context context) {
+        void bind(final Establishment establishment, Context context, final OnStationClickListener listener) {
             maddress.setText(Utils.capitalize(establishment.getEstVDescription()));
             mname.setText(establishment.getEstVName());
             mpoint.setText(Utils.capitalize(establishment.getEstVObservation()));
             mubicacion.setText(Utils.capitalize(establishment.getEstVTelephone()));
             imageView2.setImageDrawable(ContextCompat.getDrawable(context, getImage(establishment.getEstTipoOperacion())));
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onStationClickListener(establishment, view);
+                }
+            });
         }
 
         int getImage(String tipoestacion) {
@@ -96,7 +108,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             }
         }
 
-     
+
     }
 
 
