@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.entities.Establishment;
+import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -220,8 +220,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStationClickListener(Establishment establishment, View view) {
-        Snackbar.make(fab, establishment.getEstVName(), Snackbar.LENGTH_LONG).show();
+    public void onStationClickListener(Station station, View view) {
+        Snackbar.make(fab, station.getEstVName(), Snackbar.LENGTH_LONG).show();
     }
 
     private static class Adapter extends FragmentPagerAdapter {

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.StationAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Establishment;
+import energigas.apps.systemstrategy.energigas.entities.Station;
 
 /**
  * Created by Steve on 19/07/2016.
@@ -39,7 +39,7 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        StationAdapter adapter = new StationAdapter(Establishment.getEstablishments(), getActivity(), this);
+        StationAdapter adapter = new StationAdapter(Station.getEstablishments(), getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -64,11 +64,11 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
     }
 
     @Override
-    public void onStationClickListener(Establishment establishment, View view) {
-        listener.onStationClickListener(establishment, view);
+    public void onStationClickListener(Station station, View view) {
+        listener.onStationClickListener(station, view);
     }
 
     public interface OnStationClickListener{
-        void onStationClickListener(Establishment establishment, View view);
+        void onStationClickListener(Station station, View view);
     }
 }

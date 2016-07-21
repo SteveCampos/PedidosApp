@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.entities.Establishment;
+import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -21,18 +21,18 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
 
     // Store a member variable for the contacts
-    private List<Establishment> mListEstablishments;
+    private List<Station> mListStations;
     // Store the context for easy access
     private Context mContext;
 
     public interface OnStationClickListener{
-        void onStationClickListener(Establishment establishment, View view);
+        void onStationClickListener(Station station, View view);
     }
 
     public OnStationClickListener listener;
 
-    public StationAdapter(List<Establishment> mListEstablishments, Context mContext, OnStationClickListener listener) {
-        this.mListEstablishments = mListEstablishments;
+    public StationAdapter(List<Station> mListStations, Context mContext, OnStationClickListener listener) {
+        this.mListStations = mListStations;
         this.mContext = mContext;
         this.listener = listener;
     }
@@ -50,12 +50,12 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Get the data model based on position
         //
-        holder.bind(mListEstablishments.get(position), mContext, listener);
+        holder.bind(mListStations.get(position), mContext, listener);
     }
 
     @Override
     public int getItemCount() {
-        return mListEstablishments.size();
+        return mListStations.size();
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -83,16 +83,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             imageView2 = (ImageView)itemView.findViewById(R.id.imageView2);
 
         }
-        void bind(final Establishment establishment, Context context, final OnStationClickListener listener) {
-            maddress.setText(Utils.capitalize(establishment.getEstVDescription()));
-            mname.setText(establishment.getEstVName());
-            mpoint.setText(Utils.capitalize(establishment.getEstVObservation()));
-            mubicacion.setText(Utils.capitalize(establishment.getEstVTelephone()));
-            imageView2.setImageDrawable(ContextCompat.getDrawable(context, getImage(establishment.getEstTipoOperacion())));
+        void bind(final Station station, Context context, final OnStationClickListener listener) {
+            maddress.setText(Utils.capitalize(station.getEstVDescription()));
+            mname.setText(station.getEstVName());
+            mpoint.setText(Utils.capitalize(station.getEstVObservation()));
+            mubicacion.setText(Utils.capitalize(station.getEstVTelephone()));
+            imageView2.setImageDrawable(ContextCompat.getDrawable(context, getImage(station.getEstTipoOperacion())));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onStationClickListener(establishment, view);
+                    listener.onStationClickListener(station, view);
                 }
             });
         }
@@ -107,9 +107,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     return R.drawable.logo;
             }
         }
-
-
     }
-
 
 }
