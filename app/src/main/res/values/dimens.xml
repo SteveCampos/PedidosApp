@@ -11,7 +11,6 @@
     <dimen name="tile_padding">8dp</dimen>
     <dimen name="tile_height">160dp</dimen>
     <dimen name="app_bar_height">256dp</dimen>
-    <dimen name="app_bar_height_order">180dp</dimen>
     <dimen name="article_keylines">72dp</dimen>
     <dimen name="avator_size">40dp</dimen>
     <dimen name="card_title_height">40dp</dimen>
@@ -22,5 +21,37 @@
     <dimen name="card_image_height">200dp</dimen>
     <dimen name="list_body">14sp</dimen>
     <dimen name="navheader_height">222dp</dimen>
+
+
+
+    <dimen name="card_margin_top">10dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+    <dimen name="app_bar_height">250dp</dimen>
+    <dimen name="height_collapsing">300dp</dimen>
+
+    <!--LAYOUT_ITEM_ALL_SUMMARY-->
+    <dimen name="height_summary_title">70dp</dimen>
+    <dimen name="size_title_summary">18dp</dimen>
+    <dimen name="size_text_item">12dp</dimen>
+    <dimen name="height_item_summary">24dp</dimen>
+    <dimen name="padding_layout">5dp</dimen>
+    <dimen name="height_view">1dp</dimen>
+    <dimen name="margin_left_and_rigth">2dp</dimen>
+    <dimen name="margin_rigth">8dp</dimen>
+    <dimen name="table_row">10dp</dimen>
+    <dimen name="margin_top_layout">5dp</dimen>
+    <dimen name="text_sub_item">10dp</dimen>
+    <!--#######################-->
+
+
+
+    <!--LAYOUT ACCOUNT SUMMARY-->
+
+    <dimen name="text_size">13dp</dimen>
+    <dimen name="expanded_title_margin_bottom">32dp</dimen>
+    <dimen name="expanded_title_margin_end">64dp</dimen>
+    <dimen name="expanded_title_margin_start">48dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="app_bar_height_order">180dp</dimen>
 </resources>

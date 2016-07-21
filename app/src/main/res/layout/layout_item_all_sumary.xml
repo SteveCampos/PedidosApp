@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_margin">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_summary_title"
+            android:background="@color/greem_background_item"
+            android:orientation="vertical"
+            android:padding="@dimen/card_margin">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Resumen"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_title_summary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/height_item_summary"
+                android:gravity="center_vertical"
+                android:padding="@dimen/padding_layout"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/aa"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Saldo Inicial :"
+                    android:textSize="@dimen/size_text_item"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/sss"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_rigth"
+                    android:layout_weight="2"
+                    android:gravity="right"
+                    android:text="S/. 1000.00"
+                    android:textSize="@dimen/size_text_item"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_view"
+                android:layout_marginLeft="@dimen/margin_left_and_rigth"
+                android:layout_marginRight="@dimen/margin_left_and_rigth"
+                android:background="@color/colorPrimaryDark"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding_layout"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="fill_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textIngresos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ingresos Totales : "
+                    android:textSize="@dimen/size_text_item"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/aaaaa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_rigth"
+                    android:layout_weight="2"
+                    android:gravity="right"
+                    android:text="S/. 1000.00"
+                    android:textSize="@dimen/size_text_item"
+                    android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/table_row"
+                        android:layout_marginLeft="@dimen/table_row"
+                        android:layout_marginTop="@dimen/margin_top_layout"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Facturas Cobradas"
+                            android:id="@+id/iih"
+                            android:textStyle="italic"
+                            android:textSize="@dimen/text_sub_item"
+                            android:gravity="left" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="S/. 1000.00"
+                            android:textSize="@dimen/text_sub_item"
+                            android:id="@+id/texdtaaa"
+                            android:textStyle="italic"
+                            android:gravity="right"/>
+
+
+                    </TableRow>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_view"
+                android:layout_marginLeft="@dimen/margin_left_and_rigth"
+                android:layout_marginRight="@dimen/margin_left_and_rigth"
+                android:background="@color/colorPrimaryDark"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/height_item_summary"
+                android:padding="@dimen/padding_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/hjgk"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gatos : "
+                    android:textSize="@dimen/size_text_item"
+
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/sdr"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_rigth"
+                    android:layout_weight="2"
+                    android:gravity="right"
+                    android:text="S/. 1000.00"
+                    android:textSize="@dimen/size_text_item"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_view"
+                android:background="@color/line_last_view"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/height_item_summary"
+                android:gravity="center_vertical"
+                android:padding="@dimen/padding_layout"
+                android:background="@color/background_color"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ggggg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Efectivo a rendir :"
+                    android:textSize="@dimen/size_text_item"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/sddddr"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_rigth"
+                    android:layout_weight="2"
+                    android:gravity="right"
+                    android:text="S/. 1000.00"
+                    android:textSize="@dimen/size_text_item"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

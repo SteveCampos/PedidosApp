@@ -3,6 +3,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_settings">Settings</string>
 
     <string name="login_hint_email">Email</string>
@@ -131,4 +132,15 @@
 
     <!--##############################-->
 
+
+    <!--### AccountSummary-->
+    <string name="activity_summary_account">Resumen caja</string>
+    <string name="title_activity_account_summary">AccountSummary</string>
+
+    <string name="fragment_summary">Ingresos y gastos</string>
+    <string name="fragment_inventory">Inventario de ventas</string>
+    <string name="information_date">19/07/2016</string>
+    <string name="information_summary">41</string>
+    <string name="information_agent">Kelvin Thony Meza Espiritu</string>
+    <!--### ####-->
 </resources>

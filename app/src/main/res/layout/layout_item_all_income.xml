@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_margin">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_summary_title"
+            android:background="@color/greem_background_item"
+            android:orientation="vertical"
+            android:padding="@dimen/card_margin">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingresos"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_title_summary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tableLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_rigth"
+                android:shrinkColumns="*"
+                android:stretchColumns="*">
+
+
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/a1"
+                        android:text=""/>
+
+                    <TextView
+                        android:id="@+id/TextView04"
+                        android:text="Cantidad"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center"
+                        android:textStyle="bold"/>
+
+
+
+                    <TextView
+                        android:id="@+id/TextView03"
+                        android:text="Emitidos"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/TextView02"
+                        android:text="Pagados"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/TextView01"
+                        android:text="Cobrados"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center"
+                        android:textStyle="bold"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/a2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/a3"
+                        android:text="Boletas cobradas"
+                        android:gravity="center"
+                        android:textSize="@dimen/size_text_item"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/a4"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="50"/>
+
+                    <TextView
+                        android:id="@+id/a5"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/a6"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/a7"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ab2"
+                    android:layout_marginTop="@dimen/margin_rigth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/ab3"
+                        android:text="Facturas cobradas"
+                        android:gravity="center"
+                        android:textSize="@dimen/size_text_item"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/ab4"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="50"/>
+
+                    <TextView
+                        android:id="@+id/ab5"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/ab6"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/ab7"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:text="5"/>
+
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/abc2"
+                    android:background="@color/background_color"
+                    android:layout_marginTop="@dimen/margin_rigth"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:id="@+id/abc3"
+                        android:text="Total"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="@dimen/size_text_item"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/ab4c"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        android:text="50"/>
+
+                    <TextView
+                        android:id="@+id/abc5"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/abc6"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        android:text="5"/>
+
+                    <TextView
+                        android:id="@+id/abc7"
+                        android:textSize="@dimen/size_text_item"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        android:text="5"/>
+
+
+                </TableRow>
+
+            </TableLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:background="@color/background_color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -4,6 +4,15 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="background_color">#ecf0f1</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="line_last_view">#9E9E9E</color>
+    <color name="greem_background_item">#009688</color>
+    <color name="white">#FFFFFF</color>
+    <color name="dark_grey">#424242</color>
+    <color name="medium_grey">#9E9E9E</color>
+    <color name="button_grey">#757575</color>
 
     <color name="Personalizado4">#78bfe9</color>
     <color name="grey_300">#e0e0e0</color>
@@ -11,9 +20,4 @@
     <color name="verde">#2cae32</color>
     <color name="colordorado">#f7d737</color>
     <color name="color_blanco">#ddffffff</color>
-
-    <color name="white">#FFFFFF</color>
-    <color name="dark_grey">#424242</color>
-    <color name="medium_grey">#9E9E9E</color>
-    <color name="button_grey">#757575</color>
 </resources>
