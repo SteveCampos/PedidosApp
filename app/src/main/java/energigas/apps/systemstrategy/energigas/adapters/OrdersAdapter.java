@@ -38,7 +38,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         void onOrdersClickListener(Order order, View view);
     }
 
-    public OnOrdersClickListener listener;
+    private OnOrdersClickListener listener;
 
     public OrdersAdapter(List<Order> mListOrders, Context mContext, OnOrdersClickListener listener) {
         this.mListOrders = mListOrders;
@@ -102,9 +102,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         void bind(final Order order, Context context, final OnOrdersClickListener listener) {
             mProducts.setText(Utils.capitalize(order.getProductsName()));
             mAddress.setText(Utils.capitalize(order.getStation().getEstVName()));
-            mLocation.setText("2.4 km");
+            mLocation.setText(context.getString(R.string.estable_default_marker));
             mClock.setText(new SimpleDateFormat("hh:mm", Locale.ENGLISH).format(new Date(order.getEndTime())));
 
+            btnDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onOrdersClickListener(order, view);
+                }
+            });
             imageViewStation.setImageDrawable(ContextCompat.getDrawable(context, getImage(order.getStation().getEstTipoOperacion())));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.OrdersFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener, OrdersFragment.OnOrdersClickListener {
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 showToast(item);
                 break;
             case R.id.nav_summary:
-                showToast(item);
+                startActivity(new Intent(this, AccountSummary.class));
                 break;
             case R.id.nav_close_account:
                 showToast(item);
@@ -228,7 +230,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOrdersClickListener(Order order, View view) {
-        Snackbar.make(fab, order.getProductsName(), Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(fab, order.getProductsName(), Snackbar.LENGTH_LONG).show();
+        startActivity(new Intent(this, OrderActivity.class));
     }
 
     private static class Adapter extends FragmentPagerAdapter {

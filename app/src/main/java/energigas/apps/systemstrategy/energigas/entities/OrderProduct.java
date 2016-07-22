@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import energigas.apps.systemstrategy.energigas.utils.Utils;
+
 /**
  * Created by Steve on 21/07/2016.
  */
@@ -65,4 +67,21 @@ public class OrderProduct {
     public void setDispatchList(List<OrderDispatch> dispatchList) {
         this.dispatchList = dispatchList;
     }
+
+    public String getProductOrderedTitle(){
+        return (getProduct().getName() + " " + Utils.formatDouble(getQuantityProduct()) + " " + getProduct().getUnidadMedida()).toUpperCase();
+    }
+
+    public static List<OrderProduct> getList(){
+        List<OrderProduct> orderProducts = new ArrayList<>();
+
+        Product glp = new Product(1, "1000", "GLP", "Galones");
+        Product gnv = new Product(2, "1001", "gnv", "Galones");
+
+        orderProducts.add(new OrderProduct(glp, 1, "2000", 500.00, OrderDispatch.getList()));
+        orderProducts.add(new OrderProduct(gnv, 2, "2001", 500.00, OrderDispatch.getList()));
+
+        return orderProducts;
+    }
+
 }

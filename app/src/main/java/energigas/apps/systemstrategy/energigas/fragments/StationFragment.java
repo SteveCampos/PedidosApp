@@ -6,13 +6,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.StationAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Station;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 19/07/2016.
@@ -22,6 +27,9 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
 
 
     public OnStationClickListener listener;
+    private StationAdapter adapter;
+    private List<Station> stationList = new ArrayList<>();
+    private RecyclerView recyclerView;
 
     public StationFragment() {
 
@@ -36,12 +44,13 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(
+        recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        StationAdapter adapter = new StationAdapter(Station.getEstablishments(), getActivity(), this);
+        stationList = Station.getEstablishments();
+        adapter = new StationAdapter(stationList, getActivity(), this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }
@@ -65,10 +74,19 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
 
     @Override
     public void onStationClickListener(Station station, View view) {
-        listener.onStationClickListener(station, view);
+        //Log.d(Utils.TAG, "StationFragment onStationClickListener: "+ position);
+        int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
+        Log.d(Utils.TAG, "recyclerView.childAdapterPosition(): "+ childAdapterPosition);
+        if (stationList.size()>childAdapterPosition && childAdapterPosition >= 0){
+            stationList.remove(childAdapterPosition);
+            adapter.notifyItemRemoved(childAdapterPosition);
+            listener.onStationClickListener(station, view);
+        }
+
     }
 
     public interface OnStationClickListener{
         void onStationClickListener(Station station, View view);
     }
+
 }

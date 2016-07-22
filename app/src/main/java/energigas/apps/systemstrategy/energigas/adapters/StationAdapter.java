@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        Log.d(Utils.TAG, "onCreateViewHolder");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_station, parent, false);
@@ -50,12 +53,30 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Get the data model based on position
         //
+
+        Log.d(Utils.TAG, "onBindViewHolder: "+ position);
         holder.bind(mListStations.get(position), mContext, listener);
     }
 
     @Override
     public int getItemCount() {
+        Log.d(Utils.TAG, "getItemCount");
         return mListStations.size();
+    }
+
+    public void remove(int position){
+        Log.d(Utils.TAG, "RecyclerView remove: "+ position);
+        if (mListStations.isEmpty()) return;
+        mListStations.remove(position);
+        notifyItemRemoved(position);
+        //notifyItemRangeRemoved(position, mListStations.size());
+
+
+
+
+        //notifyDataSetChanged();
+//        notify();
+        //notifyItemMoved(position, --position);
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -89,6 +110,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             mpoint.setText(Utils.capitalize(station.getEstVObservation()));
             mubicacion.setText(Utils.capitalize(station.getEstVTelephone()));
             imageView2.setImageDrawable(ContextCompat.getDrawable(context, getImage(station.getEstTipoOperacion())));
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -107,6 +129,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     return R.drawable.logo;
             }
         }
+
+
     }
 
 }

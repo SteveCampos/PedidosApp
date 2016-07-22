@@ -12,6 +12,9 @@
     <string name="login_action_login">Iniciar Sesión</string>
     <string name="login_message_notaccount">¿No tiene una cuenta?</string>
 
+    <string name="ordered_product_title_name">Productos</string>
+    <string name="ordered_dispatch_title_name">Despachos</string>
+
     <string name="estb_title_name">Estaciones</string>
     <string name="order_title_name">Pedidos</string>
     <string name="plan_title_name">Plan</string>
