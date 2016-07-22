@@ -25,11 +25,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.Station;
+import energigas.apps.systemstrategy.energigas.fragments.OrdersFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener, OrdersFragment.OnOrdersClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new StationFragment(), getString(R.string.estb_title_name));
-        adapter.addFragment(new StationFragment(), getString(R.string.order_title_name));
+        adapter.addFragment(new OrdersFragment(), getString(R.string.order_title_name));
         adapter.addFragment(new StationFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
@@ -222,6 +224,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStationClickListener(Station station, View view) {
         Snackbar.make(fab, station.getEstVName(), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onOrdersClickListener(Order order, View view) {
+        Snackbar.make(fab, order.getProductsName(), Snackbar.LENGTH_LONG).show();
     }
 
     private static class Adapter extends FragmentPagerAdapter {

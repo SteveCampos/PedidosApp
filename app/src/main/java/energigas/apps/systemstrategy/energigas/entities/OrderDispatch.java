@@ -8,7 +8,6 @@ public class OrderDispatch {
 
 
 
-    private Product product;
     private double quantityDisptach;
 
     //INFORMACIÓN SOBRE EL TANQUE,
@@ -27,8 +26,7 @@ public class OrderDispatch {
     public OrderDispatch() {
     }
 
-    public OrderDispatch(Product product, double quantityDisptach, String serieTanque, String nroTransporte, double percentStart, double percentEnd, long date, long startTime, long endTime, double startCounter, double endCounter) {
-        this.product = product;
+    public OrderDispatch(double quantityDisptach, String serieTanque, String nroTransporte, double percentStart, double percentEnd, long date, long startTime, long endTime, double startCounter, double endCounter) {
         this.quantityDisptach = quantityDisptach;
         this.serieTanque = serieTanque;
         this.nroTransporte = nroTransporte;
@@ -39,14 +37,6 @@ public class OrderDispatch {
         this.endTime = endTime;
         this.startCounter = startCounter;
         this.endCounter = endCounter;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public double getQuantityDisptach() {

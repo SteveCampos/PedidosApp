@@ -11,8 +11,13 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
-        </activity>
+
         <activity android:name=".activities.LoginActivity"></activity>
         <activity
             android:name=".activities.OrderActivity"
@@ -23,20 +28,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="energigas.apps.systemstrategy.energigas.activities.MainActivity" />
 
-
-
-        <activity android:name=".activities.LoginActivity">
-
         </activity>
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".activities.AccountSummary"
             android:label="@string/activity_summary_account"
-            android:name=".activities.AccountSummary">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
     </application>

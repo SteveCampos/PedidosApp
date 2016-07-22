@@ -25,6 +25,8 @@
 
     <string name="nav_item_account">Cuenta</string>
     <string name="title_activity_order">OrderActivity</string>
+    <string name="title_order">Prioridad Alta</string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

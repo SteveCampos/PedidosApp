@@ -5,7 +5,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="background_color">#ecf0f1</color>
-    <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="line_last_view">#9E9E9E</color>
     <color name="greem_background_item">#009688</color>
@@ -17,7 +16,39 @@
     <color name="Personalizado4">#78bfe9</color>
     <color name="grey_300">#e0e0e0</color>
     <color name="grey_400">#bdbdbd</color>
-    <color name="verde">#2cae32</color>
-    <color name="colordorado">#f7d737</color>
-    <color name="color_blanco">#ddffffff</color>
+
+    <color name="gold">#f7d737</color>
+
+    <!-- green -->
+    <color name="md_green_50">#E8F5E9</color>
+    <color name="md_green_100">#C8E6C9</color>
+    <color name="md_green_200">#A5D6A7</color>
+    <color name="md_green_300">#81C784</color>
+    <color name="md_green_400">#66BB6A</color>
+    <color name="md_green_500">#4CAF50</color>
+    <color name="md_green_600">#43A047</color>
+    <color name="md_green_700">#388E3C</color>
+    <color name="md_green_800">#2E7D32</color>
+    <color name="md_green_900">#1B5E20</color>
+    <color name="md_green_A100">#B9F6CA</color>
+    <color name="md_green_A200">#69F0AE</color>
+    <color name="md_green_A400">#00E676</color>
+    <color name="md_green_A700">#00C853</color>
+
+    <!--light green-->
+    <color name="md_light_green_50">#F1F8E9</color>
+    <color name="md_light_green_100">#DCEDC8</color>
+    <color name="md_light_green_200">#C5E1A5</color>
+    <color name="md_light_green_300">#AED581</color>
+    <color name="md_light_green_400">#9CCC65</color>
+    <color name="md_light_green_500">#8BC34A</color>
+    <color name="md_light_green_600">#7CB342</color>
+    <color name="md_light_green_700">#689F38</color>
+    <color name="md_light_green_800">#558B2F</color>
+    <color name="md_light_green_900">#33691E</color>
+    <color name="md_light_green_A100">#CCFF90</color>
+    <color name="md_light_green_A200">#B2FF59</color>
+    <color name="md_light_green_A400">#76FF03</color>
+    <color name="md_light_green_A700">#64DD17</color>
+
 </resources>
