@@ -30,12 +30,13 @@ public class Dispatch {
     private String percentageEnd;
     private String serialTank;
     private String numberTransport;
+    private String instalationOdDispatch;
 
 
     public Dispatch() {
     }
 
-    public Dispatch(int id, String nameCompany, String addressCompany, String districtCompany, String telephoneCompany, String departmentCompany, String countryCompany, String rucCompany, String nameOfDispacth, String addressOfDispacth, String coordinatesLatLon, String numberPlate, String driverCar, String numberPayment, String date, String timeStart, String timeEnd, String countStart, String countEnd, String quantityDispatch, String percentageStart, String percentageEnd, String serialTank, String numberTransport) {
+    public Dispatch(int id, String nameCompany, String addressCompany, String districtCompany, String telephoneCompany, String departmentCompany, String countryCompany, String rucCompany, String nameOfDispacth, String addressOfDispacth, String coordinatesLatLon, String numberPlate, String driverCar, String numberPayment, String date, String timeStart, String timeEnd, String countStart, String countEnd, String quantityDispatch, String percentageStart, String percentageEnd, String serialTank, String numberTransport,String instalationOdDispatch) {
         this.id = id;
         this.nameCompany = nameCompany;
         this.addressCompany = addressCompany;
@@ -60,6 +61,7 @@ public class Dispatch {
         this.percentageEnd = percentageEnd;
         this.serialTank = serialTank;
         this.numberTransport = numberTransport;
+        this.instalationOdDispatch = instalationOdDispatch;
     }
 
 
@@ -253,5 +255,14 @@ public class Dispatch {
 
     public void setNumberTransport(String numberTransport) {
         this.numberTransport = numberTransport;
+    }
+
+
+    public String getInstalationOdDispatch() {
+        return instalationOdDispatch;
+    }
+
+    public void setInstalationOdDispatch(String instalationOdDispatch) {
+        this.instalationOdDispatch = instalationOdDispatch;
     }
 }

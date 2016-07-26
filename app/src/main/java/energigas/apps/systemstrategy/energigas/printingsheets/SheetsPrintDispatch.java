@@ -39,6 +39,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + dispatch.getRucCompany() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre: " + dispatch.getNameOfDispacth() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Direccion: " + dispatch.getAddressOfDispacth() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Instalacion: " + dispatch.getInstalationOdDispatch() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Coordenadas: " + dispatch.getCoordinatesLatLon() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Placa: " + dispatch.getNumberPlate() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Chofer: " + dispatch.getDriverCar() + LF);

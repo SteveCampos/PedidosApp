@@ -148,4 +148,12 @@
     <string name="title_activity_costs">CostsActivity</string>
     <string name="title_activity_print_dispatch">PrintDispatch</string>
     <!--### ####-->
+
+
+
+
+    <!--###### PrintDispatch -->
+
+    <string name="print_snack_error">Error</string>
+    <string name="print_snack_sync_success">Error</string>
 </resources>

@@ -79,7 +79,7 @@ public class AccountSummary extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-           startActivity(new Intent(getApplicationContext(),PrintDispatch.class));
+         onBackPressed();
             return true;
         }
 

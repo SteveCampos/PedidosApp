@@ -48,6 +48,16 @@
     <dimen name="expanded_title_margin_end">64dp</dimen>
     <dimen name="expanded_title_margin_start">48dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-
     <dimen name="app_bar_height_order">180dp</dimen>
+
+
+    <!--ACTIVITY_PRINT_DISPATCH-->
+
+    <dimen name="print_elevation_fab">6dp</dimen>
+    <dimen name="print_translation_z">12dp</dimen>
+    <dimen name="print_margin_bottom_fab_2">90dp</dimen>
+    <dimen name="print_margin_bottom_fab_3">160dp</dimen>
+    <dimen name="print_margin_bottom_fab_4">230dp</dimen>
+
+
 </resources>

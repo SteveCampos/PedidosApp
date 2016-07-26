@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "energigas.apps.systemstrategy.energigas"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -18,16 +18,45 @@ android {
         }
     }
 }
+// TODO remove eventually: http://b.android.com/162285
+configurations {
+    internalDebugCompile
+}
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:23.4.0'
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$test_espresso_version"
+    androidTestCompile "com.android.support.test:runner:$test_runner_version"
+    androidTestCompile "com.android.support:support-annotations:$support_annotations_version"
+    compile "com.jakewharton:butterknife:$butterknife"
+    apt "com.jakewharton:butterknife-compiler:$butterknife"
+    compile "com.fasterxml.jackson.core:jackson-core:$jackson"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jackson"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jackson"
+    compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
     testCompile 'junit:junit:4.12'
+    compile files('libs/SML_Android_1.042.jar')
+}
+buildscript {
+    ext.support_library_version = "23.4.0"
+    ext.constraint_layout_version = "1.0.0-alpha3"
+    ext.junit_version = "4.12"
+    ext.test_espresso_version = "2.2.2"
+    ext.test_runner_version = "0.5"
+    ext.support_annotations_version = "23.4.0"
+    ext.butterknife = "8.2.1"
+    ext.jackson = "2.4.2"
 }
