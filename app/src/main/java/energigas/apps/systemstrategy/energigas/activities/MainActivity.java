@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener, OrdersFragment.OnOrdersClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewpager)
@@ -55,6 +58,38 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
+
+    }
+
+    private void showDialogAccount() {
+
+        View viewDialog = getLayoutInflater().inflate(R.layout.layout_dialog_open_account, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.main_dialog_title));
+        builder.setView(viewDialog);
+        builder.setCancelable(false);
+        String positiveText = getString(android.R.string.ok);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // positive button logic
+                        // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
+                    }
+                });
+
+        String negativeText = getString(android.R.string.cancel);
+        builder.setNegativeButton(negativeText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // negative button logic
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
     }
 
     private void initViews() {
@@ -78,8 +113,8 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "navigationView.getHeaderCount(): " + navigationView.getHeaderCount());
         Log.d(TAG, "navigationView.getMenu().size(): " + navigationView.getMenu().size());
-        for (int i= 0; i< navigationView.getMenu().size(); i++){
-            Log.d(TAG, "navigationView.getMenu().getItem("+i+"): " + navigationView.getMenu().getItem(i));
+        for (int i = 0; i < navigationView.getMenu().size(); i++) {
+            Log.d(TAG, "navigationView.getMenu().getItem(" + i + "): " + navigationView.getMenu().getItem(i));
         }
         // Set behavior of Navigation drawer
         navigationView.setNavigationItemSelectedListener(this);
@@ -184,7 +219,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void setCurrentItem(int position){
+    private void setCurrentItem(int position) {
         if (viewPager.getCurrentItem() != position) {
             viewPager.setCurrentItem(position);
         }
@@ -199,8 +234,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
-                Snackbar.make(view, "Current Item Page: " + viewPager.getCurrentItem(),
-                        Snackbar.LENGTH_LONG).show();
+                showDialogAccount();
                 break;
         }
     }

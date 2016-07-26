@@ -156,4 +156,22 @@
 
     <string name="print_snack_error">Error</string>
     <string name="print_snack_sync_success">Error</string>
+
+
+
+    <string name="html_dispatch">
+
+    </string>
+
+    <!--####-->
+    <string name="main_dialog_title">Abriendo caja</string>
+    <string name="main_dialog_text_km_start">Kilometraje inicial</string>
+    <string name="main_dialog_text_weight_start">Peso inicial</string>
+    <string name="main_dialog_text_percent_start">Porcentaje inicial</string>
+
+    <string name="main_dialog_message_title">Abriendo Caja</string>
+    <string name="main_dialog_message_loanding">Conectando</string>
+
+
+
 </resources>
