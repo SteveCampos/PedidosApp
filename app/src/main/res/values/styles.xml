@@ -37,12 +37,13 @@
     </style>
 
 
-
-
     <!-- TextView Empty Base-->
     <style name="TextViewBody1" parent="TextAppearance.AppCompat.Body1" />
+
     <style name="TextViewTitle" parent="TextAppearance.AppCompat.Title" />
+
     <style name="TextViewMedium" parent="TextAppearance.AppCompat.Medium" />
+
     <style name="TextViewSmall" parent="TextAppearance.AppCompat.Small" />
 
     <style name="categoriesCardViewButtons">

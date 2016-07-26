@@ -22,7 +22,6 @@
     <dimen name="navheader_height">222dp</dimen>
 
 
-
     <dimen name="card_margin_top">10dp</dimen>
     <dimen name="card_margin">16dp</dimen>
     <dimen name="height_collapsing">300dp</dimen>
@@ -40,7 +39,6 @@
     <dimen name="margin_top_layout">5dp</dimen>
     <dimen name="text_sub_item">10dp</dimen>
     <!--#######################-->
-
 
 
     <!--LAYOUT ACCOUNT SUMMARY-->

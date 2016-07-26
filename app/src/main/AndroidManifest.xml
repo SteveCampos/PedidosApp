@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="energigas.apps.systemstrategy.energigas">
 
+
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,14 +14,12 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/app_name">
+
+
         </activity>
-        <activity android:name=".activities.LoginActivity" />
+
+        <activity android:name=".activities.LoginActivity"></activity>
         <activity
             android:name=".activities.OrderActivity"
             android:label="@string/title_activity_order"
@@ -29,9 +31,27 @@
 
         </activity>
         <activity
-            android:theme="@style/AppTheme"
+            android:name=".activities.AccountSummary"
             android:label="@string/activity_summary_account"
-            android:name=".activities.AccountSummary">
+            android:theme="@style/AppTheme.NoActionBar">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".activities.CostsActivity"
+            android:label="@string/title_activity_costs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PrintDispatch"
+            android:label="@string/title_activity_print_dispatch"
+            android:theme="@style/AppTheme.NoActionBar">
+
+
         </activity>
     </application>
 

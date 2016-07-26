@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -78,7 +79,7 @@ public class AccountSummary extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-            onBackPressed();
+           startActivity(new Intent(getApplicationContext(),PrintDispatch.class));
             return true;
         }
 

@@ -3,12 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+    <color name="white">#fff</color>
     <color name="background_color">#ecf0f1</color>
     <color name="black">#000</color>
     <color name="line_last_view">#9E9E9E</color>
     <color name="greem_background_item">#009688</color>
-    <color name="white">#FFFFFF</color>
     <color name="dark_grey">#424242</color>
     <color name="medium_grey">#9E9E9E</color>
     <color name="button_grey">#757575</color>
