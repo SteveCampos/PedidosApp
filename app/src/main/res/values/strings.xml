@@ -1,16 +1,44 @@
 <resources>
     <string name="app_name">Energigas</string>
 
+    <string name="default_values_name">Steve</string>
+    <string name="default_values_count_products">2</string>
+    <string name="default_values_count_tanks">8</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_print">Imprimir Factura</string>
 
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Contraseña</string>
     <string name="login_image_description">Logo Energigas</string>
     <string name="login_action_login">Iniciar Sesión</string>
     <string name="login_message_notaccount">¿No tiene una cuenta?</string>
+
+
+    <string name="wizard_title_activity">Mago</string>
+    <string name="wizard_title_name">%1$s, nuestro Mago te guiará en el proceso de Despacho.</string>
+    <string name="wizard_tabtitle_name">Selecciona un Tanque:</string>
+    <string name="wizard_text_products_count">%1$d Productos, %2$d Tanques.</string>
+
+    <string name="dispatch_name">Despacho</string>
+    <string name="dispatch_title_name">Tanque: %1$s</string>
+    <string name="dispatch_station_name">Estación: %1$s</string>
+    <string name="dispatch_product_name">Producto: %1$s</string>
+
+    <string name="dispatch_contometer">Contómetro</string>
+
+    <string name="dispatch_button_requested">Despachar</string>
+    <string name="dispatch_hint_requested_quantity">Cantidad Solicitada</string>
+    <string name="dispatch_hint_dispensed_quantity">Cantidad Despachada</string>
+    <string name="dispatch_hint_quantity_initial">Contómetro Inicial</string>
+    <string name="dispatch_hint_quantity_final">Contómetro Final</string>
+    <string name="dispatch_hint_tank_initial_percent">% Tanque Inicial</string>
+    <string name="dispatch_hint_tank_final_percent">% Tanque Final</string>
+
 
     <string name="ordered_product_title_name">Productos</string>
     <string name="ordered_dispatch_title_name">Despachos</string>
@@ -29,6 +57,80 @@
     <string name="nav_item_account">Cuenta</string>
     <string name="title_activity_order">OrderActivity</string>
     <string name="title_order">Prioridad Alta</string>
+
+
+    <string name="print_factura_empresa">
+        "Energigas SAC\n"
+        "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502\n"
+        "San Isidro Lima\n"
+        "RUC: 20506151547\n"
+        "Telf: (511) 2033001\n\n"
+        "FACTURA ELECTRONICA"
+    </string>
+
+    <string name="print_factura_header">
+        "NUMERO   :F246-00000024\n"
+        "FECHA    : %1$s\n"
+        "CLIENTE  : Agropacking Export S.A.\n"
+        "DNI/RUC  : 20525974635\n"
+        "DIRECCION: Car. Panamericana Norte Km. 1076 Piura - Piura - Tambo Grande."
+    </string>
+
+    <string name="print_factura_items">
+        "500.00\tGLP\n"
+        "300.00\tGNV\n\n"
+        "OP. GRAVADA     S/.\n"
+        "OP. INAFECTA    S/.\n"
+        "OP. EXONERADA   S/.\n"
+        "OP. GRATUIRA    S/.\n"
+        "DESCUENTOS      S/.\n"
+        "I.G.V.          S/.\n\n"
+        "PRECIO VENTA    S/.\n"
+    </string>
+    <string name="print_factura_items_importe">
+        "5000.00\n"
+        "3900.00\n\n"
+        "7542.37\n"
+        "0.00\n"
+        "0.00\n"
+        "0.00\n"
+        "0.00\n"
+        "1357.63\n"
+        "----------\n"
+        "8900.00"
+    </string>
+    <string name="print_factura_operaciones">
+        "OP. GRAVADA     S/.\n"
+        "OP. INAFECTA    S/.\n"
+        "OP. EXONERADA   S/.\n"
+        "OP. GRATUIRA    S/.\n"
+        "DESCUENTOS      S/.\n"
+        "I.G.V.          S/.\n\n"
+        "PRECIO VENTA    S/.\n"
+    </string>
+    <string name="print_factura_operaciones_monto">
+        "7542.37\n"
+        "0.00\n"
+        "0.00\n"
+        "0.00\n"
+        "0.00\n"
+        "1357.63\n"
+        "_________\n"
+        "8900.00"
+    </string>
+    <string name="print_factura_footer">
+        "\n\nOCHO MIL NOVESCIENTOS CON 00/100 SOLES\n\n"
+        "VENTA AL CONTADO\n"
+        "AGENTE: Juan Casani Lazo\n\n"
+        "V. Resumen: MUOy4w/Q6VGqEBNiwQOhMYLCvm8\n\n"
+        "<b>REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA</b>\n"
+        "Visualice este documento en:\n"
+        "<u>http://www.energigas.com.pe/</u>"
+    </string>
+
+
+
+
 
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -124,6 +226,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+
+
     <!--String Listar Establecimientos-->
     <string name="estable_default_empresa">Name Empresa</string>
     <string name="estable_default_name">Name Establecimiento</string>
@@ -145,10 +249,10 @@
     <string name="information_date">19/07/2016</string>
     <string name="information_summary">41</string>
     <string name="information_agent">Kelvin Thony Meza Espiritu</string>
+    <string name="title_activity_dispatch">DispatchActivity</string>
     <string name="title_activity_costs">CostsActivity</string>
     <string name="title_activity_print_dispatch">PrintDispatch</string>
     <!--### ####-->
-
 
 
 
@@ -171,7 +275,5 @@
 
     <string name="main_dialog_message_title">Abriendo Caja</string>
     <string name="main_dialog_message_loanding">Conectando</string>
-
-
 
 </resources>

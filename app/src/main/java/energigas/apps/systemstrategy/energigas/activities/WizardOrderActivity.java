@@ -13,9 +13,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +25,10 @@ import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
-import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
-public class OrderActivity extends AppCompatActivity implements View.OnClickListener,
-        StationFragment.OnStationClickListener,
-        OrderedProductFragment.OnOrderedProductClickListener,
-        OrderedProductFragment.OnDispatchClickListener{
+public class WizardOrderActivity extends AppCompatActivity implements OrderedProductFragment.OnOrderedProductClickListener, OrderedProductFragment.OnDispatchClickListener{
+
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -41,17 +36,24 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     ViewPager viewPager;
     @BindView(R.id.tabs)
     TabLayout tabs;
+    @BindView(R.id.textview_wizard_title)
+    TextView textViewWizardWelcome;
+
+    @BindView(R.id.textview_text_products_count)
+    TextView textViewProductsCount;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_wizard_order);
         ButterKnife.bind(this);
         initViews();
     }
+
 
     private void initViews() {
         // Adding Toolbar to Main screen
@@ -63,72 +65,55 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         //setupTabIcons(tabs);
 
 
+
+        String textProductsCount = getString(R.string.wizard_text_products_count);
+        int default_count_products = Integer.parseInt(getString(R.string.default_values_count_products));
+        int default_count_tanks = Integer.parseInt(getString(R.string.default_values_count_tanks));
+
+        String textCountFormatted = String.format(textProductsCount, default_count_products, default_count_tanks);
+        textViewProductsCount.setText(textCountFormatted);
+
+
+        String textWizardWelcome = getString(R.string.wizard_title_name);
+        String default_name = getString(R.string.default_values_name);
+
+        String textWelcomeFormatted = String.format(textWizardWelcome, default_name);
+        textViewWizardWelcome.setText(textWelcomeFormatted);
+
+
         // Adding menu icon to Toolbar
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setTitle("Prioridad Alta");
+            supportActionBar.setTitle(R.string.wizard_title_activity);
         }
+    }
 
-
-        //
-        //viewPager.addOnPageChangeListener(this);
-
-        // Adding Floating Action Button to bottom right of main view
+    @OnClick(R.id.fab)
+    void launchDispatch(){
+        startActivity(new Intent(WizardOrderActivity.this, DispatchActivity.class));
     }
 
 
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new OrderedProductFragment(), getString(R.string.ordered_product_title_name));
+        adapter.addFragment(new OrderedProductFragment(), getString(R.string.wizard_tabtitle_name));
         viewPager.setAdapter(adapter);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.action_print:
-                startActivity(new Intent(OrderActivity.this, PrintFacturaActivity.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @OnClick(R.id.fab)
-    void onFabClicke(){
-        //Initiate Wizard
-        startActivity(new Intent(OrderActivity.this, WizardOrderActivity.class));
-    }
-
-    @Override
-    public void onClick(View view) {
-        Snackbar.make(viewPager, "Order Go!", Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onStationClickListener(Station station, View view) {
-        Snackbar.make(viewPager, station.getEstVName(), Snackbar.LENGTH_LONG).show();
+    public void onDispatchClickListener(OrderDispatch orderDispatch, View view) {
+        Snackbar.make(fab, orderDispatch.getTitleTank(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onOrderedProductClickListener(OrderProduct orderProduct, View view) {
-        Snackbar.make(viewPager, orderProduct.getProductOrderedTitle(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(fab, orderProduct.getProductOrderedTitle(), Snackbar.LENGTH_LONG).show();
     }
 
-    @Override
-    public void onDispatchClickListener(OrderDispatch orderDispatch, View view) {
-        Snackbar.make(viewPager, orderDispatch.getTitleTank(), Snackbar.LENGTH_LONG).show();
-    }
 
-    private static class Adapter extends FragmentPagerAdapter {
+    private class Adapter extends FragmentPagerAdapter {
         private static final String TAG = "FragmentPagerAdapter";
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -157,7 +142,5 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-
-
     }
 }

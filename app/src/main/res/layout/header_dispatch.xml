@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textview_dispatch_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dispatch_title_name"
+        android:gravity="center"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_marginTop="32dp"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textview_dispatch_product"
+        android:text="@string/dispatch_product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+    <TextView
+        android:id="@+id/textview_dispatch_station"
+        android:text="@string/dispatch_station_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        />
+
+
+</LinearLayout>

@@ -14,12 +14,17 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
+        <activity
+            android:name=".activities.PrintFacturaActivity"/>
         <activity
             android:name=".activities.OrderActivity"
             android:label="@string/title_activity_order"
@@ -33,25 +38,29 @@
         <activity
             android:name=".activities.AccountSummary"
             android:label="@string/activity_summary_account"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.WizardOrderActivity"
+            android:label="@string/wizard_title_activity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
-
-
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="energigas.apps.systemstrategy.energigas.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.CostsActivity"
-            android:label="@string/title_activity_costs"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".activities.DispatchActivity"
+            android:label="@string/title_activity_dispatch"
+            android:parentActivityName=".activities.WizardOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="energigas.apps.systemstrategy.energigas.activities.WizardOrderActivity" />
+        </activity>
         <activity
             android:name=".activities.PrintDispatch"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
 
         </activity>
