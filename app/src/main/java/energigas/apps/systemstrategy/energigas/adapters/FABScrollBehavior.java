@@ -60,7 +60,6 @@ public class FABScrollBehavior extends FloatingActionButton.Behavior {
 
             for (int i = 0; i < coordinatorLayout.getChildCount(); i++) {
 
-
                 if (coordinatorLayout.getChildAt(i) instanceof Snackbar.SnackbarLayout) {
                     child.show();
                     return;

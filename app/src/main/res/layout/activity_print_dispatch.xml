@@ -74,6 +74,9 @@
         app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
         android:src="@drawable/ic_printer_sync_print" />
 
+
+    <!--app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"-->
+
     <include layout="@layout/content_print_dispatch" />
 
     <!--Hola Mundo-->

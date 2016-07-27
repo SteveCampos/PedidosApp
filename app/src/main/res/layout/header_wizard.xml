@@ -13,6 +13,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="32dp"
+        style="@style/TextAppearance.AppCompat.Title"
         android:textSize="30sp" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textview_wizard_title"
         android:layout_centerHorizontal="true"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:gravity="center" />
 
 </RelativeLayout>

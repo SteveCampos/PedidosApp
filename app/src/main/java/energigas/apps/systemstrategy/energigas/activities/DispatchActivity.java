@@ -85,9 +85,9 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
     }
 
     private void setTexts() {
-        textViewTank.setText("Tanque T100");
+        /*textViewTank.setText("Tanque T100");
         textViewProduct.setText("GLP");
-        textviewStation.setText("Est. La Molina");
+        textviewStation.setText("Est. La Molina");*/
     }
 
     @OnClick(R.id.fab)

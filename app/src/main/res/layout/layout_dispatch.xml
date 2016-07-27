@@ -37,11 +37,33 @@
             android:text="@string/dispatch_button_requested" />
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dispatch_contometer" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textViewContometer"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dispatch_contometer"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true" />
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:id="@+id/buttonContometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textViewContometer"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignRight="@+id/textViewContometer"
+            android:layout_centerInParent="true"
+            android:text="@string/dispatch_button_read_contometer" />
+    </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

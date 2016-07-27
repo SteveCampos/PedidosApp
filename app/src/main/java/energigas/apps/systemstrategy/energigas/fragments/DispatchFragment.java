@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import energigas.apps.systemstrategy.energigas.R;
 
@@ -42,6 +44,9 @@ public class DispatchFragment extends Fragment {
     TextInputEditText input_tank_initial;
     @BindView(R.id.input_tank_final_percent)
     TextInputEditText input_tank_final;
+    @BindView(R.id.buttonContometer)
+    AppCompatButton buttonContometer;
+
 
     private Unbinder unbinder;
     private static final String ARG_PARAM1 = "param1";
@@ -97,7 +102,7 @@ public class DispatchFragment extends Fragment {
 
     private void fillInputs() {
         inputRequestedQuantity.setText("100.00");
-
+        enabledInputs(false);
     }
     private void enabledInputs(boolean enabled){
         inputDispensedQuantity.setEnabled(enabled);
@@ -107,6 +112,14 @@ public class DispatchFragment extends Fragment {
         input_tank_final.setEnabled(enabled);
     }
 
+    @OnClick(R.id.buttonContometer)
+    void readContometer(){
+        inputDispensedQuantity.setText("100.00");
+        inputQuantityInitial.setText("900.00");
+        inputQuantityFinal.setText("1000.00");
+        input_tank_initial.setText("56.25");
+        input_tank_final.setText("62.5");
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

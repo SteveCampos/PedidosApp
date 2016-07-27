@@ -3,14 +3,14 @@
 
     <string name="default_values_name">Steve</string>
     <string name="default_values_count_products">2</string>
-    <string name="default_values_count_tanks">8</string>
+    <string name="default_values_count_tanks">6</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="action_print">Imprimir Factura</string>
+    <string name="action_print">Imprimir</string>
 
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Contraseña</string>
@@ -25,13 +25,17 @@
     <string name="wizard_text_products_count">%1$d Productos, %2$d Tanques.</string>
 
     <string name="dispatch_name">Despacho</string>
-    <string name="dispatch_title_name">Tanque: %1$s</string>
-    <string name="dispatch_station_name">Estación: %1$s</string>
-    <string name="dispatch_product_name">Producto: %1$s</string>
+    <string name="dispatch_title_name">Tanque 100 - 10056235832</string>
+    <string name="dispatch_station_name">
+        "Agropacking Export S.A.\n"
+        "Est. Piura - Piura"
+    </string>
+    <string name="dispatch_product_name">PRODUCTO: GLP</string>
 
     <string name="dispatch_contometer">Contómetro</string>
 
     <string name="dispatch_button_requested">Despachar</string>
+    <string name="dispatch_button_read_contometer">Contómetro</string>
     <string name="dispatch_hint_requested_quantity">Cantidad Solicitada</string>
     <string name="dispatch_hint_dispensed_quantity">Cantidad Despachada</string>
     <string name="dispatch_hint_quantity_initial">Contómetro Inicial</string>
@@ -229,12 +233,12 @@
 
 
     <!--String Listar Establecimientos-->
-    <string name="estable_default_empresa">Name Empresa</string>
-    <string name="estable_default_name">Name Establecimiento</string>
-    <string name="estable_default_address">Dirección</string>
-    <string name="estable_default_description">4.0</string>
+    <string name="estable_default_empresa">Agropacking Export S.A.</string>
+    <string name="estable_default_name">Agropacking Export S.A.</string>
+    <string name="estable_default_address">Panamericana Norte Km 1076 Piura</string>
+    <string name="estable_default_description">3:00 - 7:00 p.m.</string>
     <string name="estable_action_attend">Atender</string>
-    <string name="estable_default_marker">7000 kilometros</string>
+    <string name="estable_default_marker">516 km</string>
 
 
     <!--##############################-->
@@ -251,7 +255,8 @@
     <string name="information_agent">Kelvin Thony Meza Espiritu</string>
     <string name="title_activity_dispatch">DispatchActivity</string>
     <string name="title_activity_costs">CostsActivity</string>
-    <string name="title_activity_print_dispatch">PrintDispatch</string>
+    <string name="title_activity_print_dispatch">Imprimir Despacho</string>
+    <string name="title_activity_print_factura">Imprimir Factura</string>
     <!--### ####-->
 
 

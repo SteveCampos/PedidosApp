@@ -255,7 +255,6 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
             }
         } else {
 
-
             if (isFabOpen) {
 
                 pPrint.setBehavior(null);
