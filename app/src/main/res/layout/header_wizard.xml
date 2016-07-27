@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    android:orientation="vertical"
+    android:minHeight="208dp">
 
     <TextView
         android:id="@+id/textview_wizard_title"
@@ -10,20 +11,16 @@
         android:layout_height="wrap_content"
         android:text="@string/wizard_title_name"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_margin="32dp"
         style="@style/TextAppearance.AppCompat.Title"
-        android:textSize="30sp" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/textview_text_products_count"
         android:text="@string/wizard_text_products_count"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_wizard_title"
-        android:layout_centerHorizontal="true"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:gravity="center" />
 
-</RelativeLayout>
+</LinearLayout>

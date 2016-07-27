@@ -78,8 +78,8 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
         int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
         Log.d(Utils.TAG, "recyclerView.childAdapterPosition(): "+ childAdapterPosition);
         if (stationList.size()>childAdapterPosition && childAdapterPosition >= 0){
-            stationList.remove(childAdapterPosition);
-            adapter.notifyItemRemoved(childAdapterPosition);
+            /*stationList.remove(childAdapterPosition);
+            adapter.notifyItemRemoved(childAdapterPosition);*/
             listener.onStationClickListener(station, view);
         }
 

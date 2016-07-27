@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -31,6 +32,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.OrdersFragment;
+import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new StationFragment(), getString(R.string.estb_title_name));
         adapter.addFragment(new OrdersFragment(), getString(R.string.order_title_name));
-        adapter.addFragment(new StationFragment(), getString(R.string.plan_title_name));
+        adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
 

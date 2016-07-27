@@ -5,8 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 
 /**
@@ -23,15 +25,20 @@ public class PrintFacturaActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_print);
+        ButterKnife.bind(this);
+        initViews();
+    }
 
+
+    private void initViews() {
+        // Adding Toolbar to Main screen
         setSupportActionBar(toolbar);
 
-        setTitle("Title");
         // Adding menu icon to Toolbar
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setTitle("Impresión");
+            supportActionBar.setTitle("Imprimir Factura");
         }
     }
 }

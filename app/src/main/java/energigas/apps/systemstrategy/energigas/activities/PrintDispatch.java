@@ -139,8 +139,6 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        //xDXDXDDXXDDDDEDDD
-
     }
 
 
@@ -208,6 +206,9 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
         switch (view.getId()) {
             case R.id.fab:
+
+                floatingActionButton.setImageResource(R.drawable.ic_sync);
+                floatingActionButton.startAnimation(AnimationUtils.loadAnimation(PrintDispatch.this, R.anim.rotate_forward));
                 bluetoothConnect();
                 break;
             case R.id.fabPrint:
@@ -228,6 +229,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabNext:
                 //ORDER
+                startActivity(new Intent(PrintDispatch.this, PrintFacturaActivity.class));
                 break;
         }
     }
@@ -339,9 +341,6 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            floatingActionButton.setImageResource(R.drawable.ic_sync);
-            floatingActionButton.startAnimation(rotate_forward);
             super.onPreExecute();
         }
 

@@ -22,6 +22,8 @@
     </android.support.design.widget.AppBarLayout>
 
 
+    <include layout="@layout/content_print_dispatch" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabNext"
         android:layout_width="wrap_content"
@@ -30,10 +32,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="@dimen/fab_margin"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary"
         app:elevation="@dimen/print_elevation_fab"
         app:pressedTranslationZ="@dimen/print_translation_z"
-        android:src="@drawable/ic_printer_sync_print" />
+        android:src="@drawable/ic_arrow_forward_" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabDisconec"
@@ -75,10 +77,5 @@
         android:src="@drawable/ic_printer_sync_print" />
 
 
-    <!--app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"-->
-
-    <include layout="@layout/content_print_dispatch" />
-
-    <!--Hola Mundo-->
 
 </android.support.design.widget.CoordinatorLayout>

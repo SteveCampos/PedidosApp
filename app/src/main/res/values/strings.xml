@@ -83,13 +83,13 @@
     <string name="print_factura_items">
         "500.00\tGLP\n"
         "300.00\tGNV\n\n"
-        "OP. GRAVADA     S/.\n"
-        "OP. INAFECTA    S/.\n"
-        "OP. EXONERADA   S/.\n"
-        "OP. GRATUIRA    S/.\n"
-        "DESCUENTOS      S/.\n"
-        "I.G.V.          S/.\n\n"
-        "PRECIO VENTA    S/.\n"
+        "OP. GRAVADA\t\t\t\tS/.\n"
+        "OP. INAFECTA\t\t\tS/.\n"
+        "OP. EXONERADA\t\tS/.\n"
+        "OP. GRATUITA\t\t\tS/.\n"
+        "DESCUENTOS\t\t\tS/.\n"
+        "I.G.V.\t\t\t\t\t\t\t\t\tS/.\n\n"
+        "PRECIO VENTA\t\t\tS/.\n"
     </string>
     <string name="print_factura_items_importe">
         "5000.00\n"
@@ -230,8 +230,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-
-
     <!--String Listar Establecimientos-->
     <string name="estable_default_empresa">Agropacking Export S.A.</string>
     <string name="estable_default_name">Agropacking Export S.A.</string>
@@ -258,7 +256,6 @@
     <string name="title_activity_print_dispatch">Imprimir Despacho</string>
     <string name="title_activity_print_factura">Imprimir Factura</string>
     <!--### ####-->
-
 
 
     <!--###### PrintDispatch -->
