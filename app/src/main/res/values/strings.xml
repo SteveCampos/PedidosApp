@@ -278,4 +278,16 @@
     <string name="main_dialog_message_title">Abriendo Caja</string>
     <string name="main_dialog_message_loanding">Conectando</string>
 
+
+    <!-- ###### Expenses Activity  -->
+    <string name="activity_expenses_account">Gastos</string>
+    <string name="activity_expenses_today">Hoy</string>
+    <string name="activity_expenses_week">Semana</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_new_expense">Add new Expense</string>
+    <string name="optional_description">Description (Optional)</string>
+    <string name="total">Total</string>
+    <!-- #### -->
+
 </resources>

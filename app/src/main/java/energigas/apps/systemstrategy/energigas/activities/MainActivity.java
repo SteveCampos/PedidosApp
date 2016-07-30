@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                 setCurrentItem(2);
                 break;
             case R.id.nav_expenses:
-                showToast(item);
+                startActivity(new Intent(this, ExpensesActivity.class));
                 break;
             case R.id.nav_collect:
                 showToast(item);

@@ -45,7 +45,7 @@
         <activity
             android:name=".activities.AccountSummary"
             android:label="@string/activity_summary_account"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.WizardOrderActivity"
             android:label="@string/wizard_title_activity"
@@ -68,9 +68,11 @@
             android:name=".activities.PrintDispatch"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar">
-
-
         </activity>
+        <activity
+            android:name=".activities.ExpensesActivity"
+            android:label="@string/activity_expenses_account"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
