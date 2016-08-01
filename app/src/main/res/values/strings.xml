@@ -277,6 +277,10 @@
 
     <string name="main_dialog_message_title">Abriendo Caja</string>
     <string name="main_dialog_message_loanding">Conectando</string>
+    <string name="title_activity_station_menu">StationMenuActivity</string>
+    <string name="title_activity_charges"></string>
+    <string name="title_activity_load_inventory">Cargar Invenrtario</string>
+    <string name="title_activity_prueba">prueba</string>
 
 
     <!-- ###### Expenses Activity  -->

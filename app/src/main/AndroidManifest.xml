@@ -15,7 +15,9 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.LoginActivity" />
+
+
         <activity
             android:name=".activities.PrintFacturaActivity"
             android:label="@string/title_activity_print_factura"
@@ -68,11 +72,19 @@
             android:name=".activities.PrintDispatch"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name=".activities.ExpensesActivity"
             android:label="@string/activity_expenses_account"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.LoadInventory"
+            android:label="@string/title_activity_load_inventory"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

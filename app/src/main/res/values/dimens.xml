@@ -60,8 +60,8 @@
     <dimen name="print_margin_bottom_fab_4">230dp</dimen>
 
 
-
     <dimen name="dialog_padding">10dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
 
 
 

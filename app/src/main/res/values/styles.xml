@@ -17,6 +17,12 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar2">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
 
@@ -75,6 +81,11 @@
     <style name="AppTheme.Button2" parent="Widget.AppCompat.Button.Colored">
         <!--<item name="colorButtonNormal">@color/color_blanco</item>-->
         <!--<item name="android:textColor">@color/color_blanco</item>-->
+    </style>
+
+
+    <style name="CustomToolbar">
+        <item name="android:textSize">18dp</item>
     </style>
 
     <style name="ExpenseTrackerTextView">
