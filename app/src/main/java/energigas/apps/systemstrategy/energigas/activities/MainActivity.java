@@ -209,7 +209,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, ExpensesActivity.class));
                 break;
             case R.id.nav_collect:
-                showToast(item);
+                startActivity(new Intent(this, ChargesActivity.class));
+                //showToast(item);
                 break;
             case R.id.nav_summary:
                 startActivity(new Intent(this, AccountSummary.class));

@@ -290,4 +290,10 @@
     <string name="total">Total</string>
     <!-- #### -->
 
+
+    <!-- ###### Charges Account  -->
+    <string name="charges_account">22/08/16</string>
+    <string name="activity_charges_account">Cobranza</string>
+    <!-- #### -->
+
 </resources>
