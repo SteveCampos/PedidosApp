@@ -43,7 +43,6 @@ public class ChargesFragment extends Fragment implements ChargesAdapter.OnCharge
           recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         return rootView;
     }
 

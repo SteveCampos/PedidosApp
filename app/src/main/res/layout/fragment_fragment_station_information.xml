@@ -1,0 +1,114 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="energigas.apps.systemstrategy.energigas.activities.MainStationActivity">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EST. LA MOLINA"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Display1"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/article_subheading"
+            android:text="Car. Panamericana Norte Km 1076. Piura - Piura."
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Headline"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lat: -19.7563846, Lon: -79.05815"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Caption"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/tile_padding"
+            android:text="MOSTRAR EN MAPA"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin">
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/imageViewLogoCompany"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/logo"
+                        android:layout_marginLeft="8dp"
+                        />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="-8dp"
+                        android:layout_toEndOf="@+id/imageViewLogoCompany">
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ENERGIGAS S.AC."
+                            android:gravity="center"
+                            style="@style/TextAppearance.AppCompat.Title"
+                            />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="10766795264"
+                            android:gravity="center"
+                            style="@style/TextAppearance.AppCompat.Large"
+                            />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Lat: -19.7563846, Lon: -79.05815"
+                            android:gravity="center"
+                            style="@style/TextAppearance.AppCompat.Caption"/>
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="AV. MIRAFLORES 1076 FLORA TRISTÁN. CRUCE AV. AVIACIÓN."
+                    android:gravity="center"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.CardView>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v4.widget.NestedScrollView>

@@ -79,6 +79,15 @@
             android:label="@string/activity_charges_account"
             android:theme="@style/AppTheme">
         </activity>
+        <activity
+            android:name=".activities.MainStationActivity"
+            android:label="@string/title_activity_main_station"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="energigas.apps.systemstrategy.energigas.activities.WizardOrderActivity" />
+        </activity>
     </application>
 
 </manifest>

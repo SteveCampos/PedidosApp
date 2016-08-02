@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_collapsing"
             android:fitsSystemWindows="true"
+            app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="@dimen/expanded_title_margin_bottom"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
@@ -30,7 +31,6 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -42,43 +42,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:text="10/10/15"
+                        android:text="Lunes, 1 de Agosto"
                         android:layout_marginBottom="@dimen/margin_top_layout"
                         android:textSize="@dimen/text_size_14"/>
 
                     <TextView
                         android:id="@+id/tv_description"
-                        style="@style/ExpenseTrackerTextView"
-                        android:layout_marginBottom="@dimen/dimen_15dp"
-                        android:textSize="@dimen/text_size_24"
-                        android:textColor="@color/white"
-                        android:text="Total"/>
-
-                    <TextView
-                        android:id="@+id/tv_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_size_35"
-
-                        android:text="S/. 1.200"/>
+                        style="@style/ExpenseTrackerTextView"
+                        android:layout_marginBottom="15dp"
+                        android:textSize="24sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:text="Est. La Molina"/>
 
                 </LinearLayout>
 
 
             </LinearLayout>
-
-
-            <!--<ImageView-->
-            <!--android:id="@+id/header"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/maxresdefault"-->
-            <!--android:fitsSystemWindows="true"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--app:layout_collapseMode="parallax" />-->
-
-
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -103,21 +85,18 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewCharges"
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btndialog"
+        android:id="@+id/fab"
+        android:src="@drawable/ic_arrow_forward_"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
         android:layout_marginRight="@dimen/md_keylines" />
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>

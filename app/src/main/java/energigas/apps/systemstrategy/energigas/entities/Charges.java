@@ -71,11 +71,10 @@ public class Charges {
 
     public static List<Charges> getCharges() {
         List<Charges> chargesList = new ArrayList<>();
-        chargesList.add(new Charges("F0001","ABCDEF","10/02/16",120.0));
-        chargesList.add(new Charges("F0002","ABCDEF","11/02/16",140.0));
-        chargesList.add(new Charges("F0003","ABCDEF","12/02/16",160.0));
+        chargesList.add(new Charges("00000024","F001","10/07/2016",120.0));
+        chargesList.add(new Charges("00000148","F200","11/07/2016",140.0));
+        chargesList.add(new Charges("00001000","B800","12/07/2016",160.0));
         return chargesList;
-
     }
 
 

@@ -119,7 +119,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onOrderedProductClickListener(OrderProduct orderProduct, View view) {
+    public void onOrderedProductClickListener(OrderProduct orderProduct, View view, int typeClick) {
         Snackbar.make(viewPager, orderProduct.getProductOrderedTitle(), Snackbar.LENGTH_LONG).show();
     }
 

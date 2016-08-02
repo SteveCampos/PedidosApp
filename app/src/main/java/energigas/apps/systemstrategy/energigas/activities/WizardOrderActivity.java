@@ -108,7 +108,7 @@ public class WizardOrderActivity extends AppCompatActivity implements OrderedPro
     }
 
     @Override
-    public void onOrderedProductClickListener(OrderProduct orderProduct, View view) {
+    public void onOrderedProductClickListener(OrderProduct orderProduct, View view, int typeClick) {
         Snackbar.make(fab, orderProduct.getProductOrderedTitle(), Snackbar.LENGTH_LONG).show();
     }
 
