@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == android.R.id.home) {
             drawer.openDrawer(GravityCompat.START);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -209,7 +208,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, ExpensesActivity.class));
                 break;
             case R.id.nav_collect:
-                showToast(item);
+                startActivity(new Intent(this, ChargesActivity.class));
+                //showToast(item);
                 break;
             case R.id.nav_summary:
                 startActivity(new Intent(this, AccountSummary.class));
@@ -262,6 +262,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStationClickListener(Station station, View view) {
         Snackbar.make(fab, station.getEstVName(), Snackbar.LENGTH_LONG).show();
+        startActivity(new Intent(MainActivity.this, MainStationActivity.class));
     }
 
     @Override

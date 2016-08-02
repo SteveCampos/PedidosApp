@@ -20,6 +20,8 @@ public class OrderDispatch {
     //SI SE PUEDE AGREGAR UN OBJETO TANQUE
     private String serieTanque;
     private String nroTransporte;
+
+
     private double percentStart;
     private double percentEnd;
 

@@ -251,7 +251,7 @@
     <string name="information_date">19/07/2016</string>
     <string name="information_summary">41</string>
     <string name="information_agent">Kelvin Thony Meza Espiritu</string>
-    <string name="title_activity_dispatch">DispatchActivity</string>
+    <string name="title_activity_dispatch">Despachos</string>
     <string name="title_activity_costs">CostsActivity</string>
     <string name="title_activity_print_dispatch">Imprimir Despacho</string>
     <string name="title_activity_print_factura">Imprimir Factura</string>
@@ -292,6 +292,14 @@
     <string name="add_new_expense">Add new Expense</string>
     <string name="optional_description">Description (Optional)</string>
     <string name="total">Total</string>
+    <string name="title_activity_main_station">Estación</string>
+    <string name="selected_count">%1$d Selected</string>
+    <!-- #### -->
+
+
+    <!-- ###### Charges Account  -->
+    <string name="charges_account">22/08/16</string>
+    <string name="activity_charges_account">Cobranza</string>
     <!-- #### -->
 
 </resources>

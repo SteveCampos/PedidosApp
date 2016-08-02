@@ -2,11 +2,13 @@ package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -65,6 +67,7 @@ public class DisptachAdapter extends RecyclerView.Adapter<DisptachAdapter.ViewHo
         public TextView textViewTank;
         public TextView textViewQuantity;
         public RelativeLayout relativeLayout;
+        public ImageView imageViewChecked;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -76,6 +79,7 @@ public class DisptachAdapter extends RecyclerView.Adapter<DisptachAdapter.ViewHo
             textViewTank = (TextView) itemView.findViewById(R.id.textViewTanque);
             textViewQuantity = (TextView) itemView.findViewById(R.id.textviewQuantity);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.layoutBackground);
+            imageViewChecked = (ImageView) itemView.findViewById(R.id.imageView);
         }
 
         public void bind(final OrderDispatch orderDispatch, Context context, final OnDispatchClickListener listener, int position){
@@ -87,17 +91,26 @@ public class DisptachAdapter extends RecyclerView.Adapter<DisptachAdapter.ViewHo
 
             Log.d(Utils.TAG, "POSITION : " + position);
             Log.d(Utils.TAG, "RESTO : " + positionToColor);
+            boolean setCheckd = false;
             switch (positionToColor){
                 case 0:
                     hexColor = "#0F000000";
+                    setCheckd = true;
                     break;
                 case 1:
                     hexColor = "#ffffff";
+                    setCheckd = false;
                     break;
                 case 2:
                     hexColor = "#0A000000";
+                    setCheckd = false;
                     break;
             }
+            if (!setCheckd){
+                //imageViewChecked.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check_colored));
+                imageViewChecked.setVisibility(View.GONE);
+            }
+
             relativeLayout.setBackgroundColor(Color.parseColor(hexColor));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
