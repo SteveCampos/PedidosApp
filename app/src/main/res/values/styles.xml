@@ -11,8 +11,13 @@
 
         <item name="android:windowBackground">@color/white</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
-        <item name="actionModeBackground">@color/colorPrimary </item> (or)
-        <item name="android:actionModeBackground">@color/colorPrimary </item>
+        <!--ACTION MODE-->
+        <!--  For Custom Action Mode Background Color/Drawable -->
+        <item name="actionModeBackground">@color/colorAccent </item> (or)
+        <item name="android:actionModeBackground">@color/colorAccent </item>
+        <!--  It should be true otherwise action mode will not overlay toolbar -->
+        <item name="windowActionModeOverlay">true</item>
+
     </style>
 
     <style name="AppTheme.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -22,12 +27,10 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar2">
         <item name="windowActionBar">false</item>
-        <item name="android:windowContentTransitions">true</item>
     </style>
 
 

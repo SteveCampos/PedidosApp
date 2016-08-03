@@ -1,8 +1,11 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +31,18 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     // Store the context for easy access
     private Context mContext;
 
-    public StationDispatchsAdapter(List<OrderDispatch> stationDispatches, Context mContext) {
+    private SparseBooleanArray mSelectedItemsIds;
+    private OnStationDispatchClickListener listener;
+
+    public interface OnStationDispatchClickListener{
+        void onStationDispatchClickListener(OrderDispatch orderDispatch, View view, int typeListener);
+    }
+
+    public StationDispatchsAdapter(List<OrderDispatch> stationDispatches, Context mContext, OnStationDispatchClickListener listener) {
         this.stationDispatches = stationDispatches;
         this.mContext = mContext;
+        this.listener = listener;
+        mSelectedItemsIds = new SparseBooleanArray();
     }
 
     @Override
@@ -44,14 +56,34 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
 
     @Override
     public void onBindViewHolder(StationDispatchsHolder holder, int position) {
-        OrderDispatch dispatch = stationDispatches.get(position);
+        final OrderDispatch dispatch = stationDispatches.get(position);
+
+
         holder.dispatchTank.setText(dispatch.getTitleTank());
         holder.dispatchProduct.setText("GLP");
         holder.dispatchQuantity.setText(dispatch.getQuantityDisptach() + " Gal");
+
+        int colorAccent = ContextCompat.getColor(mContext, R.color.colorAccent);
+        int colorWhite = ContextCompat.getColor(mContext, R.color.white);
+        /** Change background color of the selected items  **/
+        holder.itemView
+                .setBackgroundColor(mSelectedItemsIds.get(position, false) ? colorAccent
+                        : Color.TRANSPARENT);
+        holder.dispatchQuantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
+
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "holder.itemView.setOnClickListener");
+                listener.onStationDispatchClickListener(dispatch, view, 0);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                listener.onStationDispatchClickListener(dispatch, view, 1);
+                return true;
             }
         });
     }
@@ -60,4 +92,49 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     public int getItemCount() {
         return stationDispatches.size();
     }
+
+
+    /***
+     * Methods required for do selections, remove selections, etc.
+     */
+
+    //Toggle selection methods
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+
+
+    //Remove selected selections
+    public void removeSelection(SparseBooleanArray mStaticSelecteds) {
+
+        /*
+        for (int i = 0; i < mStaticSelecteds.size(); i++) {
+            int position = mStaticSelecteds.keyAt(i);
+            toggleSelection(position);
+        }*/
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+
+
+    //Put or delete selected position into SparseBooleanArray
+    private void selectView(int position, boolean value) {
+        if (value)
+            mSelectedItemsIds.put(position, true);
+        else
+            mSelectedItemsIds.delete(position);
+
+        notifyItemChanged(position);
+    }
+
+    //Get total selected count
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+
+    //Return all selected ids
+    public SparseBooleanArray getSelectedIds() {
+        return mSelectedItemsIds;
+    }
+
 }

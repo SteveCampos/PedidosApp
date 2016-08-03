@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_close_account:
                 showToast(item);
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
         return true;
