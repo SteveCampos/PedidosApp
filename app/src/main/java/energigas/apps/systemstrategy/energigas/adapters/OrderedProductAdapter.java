@@ -29,6 +29,8 @@ public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAd
     private OnOrderedProductClickListener listener;
     private OnDispatchClickListener listenerOrderedDispatch;
     private SparseBooleanArray selectedItems;
+    private DisptachAdapter disptachAdapter;
+    private RecyclerView recyclerView;
 
     public OrderedProductAdapter(List<OrderProduct> orderProductList, Context mContext, OnOrderedProductClickListener listener, OnDispatchClickListener listenerOrderedDispatch) {
         this.orderProductList = orderProductList;
@@ -39,6 +41,7 @@ public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAd
 
     @Override
     public void onDispatchClickListener(OrderDispatch orderDispatch, View view) {
+        disptachAdapter.toggleSelection(recyclerView.getChildAdapterPosition(view));
         listenerOrderedDispatch.onDispatchClicckListener(orderDispatch, view);
     }
 
@@ -82,14 +85,14 @@ public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAd
             }
         });
 
-        RecyclerView recyclerView = holder.recyclerViewDisptaches;
+        recyclerView = holder.recyclerViewDisptaches;
         //DISPLAY ITEM DISPATCHES IN HORIZONTAL MODE
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(false);
 
-        DisptachAdapter disptachAdapter = new DisptachAdapter(orderProductList.get(position).getDispatchList(), mContext, this);
+        disptachAdapter = new DisptachAdapter(orderProductList.get(position).getDispatchList(), mContext, this);
         recyclerView.setAdapter(disptachAdapter);
     }
 

@@ -75,8 +75,8 @@ public class OrderProduct {
     public static List<OrderProduct> getList(){
         List<OrderProduct> orderProducts = new ArrayList<>();
 
-        Product glp = new Product(1, "1000", "GLP", "Galones");
-        Product gnv = new Product(2, "1001", "gnv", "Galones");
+        Product glp = new Product(1, "1000", "GLP", " Gal");
+        Product gnv = new Product(2, "1001", "GNV", " Gal");
 
         orderProducts.add(new OrderProduct(glp, 1, "2000", 500.00, OrderDispatch.getList()));
         orderProducts.add(new OrderProduct(gnv, 2, "2001", 500.00, OrderDispatch.getList()));

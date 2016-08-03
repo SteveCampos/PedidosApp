@@ -25,6 +25,8 @@ import energigas.apps.systemstrategy.energigas.fragments.DispatchFragment;
 import energigas.apps.systemstrategy.energigas.fragments.ExpensesFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
+import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
+import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment;
 
 public class MainStationActivity extends AppCompatActivity implements OrderedProductFragment.OnOrderedProductClickListener, OrderedProductFragment.OnDispatchClickListener{
 
@@ -65,7 +67,8 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new FragmentStationInformation(), getString(R.string.title_activity_main_station));
-        tabsAdapter.addFragment(new OrderedProductFragment(), getString(R.string.title_activity_dispatch));
+        tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
+        tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
         tabsAdapter.addFragment(new ChargesFragment(), getString(R.string.activity_charges_account));
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
