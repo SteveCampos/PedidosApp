@@ -25,7 +25,7 @@
             android:id="@+id/nav_collect"
             android:icon="@drawable/ic_hand_cash"
             android:tint="@color/colorAccent"
-            android:title="@string/collect_title_name" />
+            android:title="@string/collect_title_inventory" />
 
 
     </group>

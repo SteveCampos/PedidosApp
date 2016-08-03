@@ -115,7 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
-        android:layout_marginRight="@dimen/md_keylines" />
+        android:layout_marginRight="@dimen/md_keylines"
+        android:src="@drawable/ic_add_white_24dp" />
 
 
 

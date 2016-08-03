@@ -61,6 +61,8 @@
 
 
     <dimen name="dialog_padding">10dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+
 
     <!--ACTIVITY_ACCOUNT_EXPENSES-->
 
@@ -76,7 +78,6 @@
     <dimen name="elevation_dp">2dp</dimen>
     <dimen name="dimen_12_10dp">120dp</dimen>
     <dimen name="dimen_10_10dp">100dp</dimen>
-    <dimen name="app_bar_height">180dp</dimen>
 
 
 </resources>

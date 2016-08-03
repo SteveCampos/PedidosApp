@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.Station;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fab;
     @BindView(R.id.drawer)
     DrawerLayout drawer;
+    Agent agent;
+    View headerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
+        agent = Agent.getAgent();
+
+        headerLayout =  navigationView.inflateHeaderView(R.layout.nav_header);
 
 
     }
@@ -78,6 +86,13 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // positive button logic
+                        // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
+                        setTitle(agent.getmRuta());
+                        TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
+                        TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
+                        nameAgent.setText(agent.getmName());
+                        rutaAgent.setText(agent.getmRuta());
+
                         new AsyntaskOpenAccount(MainActivity.this,fab).execute();
                     }
                 });
@@ -210,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, ExpensesActivity.class));
                 break;
             case R.id.nav_collect:
-                startActivity(new Intent(this, ChargesActivity.class));
+                startActivity(new Intent(this, LoadInventory.class));
                 //showToast(item);
                 break;
             case R.id.nav_summary:
