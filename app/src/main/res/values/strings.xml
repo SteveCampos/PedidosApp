@@ -80,6 +80,8 @@
         "DIRECCION: Car. Panamericana Norte Km. 1076 Piura - Piura - Tambo Grande."
     </string>
 
+
+
     <string name="print_factura_items">
         "500.00\tGLP\n"
         "300.00\tGNV\n\n"
@@ -302,4 +304,48 @@
     <string name="activity_charges_account">Cobranza</string>
     <!-- #### -->
 
+    <string name="print_distpach_empresa">
+        "Energigas SAC\n"
+        "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502\n"
+        "San Isidro Lima\n"
+        "RUC: 20506151547\n"
+        "Telf: (511) 2033001\n"
+    </string>
+
+
+      <string name="print_dispatch_header">
+        "DIRECCION   : F246-00000024\n"
+        "INSTALACION : %1$s\n"
+        "PLACA       : Agropacking Export S.A.\n"
+        "AGENTE      : 20525974635\n"
+        "COMPROBANTE : Car. Panamericana Norte Km. 1076 Piura - Piura - Tambo Grande."
+    </string>
+
+      <string name="print_dispatch_body">
+        "FECHA   : F246-00000024\n"
+        "HORA INICIO : %1$s\n"
+        "HORA FIN       : Agropacking Export S.A.\n"
+        "CONTADOR INICIAL      : 20525974635\n"
+        "CONTADOR FINAL      : 20525974635\n"
+        "CANTIDAD DESPACHO  : Car. Panamericana Norte Km. 1076 Piura - Piura - Tambo Grande."
+    </string>
+
+     <string name="print_dispatch_footer">
+        "PORCENTAJE INICIO TANQUE   : F246-00000024\n"
+        "PORCENTAJE FINAL TANQUE   : F246-00000024\n"
+        "SERIE TANQUE      : Agropacking Export S.A.\n"
+        "NUMERO DE TRANSPORTE      : 20525974635"
+    </string>
+
+    <string name="print_dispatch_adding">
+        "Nombre   : F246-00000024\n"
+        "DNI   : F246-00000024\n"
+        "Firma     : Agropacking Export S.A."
+    </string>
+
+      <string name="print_dispatch_footer_footer">
+        "Documento sin valor tributario.\n"
+        "Visualize este documento en .\n"
+        "www.energigas.com"
+    </string>
 </resources>

@@ -12,7 +12,7 @@ public class Inventory {
     public double cantidadInicial;
     public double cantidadVendida;
     public double cantidadFinal;
-
+    List<Inventory> inventoriesList;
 
     public Inventory() {
     }
@@ -56,12 +56,17 @@ public class Inventory {
         this.cantidadFinal = cantidadFinal;
     }
 
-    public  static  List<Inventory> getInventoryList() {
+    public List<Inventory> instanceListInventory(){
+        inventoriesList = new ArrayList<Inventory>();
+        return inventoriesList;
 
-        List<Inventory> inventories = new ArrayList<Inventory>();
-        inventories.add(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
-        inventories.add(new Inventory("Gas natural vehicular", 2000, 500, 1500));
+    }
 
-        return inventories;
+    public   List<Inventory> getInventoryList() {
+
+        inventoriesList.add(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
+        inventoriesList.add(new Inventory("Gas natural vehicular", 2000, 500, 1500));
+
+        return inventoriesList;
     }
 }

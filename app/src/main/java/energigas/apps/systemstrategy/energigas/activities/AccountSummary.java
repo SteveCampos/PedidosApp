@@ -38,9 +38,7 @@ public class AccountSummary extends AppCompatActivity {
     private void setupCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(
                 R.id.collapse_toolbar);
-
         collapsingToolbar.setTitleEnabled(false);
-
     }
 
 

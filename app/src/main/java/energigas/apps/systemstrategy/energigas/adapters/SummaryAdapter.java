@@ -77,11 +77,11 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            //nameTextView = (TextView) itemView.findViewById(R.id.text_establishment_name);
+            nameTextView = (TextView) itemView.findViewById(R.id.text_establishment_name);
         }
 
         void bind(Summary summary) {
-            //  nameTextView.setText(summary.getEfectivoRendir()+"");
+            nameTextView.setText(summary.getEfectivoRendir()+"");
         }
     }
 }

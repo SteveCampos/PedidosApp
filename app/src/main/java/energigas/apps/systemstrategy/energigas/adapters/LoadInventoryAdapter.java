@@ -53,7 +53,13 @@ public class LoadInventoryAdapter extends RecyclerView.Adapter<LoadInventoryAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(inventories.get(position));
+
+        if(inventories.size() != 0){
+            holder.bind(inventories.get(position));
+        }else{
+            holder.bind(null);
+        }
+
     }
 
     @Override
@@ -83,7 +89,9 @@ public class LoadInventoryAdapter extends RecyclerView.Adapter<LoadInventoryAdap
         }
         void bind(Inventory inventory){
 
-           nameTextView.setText(inventory.getNombre());
+            if(inventory != null)
+                nameTextView.setText(inventory.getNombre());
+
         }
     }
 }

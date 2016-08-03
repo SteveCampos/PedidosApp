@@ -29,6 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.OrdersFragment;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initViews();
 
+
     }
 
     private void showDialogAccount() {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // positive button logic
-                        // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
+                        new AsyntaskOpenAccount(MainActivity.this,fab).execute();
                     }
                 });
 

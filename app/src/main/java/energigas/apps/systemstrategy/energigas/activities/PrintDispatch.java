@@ -61,7 +61,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     private Dispatch mainDispatch;
 
     //******* Widgets  to see preview print
-
+/*
     @BindView(R.id.textNombre)
     TextView textNombre;
     @BindView(R.id.textDireccin)
@@ -95,7 +95,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.textSerieTanque)
     TextView textSerieTanque;
     @BindView(R.id.textNroTransporte)
-    TextView textNroTransporte;
+    TextView textNroTransporte;*/
 
 
     private static final String TAG = "PrintDispatch";
@@ -106,23 +106,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_print_dispatch);
         mainDispatch = new Dispatch(1, "Energigas SAC", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro", "(511) 2033001", "Lima", "Peru", "20145852413", "10 - San Fernando", "Calle Santa Teresa 171 Urbanizacion Los Sauces - Ate", "-12.5484, -71.9824", "PE-7845", "Julio Paredes", "F001-000008", "26/07/2016", "8:00 am", "9:00 am", "5000", "3000", "2000", "100%", "60%", "TANK-002825", "143810","198554214");
         ButterKnife.bind(this);
-        textNombre.setText(mainDispatch.getNameOfDispacth());
-        textDireccin.setText(mainDispatch.getAddressOfDispacth());
-        textInstalacion.setText(mainDispatch.getInstalationOdDispatch());
-        textCoordenadas.setText(mainDispatch.getCoordinatesLatLon());
-        textPlaca.setText(mainDispatch.getNumberPlate());
-        textChofer.setText(mainDispatch.getDriverCar());
-        textNroComprobante.setText(mainDispatch.getNumberPayment());
-        textHoraInicio.setText(mainDispatch.getTimeStart());
-        textHoraFin.setText(mainDispatch.getTimeEnd());
-        textContadorInicial.setText(mainDispatch.getCountStart());
-        textContadorFinal.setText(mainDispatch.getCountEnd());
-        textCantidadDespachada.setText(mainDispatch.getQuantityDispatch());
-        textPorInicial.setText(mainDispatch.getPercentageStart());
-        textPorFinal.setText(mainDispatch.getPercentageEnd());
-        textSerieTanque.setText(mainDispatch.getSerialTank());
-        textNroTransporte.setText(mainDispatch.getNumberTransport());
-        textFecha.setText(mainDispatch.getDate());
+
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
