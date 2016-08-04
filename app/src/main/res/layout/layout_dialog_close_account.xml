@@ -14,7 +14,7 @@
             android:gravity="center"
             android:textSize="@dimen/text_size_24"
             android:textColor="@color/white"
-            android:text="@string/main_dialog_title"
+            android:text="@string/main_dialog_title_close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -29,49 +29,49 @@
 
 
 
-        <android.support.design.widget.TextInputLayout
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
+
+        <EditText
+            android:id="@+id/textKmEnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:hint="@string/main_dialog_text_km_end"
+            android:inputType="numberDecimal"
+            />
+    </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/textKmEnd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/main_dialog_text_km_start"
-                android:inputType="numberDecimal"
-                />
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
-        <android.support.design.widget.TextInputLayout
+        <EditText
+            android:id="@+id/textWeightEnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:hint="@string/main_dialog_text_weight_end"
+            android:inputType="numberDecimal"
+            />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
-            <EditText
-                android:id="@+id/textWeightEnd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/main_dialog_text_weight_start"
-                android:inputType="numberDecimal"
-                />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+        <EditText
+            android:id="@+id/textPercentEnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/textPercentEnd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/main_dialog_text_percent_start"
-                android:inputType="numberDecimal"
-                />
-        </android.support.design.widget.TextInputLayout>
+            android:hint="@string/main_dialog_text_percent_end"
+            android:inputType="numberDecimal"
+            />
+    </android.support.design.widget.TextInputLayout>
 
 
     </LinearLayout>

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,7 +40,6 @@ import energigas.apps.systemstrategy.energigas.entities.Station;
 import energigas.apps.systemstrategy.energigas.fragments.OrdersFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
-import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener, OrdersFragment.OnOrdersClickListener {
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         initViews();
         agent = Agent.getAgent();
 
-        headerLayout =  navigationView.inflateHeaderView(R.layout.nav_header);
+        headerLayout = navigationView.inflateHeaderView(R.layout.nav_header);
 
 
     }
@@ -76,37 +78,42 @@ public class MainActivity extends AppCompatActivity
     private void showDialogAccount() {
 
         View viewDialog = getLayoutInflater().inflate(R.layout.layout_dialog_open_account, null);
+
+        final ContentLoadingProgressBar loadingProgressBar = (ContentLoadingProgressBar) viewDialog.findViewById(R.id.loanding);
+
+
+        final ViewGroup viewGroupInfo = (ViewGroup) viewDialog.findViewById(R.id.viewinfo);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(getString(R.string.main_dialog_title));
+        // builder.setTitle(getString(R.string.main_dialog_title));
         builder.setView(viewDialog);
         builder.setCancelable(false);
-        String positiveText = getString(android.R.string.ok);
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // positive button logic
-                        // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
-                        setTitle(agent.getmRuta());
-                        TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
-                        TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
-                        nameAgent.setText(agent.getmName());
-                        rutaAgent.setText(agent.getmRuta());
+        final Button buttonAcceptar = (Button) viewDialog.findViewById(R.id.btn_ok);
+        final Button buttonCancel = (Button) viewDialog.findViewById(R.id.btn_cancel);
 
-                        new AsyntaskOpenAccount(MainActivity.this,fab).execute();
-                    }
-                });
-
-        String negativeText = getString(android.R.string.cancel);
-        builder.setNegativeButton(negativeText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // negative button logic
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
+        buttonAcceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // positive button logic
+                // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
+                setTitle(agent.getmRuta());
+                TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
+                TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
+                nameAgent.setText(agent.getmName());
+                rutaAgent.setText(agent.getmRuta());
+                viewGroupInfo.setVisibility(View.GONE);
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                buttonAcceptar.setVisibility(View.GONE);
+                buttonCancel.setVisibility(View.GONE);
+                new AsyntaskOpenAccount(MainActivity.this, fab, dialog).execute();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
         // display dialog
         dialog.show();
     }
@@ -233,10 +240,54 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_close_account:
                 showToast(item);
-                startActivity(new Intent(this, LoginActivity.class));
+                closeAccount();
+                //startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
         return true;
+    }
+
+    private void closeAccount() {
+
+        View viewDialog = getLayoutInflater().inflate(R.layout.layout_dialog_close_account, null);
+
+        final ContentLoadingProgressBar loadingProgressBar = (ContentLoadingProgressBar) viewDialog.findViewById(R.id.loanding);
+
+
+        final ViewGroup viewGroupInfo = (ViewGroup) viewDialog.findViewById(R.id.viewinfo);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        // builder.setTitle(getString(R.string.main_dialog_title));
+        builder.setView(viewDialog);
+        builder.setCancelable(false);
+        final Button buttonAcceptar = (Button) viewDialog.findViewById(R.id.btn_ok);
+        final Button buttonCancel = (Button) viewDialog.findViewById(R.id.btn_cancel);
+
+        final AlertDialog dialog = builder.create();
+        buttonAcceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // positive button logic
+                // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
+                setTitle(agent.getmRuta());
+                TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
+                TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
+                nameAgent.setText(agent.getmName());
+                rutaAgent.setText(agent.getmRuta());
+                viewGroupInfo.setVisibility(View.GONE);
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                buttonAcceptar.setVisibility(View.GONE);
+                buttonCancel.setVisibility(View.GONE);
+                new AsyntaskOpenAccount(MainActivity.this, fab, dialog).execute();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+        // display dialog
+        dialog.show();
     }
 
     private void setCurrentItem(int position) {

@@ -274,6 +274,7 @@
 
     <!--####-->
     <string name="main_dialog_title">Abriendo caja</string>
+
     <string name="main_dialog_text_km_start">Kilometraje inicial</string>
     <string name="main_dialog_text_weight_start">Peso inicial</string>
     <string name="main_dialog_text_percent_start">Porcentaje inicial</string>
@@ -349,4 +350,10 @@
         "Visualize este documento en .\n"
         "www.energigas.com"
     </string>
+
+
+    <string name="main_dialog_title_close">Cerrar caja</string>
+    <string name="main_dialog_text_km_end">Kilometraje Final</string>
+    <string name="main_dialog_text_weight_end">Peso Final</string>
+    <string name="main_dialog_text_percent_end">Porcentaje Final</string>
 </resources>
