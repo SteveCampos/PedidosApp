@@ -1,13 +1,15 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,17 +19,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.RecyclerTouchListener;
+import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
+import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
-import energigas.apps.systemstrategy.energigas.adapters.StationProductsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
-import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 
 
 public class StationDispatchsFragment extends Fragment implements ActionMode.Callback, StationDispatchsAdapter.OnStationDispatchClickListener {
@@ -102,6 +102,8 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
             case 0:
                 if (mActionMode != null)
                     onListItemSelect(position);
+                else
+                    startActivity(new Intent(getActivity(), DispatchActivity.class));
                 break;
             case 1:
                 onListItemSelect(position);
@@ -145,7 +147,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
             mActionMode.finish();
         if (mActionMode != null)
             //set action mode title on item selection
-            mActionMode.setTitle(String.valueOf(countSelected) + " selected");
+            mActionMode.setTitle(String.valueOf(countSelected) + " Despachos");
     }
 
     //Set action mode null after use
@@ -185,7 +187,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.print:
-                print();
+                createAndShowAlertDialog();
                 onDestroyActionMode(mActionMode);
                 return true;
             default:
@@ -201,7 +203,29 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
 
 
     private void print() {
-        Snackbar.make(recyclerView, adapter.getSelectedCount() + " Items Selected", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(recyclerView, adapter.getSelectedCount() + " Despachos Seleccionados", Snackbar.LENGTH_LONG).show();
+        startActivity(new Intent(getActivity(), PrintFacturaActivity.class));
+    }
+
+    private void createAndShowAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Generar Factura");
+        builder.setMessage(adapter.getSelectedCount() + " Despachos Seleccionados");
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //TODO
+                dialog.dismiss();
+                print();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //TODO
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

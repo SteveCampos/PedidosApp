@@ -42,7 +42,10 @@ import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, StationFragment.OnStationClickListener, OrdersFragment.OnOrdersClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        ViewPager.OnPageChangeListener,
+        StationFragment.OnStationClickListener{
+        //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawer)
     DrawerLayout drawer;
     Agent agent;
-    View headerLayout;
 
 
     @Override
@@ -68,11 +70,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
-        agent = Agent.getAgent();
-
-        headerLayout = navigationView.inflateHeaderView(R.layout.nav_header);
-
-
     }
 
     private void showDialogAccount() {
@@ -97,8 +94,8 @@ public class MainActivity extends AppCompatActivity
                 // positive button logic
                 // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
                 setTitle(agent.getmRuta());
-                TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
-                TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
+                TextView nameAgent = (TextView) navigationView.findViewById(R.id.nvtxtagente);
+                TextView rutaAgent = (TextView) navigationView.findViewById(R.id.nvtxtruta);
                 nameAgent.setText(agent.getmName());
                 rutaAgent.setText(agent.getmRuta());
                 viewGroupInfo.setVisibility(View.GONE);
@@ -119,6 +116,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initViews() {
+        agent = Agent.getAgent();
         // Adding Toolbar to Main screen
         setSupportActionBar(toolbar);
         // Setting ViewPager for each Tabs
@@ -150,15 +148,17 @@ public class MainActivity extends AppCompatActivity
 
     private void setupTabIcons(TabLayout tabLayout) {
         TabLayout.Tab tabStations = tabLayout.getTabAt(0);
-        TabLayout.Tab tabOrders = tabLayout.getTabAt(1);
-        TabLayout.Tab tabPlan = tabLayout.getTabAt(2);
+        //TabLayout.Tab tabOrders = tabLayout.getTabAt(1);
+        TabLayout.Tab tabPlan = tabLayout.getTabAt(1);
 
         if (tabStations != null) {
             tabStations.setIcon(R.drawable.ic_gas_station);
         }
+        /*
         if (tabOrders != null) {
             tabOrders.setIcon(R.drawable.ic_gas_filter);
         }
+        */
         if (tabPlan != null) {
             tabPlan.setIcon(R.drawable.ic_calendar);
         }
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new StationFragment(), getString(R.string.estb_title_name));
-        adapter.addFragment(new OrdersFragment(), getString(R.string.order_title_name));
+        //adapter.addFragment(new OrdersFragment(), getString(R.string.order_title_name));
         adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
@@ -222,11 +222,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_station:
                 setCurrentItem(0);
                 break;
+            /*
             case R.id.nav_orders:
                 setCurrentItem(1);
-                break;
+                break;*/
             case R.id.nav_plan:
-                setCurrentItem(2);
+                setCurrentItem(1);
                 break;
             case R.id.nav_expenses:
                 startActivity(new Intent(this, ExpensesActivity.class));
@@ -242,6 +243,9 @@ public class MainActivity extends AppCompatActivity
                 showToast(item);
                 closeAccount();
                 //startActivity(new Intent(this, LoginActivity.class));
+                break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
         return true;
@@ -269,8 +273,8 @@ public class MainActivity extends AppCompatActivity
                 // positive button logic
                 // new AsyAbrirCajaLiquidacion(activity,fabOpenSettlement).execute();
                 setTitle(agent.getmRuta());
-                TextView nameAgent = (TextView) headerLayout.findViewById(R.id.nvtxtagente);
-                TextView rutaAgent = (TextView) headerLayout.findViewById(R.id.nvtxtruta);
+                TextView nameAgent = (TextView) navigationView.findViewById(R.id.nvtxtagente);
+                TextView rutaAgent = (TextView) navigationView.findViewById(R.id.nvtxtruta);
                 nameAgent.setText(agent.getmName());
                 rutaAgent.setText(agent.getmRuta());
                 viewGroupInfo.setVisibility(View.GONE);
@@ -334,11 +338,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(new Intent(MainActivity.this, MainStationActivity.class));
     }
 
+    /*
     @Override
     public void onOrdersClickListener(Order order, View view) {
         //Snackbar.make(fab, order.getProductsName(), Snackbar.LENGTH_LONG).show();
         startActivity(new Intent(this, OrderActivity.class));
     }
+    */
 
     private static class Adapter extends FragmentPagerAdapter {
         private static final String TAG = "FragmentPagerAdapter";

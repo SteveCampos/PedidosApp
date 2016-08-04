@@ -44,8 +44,7 @@ public class Agent {
 
     public static Agent getAgent(){
 
-        Agent agentList = new Agent("Kike Rojas Palomino","kikerojash@gmail.com","Dia - Ruta");
-
+        Agent agentList = new Agent("Kike Rojas Palomino","kikerojash@gmail.com","Martes - Piura");
         return agentList;
     }
 

@@ -45,5 +45,22 @@
                 android:title="@string/action_close_account" />
         </menu>
     </item>
+    <item android:title="@string/title_activity_settings">
+        <menu>
+            <item
+                android:checkable="false"
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_sync"
+                android:tint="@color/colorAccent"
+                android:title="@string/title_activity_settings" />
+            <item
+                android:checkable="false"
+                android:id="@+id/nav_about_us"
+                android:icon="@drawable/ic_info_black_24dp"
+                android:tint="@color/colorAccent"
+                android:title="@string/action_abous_us" />
+        </menu>
+    </item>
+
 
 </menu>

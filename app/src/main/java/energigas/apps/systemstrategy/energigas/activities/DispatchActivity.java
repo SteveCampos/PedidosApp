@@ -80,7 +80,7 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setTitle(R.string.wizard_title_activity);
+            //supportActionBar.setTitle(R.string.wizard_title_activity);
         }
     }
 
@@ -92,6 +92,7 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
 
     @OnClick(R.id.fab)
     void dispatch(){
+        finish();
         startActivity(new Intent(DispatchActivity.this, PrintDispatch.class));
     }
 
