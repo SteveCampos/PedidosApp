@@ -25,6 +25,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
 
 
 
+    private OnAddnewExpenses listenerAdd;
     // Store a member variable for the contacts
     private List<Expenses> mListExpenses;
     // Store the context for easy access
@@ -37,14 +38,26 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
     public OnExpensesClickListener listener;
 
 
-    private TextView tvtotal;
-    private Activity activity;
-
-    public ExpensesAdapter(List<Expenses> mListExpenses, Activity mactivity, OnExpensesClickListener listener,TextView  tvtotal) {
+    public ExpensesAdapter(List<Expenses> mListExpenses, Activity mactivity, OnExpensesClickListener listener,OnAddnewExpenses listenerAdd) {
         this.mListExpenses = mListExpenses;
         this.mactivity = mactivity;
         this.listener = listener;
-        this.tvtotal = tvtotal;
+        this.listenerAdd = listenerAdd;
+    }
+
+    public void addnewExpenses(){
+        mListExpenses.add(new Expenses("Boleta","10/20/11","cafecito",10.20,10.20));
+        int position = getItemCount();
+        notifyItemInserted(--position);//
+        listenerAdd.onAddnewExpenses("10/20/11", getTotal());
+    }
+
+    public Double getTotal(){
+        Double total = 0.0;
+        for (int i=0; i < mListExpenses.size(); i++){
+            total += mListExpenses.get(i).getmTotal();
+        }
+        return total;
     }
 
     @Override
@@ -109,48 +122,9 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
         }
     }
 
-
-
-
-
-    /****************************VISTA DIALOGGG**************************************************/
-    public void inflate_dialog() {
-
-        final View layout_dialog_expenses = View.inflate(activity, R.layout.fragment_dialog_new_expense, null);
-        final Button btnsave = (Button) layout_dialog_expenses.findViewById(R.id.btn_save);
-
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                activity);
-
-        // set title
-        alertDialogBuilder.setTitle("New Expenses");
-
-        // set dialog message
-        final AlertDialog.Builder builder = alertDialogBuilder
-                .setView(layout_dialog_expenses)
-                .setCancelable(true);
-        btnsave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Expenses expenses=new Expenses("Comida","20/10/16","arroz con pollo",20.0,10.0);
-                mListExpenses.add(expenses);
-
-
-                double cantidadtotal=0.00;
-                for(Expenses item: mListExpenses){
-                    cantidadtotal=cantidadtotal+item.getmTotal();
-                }
-                tvtotal.setText(cantidadtotal+"");
-                Log.d("inflate","cantidadtotat:"+cantidadtotal);
-
-
-            }
-        });
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
-
+    public interface OnAddnewExpenses{
+        void onAddnewExpenses (String date,Double total);
     }
+
+
 }

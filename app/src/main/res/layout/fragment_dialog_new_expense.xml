@@ -6,31 +6,12 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_title"
-        style="@style/ExpenseTrackerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:text="@string/add_new_expense"
-        android:textSize="@dimen/text_size_20" />
-
-    <Button
-        android:id="@+id/btn_date"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:elevation="@dimen/elevation_dp"
-        android:textColor="@color/dark_grey"
-        android:textSize="@dimen/text_size_20" />
-
     <Spinner
         android:id="@+id/sp_categories"
-        style="@style/ExpenseTrackerEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dimen_20dp"
+        android:entries="@array/spinnerItemsExpeneses"
         android:layout_marginRight="@dimen/dimen_20dp"
         android:layout_marginTop="@dimen/dimen_20dp" />
 
@@ -83,10 +64,12 @@
             android:layout_width="@dimen/dimen_12_10dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:text="@string/cancel" />
 
         <Button
             android:id="@+id/btn_save"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="@dimen/dimen_12_10dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_10dp"

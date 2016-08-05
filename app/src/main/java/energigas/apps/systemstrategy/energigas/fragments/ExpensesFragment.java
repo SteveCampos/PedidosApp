@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,18 +23,20 @@ import energigas.apps.systemstrategy.energigas.entities.Expenses;
  * Created by kikerojas on 30/07/2016.
  */
 
-public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpensesClickListener{
+
+public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpensesClickListener,ExpensesAdapter.OnAddnewExpenses{
 
 
     public OnExpensesClickListener listener;
 
+    private OnAddnewExpenses listenerAdd;
 
     private RecyclerView recyclerView;
 
     public ExpensesFragment() {
 
     }
-    private TextView tvtotal;
+    ExpensesAdapter adapter;
 
 
 
@@ -45,7 +48,7 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_expenses);
 
-        ExpensesAdapter adapter = new ExpensesAdapter(Expenses.getListExpenses(),getActivity(),this,tvtotal);
+        adapter = new ExpensesAdapter(Expenses.getListExpenses(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -58,7 +61,38 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
         Snackbar.make(view,expenses.getmType(),Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onAddnewExpenses(String date, Double total) {
+        listenerAdd.onAddnewExpenses(date,total);
+    }
+
     public interface OnExpensesClickListener{
         void onExpensesClickListener(Expenses expenses, View view);
+    }
+
+    public void  addnewExpenses(){
+        adapter.addnewExpenses();
+    }
+
+    public interface OnAddnewExpenses{
+        void onAddnewExpenses (String date,Double total);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnAddnewExpenses){
+            listenerAdd = (OnAddnewExpenses) context;
+        }else{
+            throw new RuntimeException(context.toString() +
+                    " must implement OnAddnewExpenses");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listenerAdd = null;
     }
 }

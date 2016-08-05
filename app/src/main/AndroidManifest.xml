@@ -68,7 +68,9 @@
         <activity
             android:name=".activities.ExpensesActivity"
             android:label="@string/activity_expenses_account"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".activities.ChargesActivity"
             android:label="@string/activity_charges_account"

@@ -95,15 +95,14 @@
             android:text="Cancelar"
             android:id="@+id/btn_cancel"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:textColor="@color/colorAccent"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         <Button
             android:id="@+id/btn_ok"
             android:text="Guardar"
             android:layout_weight="1"
-            android:background="@color/white"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

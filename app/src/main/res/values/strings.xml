@@ -417,6 +417,13 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="spinnerItemsExpeneses">
+        <item>item1</item>
+        <item>item2</item>
+        <item>item3</item>
+        <item>item4</item>
+    </string-array>
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
