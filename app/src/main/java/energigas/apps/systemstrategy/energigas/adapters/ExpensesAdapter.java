@@ -45,12 +45,13 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
         this.listenerAdd = listenerAdd;
     }
 
-    public void addnewExpenses(){
-        mListExpenses.add(new Expenses("Boleta","10/20/11","cafecito",10.20,10.20));
+    public void addnewExpenses(Expenses expenses){
+        mListExpenses.add(expenses);
         int position = getItemCount();
-        notifyItemInserted(--position);//
+        notifyItemInserted(--position);//3 o 2 position
         listenerAdd.onAddnewExpenses("10/20/11", getTotal());
     }
+
 
     public Double getTotal(){
         Double total = 0.0;

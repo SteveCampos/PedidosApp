@@ -1,5 +1,4 @@
 package energigas.apps.systemstrategy.energigas.activities;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,20 +17,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
-import energigas.apps.systemstrategy.energigas.adapters.ExpensesAdapter;
+
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
 import energigas.apps.systemstrategy.energigas.fragments.ExpensesFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentInventory;
-import energigas.apps.systemstrategy.energigas.fragments.FragmentSummary;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -47,18 +40,17 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
     TabLayout tabLayout;
     @BindView(R.id.tv_total)
     TextView txtotal;
+    @BindView(R.id.tv_date)
+    TextView txtdate;
     @BindView(R.id.btndialog)
     FloatingActionButton btndialog;
-    private Activity activity;
 
     private CustomTabsAdapter tabsAdapter;
     AlertDialog alertDialog;
 
-    //private List<Expenses> mListExpenses;
 
-    private List<Expenses> mListExpenses = new ArrayList<>();
 
-    private TextView tvtotal;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +58,6 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_account_expenses);
         ButterKnife.bind(this);
         btndialog.setOnClickListener(this);
-        tvtotal=(TextView)findViewById(R.id.tv_total);
         setTabsAdapterFragment();
         setToolbar();
         setupCollapsingToolbar();
@@ -122,15 +113,6 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
-
-
-//    @Override
-//    public void onExpensesClickListener(Expenses expenses, View view) {
-//        double cantidad=0.0;
-//        cantidad= cantidad+expenses.getmSbTotal();
-//        txtotal.setText("S/."+Utils.formatDouble(cantidad));
-//    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -139,12 +121,9 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
                 inflate_dialog();
                 break;
             case R.id.btn_save:
-                alertDialog.dismiss();
-                Snackbar.make(btndialog,"Expense Activity",Snackbar.LENGTH_LONG).show();
-                Fragment expensesFragment = getFragment(0); //Capturamos la posicion del fragmento
-                if (expensesFragment !=null){
-                    ((ExpensesFragment) expensesFragment).addnewExpenses(); //obtenemos la instancia del fragmento
-                }
+                alertDialog = null;
+
+                inflate_dialog();
                 break;
             case R.id.btn_cancel:
                 alertDialog.dismiss();
@@ -164,9 +143,10 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
 
         final View layout_dialog_expenses = View.inflate(this, R.layout.fragment_dialog_new_expense, null);
 
-        final EditText description =(EditText)layout_dialog_expenses.findViewById(R.id.et_description);
         final Button btnsave = (Button) layout_dialog_expenses.findViewById(R.id.btn_save);
         final Button btn_cancel = (Button) layout_dialog_expenses.findViewById(R.id.btn_cancel);
+        final EditText txtttotal = (EditText) layout_dialog_expenses.findViewById(R.id.et_total);
+        final EditText txtdgdescription = (EditText) layout_dialog_expenses.findViewById(R.id.et_description);
 
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -182,8 +162,39 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
         btnsave.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
 
+        btnsave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+
+                Fragment expensesFragment = getFragment(0); //Capturamos la posicion del fragmento
+
+                if (txtdgdescription.getText().toString().equals("")) {
+                    txtdgdescription.setError("Ingrese Descripcion");
+
+                } else if (txtttotal.getText().toString().equals("")) {
+                    txtttotal.setError("Ingrese Total");
+                } else {
+                    Expenses expenses = new Expenses(
+
+                            "BOLETA",
+                            "05/08/2016",
+                            txtdgdescription.getText().toString(),
+                            100.0,
+                            Double.valueOf(txtttotal.getText().toString())
+                    );
+                    if (expensesFragment != null) {
+                        ((ExpensesFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
+                    }
+
+                    alertDialog.dismiss();
+                }
+            }
+
+        });
         // create alert dialog
-         alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
 
@@ -192,7 +203,9 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onAddnewExpenses(String date, Double total) {
-        txtotal.setText(Utils.formatDouble(total));
+        txtotal.setText("S/."+Utils.formatDouble(total));
+        txtdate.setText(date);
+        Log.d("DATE","date "+date + total);
 
     }
 }

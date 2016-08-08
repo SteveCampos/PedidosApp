@@ -70,8 +70,9 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
         void onExpensesClickListener(Expenses expenses, View view);
     }
 
-    public void  addnewExpenses(){
-        adapter.addnewExpenses();
+
+    public void  addnewExpenses(Expenses expenses){
+        adapter.addnewExpenses(expenses);
     }
 
     public interface OnAddnewExpenses{
