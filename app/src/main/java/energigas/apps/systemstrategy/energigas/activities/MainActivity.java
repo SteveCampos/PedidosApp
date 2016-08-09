@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
         StationFragment.OnStationClickListener{
-        //OrdersFragment.OnOrdersClickListener
+        //,OrdersFragment.OnOrdersClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 

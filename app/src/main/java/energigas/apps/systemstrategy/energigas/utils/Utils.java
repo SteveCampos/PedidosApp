@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -16,5 +18,10 @@ public class Utils {
 
     public static String formatDouble(Double d){
         return String.format(Locale.ENGLISH, "%.2f", d);
+    }
+
+    public static String getNameOfDay(Date date){
+        SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
+        return Utils.capitalize(parseFormat.format(date));
     }
 }

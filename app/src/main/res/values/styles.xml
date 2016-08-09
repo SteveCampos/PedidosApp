@@ -13,8 +13,9 @@
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <!--ACTION MODE-->
         <!--  For Custom Action Mode Background Color/Drawable -->
-        <item name="actionModeBackground">@color/colorAccent </item> (or)
-        <item name="android:actionModeBackground">@color/colorAccent </item>
+        <item name="actionModeBackground">@color/colorAccent</item>
+        (or)
+        <item name="android:actionModeBackground">@color/colorAccent</item>
         <!--  It should be true otherwise action mode will not overlay toolbar -->
         <item name="windowActionModeOverlay">true</item>
 

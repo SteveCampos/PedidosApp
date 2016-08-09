@@ -69,9 +69,7 @@
         <activity
             android:name=".activities.ExpensesActivity"
             android:label="@string/activity_expenses_account"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.ChargesActivity"
             android:label="@string/activity_charges_account"
@@ -87,15 +85,24 @@
         <activity
             android:name=".activities.LoadInventory"
             android:label="@string/title_activity_load_inventory"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="energigas.apps.systemstrategy.energigas.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.StationOrderActivity"
+            android:label="@string/title_activity_station_order"
+            android:parentActivityName=".activities.MainStationActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="energigas.apps.systemstrategy.energigas.activities.MainStationActivity" />
         </activity>
     </application>
 

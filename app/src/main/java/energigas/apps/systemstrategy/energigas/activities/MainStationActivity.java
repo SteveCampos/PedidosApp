@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,15 +19,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Order;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 import energigas.apps.systemstrategy.energigas.fragments.ChargesFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
+import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment;
 
-public class MainStationActivity extends AppCompatActivity implements OrderedProductFragment.OnOrderedProductClickListener, OrderedProductFragment.OnDispatchClickListener{
+public class MainStationActivity extends AppCompatActivity implements OrderedProductFragment.OnOrderedProductClickListener, OrderedProductFragment.OnDispatchClickListener,
+        StationOrderFragment.OnStationOrderClickListener {
 
 
     @BindView(R.id.toolbar)
@@ -65,6 +69,7 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new FragmentStationInformation(), getString(R.string.title_activity_main_station));
+        tabsAdapter.addFragment(new StationOrderFragment(), getString(R.string.order_title_name));
         tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
         tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
         tabsAdapter.addFragment(new ChargesFragment(), getString(R.string.activity_charges_account));
@@ -134,5 +139,8 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
     }
 
 
-
+    @Override
+    public void onStationOrderClickListener(Order order) {
+        startActivity(new Intent(MainStationActivity.this, StationOrderActivity.class));
+    }
 }
