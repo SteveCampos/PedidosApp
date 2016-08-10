@@ -14,6 +14,9 @@ public class Charges {
     private String mDate;
     private Double mTotal;
 
+    public Charges (){
+
+    }
     public Charges(String mSerie, String mComprobante, String mDate, Double mTotal) {
         this.mSerie = mSerie;
         this.mComprobante = mComprobante;
@@ -53,21 +56,6 @@ public class Charges {
         this.mTotal = mTotal;
     }
 
-    //    public static List<Charges> getListCharges() {
-//        List<Charges> chargesList = new ArrayList<>();
-//
-//        Charges charges = new Charges(
-//                new Station("Agropacking Export S.A.", "car. panamericana norte km. 1076", "2.0", "1.4 km", "externo"),
-//                "01/08/2016",
-//                26.000,
-//                "Boleta"
-//        );
-//        for (int i = 0; i < 3; i++) {
-//            chargesList.add(charges);
-//        }
-//        return chargesList;
-//
-//    }
 
     public static List<Charges> getCharges() {
         List<Charges> chargesList = new ArrayList<>();
@@ -76,6 +64,7 @@ public class Charges {
         chargesList.add(new Charges("00001000","B800","12/07/2016",160.0));
         return chargesList;
     }
+
 
 
 }

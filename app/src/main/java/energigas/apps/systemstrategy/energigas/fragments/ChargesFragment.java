@@ -21,7 +21,7 @@ import energigas.apps.systemstrategy.energigas.entities.Expenses;
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesFragment extends Fragment implements ChargesAdapter.OnChargesClickListener{
+public class ChargesFragment extends Fragment implements ChargesAdapter.OnChargesClickListener {
 
     public OnChargesClickListener listener;
 
@@ -31,16 +31,17 @@ public class ChargesFragment extends Fragment implements ChargesAdapter.OnCharge
     public ChargesFragment() {
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragmen_charges, container, false);
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
-         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_charges);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
 
-          ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(),getActivity(),this);
-          recyclerView.setAdapter(adapter);
+        ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(), this);
+        recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
@@ -48,9 +49,10 @@ public class ChargesFragment extends Fragment implements ChargesAdapter.OnCharge
 
     @Override
     public void onChargesClickListener(Charges charges, View view) {
-        Snackbar.make(view,charges.getmDate(),Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, charges.getmDate(), Snackbar.LENGTH_LONG).show();
     }
-    public interface OnChargesClickListener{
+
+    public interface OnChargesClickListener {
         void onCharfesClickListener(Charges charges, View view);
     }
 }

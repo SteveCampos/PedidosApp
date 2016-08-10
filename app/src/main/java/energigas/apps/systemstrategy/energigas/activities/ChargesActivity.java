@@ -39,7 +39,7 @@ public class ChargesActivity extends AppCompatActivity implements ChargesAdapter
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_charges);
 
-        ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(),getApplicationContext(),this);
+        ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(),this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

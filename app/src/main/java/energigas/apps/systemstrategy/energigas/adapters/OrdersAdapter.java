@@ -18,13 +18,14 @@ import java.util.Locale;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Order;
+import energigas.apps.systemstrategy.energigas.holders.OrdesHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Kike on 21/07/2016.
  */
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
+public class OrdersAdapter extends RecyclerView.Adapter<OrdesHolder> {
 
     // Store a member variable for the contacts
     private List<Order> mListOrders;
@@ -32,9 +33,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private Context mContext;
 
 
-
-
-    public interface OnOrdersClickListener{
+    public interface OnOrdersClickListener {
         void onOrdersClickListener(Order order, View view);
     }
 
@@ -47,24 +46,58 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     }
 
 
-
-
-
     @Override
-    public OrdersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrdesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_orders, parent, false);
         // Return a new holder instance
-        return new OrdersAdapter.ViewHolder(contactView);
+        return new OrdesHolder(contactView);
     }
 
     @Override
-    public void onBindViewHolder(OrdersAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(OrdesHolder holder, int position) {
         // Get the data model based on position
         //
-        holder.bind(mListOrders.get(position), mContext, listener);
+        //holder.bind(mListOrders.get(position), mContext, listener);
+
+        final Order order = mListOrders.get(position);
+
+        holder.mProducts.setText(Utils.capitalize(order.getProductsName()));
+        holder.mAddress.setText(Utils.capitalize(order.getStation().getEstVName()));
+        holder.mLocation.setText(mContext.getString(R.string.estable_default_marker));
+        holder.mClock.setText(new SimpleDateFormat("hh:mm", Locale.ENGLISH).format(new Date(order.getEndTime())));
+
+        holder.btnDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onOrdersClickListener(order, view);
+            }
+        });
+        holder.imageViewStation.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(order.getStation().getEstTipoOperacion())));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onOrdersClickListener(order, view);
+            }
+        });
     }
+
+
+    int getImage(String tipoestacion) {
+        switch (tipoestacion) {
+            case "externo":
+                return R.drawable.ic_gas_station_c;
+            case "interno":
+                return R.drawable.logo;
+            default:
+                return R.drawable.logo;
+        }
+    }
+
+
+
+
 
     @Override
     public int getItemCount() {
@@ -73,64 +106,64 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
-//        TextView nameTextView;
-        TextView mProducts;
-        TextView mAddress;
-        TextView mLocation;
-        TextView mClock;
-        ImageView imageViewStation;
-        AppCompatButton btnDetails;
-
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
-        ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
-            super(itemView);
-            mProducts = (TextView) itemView.findViewById(R.id.txtproducts);
-            mAddress=(TextView) itemView.findViewById(R.id.txtaddress);
-            mLocation=(TextView) itemView.findViewById(R.id.txtlocation);
-            mClock=(TextView) itemView.findViewById(R.id.txtclock);
-            imageViewStation = (ImageView)itemView.findViewById(R.id.imageViewStation);
-            btnDetails = (AppCompatButton) itemView.findViewById(R.id.btnDetails);
-
-
-        }
-        void bind(final Order order, Context context, final OnOrdersClickListener listener) {
-            mProducts.setText(Utils.capitalize(order.getProductsName()));
-            mAddress.setText(Utils.capitalize(order.getStation().getEstVName()));
-            mLocation.setText(context.getString(R.string.estable_default_marker));
-            mClock.setText(new SimpleDateFormat("hh:mm", Locale.ENGLISH).format(new Date(order.getEndTime())));
-
-            btnDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onOrdersClickListener(order, view);
-                }
-            });
-            imageViewStation.setImageDrawable(ContextCompat.getDrawable(context, getImage(order.getStation().getEstTipoOperacion())));
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onOrdersClickListener(order, view);
-                }
-            });
-        }
-
-        int getImage(String tipoestacion) {
-            switch (tipoestacion) {
-                case "externo":
-                    return R.drawable.ic_gas_station_c;
-                case "interno":
-                    return R.drawable.logo;
-                default:
-                    return R.drawable.logo;
-            }
-        }
-    }
+//    static class ViewHolder extends RecyclerView.ViewHolder {
+//        // Your holder should contain a member variable
+//        // for any view that will be set as you render a row
+////        TextView nameTextView;
+//        TextView mProducts;
+//        TextView mAddress;
+//        TextView mLocation;
+//        TextView mClock;
+//        ImageView imageViewStation;
+//        AppCompatButton btnDetails;
+//
+//        // We also create a constructor that accepts the entire item row
+//        // and does the view lookups to find each subview
+//        ViewHolder(View itemView) {
+//            // Stores the itemView in a public final member variable that can be used
+//            // to access the context from any ViewHolder instance.
+//            super(itemView);
+//            mProducts = (TextView) itemView.findViewById(R.id.txtproducts);
+//            mAddress=(TextView) itemView.findViewById(R.id.txtaddress);
+//            mLocation=(TextView) itemView.findViewById(R.id.txtlocation);
+//            mClock=(TextView) itemView.findViewById(R.id.txtclock);
+//            imageViewStation = (ImageView)itemView.findViewById(R.id.imageViewStation);
+//            btnDetails = (AppCompatButton) itemView.findViewById(R.id.btnDetails);
+//
+//
+//        }
+//        void bind(final Order order, Context context, final OnOrdersClickListener listener) {
+//            mProducts.setText(Utils.capitalize(order.getProductsName()));
+//            mAddress.setText(Utils.capitalize(order.getStation().getEstVName()));
+//            mLocation.setText(context.getString(R.string.estable_default_marker));
+//            mClock.setText(new SimpleDateFormat("hh:mm", Locale.ENGLISH).format(new Date(order.getEndTime())));
+//
+//            btnDetails.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onOrdersClickListener(order, view);
+//                }
+//            });
+//            imageViewStation.setImageDrawable(ContextCompat.getDrawable(context, getImage(order.getStation().getEstTipoOperacion())));
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onOrdersClickListener(order, view);
+//                }
+//            });
+//        }
+//
+//        int getImage(String tipoestacion) {
+//            switch (tipoestacion) {
+//                case "externo":
+//                    return R.drawable.ic_gas_station_c;
+//                case "interno":
+//                    return R.drawable.logo;
+//                default:
+//                    return R.drawable.logo;
+//            }
+//        }
+//    }
 
 
 }

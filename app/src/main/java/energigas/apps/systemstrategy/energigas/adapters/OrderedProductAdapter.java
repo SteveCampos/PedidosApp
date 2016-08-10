@@ -15,12 +15,13 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.holders.OrderedProductHolder;
 
 /**
  * Created by Steve on 22/07/2016.
  */
 
-public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAdapter.ViewHolder> implements DisptachAdapter.OnDispatchClickListener {
+public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductHolder> implements DisptachAdapter.OnDispatchClickListener {
 
     // Store a member variable for the list;
     private List<OrderProduct> orderProductList;
@@ -54,16 +55,16 @@ public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAd
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrderedProductHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_ordered_product, parent, false);
         // Return a new holder instance
-        return new ViewHolder(contactView);
+        return new OrderedProductHolder(contactView);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final OrderedProductHolder holder, final int position) {
 
 //            holder.bind(orderProductList.get(position), mContext, listener);
         TextView textViewOrderedProduct = holder.textViewProductOrdered;
@@ -101,38 +102,38 @@ public class OrderedProductAdapter extends RecyclerView.Adapter<OrderedProductAd
         return orderProductList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView textViewProductOrdered;
-        RecyclerView recyclerViewDisptaches;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            recyclerViewDisptaches = (RecyclerView) itemView.findViewById(R.id.recycler_view);
-            textViewProductOrdered = (TextView) itemView.findViewById(R.id.textView);
-        }
-/*
-        void bind(final OrderProduct orderedProduct, Context context, final OnOrderedProductClickListener listener){
-            textViewProductOrdered.setText(orderedProduct.getProductOrderedTitle());
-
-            //DISPLAY ITEM DISPATCHES IN HORIZONTAL MODE
-            LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-            recyclerViewDisptaches.setLayoutManager(layoutManager);
-
-            DisptachAdapter disptachAdapter = new DisptachAdapter(orderedProduct.getDispatchList(), context, (DisptachAdapter.OnDispatchClickListener) context);
-            recyclerViewDisptaches.setAdapter(disptachAdapter);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onOrderedProductClickListener(orderedProduct, view);
-                }
-            });
-
-        }
-*/
-    }
+//    static class ViewHolder extends RecyclerView.ViewHolder {
+//
+//        TextView textViewProductOrdered;
+//        RecyclerView recyclerViewDisptaches;
+//        public ViewHolder(View itemView) {
+//            super(itemView);
+//            recyclerViewDisptaches = (RecyclerView) itemView.findViewById(R.id.recycler_view);
+//            textViewProductOrdered = (TextView) itemView.findViewById(R.id.textView);
+//        }
+///*
+//        void bind(final OrderProduct orderedProduct, Context context, final OnOrderedProductClickListener listener){
+//            textViewProductOrdered.setText(orderedProduct.getProductOrderedTitle());
+//
+//            //DISPLAY ITEM DISPATCHES IN HORIZONTAL MODE
+//            LinearLayoutManager layoutManager
+//                    = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//
+//            recyclerViewDisptaches.setLayoutManager(layoutManager);
+//
+//            DisptachAdapter disptachAdapter = new DisptachAdapter(orderedProduct.getDispatchList(), context, (DisptachAdapter.OnDispatchClickListener) context);
+//            recyclerViewDisptaches.setAdapter(disptachAdapter);
+//
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onOrderedProductClickListener(orderedProduct, view);
+//                }
+//            });
+//
+//        }
+//*/
+//    }
     public void toggleSelection(int pos) {
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
