@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="@dimen/dimen_width_dialog_fragment"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
@@ -15,7 +16,7 @@
             android:textSize="@dimen/text_size_24"
             android:textColor="@color/white"
             android:text="@string/main_dialog_title"
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
@@ -36,7 +37,7 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/textKmEnd"
+                android:id="@+id/editTextKI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/main_dialog_text_km_start"
@@ -51,7 +52,7 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/textWeightEnd"
+                android:id="@+id/ediTextWI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/main_dialog_text_weight_start"
@@ -65,7 +66,7 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/textPercentEnd"
+                android:id="@+id/editTextPI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/main_dialog_text_percent_start"
@@ -78,8 +79,8 @@
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/loanding"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 

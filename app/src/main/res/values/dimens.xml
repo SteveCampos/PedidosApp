@@ -80,4 +80,9 @@
     <dimen name="dimen_10_10dp">100dp</dimen>
 
 
+    <!---->
+
+    <dimen name="dimen_width_dialog_fragment">800dp</dimen>
+
+
 </resources>

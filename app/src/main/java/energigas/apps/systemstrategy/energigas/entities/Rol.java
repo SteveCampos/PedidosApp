@@ -1,0 +1,101 @@
+package energigas.apps.systemstrategy.energigas.entities;
+
+/**
+ * Created by kelvi on 09/08/2016.
+ */
+
+public class Rol {
+    private int id;
+
+    private String nombre;
+
+    private boolean estado;
+
+    private int parentId;
+
+    private String fechaCreacion;
+
+    private String fechaActualizacion;
+
+    private int usuarioCreacion;
+
+    private int usuarioActualizacion;
+
+    public Rol() {
+    }
+
+    public Rol(int id, String nombre, boolean estado, int parentId, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.estado = estado;
+        this.parentId = parentId;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaActualizacion = fechaActualizacion;
+        this.usuarioCreacion = usuarioCreacion;
+        this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(String fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public int getUsuarioCreacion() {
+        return usuarioCreacion;
+    }
+
+    public void setUsuarioCreacion(int usuarioCreacion) {
+        this.usuarioCreacion = usuarioCreacion;
+    }
+
+    public int getUsuarioActualizacion() {
+        return usuarioActualizacion;
+    }
+
+    public void setUsuarioActualizacion(int usuarioActualizacion) {
+        this.usuarioActualizacion = usuarioActualizacion;
+    }
+}

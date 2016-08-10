@@ -1,0 +1,222 @@
+package energigas.apps.systemstrategy.energigas.entities;
+
+/**
+ * Created by kelvi on 10/08/2016.
+ */
+
+public class Establecimiento {
+    private int estIEstablecimientoId;
+
+    private String estVCodigo;
+
+    private String estVDescripcion;
+
+    private int estIClienteId;
+
+    private int ubId;
+
+    private int estICategoriaId;
+
+    private int estICanalId;
+
+    private String estVTelefono;
+
+    private String estVCelular;
+
+    private int estIUsuarioCreacion;
+
+    private String estDTFechaCreacion;
+
+    private int estIUsuarioActualizacion;
+
+    private String estDTFechaActualizacion;
+
+    private int estIEstadoId;
+
+    private int estIUsuarioAprobacion;
+
+    private String estDTFechaAprobacion;
+
+    private String estVObservacion;
+
+    private String estVKeyFireBase;
+
+    private String estVContacto;
+
+    public Establecimiento() {
+    }
+
+    public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto) {
+        this.estIEstablecimientoId = estIEstablecimientoId;
+        this.estVCodigo = estVCodigo;
+        this.estVDescripcion = estVDescripcion;
+        this.estIClienteId = estIClienteId;
+        this.ubId = ubId;
+        this.estICategoriaId = estICategoriaId;
+        this.estICanalId = estICanalId;
+        this.estVTelefono = estVTelefono;
+        this.estVCelular = estVCelular;
+        this.estIUsuarioCreacion = estIUsuarioCreacion;
+        this.estDTFechaCreacion = estDTFechaCreacion;
+        this.estIUsuarioActualizacion = estIUsuarioActualizacion;
+        this.estDTFechaActualizacion = estDTFechaActualizacion;
+        this.estIEstadoId = estIEstadoId;
+        this.estIUsuarioAprobacion = estIUsuarioAprobacion;
+        this.estDTFechaAprobacion = estDTFechaAprobacion;
+        this.estVObservacion = estVObservacion;
+        this.estVKeyFireBase = estVKeyFireBase;
+        this.estVContacto = estVContacto;
+    }
+
+    public int getEstIEstablecimientoId() {
+        return estIEstablecimientoId;
+    }
+
+    public void setEstIEstablecimientoId(int estIEstablecimientoId) {
+        this.estIEstablecimientoId = estIEstablecimientoId;
+    }
+
+    public String getEstVCodigo() {
+        return estVCodigo;
+    }
+
+    public void setEstVCodigo(String estVCodigo) {
+        this.estVCodigo = estVCodigo;
+    }
+
+    public String getEstVDescripcion() {
+        return estVDescripcion;
+    }
+
+    public void setEstVDescripcion(String estVDescripcion) {
+        this.estVDescripcion = estVDescripcion;
+    }
+
+    public int getEstIClienteId() {
+        return estIClienteId;
+    }
+
+    public void setEstIClienteId(int estIClienteId) {
+        this.estIClienteId = estIClienteId;
+    }
+
+    public int getUbId() {
+        return ubId;
+    }
+
+    public void setUbId(int ubId) {
+        this.ubId = ubId;
+    }
+
+    public int getEstICategoriaId() {
+        return estICategoriaId;
+    }
+
+    public void setEstICategoriaId(int estICategoriaId) {
+        this.estICategoriaId = estICategoriaId;
+    }
+
+    public int getEstICanalId() {
+        return estICanalId;
+    }
+
+    public void setEstICanalId(int estICanalId) {
+        this.estICanalId = estICanalId;
+    }
+
+    public String getEstVTelefono() {
+        return estVTelefono;
+    }
+
+    public void setEstVTelefono(String estVTelefono) {
+        this.estVTelefono = estVTelefono;
+    }
+
+    public String getEstVCelular() {
+        return estVCelular;
+    }
+
+    public void setEstVCelular(String estVCelular) {
+        this.estVCelular = estVCelular;
+    }
+
+    public int getEstIUsuarioCreacion() {
+        return estIUsuarioCreacion;
+    }
+
+    public void setEstIUsuarioCreacion(int estIUsuarioCreacion) {
+        this.estIUsuarioCreacion = estIUsuarioCreacion;
+    }
+
+    public String getEstDTFechaCreacion() {
+        return estDTFechaCreacion;
+    }
+
+    public void setEstDTFechaCreacion(String estDTFechaCreacion) {
+        this.estDTFechaCreacion = estDTFechaCreacion;
+    }
+
+    public int getEstIUsuarioActualizacion() {
+        return estIUsuarioActualizacion;
+    }
+
+    public void setEstIUsuarioActualizacion(int estIUsuarioActualizacion) {
+        this.estIUsuarioActualizacion = estIUsuarioActualizacion;
+    }
+
+    public String getEstDTFechaActualizacion() {
+        return estDTFechaActualizacion;
+    }
+
+    public void setEstDTFechaActualizacion(String estDTFechaActualizacion) {
+        this.estDTFechaActualizacion = estDTFechaActualizacion;
+    }
+
+    public int getEstIEstadoId() {
+        return estIEstadoId;
+    }
+
+    public void setEstIEstadoId(int estIEstadoId) {
+        this.estIEstadoId = estIEstadoId;
+    }
+
+    public int getEstIUsuarioAprobacion() {
+        return estIUsuarioAprobacion;
+    }
+
+    public void setEstIUsuarioAprobacion(int estIUsuarioAprobacion) {
+        this.estIUsuarioAprobacion = estIUsuarioAprobacion;
+    }
+
+    public String getEstDTFechaAprobacion() {
+        return estDTFechaAprobacion;
+    }
+
+    public void setEstDTFechaAprobacion(String estDTFechaAprobacion) {
+        this.estDTFechaAprobacion = estDTFechaAprobacion;
+    }
+
+    public String getEstVObservacion() {
+        return estVObservacion;
+    }
+
+    public void setEstVObservacion(String estVObservacion) {
+        this.estVObservacion = estVObservacion;
+    }
+
+    public String getEstVKeyFireBase() {
+        return estVKeyFireBase;
+    }
+
+    public void setEstVKeyFireBase(String estVKeyFireBase) {
+        this.estVKeyFireBase = estVKeyFireBase;
+    }
+
+    public String getEstVContacto() {
+        return estVContacto;
+    }
+
+    public void setEstVContacto(String estVContacto) {
+        this.estVContacto = estVContacto;
+    }
+}

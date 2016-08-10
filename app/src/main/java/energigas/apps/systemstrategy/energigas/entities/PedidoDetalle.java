@@ -1,0 +1,168 @@
+package energigas.apps.systemstrategy.energigas.entities;
+
+/**
+ * Created by kelvi on 10/08/2016.
+ */
+
+public class PedidoDetalle {
+
+    private long peId;
+
+    private int pdId;
+
+    private int productoId;
+
+    private double cantidad;
+
+    private double cantidadAtendida;
+
+    private double importe;
+
+    private int usuarioId;
+
+    private String fechaAccion;
+
+    private double precioUnitario;
+
+    private double costoVenta;
+
+    private int unidadId;
+
+    private int estadoAtencionId;
+
+    private double precio;
+
+    private String golpe;
+
+    public PedidoDetalle() {
+    }
+
+    public PedidoDetalle(long peId, int pdId, int productoId, double cantidad, double cantidadAtendida, double importe, int usuarioId, String fechaAccion, double precioUnitario, double costoVenta, int unidadId, int estadoAtencionId, double precio, String golpe) {
+        this.peId = peId;
+        this.pdId = pdId;
+        this.productoId = productoId;
+        this.cantidad = cantidad;
+        this.cantidadAtendida = cantidadAtendida;
+        this.importe = importe;
+        this.usuarioId = usuarioId;
+        this.fechaAccion = fechaAccion;
+        this.precioUnitario = precioUnitario;
+        this.costoVenta = costoVenta;
+        this.unidadId = unidadId;
+        this.estadoAtencionId = estadoAtencionId;
+        this.precio = precio;
+        this.golpe = golpe;
+    }
+
+    public long getPeId() {
+        return peId;
+    }
+
+    public void setPeId(long peId) {
+        this.peId = peId;
+    }
+
+    public int getPdId() {
+        return pdId;
+    }
+
+    public void setPdId(int pdId) {
+        this.pdId = pdId;
+    }
+
+    public int getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(int productoId) {
+        this.productoId = productoId;
+    }
+
+    public double getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(double cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getCantidadAtendida() {
+        return cantidadAtendida;
+    }
+
+    public void setCantidadAtendida(double cantidadAtendida) {
+        this.cantidadAtendida = cantidadAtendida;
+    }
+
+    public double getImporte() {
+        return importe;
+    }
+
+    public void setImporte(double importe) {
+        this.importe = importe;
+    }
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getFechaAccion() {
+        return fechaAccion;
+    }
+
+    public void setFechaAccion(String fechaAccion) {
+        this.fechaAccion = fechaAccion;
+    }
+
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    public double getCostoVenta() {
+        return costoVenta;
+    }
+
+    public void setCostoVenta(double costoVenta) {
+        this.costoVenta = costoVenta;
+    }
+
+    public int getUnidadId() {
+        return unidadId;
+    }
+
+    public void setUnidadId(int unidadId) {
+        this.unidadId = unidadId;
+    }
+
+    public int getEstadoAtencionId() {
+        return estadoAtencionId;
+    }
+
+    public void setEstadoAtencionId(int estadoAtencionId) {
+        this.estadoAtencionId = estadoAtencionId;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public String getGolpe() {
+        return golpe;
+    }
+
+    public void setGolpe(String golpe) {
+        this.golpe = golpe;
+    }
+}
