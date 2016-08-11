@@ -7,7 +7,7 @@ package energigas.apps.systemstrategy.energigas.entities;
 public class CajaLiquidacion {
     private long liqId;
 
-    private int agenteId;
+    private int usuarioId;
 
     private String fechaApertura;
 
@@ -58,9 +58,9 @@ public class CajaLiquidacion {
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int agenteId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipo, String placaVehiculo, int vehiculoId, int almacenId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipo, String placaVehiculo, int vehiculoId, int almacenId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal) {
         this.liqId = liqId;
-        this.agenteId = agenteId;
+        this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
         this.fechaCierre = fechaCierre;
         this.estadoId = estadoId;
@@ -94,12 +94,12 @@ public class CajaLiquidacion {
         this.liqId = liqId;
     }
 
-    public int getAgenteId() {
-        return agenteId;
+    public int getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setAgenteId(int agenteId) {
-        this.agenteId = agenteId;
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public String getFechaApertura() {

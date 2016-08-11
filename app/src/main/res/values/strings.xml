@@ -247,7 +247,7 @@
     <!--##############################-->
 
 
-    <!--### AccountSummary-->
+    <!--### CuentaResumenActivity-->
     <string name="activity_summary_account">Resumen caja</string>
     <string name="title_activity_account_summary">AccountSummary</string>
 

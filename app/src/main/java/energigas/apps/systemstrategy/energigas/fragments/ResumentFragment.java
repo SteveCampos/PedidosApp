@@ -19,14 +19,14 @@ import energigas.apps.systemstrategy.energigas.entities.Summary;
  * Created by kelvi on 19/07/2016.
  */
 
-public class FragmentSummary extends Fragment {
+public class ResumentFragment extends Fragment {
 
 
     @BindView(R.id.racyclerInventory)
     RecyclerView recyclerView;
 
-    public static FragmentSummary newInstance (){
-        FragmentSummary summary = new FragmentSummary();
+    public static ResumentFragment newInstance (){
+        ResumentFragment summary = new ResumentFragment();
         return summary;
     }
 

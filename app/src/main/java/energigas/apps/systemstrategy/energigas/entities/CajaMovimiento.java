@@ -29,10 +29,12 @@ public class CajaMovimiento {
 
     private String referenciaAndroid;
 
+    private int tipoMovId;
+
     public CajaMovimiento() {
     }
 
-    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid) {
+    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid,int tipoMovId) {
         this.cajMovId = cajMovId;
         this.liqId = liqId;
         this.catMovId = catMovId;
@@ -45,6 +47,7 @@ public class CajaMovimiento {
         this.usuarioId = usuarioId;
         this.fechaAccion = fechaAccion;
         this.referenciaAndroid = referenciaAndroid;
+        this.tipoMovId = tipoMovId;
     }
 
     public long getCajMovId() {
@@ -141,5 +144,14 @@ public class CajaMovimiento {
 
     public void setReferenciaAndroid(String referenciaAndroid) {
         this.referenciaAndroid = referenciaAndroid;
+    }
+
+
+    public int getTipoMovId() {
+        return tipoMovId;
+    }
+
+    public void setTipoMovId(int tipoMovId) {
+        this.tipoMovId = tipoMovId;
     }
 }

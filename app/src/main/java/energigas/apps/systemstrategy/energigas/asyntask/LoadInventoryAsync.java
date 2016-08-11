@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import energigas.apps.systemstrategy.energigas.activities.LoadInventory;
 import energigas.apps.systemstrategy.energigas.adapters.LoadInventoryAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
 

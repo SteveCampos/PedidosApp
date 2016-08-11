@@ -1,6 +1,5 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -15,11 +14,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
-import energigas.apps.systemstrategy.energigas.fragments.FragmentInventory;
-import energigas.apps.systemstrategy.energigas.fragments.FragmentSummary;
+import energigas.apps.systemstrategy.energigas.fragments.InventarioFragment;
+import energigas.apps.systemstrategy.energigas.fragments.ResumentFragment;
 
-public class AccountSummary extends AppCompatActivity {
-    private static final String TAG = AccountSummary.class.getSimpleName();
+public class CuentaResumenActivity extends AppCompatActivity {
+    private static final String TAG = CuentaResumenActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.viewPagerSummary) ViewPager mainViewPager;
@@ -44,8 +43,8 @@ public class AccountSummary extends AppCompatActivity {
 
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(FragmentSummary.newInstance(), getString(R.string.fragment_summary));
-        tabsAdapter.addFragment(FragmentInventory.newIntance(), getString(R.string.fragment_inventory));
+        tabsAdapter.addFragment(ResumentFragment.newInstance(), getString(R.string.fragment_summary));
+        tabsAdapter.addFragment(InventarioFragment.newIntance(), getString(R.string.fragment_inventory));
         mainViewPager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(mainViewPager);
     }

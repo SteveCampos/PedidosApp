@@ -1,9 +1,7 @@
 package energigas.apps.systemstrategy.energigas.activities;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,7 +22,7 @@ import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
 import energigas.apps.systemstrategy.energigas.fragments.ExpensesFragment;
-import energigas.apps.systemstrategy.energigas.fragments.FragmentInventory;
+import energigas.apps.systemstrategy.energigas.fragments.InventarioFragment;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -75,7 +73,7 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new ExpensesFragment(), getString(R.string.activity_expenses_today));
-        tabsAdapter.addFragment(FragmentInventory.newIntance(), getString(R.string.activity_expenses_week));
+        tabsAdapter.addFragment(InventarioFragment.newIntance(), getString(R.string.activity_expenses_week));
         mainViewPager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(mainViewPager);
     }

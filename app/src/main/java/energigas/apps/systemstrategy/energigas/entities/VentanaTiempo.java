@@ -11,9 +11,9 @@ public class VentanaTiempo {
 
     private String dia;
 
-    private double horaInicio;
+    private String horaInicio;
 
-    private double horaFin;
+    private String horaFin;
 
     private int usuarioCreacion;
 
@@ -30,7 +30,7 @@ public class VentanaTiempo {
     public VentanaTiempo() {
     }
 
-    public VentanaTiempo(int veId, int establecimientoId, String dia, double horaInicio, double horaFin, int usuarioCreacion, int usuarioActualizacion, String fechaCreacion, String fechaActualizacion, boolean estado, boolean preferido) {
+    public VentanaTiempo(int veId, int establecimientoId, String dia, String horaInicio, String horaFin, int usuarioCreacion, int usuarioActualizacion, String fechaCreacion, String fechaActualizacion, boolean estado, boolean preferido) {
         this.veId = veId;
         this.establecimientoId = establecimientoId;
         this.dia = dia;
@@ -68,19 +68,19 @@ public class VentanaTiempo {
         this.dia = dia;
     }
 
-    public double getHoraInicio() {
+    public String getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(double horaInicio) {
+    public void setHoraInicio(String horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public double getHoraFin() {
+    public String getHoraFin() {
         return horaFin;
     }
 
-    public void setHoraFin(double horaFin) {
+    public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
     }
 

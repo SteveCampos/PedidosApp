@@ -19,16 +19,16 @@ import energigas.apps.systemstrategy.energigas.entities.Inventory;
  * Created by kelvi on 19/07/2016.
  */
 
-public class FragmentInventory extends Fragment {
+public class InventarioFragment extends Fragment {
 
     @BindView(R.id.racyclerInventory)
     RecyclerView recyclerView;
     Inventory inventory;
 
 
-    public static FragmentInventory newIntance (){
-        FragmentInventory fragmentInventory = new FragmentInventory();
-        return  fragmentInventory;
+    public static InventarioFragment newIntance (){
+        InventarioFragment inventarioFragment = new InventarioFragment();
+        return inventarioFragment;
     }
 
     @Nullable

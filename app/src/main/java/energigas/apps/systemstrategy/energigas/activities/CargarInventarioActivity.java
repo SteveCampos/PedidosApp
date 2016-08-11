@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +22,7 @@ import energigas.apps.systemstrategy.energigas.adapters.LoadInventoryAdapter;
 import energigas.apps.systemstrategy.energigas.asyntask.LoadInventoryAsync;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
 
-public class LoadInventory extends AppCompatActivity {
+public class CargarInventarioActivity extends AppCompatActivity {
 
 
     @BindView(R.id.recycler_view)

@@ -28,9 +28,9 @@ public class Despacho {
 
     private double cantidadDespachada;
 
-    private double horaInicio;
+    private String horaInicio;
 
-    private double horaFin;
+    private String horaFin;
 
     private String fechaDespacho;
 
@@ -63,7 +63,7 @@ public class Despacho {
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, double horaInicio, double horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, int fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, int fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -182,19 +182,19 @@ public class Despacho {
         this.cantidadDespachada = cantidadDespachada;
     }
 
-    public double getHoraInicio() {
+    public String getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(double horaInicio) {
+    public void setHoraInicio(String horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public double getHoraFin() {
+    public String getHoraFin() {
         return horaFin;
     }
 
-    public void setHoraFin(double horaFin) {
+    public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
     }
 

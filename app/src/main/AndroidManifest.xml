@@ -41,7 +41,7 @@
                 android:value="energigas.apps.systemstrategy.energigas.activities.WizardOrderActivity" />
         </activity>
         <activity
-            android:name=".activities.AccountSummary"
+            android:name=".activities.CuentaResumenActivity"
             android:label="@string/activity_summary_account"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -83,7 +83,7 @@
                 android:value="energigas.apps.systemstrategy.energigas.activities.WizardOrderActivity" />
         </activity>
         <activity
-            android:name=".activities.LoadInventory"
+            android:name=".activities.CargarInventarioActivity"
             android:label="@string/title_activity_load_inventory"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
