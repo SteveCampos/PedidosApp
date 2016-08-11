@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
+import energigas.apps.systemstrategy.energigas.fragments.DespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.OrderDetailFragment;
 import energigas.apps.systemstrategy.energigas.fragments.AlmacenFragment;
 
@@ -45,12 +46,14 @@ public class StationOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) //
         {
+            setTitle("Pedido 1");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new OrderDetailFragment(), "ITEM");
+        tabsAdapter.addFragment(new DespachoFragment(), "DESPACHOS");
         tabsAdapter.addFragment(new AlmacenFragment(), "TANQUES");
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);

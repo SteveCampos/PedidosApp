@@ -3,12 +3,21 @@ package energigas.apps.systemstrategy.energigas.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +38,8 @@ public class FragmentStationInformation extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    @BindView(R.id.btn_map) AppCompatButton buttonMap;
 
     public FragmentStationInformation() {
         // Required empty public constructor
@@ -65,7 +76,9 @@ public class FragmentStationInformation extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
+        View view =inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -85,6 +98,14 @@ public class FragmentStationInformation extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }*/
+    }
+
+    @OnClick(R.id.btn_map)
+    public void showMap(){
+        float latitude = (float) -12.062865;
+        float longitude = (float) -77.040253;
+        String uri = String.format(Locale.getDefault(), "geo:%f,%f", latitude, longitude);
+        Utils.showMap(getActivity(), Uri.parse(uri));
     }
 
     @Override

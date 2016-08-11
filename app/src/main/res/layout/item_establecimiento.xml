@@ -83,6 +83,16 @@
                 android:drawableLeft="@drawable/ic_star"
                 android:layout_alignParentRight="true" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ATENDIDO"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/md_light_green_400"
+                />
+
         </RelativeLayout>
 
 

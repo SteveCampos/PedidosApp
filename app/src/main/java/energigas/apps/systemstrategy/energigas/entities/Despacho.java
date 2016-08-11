@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -52,9 +55,9 @@ public class Despacho {
 
     private double numero;
 
-    private int fechaCreacion;
+    private String fechaCreacion;
 
-    private String usuarioCreacion;
+    private int usuarioCreacion;
 
     private int estadoId;
 
@@ -63,7 +66,7 @@ public class Despacho {
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, int fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, String fechaCreacion, int usuarioCreacion, int estadoId, int vehiculoId) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -92,7 +95,6 @@ public class Despacho {
         this.estadoId = estadoId;
         this.vehiculoId = vehiculoId;
     }
-
 
     public long getDespachoId() {
         return despachoId;
@@ -278,19 +280,19 @@ public class Despacho {
         this.numero = numero;
     }
 
-    public int getFechaCreacion() {
+    public String getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(int fechaCreacion) {
+    public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getUsuarioCreacion() {
+    public int getUsuarioCreacion() {
         return usuarioCreacion;
     }
 
-    public void setUsuarioCreacion(String usuarioCreacion) {
+    public void setUsuarioCreacion(int usuarioCreacion) {
         this.usuarioCreacion = usuarioCreacion;
     }
 
@@ -308,5 +310,14 @@ public class Despacho {
 
     public void setVehiculoId(int vehiculoId) {
         this.vehiculoId = vehiculoId;
+    }
+
+    public static List<Despacho> getList() {
+        List<Despacho> list = new ArrayList<>();
+        list.add(new Despacho(
+                1, 1, 1, 1, 1, 1, 1, "PLACA", 500.0, 1300.0, 800.0, "12:00", "12:00", "12/08/2016", 1, 1, 12.5, 65.0, "-11.656565", "-51.82525", 1,
+                "SERIE", 0.0, "12/08/2016", 1, 1, 1
+        ));
+        return list;
     }
 }

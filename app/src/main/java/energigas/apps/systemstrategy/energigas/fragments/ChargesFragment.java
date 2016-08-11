@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ChargesAdapter;
-import energigas.apps.systemstrategy.energigas.adapters.ExpensesAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Charges;
-import energigas.apps.systemstrategy.energigas.entities.Expenses;
 
 /**
  * Created by Kike on 1/08/2016.

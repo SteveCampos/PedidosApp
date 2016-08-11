@@ -79,6 +79,7 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
         // Adding menu icon to Toolbar
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
+            setTitle("");
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             //supportActionBar.setTitle(R.string.wizard_title_activity);
         }

@@ -50,7 +50,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
         return dialog;
     }
 

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 
 public class StationDispatchsFragment extends Fragment implements ActionMode.Callback, StationDispatchsAdapter.OnStationDispatchClickListener {
 
+    private static final String TAG = StationDispatchsFragment.class.getSimpleName();
     private List<OrderDispatch> dispatchList = new ArrayList<>();
     private RecyclerView recyclerView;
     private StationDispatchsAdapter adapter;
@@ -103,7 +105,8 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
                 if (mActionMode != null)
                     onListItemSelect(position);
                 else
-                    startActivity(new Intent(getActivity(), DispatchActivity.class));
+                    Log.d(TAG, "ON CLICK LISTENER");
+                    //startActivity(new Intent(getActivity(), DispatchActivity.class));
                 break;
             case 1:
                 onListItemSelect(position);

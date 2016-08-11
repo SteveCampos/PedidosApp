@@ -23,7 +23,7 @@
             android:id="@+id/text_station_dispatch_tank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TANK TB - 10020"
+            android:text="TANQUE"
             android:layout_toStartOf="@+id/text_station_dispatch_quantity"
             style="@style/TextAppearance.AppCompat.Title"
             />
@@ -54,6 +54,8 @@
             android:text="DESPACHADO"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/md_light_green_400"
             />
 
     </RelativeLayout>

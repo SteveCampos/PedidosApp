@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -141,5 +142,13 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
     @Override
     public void onStationOrderClickListener(Pedido pedido) {
         startActivity(new Intent(MainStationActivity.this, StationOrderActivity.class));
+    }
+
+    public void showMap(Uri geoLocation) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

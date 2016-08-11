@@ -25,9 +25,12 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     // Store the context for easy access
     private Context mContext;
 
-    public AlmacenAdapter(List<Almacen> almacenList, Context mContext) {
+    private OnAlmacenClickListener listener;
+
+    public AlmacenAdapter(List<Almacen> almacenList, Context mContext, OnAlmacenClickListener listener) {
         this.almacenList = almacenList;
         this.mContext = mContext;
+        this.listener = listener;
     }
 
     @Override
@@ -42,12 +45,13 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     @Override
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
-        holder.title.setText("76679526 - " + position);
+        holder.title.setText("Tanque " +  (++position));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "CLICKED: " + view);
+                listener.onAlmacenClickListener(almacen, view);
             }
         });
     }
@@ -55,5 +59,9 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     @Override
     public int getItemCount() {
         return almacenList.size();
+    }
+
+    public interface OnAlmacenClickListener{
+        void onAlmacenClickListener(Almacen almacen, View view);
     }
 }

@@ -24,29 +24,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="10562851"
-            android:layout_toStartOf="@+id/text_station_tank_capacity"
             style="@style/TextAppearance.AppCompat.Title"
-            />
+            android:layout_toStartOf="@+id/text_station_undefined" />
 
         <TextView
-            android:id="@+id/text_station_tank_capacity"
+            android:id="@+id/text_station_undefined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="300 - 1300"
+            android:text="300 GAL"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorAccent"
             android:layout_alignParentTop="true"
             />
+
         <TextView
-            android:id="@+id/text_station_tank_politica"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:id="@+id/text_station_tank_capacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/text_station_tank_capacity"
-            android:text="85% or 1105 GAL"
+            android:text="300 - 1300"
             android:layout_below="@+id/text_station_tank_title"
+            />
+
+        <TextView
+            android:id="@+id/text_station_tank_politica"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="85% or 1105 GAL"
+            android:layout_below="@+id/text_station_tank_capacity"
             />
         
         <TextView
@@ -55,10 +62,20 @@
             android:layout_height="wrap_content"
             android:text="1500 GAL"
             style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/text_station_tank_politica"
+            android:layout_below="@+id/text_station_tank_politica"
             />
-        
+
+        <TextView
+            android:id="@+id/text_almacen_estado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ATENDIDO"
+            android:textColor="@color/md_green_500"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/text_station_tank_capacity_neta"
+            />
+
     </RelativeLayout>
 
 

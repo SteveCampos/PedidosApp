@@ -25,7 +25,7 @@
     <string name="wizard_text_products_count">%1$d Productos, %2$d Tanques.</string>
 
     <string name="dispatch_name">Despacho</string>
-    <string name="dispatch_title_name">Tanque 100 - 10056235832</string>
+    <string name="dispatch_title_name">Tanque 1</string>
     <string name="dispatch_station_name">
         "Agropacking Export S.A.\n"
         "Est. Piura - Piura"
@@ -266,7 +266,7 @@
     <!--###### PrintDispatch -->
 
     <string name="print_snack_error">Error</string>
-    <string name="print_snack_sync_success">Error</string>
+    <string name="print_snack_sync_success">Error: Revise la impresora</string>
 
 
 

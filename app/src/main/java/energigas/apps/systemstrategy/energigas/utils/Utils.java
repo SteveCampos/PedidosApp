@@ -1,5 +1,9 @@
 package energigas.apps.systemstrategy.energigas.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,5 +27,13 @@ public class Utils {
     public static String getNameOfDay(Date date){
         SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
         return Utils.capitalize(parseFormat.format(date));
+    }
+
+    public static void showMap(Context context, Uri geoLocation) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,13 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.adapters.AlmacenAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AlmacenFragment extends Fragment {
+public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmacenClickListener {
 
     private List<Almacen> almacenList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -38,11 +40,15 @@ public class AlmacenFragment extends Fragment {
                 R.layout.recycler_view, container, false);
 
         almacenList = Almacen.getList();
-        adapter = new AlmacenAdapter(almacenList, getActivity());
+        adapter = new AlmacenAdapter(almacenList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }
 
+    @Override
+    public void onAlmacenClickListener(Almacen almacen, View view) {
+        startActivity(new Intent(getActivity(), DispatchActivity.class));
+    }
 }
