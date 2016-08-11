@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -119,5 +122,13 @@ public class CajaGasto {
 
     public void setFechaActualizacion(String fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public static List<CajaGasto> getListCajaGastos(){
+        List<CajaGasto> cajaGastos = new ArrayList<>();
+        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
+        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
+        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
+        return cajaGastos;
     }
 }

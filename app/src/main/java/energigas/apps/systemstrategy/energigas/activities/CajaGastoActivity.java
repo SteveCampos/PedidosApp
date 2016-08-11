@@ -20,8 +20,9 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 
+import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
-import energigas.apps.systemstrategy.energigas.fragments.ExpensesFragment;
+import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.InventarioFragment;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -29,7 +30,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by kikerojas on 30/07/2016.
  */
 
-public class ExpensesActivity extends AppCompatActivity implements View.OnClickListener,ExpensesFragment.OnAddnewExpenses {
+public class CajaGastoActivity extends AppCompatActivity implements View.OnClickListener,CajaGastoFragment.OnAddnewCajaGasto {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewCharges)
@@ -72,7 +73,7 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
 
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(new ExpensesFragment(), getString(R.string.activity_expenses_today));
+        tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_today));
         tabsAdapter.addFragment(InventarioFragment.newIntance(), getString(R.string.activity_expenses_week));
         mainViewPager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(mainViewPager);
@@ -174,16 +175,16 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
                 } else if (txtttotal.getText().toString().equals("")) {
                     txtttotal.setError("Ingrese Total");
                 } else {
-                    Expenses expenses = new Expenses(
+                    CajaGasto expenses = new CajaGasto(
 
-                            "BOLETA",
-                            "05/08/2016",
-                            txtdgdescription.getText().toString(),
-                            100.0,
-                            Double.valueOf(txtttotal.getText().toString())
+//                            "BOLETA",
+//                            "05/08/2016",
+//                            txtdgdescription.getText().toString(),
+//                            100.0,
+//                            Double.valueOf(txtttotal.getText().toString())
                     );
                     if (expensesFragment != null) {
-                        ((ExpensesFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
+                        ((CajaGastoFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
                     }
 
                     alertDialog.dismiss();
@@ -200,7 +201,7 @@ public class ExpensesActivity extends AppCompatActivity implements View.OnClickL
 
 
     @Override
-    public void onAddnewExpenses(String date, Double total) {
+    public void onAddnewCajaGasto(String date, Double total) {
         txtotal.setText("S/."+Utils.formatDouble(total));
         txtdate.setText(date);
         Log.d("DATE","date "+date + total);

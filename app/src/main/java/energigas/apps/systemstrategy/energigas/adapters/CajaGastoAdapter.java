@@ -1,93 +1,90 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
-import energigas.apps.systemstrategy.energigas.holders.ExpensesHolder;
+import energigas.apps.systemstrategy.energigas.holders.CajaGastoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kikerojas on 30/07/2016.
  */
 
-public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesHolder> {
+public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
 
 
 
-    private OnAddnewExpenses listenerAdd;
+    private OnAddnewCajaGasto listenerAdd;
     // Store a member variable for the contacts
-    private List<Expenses> mListExpenses;
+    private List<CajaGasto> mListCajaGasto;
     // Store the context for easy access
     private Activity mactivity;
 
-    public interface OnExpensesClickListener{
-        void onExpensesClickListener(Expenses expenses, View view);
+    public interface OnCajaGastoClickListener{
+        void onCajaGastoClickListener(CajaGasto CajaGasto, View view);
     }
 
-    public OnExpensesClickListener listener;
+    public OnCajaGastoClickListener listener;
 
 
-    public ExpensesAdapter(List<Expenses> mListExpenses, Activity mactivity, OnExpensesClickListener listener,OnAddnewExpenses listenerAdd) {
-        this.mListExpenses = mListExpenses;
+    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener, OnAddnewCajaGasto listenerAdd) {
+        this.mListCajaGasto = mListCajaGasto;
         this.mactivity = mactivity;
         this.listener = listener;
         this.listenerAdd = listenerAdd;
     }
 
-    public void addnewExpenses(Expenses expenses){
-        mListExpenses.add(expenses);
+    public void addnewCajaGasto(CajaGasto cajaGasto){
+        mListCajaGasto.add(cajaGasto);
         int position = getItemCount();
         notifyItemInserted(--position);//3 o 2 position
-        listenerAdd.onAddnewExpenses("10/20/11", getTotal());
+        listenerAdd.onAddnewCajaGasto("10/20/11", getTotal());
     }
 
 
     public Double getTotal(){
         Double total = 0.0;
-        for (int i=0; i < mListExpenses.size(); i++){
-            total += mListExpenses.get(i).getmTotal();
+        for (int i=0; i < mListCajaGasto.size(); i++){
+            total += mListCajaGasto.get(i).getValorVenta();
         }
         return total;
     }
 
     @Override
-    public ExpensesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CajaGastoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Log.d(Utils.TAG, "onCreateViewHolder");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_expenses, parent, false);
         // Return a new holder instance
-        return new ExpensesHolder(contactView);
+        return new CajaGastoHolder(contactView);
     }
 
     @Override
-    public void onBindViewHolder(ExpensesHolder holder, int position) {
+    public void onBindViewHolder(CajaGastoHolder holder, int position) {
         // Get the data model based on position
 
-        final Expenses expenses = mListExpenses.get(position);
+        final CajaGasto cajaGasto = mListCajaGasto.get(position);
         Log.d(Utils.TAG, "onBindViewHolder: "+ position);
 
-        holder.mdocument.setText(expenses.getmType());
-        holder.mdescription.setText(expenses.getmDescription());
-        holder.mtotal.setText("S./ " + Utils.formatDouble(expenses.getmTotal()));
+        holder.mdocument.setText(cajaGasto.getFechaActualizacion());
+        holder.mdescription.setText(cajaGasto.getFechaCreacion());
+        holder.mtotal.setText("S./ " + Utils.formatDouble(cajaGasto.getImporte()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onExpensesClickListener(expenses, v);
+                listener.onCajaGastoClickListener(cajaGasto, v);
             }
         });
 
@@ -96,7 +93,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesHolder> {
     @Override
     public int getItemCount() {
         Log.d(Utils.TAG, "getItemCount");
-        return mListExpenses.size();
+        return mListCajaGasto.size();
     }
 
 
@@ -135,8 +132,8 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesHolder> {
 //        }
 //    }
 
-    public interface OnAddnewExpenses{
-        void onAddnewExpenses (String date,Double total);
+    public interface OnAddnewCajaGasto{
+        void onAddnewCajaGasto (String date,Double total);
     }
 
 

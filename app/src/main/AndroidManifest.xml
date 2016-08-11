@@ -67,7 +67,7 @@
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ExpensesActivity"
+            android:name=".activities.CajaGastoActivity"
             android:label="@string/activity_expenses_account"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity

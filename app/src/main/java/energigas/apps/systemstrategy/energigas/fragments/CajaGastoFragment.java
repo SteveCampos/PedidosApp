@@ -3,7 +3,6 @@ package energigas.apps.systemstrategy.energigas.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.ExpensesAdapter;
+import energigas.apps.systemstrategy.energigas.adapters.CajaGastoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
 
 /**
@@ -24,19 +22,19 @@ import energigas.apps.systemstrategy.energigas.entities.Expenses;
  */
 
 
-public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpensesClickListener,ExpensesAdapter.OnAddnewExpenses{
+public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCajaGastoClickListener,CajaGastoAdapter.OnAddnewCajaGasto{
 
 
-    public OnExpensesClickListener listener;
+    public OnCajaGastoClickListener listener;
 
-    private OnAddnewExpenses listenerAdd;
+    private OnAddnewCajaGasto listenerAdd;
 
     private RecyclerView recyclerView;
 
-    public ExpensesFragment() {
+    public CajaGastoFragment() {
 
     }
-    ExpensesAdapter adapter;
+    CajaGastoAdapter adapter;
 
 
 
@@ -48,7 +46,7 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_expenses);
 
-        adapter = new ExpensesAdapter(Expenses.getListExpenses(),getActivity(),this,this); //
+        adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -57,34 +55,34 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
     }
 
     @Override
-    public void onExpensesClickListener(Expenses expenses, View view) {
-        Snackbar.make(view,expenses.getmType(),Snackbar.LENGTH_LONG).show();
+    public void onCajaGastoClickListener(CajaGasto expenses, View view) {
+        Snackbar.make(view,expenses.getFechaCreacion(),Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public void onAddnewExpenses(String date, Double total) {
-        listenerAdd.onAddnewExpenses(date,total);
+    public void onAddnewCajaGasto(String date, Double total) {
+        listenerAdd.onAddnewCajaGasto(date,total);
     }
 
-    public interface OnExpensesClickListener{
-        void onExpensesClickListener(Expenses expenses, View view);
+    public interface OnCajaGastoClickListener{
+        void onCajaGastoClickListener(CajaGasto expenses, View view);
     }
 
 
-    public void  addnewExpenses(Expenses expenses){
-        adapter.addnewExpenses(expenses);
+    public void  addnewExpenses(CajaGasto expenses){
+        adapter.addnewCajaGasto(expenses);
     }
 
-    public interface OnAddnewExpenses{
-        void onAddnewExpenses (String date,Double total);
+    public interface OnAddnewCajaGasto{
+        void onAddnewCajaGasto (String date,Double total);
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnAddnewExpenses){
-            listenerAdd = (OnAddnewExpenses) context;
+        if (context instanceof OnAddnewCajaGasto){
+            listenerAdd = (OnAddnewCajaGasto) context;
         }else{
             throw new RuntimeException(context.toString() +
                     " must implement OnAddnewExpenses");

@@ -1,6 +1,5 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,9 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +31,12 @@ import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        StationFragment.OnStationClickListener{
+        EstablecimientoFragment.OnEstablecimientoClickListener{
         //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -192,7 +185,7 @@ public class MainActivity extends AppCompatActivity
                 setCurrentItem(1);
                 break;
             case R.id.nav_expenses:
-                startActivity(new Intent(this, ExpensesActivity.class));
+                startActivity(new Intent(this, CajaGastoActivity.class));
                 break;
             case R.id.nav_collect:
                 startActivity(new Intent(this, CargarInventarioActivity.class));
