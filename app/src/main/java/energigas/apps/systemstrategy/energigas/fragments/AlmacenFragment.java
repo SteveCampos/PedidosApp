@@ -13,22 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.StationOrderTankAdapter;
-import energigas.apps.systemstrategy.energigas.adapters.StationProductsAdapter;
+import energigas.apps.systemstrategy.energigas.adapters.AlmacenAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
-import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
-import energigas.apps.systemstrategy.energigas.entities.Tank;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TankFragment extends Fragment {
+public class AlmacenFragment extends Fragment {
 
     private List<Almacen> almacenList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private StationOrderTankAdapter adapter;
+    private AlmacenAdapter adapter;
 
-    public TankFragment() {
+    public AlmacenFragment() {
         // Required empty public constructor
     }
 
@@ -41,7 +38,7 @@ public class TankFragment extends Fragment {
                 R.layout.recycler_view, container, false);
 
         almacenList = Almacen.getList();
-        adapter = new StationOrderTankAdapter(almacenList, getActivity());
+        adapter = new AlmacenAdapter(almacenList, getActivity());
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

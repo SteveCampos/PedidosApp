@@ -2,24 +2,17 @@ package energigas.apps.systemstrategy.energigas.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
-import energigas.apps.systemstrategy.energigas.fragments.ChargesFragment;
-import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
 import energigas.apps.systemstrategy.energigas.fragments.OrderDetailFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment;
-import energigas.apps.systemstrategy.energigas.fragments.TankFragment;
+import energigas.apps.systemstrategy.energigas.fragments.AlmacenFragment;
 
 public class StationOrderActivity extends AppCompatActivity {
 
@@ -58,7 +51,7 @@ public class StationOrderActivity extends AppCompatActivity {
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new OrderDetailFragment(), "ITEM");
-        tabsAdapter.addFragment(new TankFragment(), "TANQUES");
+        tabsAdapter.addFragment(new AlmacenFragment(), "TANQUES");
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }
