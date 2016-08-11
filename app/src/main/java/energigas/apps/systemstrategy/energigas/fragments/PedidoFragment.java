@@ -11,20 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.OrdersAdapter;
+import energigas.apps.systemstrategy.energigas.adapters.PedidoAdapter;
 
-import energigas.apps.systemstrategy.energigas.entities.Order;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 
 
 /**
  * Created by Kike on 21/07/2016.
  */
 
-public class OrdersFragment extends Fragment implements OrdersAdapter.OnOrdersClickListener{
+public class PedidoFragment extends Fragment implements PedidoAdapter.OnPedidoClickListener {
 
-    public OnOrdersClickListener listener;
+    public OnPedidoClickListener listener;
 
-    public OrdersFragment() {
+    public PedidoFragment() {
 
     }
 
@@ -40,7 +40,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnOrdersCl
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        OrdersAdapter adapter = new OrdersAdapter(Order.getOrders(),getActivity(),this);
+        PedidoAdapter adapter = new PedidoAdapter(Pedido.getList(),getActivity(),this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -50,11 +50,11 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnOrdersCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnOrdersClickListener){
-            listener = (OnOrdersClickListener) context;
+        if (context instanceof OnPedidoClickListener){
+            listener = (OnPedidoClickListener) context;
         }else{
             throw new RuntimeException(context.toString() +
-                    " must implement OnOrdersClickListener");
+                    " must implement OnPedidoClickListener");
         }
     }
 
@@ -65,11 +65,11 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnOrdersCl
     }
 
     @Override
-    public void onOrdersClickListener(Order order, View view) {
-        listener.onOrdersClickListener(order, view);
+    public void onPedidoClickListener(Pedido pedido, View view) {
+        listener.onPedidoClickListener(pedido, view);
     }
 
-    public interface OnOrdersClickListener{
-        void onOrdersClickListener(Order order, View view);
+    public interface OnPedidoClickListener {
+        void onPedidoClickListener(Pedido pedido, View view);
     }
 }

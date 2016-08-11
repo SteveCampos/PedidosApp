@@ -49,33 +49,5 @@ public class AcRolUsuario {
         }
     }
 
-    public long createAcceso(@NonNull RolUsuario rolUsuario){
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(RolId,rolUsuario.getRolId());
-        initialValues.put(UsuarioId,rolUsuario.getUsuarioId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_ROL_USUARIO, null, initialValues);
-    }
-
-    public int updateAcceso(@NonNull RolUsuario rolUsuario){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(RolId,rolUsuario.getRolId());
-        initialValues.put(UsuarioId,rolUsuario.getUsuarioId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_ROL_USUARIO, initialValues,
-                RolId + "=? and "+UsuarioId+" =? ", new String[]{"" + rolUsuario.getRolId(),""+rolUsuario.getUsuarioId()});
-
-    }
-
-    public boolean deleteAccesoById(@NonNull RolUsuario rolUsuario) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_ROL_USUARIO,   RolId + "=? and "+UsuarioId+" =? ", new String[]{"" + rolUsuario.getRolId(),""+rolUsuario.getUsuarioId()});
-        return doneDelete > 0;
-
-    }
-
 
 }

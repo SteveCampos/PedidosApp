@@ -57,38 +57,4 @@ public class AcProvilegio {
         }
     }
 
-    public long createPrivilegio(@NonNull Privilegio privilegio) {
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(Id, privilegio.getId());
-        initialValues.put(AccesoId, privilegio.getAccesoId());
-        initialValues.put(Nombre, privilegio.getNombre());
-        initialValues.put(Descripcion, privilegio.getDescripcion());
-        initialValues.put(Estado, privilegio.getEstado());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_PRIVILEGIO, null, initialValues);
-    }
-
-    public int updatePrivilegio(@NonNull Privilegio privilegio) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(AccesoId, privilegio.getAccesoId());
-        initialValues.put(Nombre, privilegio.getNombre());
-        initialValues.put(Descripcion, privilegio.getDescripcion());
-        initialValues.put(Estado, privilegio.getEstado());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_PRIVILEGIO, initialValues,
-                Id + "=?", new String[]{"" + privilegio.getId()});
-
-    }
-
-    public boolean deletePrivilegioById(@NonNull Privilegio privilegio) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_PRIVILEGIO, Id + "=?", new String[]{privilegio.getId() + ""});
-        return doneDelete > 0;
-
-    }
-
-
 }

@@ -11,34 +11,23 @@
     card_view:cardPreventCornerOverlap="false"
     card_view:cardUseCompatPadding="true"
     android:foreground="?android:attr/selectableItemBackground">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="@dimen/activity_vertical_margin"
-        >
+        android:padding="@dimen/activity_vertical_margin">
 
         <TextView
-            android:id="@+id/text_station_dispatch_tank"
+            android:id="@+id/text_station_dispatch_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TANK TB - 10020"
-            android:layout_toStartOf="@+id/text_station_dispatch_quantity"
-            style="@style/TextAppearance.AppCompat.Title"
+            android:text="GLP 500 GAL - TANK 5621652248"
+            android:layout_toStartOf="@+id/text_station_dispatch_requested_quantity"
+            style="@style/TextAppearance.AppCompat.Medium"
             />
 
         <TextView
-            android:id="@+id/text_station_dispatch_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GLP"
-            android:layout_below="@+id/text_station_dispatch_tank"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />
-
-        <TextView
-            android:id="@+id/text_station_dispatch_quantity"
+            android:id="@+id/text_station_dispatch_requested_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="300.00 GAL"
@@ -46,14 +35,14 @@
             style="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorAccent"
             />
-
         <TextView
             android:id="@+id/text_station_dispatch_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DESPACHADO"
-            android:layout_alignParentEnd="true"
+            android:text="POR ATENDER"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            style="@style/TextAppearance.AppCompat.Caption"
             />
 
     </RelativeLayout>

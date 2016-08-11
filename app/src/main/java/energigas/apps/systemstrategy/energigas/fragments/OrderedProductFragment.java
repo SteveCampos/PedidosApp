@@ -70,7 +70,7 @@ public class OrderedProductFragment extends Fragment implements OrderedProductAd
             listener = (OnOrderedProductClickListener) context;
         }else{
             throw new RuntimeException(context.toString() +
-                    " must implement OnStationClickListener");
+                    " must implement OnEstablecimientoClickListener");
         }
         if (context instanceof OnDispatchClickListener){
             listenerDispatch = (OnDispatchClickListener) context;

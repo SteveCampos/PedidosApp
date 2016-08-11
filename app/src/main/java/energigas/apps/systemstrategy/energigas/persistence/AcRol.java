@@ -52,37 +52,4 @@ public class AcRol {
         }
     }
 
-    public long createRol(@NonNull Rol rol){
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(Id,rol.getId());
-        initialValues.put(Nombre,rol.getNombre());
-        initialValues.put(Estado,rol.getEstado());
-        initialValues.put(ParentId,rol.getParentId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_ROL, null, initialValues);
-    }
-
-    public int updateRol(@NonNull Rol rol){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(Id,rol.getId());
-        initialValues.put(Nombre,rol.getNombre());
-        initialValues.put(Estado,rol.getEstado());
-        initialValues.put(ParentId,rol.getParentId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_ROL, initialValues,
-                Id + "=?", new String[]{"" + rol.getId()});
-
-    }
-
-    public boolean deleteRolById(@NonNull Rol rol) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_ROL, Id+"=?", new String[]{rol.getId()+""});
-        return doneDelete > 0;
-
-    }
-
-
 }

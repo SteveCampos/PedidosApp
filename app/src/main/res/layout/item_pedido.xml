@@ -20,41 +20,51 @@
         >
 
         <TextView
-            android:id="@+id/text_station_dispatch_tank"
+            android:id="@+id/text_station_order_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TANK TB - 10020"
-            android:layout_toStartOf="@+id/text_station_dispatch_quantity"
-            style="@style/TextAppearance.AppCompat.Title"
-            />
-
-        <TextView
-            android:id="@+id/text_station_dispatch_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="GLP"
-            android:layout_below="@+id/text_station_dispatch_tank"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />
-
-        <TextView
-            android:id="@+id/text_station_dispatch_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="300.00 GAL"
-            android:layout_alignParentEnd="true"
+            android:layout_toStartOf="@+id/text_station_order_quantity"
             style="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorAccent"
             />
 
         <TextView
-            android:id="@+id/text_station_dispatch_state"
+            android:id="@+id/text_station_order_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DESPACHADO"
+            android:text="500 GALONES"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent"
+            android:gravity="right" />
+
+        <TextView
+            android:id="@+id/text_station_order_scope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="84399786"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_below="@+id/text_station_order_title"
             />
+
+        <TextView
+            android:id="@+id/text_station_order_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACTIVO"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/text_station_order_scope"
+            />
+
+        <TextView
+            android:id="@+id/text_station_order_programed_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Martes 16"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignBottom="@+id/text_station_order_state"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

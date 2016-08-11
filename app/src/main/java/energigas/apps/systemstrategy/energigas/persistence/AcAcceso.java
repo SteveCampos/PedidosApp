@@ -62,46 +62,5 @@ public class AcAcceso {
         }
     }
 
-    public long createAcceso(@NonNull Acceso acceso){
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(Id,acceso.getId());
-        initialValues.put(ParentId,acceso.getParentId());
-        initialValues.put(Abreviacion,acceso.getAbreviacion());
-        initialValues.put(Descripcion,acceso.getDescripcion());
-        initialValues.put(Item,acceso.getItem());
-        initialValues.put(Nivel,acceso.getNivel());
-        initialValues.put(URL,acceso.getUrl());
-        initialValues.put(Estado,acceso.getEstado());
-        initialValues.put(Movil,acceso.getMovil());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_ACCESO, null, initialValues);
-    }
-
-    public int updateAcceso(@NonNull Acceso acceso){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(ParentId,acceso.getParentId());
-        initialValues.put(Abreviacion,acceso.getAbreviacion());
-        initialValues.put(Descripcion,acceso.getDescripcion());
-        initialValues.put(Item,acceso.getItem());
-        initialValues.put(Nivel,acceso.getNivel());
-        initialValues.put(URL,acceso.getUrl());
-        initialValues.put(Estado,acceso.getEstado());
-        initialValues.put(Movil,acceso.getMovil());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_ACCESO, initialValues,
-                Id + "=?", new String[]{"" + acceso.getId()});
-
-    }
-
-    public boolean deleteAccesoById(@NonNull Acceso acceso) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_ACCESO, Id+"=?", new String[]{acceso.getId()+""});
-        return doneDelete > 0;
-
-    }
-
 
 }

@@ -74,7 +74,7 @@
                 android:id="@+id/txtpoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/estable_default_description"
+                android:text="5"
                 android:drawablePadding="8dp"
                 android:textAppearance="@style/TextViewSmall"
                 android:drawableStart="@drawable/ic_star"

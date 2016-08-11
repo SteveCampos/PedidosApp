@@ -20,42 +20,45 @@
         >
 
         <TextView
-            android:id="@+id/text_station_dispatch_tank"
+            android:id="@+id/text_station_tank_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TANK TB - 10020"
-            android:layout_toStartOf="@+id/text_station_dispatch_quantity"
+            android:text="10562851"
+            android:layout_toStartOf="@+id/text_station_tank_capacity"
             style="@style/TextAppearance.AppCompat.Title"
             />
 
         <TextView
-            android:id="@+id/text_station_dispatch_product"
+            android:id="@+id/text_station_tank_capacity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GLP"
-            android:layout_below="@+id/text_station_dispatch_tank"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />
-
-        <TextView
-            android:id="@+id/text_station_dispatch_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="300.00 GAL"
+            android:text="300 - 1300"
             android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
             style="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorAccent"
+            android:layout_alignParentTop="true"
             />
-
         <TextView
-            android:id="@+id/text_station_dispatch_state"
+            android:id="@+id/text_station_tank_politica"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/text_station_tank_capacity"
+            android:text="85% or 1105 GAL"
+            android:layout_below="@+id/text_station_tank_title"
+            />
+        
+        <TextView
+            android:id="@+id/text_station_tank_capacity_neta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DESPACHADO"
+            android:text="1500 GAL"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/text_station_tank_politica"
             />
-
+        
     </RelativeLayout>
 
 

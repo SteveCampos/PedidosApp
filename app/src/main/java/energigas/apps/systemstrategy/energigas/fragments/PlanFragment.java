@@ -24,15 +24,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.StationAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Station;
+import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PlanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlanFragment extends Fragment implements StationAdapter.OnStationClickListener, OnDateSelectedListener {
+public class PlanFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener, OnDateSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,8 +52,8 @@ public class PlanFragment extends Fragment implements StationAdapter.OnStationCl
     NestedScrollView scrollView;
 
 
-    private StationAdapter adapter;
-    private List<Station> stationList = new ArrayList<>();
+    private EstablecimientoAdapter adapter;
+    private List<Establecimiento> establecimientoList = new ArrayList<>();
 
     public PlanFragment() {
         // Required empty public constructor
@@ -96,14 +96,13 @@ public class PlanFragment extends Fragment implements StationAdapter.OnStationCl
 
         //VIEWS
 
-        stationList = Station.getEstablishments();
-        adapter = new StationAdapter(stationList, getActivity(), this);
+        establecimientoList = Establecimiento.getList();
+        adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         calendarView.setOnDateChangedListener(this);
         recyclerView.setFocusable(false);
-        //scrollView.fullScroll(NestedScrollView.FOCUS_UP);
         return view;
     }
 
@@ -114,7 +113,7 @@ public class PlanFragment extends Fragment implements StationAdapter.OnStationCl
     }
 
     @Override
-    public void onStationClickListener(Station station, View view) {
+    public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
 
     }
 

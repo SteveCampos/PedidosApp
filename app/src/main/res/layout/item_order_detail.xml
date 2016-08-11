@@ -20,41 +20,42 @@
         >
 
         <TextView
-            android:id="@+id/text_station_dispatch_tank"
+            android:id="@+id/text_order_detail_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TANK TB - 10020"
-            android:layout_toStartOf="@+id/text_station_dispatch_quantity"
-            style="@style/TextAppearance.AppCompat.Title"
-            />
-
-        <TextView
-            android:id="@+id/text_station_dispatch_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="GLP"
-            android:layout_below="@+id/text_station_dispatch_tank"
-            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_toStartOf="@+id/text_order_detail_quantity"
+            style="@style/TextAppearance.AppCompat.Large"
             />
 
         <TextView
-            android:id="@+id/text_station_dispatch_quantity"
+            android:id="@+id/text_order_detail_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="300.00 GAL"
+            android:text="500 GALONES"
             android:layout_alignParentEnd="true"
-            style="@style/TextAppearance.AppCompat.Large"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent"
             />
 
         <TextView
-            android:id="@+id/text_station_dispatch_state"
+            android:id="@+id/text_order_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DESPACHADO"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:text="CON IGV: S/. 4. 7200 \nSIN IGV:   S/. 4. 0000"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_below="@+id/text_order_detail_title"
             />
+
+
+        <TextView
+            android:id="@+id/text_order_detail_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S/. 11 800 .00"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignBottom="@+id/text_order_detail_price"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

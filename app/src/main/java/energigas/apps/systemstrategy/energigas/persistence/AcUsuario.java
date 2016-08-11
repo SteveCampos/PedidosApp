@@ -46,44 +46,11 @@ public class AcUsuario {
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this ;
-    }
+}
     public void close() {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
-    }
-
-    public long createUser(Usuario usuario){
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(UsuIUsuarioId,usuario.getUsuIUsuarioId());
-        initialValues.put(UsuVUsuario,usuario.getUsuVUsuario());
-        initialValues.put(UsuVPassword,usuario.getUsuVPassword());
-        initialValues.put(UsuBEstado,usuario.getUsuBEstado());
-        initialValues.put(UsuIPersonaId,usuario.getUsuIPersonaId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_USUARIO, null, initialValues);
-    }
-
-    public int updateUser(Usuario usuario){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(UsuVUsuario,usuario.getUsuVUsuario());
-        initialValues.put(UsuVPassword,usuario.getUsuVPassword());
-        initialValues.put(UsuBEstado,usuario.getUsuBEstado());
-        initialValues.put(UsuIPersonaId,usuario.getUsuIPersonaId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_USUARIO, initialValues,
-                UsuIUsuarioId + "=?", new String[]{"" + usuario.getUsuIUsuarioId()});
-
-    }
-
-    public boolean deleteUserById(Usuario usuario) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_USUARIO, UsuIUsuarioId+"=?", new String[]{usuario.getUsuIUsuarioId()+""});
-        return doneDelete > 0;
-
     }
 
 

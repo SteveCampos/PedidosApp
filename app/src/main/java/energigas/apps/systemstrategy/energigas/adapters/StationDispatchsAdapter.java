@@ -59,6 +59,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         final OrderDispatch dispatch = stationDispatches.get(position);
 
 
+
         holder.dispatchTank.setText(dispatch.getTitleTank());
         holder.dispatchProduct.setText("GLP");
         holder.dispatchQuantity.setText(dispatch.getQuantityDisptach() + " Gal");

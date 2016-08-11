@@ -49,33 +49,4 @@ public class AcRolPrivilegio {
         }
     }
 
-    public long createAcceso(@NonNull RolPrivilegio rolPrivilegio){
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(RolId,rolPrivilegio.getRolId());
-        initialValues.put(PrivilegioId,rolPrivilegio.getPrivilegioId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.insert(SQLITE_TABLA_ROL_USUARIO, null, initialValues);
-    }
-
-    public int updateAcceso(@NonNull RolPrivilegio rolPrivilegio){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(RolId,rolPrivilegio.getRolId());
-        initialValues.put(PrivilegioId,rolPrivilegio.getPrivilegioId());
-        initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-
-        return mDb.update(SQLITE_TABLA_ROL_USUARIO, initialValues,
-                RolId + "=? and "+ PrivilegioId +" =? ", new String[]{"" + rolPrivilegio.getRolId(),""+rolPrivilegio.getPrivilegioId()});
-
-    }
-
-    public boolean deleteAccesoById(@NonNull  RolPrivilegio rolPrivilegio) {
-
-        int doneDelete = mDb.delete(SQLITE_TABLA_ROL_USUARIO,   RolId + "=? and "+ PrivilegioId +" =? ", new String[]{"" + rolPrivilegio.getRolId(),""+rolPrivilegio.getPrivilegioId()});
-        return doneDelete > 0;
-
-    }
-
-
 }

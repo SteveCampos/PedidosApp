@@ -15,9 +15,11 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.fragments.ChargesFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
+import energigas.apps.systemstrategy.energigas.fragments.OrderDetailFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment;
+import energigas.apps.systemstrategy.energigas.fragments.TankFragment;
 
 public class StationOrderActivity extends AppCompatActivity {
 
@@ -55,9 +57,8 @@ public class StationOrderActivity extends AppCompatActivity {
     }
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.title_activity_main_station));
-        tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.order_title_name));
-
+        tabsAdapter.addFragment(new OrderDetailFragment(), "ITEM");
+        tabsAdapter.addFragment(new TankFragment(), "TANQUES");
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }

@@ -20,7 +20,8 @@ public class StationDispatchsHolder extends RecyclerView.ViewHolder {
     public TextView dispatchQuantity;
     @BindView(R.id.text_station_dispatch_tank)
     public TextView dispatchTank;
-
+    @BindView(R.id.text_station_dispatch_state)
+    public TextView dispatchState;
 
     public StationDispatchsHolder(View itemView) {
         super(itemView);

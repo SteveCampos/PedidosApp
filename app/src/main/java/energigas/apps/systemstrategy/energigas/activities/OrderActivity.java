@@ -26,12 +26,12 @@ import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
-import energigas.apps.systemstrategy.energigas.entities.Station;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
-import energigas.apps.systemstrategy.energigas.fragments.StationFragment;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener,
-        StationFragment.OnStationClickListener,
+        EstablecimientoFragment.OnEstablecimientoClickListener,
         OrderedProductFragment.OnOrderedProductClickListener,
         OrderedProductFragment.OnDispatchClickListener{
 
@@ -110,12 +110,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        Snackbar.make(viewPager, "Order Go!", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(viewPager, "Pedido Go!", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public void onStationClickListener(Station station, View view) {
-        Snackbar.make(viewPager, station.getEstVName(), Snackbar.LENGTH_LONG).show();
+    public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
+        Snackbar.make(viewPager, establecimiento.getEstVDescripcion(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override

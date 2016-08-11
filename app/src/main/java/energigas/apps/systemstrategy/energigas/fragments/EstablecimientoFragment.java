@@ -15,23 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.StationAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Station;
+import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 19/07/2016.
  */
 
-public class StationFragment extends Fragment implements StationAdapter.OnStationClickListener {
+public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener {
 
 
-    public OnStationClickListener listener;
-    private StationAdapter adapter;
-    private List<Station> stationList = new ArrayList<>();
+    public OnEstablecimientoClickListener listener;
+    private EstablecimientoAdapter adapter;
+    private List<Establecimiento> establecimientoList = new ArrayList<>();
     private RecyclerView recyclerView;
 
-    public StationFragment() {
+    public EstablecimientoFragment() {
 
     }
 
@@ -47,8 +47,8 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        stationList = Station.getEstablishments();
-        adapter = new StationAdapter(stationList, getActivity(), this);
+        establecimientoList = Establecimiento.getList();
+        adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -58,11 +58,11 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnStationClickListener){
-            listener = (OnStationClickListener) context;
+        if (context instanceof OnEstablecimientoClickListener){
+            listener = (OnEstablecimientoClickListener) context;
         }else{
             throw new RuntimeException(context.toString() +
-                    " must implement OnStationClickListener");
+                    " must implement OnEstablecimientoClickListener");
         }
     }
 
@@ -73,20 +73,20 @@ public class StationFragment extends Fragment implements StationAdapter.OnStatio
     }
 
     @Override
-    public void onStationClickListener(Station station, View view) {
-        //Log.d(Utils.TAG, "StationFragment onStationClickListener: "+ position);
+    public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
+        //Log.d(Utils.TAG, "EstablecimientoFragment onEstablecimientoClickListener: "+ position);
         int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
         Log.d(Utils.TAG, "recyclerView.childAdapterPosition(): "+ childAdapterPosition);
-        if (stationList.size()>childAdapterPosition && childAdapterPosition >= 0){
-            /*stationList.remove(childAdapterPosition);
+        if (establecimientoList.size()>childAdapterPosition && childAdapterPosition >= 0){
+            /*establecimientoList.remove(childAdapterPosition);
             adapter.notifyItemRemoved(childAdapterPosition);*/
-            listener.onStationClickListener(station, view);
+            listener.onEstablecimientoClickListener(establecimiento, view);
         }
 
     }
 
-    public interface OnStationClickListener{
-        void onStationClickListener(Station station, View view);
+    public interface OnEstablecimientoClickListener {
+        void onEstablecimientoClickListener(Establecimiento establecimiento, View view);
     }
 
 }

@@ -13,7 +13,6 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class OrderDispatch {
 
 
-
     private double quantityDisptach;
 
     //INFORMACIÓN SOBRE EL TANQUE,

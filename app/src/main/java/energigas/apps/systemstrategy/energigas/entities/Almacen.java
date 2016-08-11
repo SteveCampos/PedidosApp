@@ -1,5 +1,10 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.app.AlarmManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -219,5 +224,13 @@ public class Almacen {
 
     public void setRigido(boolean rigido) {
         this.rigido = rigido;
+    }
+
+    public static List<Almacen> getList() {
+        List<Almacen> list = new ArrayList<>();
+        list.add(new Almacen());
+        list.add(new Almacen());
+        list.add(new Almacen());
+        return list;
     }
 }

@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -10,9 +13,9 @@ public class PedidoDetalle {
 
     private int pdId;
 
-    private int productoId;
+    private int productoId;//PRODUCTO NOMBRE, UNIDAD DE MEDIDA
 
-    private double cantidad;
+    private double cantidad;//
 
     private double cantidadAtendida;
 
@@ -22,9 +25,9 @@ public class PedidoDetalle {
 
     private String fechaAccion;
 
-    private double precioUnitario;
+    private double precioUnitario;//
 
-    private double costoVenta;
+    private double costoVenta;//
 
     private int unidadId;
 
@@ -164,5 +167,11 @@ public class PedidoDetalle {
 
     public void setGolpe(String golpe) {
         this.golpe = golpe;
+    }
+
+    public static List<PedidoDetalle> getList() {
+        List<PedidoDetalle> list = new ArrayList<>();
+        list.add(new PedidoDetalle());
+        return list;
     }
 }

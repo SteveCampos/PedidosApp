@@ -11,67 +11,70 @@ import java.util.Date;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.entities.Order;
-import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
-import energigas.apps.systemstrategy.energigas.holders.StationOrdersHolder;
-import energigas.apps.systemstrategy.energigas.holders.StationProductsHolder;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.holders.EstablecimientoPedidoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 8/08/2016.
  */
 
-public class StationOrdersAdapter extends RecyclerView.Adapter<StationOrdersHolder> {
+public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPedidoHolder> {
     private static final String TAG = StationProductsAdapter.class.getSimpleName();
     // Store a member variable for the list;
-    private List<Order> orderList;
+    private List<Pedido> pedidoList;
     // Store the context for easy access
     private Context mContext;
     public OnOrderClickListener listener;
 
     public interface OnOrderClickListener{
-        public void onOrderClickListener(Order order);
+        public void onOrderClickListener(Pedido pedido);
     }
 
-    public StationOrdersAdapter(List<Order> orderList, Context mContext, OnOrderClickListener listener) {
-        this.orderList = orderList;
+    public StationOrdersAdapter(List<Pedido> pedidoList, Context mContext, OnOrderClickListener listener) {
+        this.pedidoList = pedidoList;
         this.mContext = mContext;
         this.listener = listener;
     }
 
     @Override
-    public StationOrdersHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EstablecimientoPedidoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
-        View view = inflater.inflate(R.layout.item_station_order, parent, false);
+        View view = inflater.inflate(R.layout.item_pedido, parent, false);
         // Return a new holder instance
-        return new StationOrdersHolder(view);
+        return new EstablecimientoPedidoHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(StationOrdersHolder holder, int position) {
-        final Order order = orderList.get(position);
+    public void onBindViewHolder(EstablecimientoPedidoHolder holder, int position) {
+        final Pedido pedido = pedidoList.get(position);
 
-        holder.orderTitle.setText("PEDIDO 3000" + position);
-        holder.programedDate.setText(Utils.getNameOfDay(new Date(order.getOrderDate())));
+        /*
+        holder.title.setText(pedido.getProductsName()[0]);
+        holder.quantity.setText(pedido.getProductsName()[1]);
+        holder.scope.setText(position + "56542682256" + position);
+        holder.state.setText("ACTIVO");
+        holder.programedDate.setText(Utils.getNameOfDay(new Date(pedido.getOrderDate())));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "holder.itemView.setOnClickListener");
             }
         });
+        */
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onOrderClickListener(order);
+                listener.onOrderClickListener(pedido);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return orderList.size();
+        return pedidoList.size();
     }
 
 }

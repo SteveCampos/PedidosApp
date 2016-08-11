@@ -15,9 +15,7 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.StationOrdersAdapter;
-import energigas.apps.systemstrategy.energigas.adapters.StationProductsAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Order;
-import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,13 +23,13 @@ import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 public class StationOrderFragment extends Fragment implements StationOrdersAdapter.OnOrderClickListener {
 
 
-    private List<Order> orders = new ArrayList<>();
+    private List<Pedido> pedidos = new ArrayList<>();
     private RecyclerView recyclerView;
     private StationOrdersAdapter adapter;
     private OnStationOrderClickListener listener;
 
     public interface OnStationOrderClickListener{
-        void onStationOrderClickListener(Order order);
+        void onStationOrderClickListener(Pedido pedido);
     }
 
     public StationOrderFragment() {
@@ -46,8 +44,8 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        orders = Order.getOrders();
-        adapter = new StationOrdersAdapter(orders, getActivity(), this);
+        pedidos = Pedido.getList();
+        adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -55,9 +53,9 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
     }
 
     @Override
-    public void onOrderClickListener(Order order) {
+    public void onOrderClickListener(Pedido pedido) {
         if (listener!=null){
-            listener.onStationOrderClickListener(order);
+            listener.onStationOrderClickListener(pedido);
         }
     }
 

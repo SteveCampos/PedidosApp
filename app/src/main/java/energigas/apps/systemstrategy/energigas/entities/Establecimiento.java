@@ -1,10 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by kelvi on 10/08/2016.
+ * Created by jairc on 19/07/2016.
  */
 
 public class Establecimiento {
+
     private int estIEstablecimientoId;
 
     private String estVCodigo;
@@ -44,6 +48,7 @@ public class Establecimiento {
     private String estVContacto;
 
     public Establecimiento() {
+
     }
 
     public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto) {
@@ -219,4 +224,19 @@ public class Establecimiento {
     public void setEstVContacto(String estVContacto) {
         this.estVContacto = estVContacto;
     }
+
+    public static List<Establecimiento> getList(){
+        List<Establecimiento> listEstablecimiento = new ArrayList<>();
+        for (int i= 0; i<= 10; i++){
+            listEstablecimiento.add(new Establecimiento(100, "1000", "Descripción", 1, 1, 1, 1, "993061806", "993061806",
+                    1, "16/02/16", 1, "16/02/16", 1, 1, "126/06/16", "Observacion", "KEyFirebase", "Contacto"));
+            /*
+            listEstablecimiento.add(new Establecimiento("Agropacking Export S.A.","car. panamericana norte km. 1076","2.0","1.4 km","externo"));
+            listEstablecimiento.add(new Establecimiento("Alsur Peru S.A.C.","av.Juan Pablo II N°  1130 MZA","4.0","7 km","interno"));
+            listEstablecimiento.add(new Establecimiento("America Textil Peru","Sector Peruano Zona II MZA.","3.0","24 km","externo"));*/
+        }
+        return listEstablecimiento;
+    }
+
+
 }
