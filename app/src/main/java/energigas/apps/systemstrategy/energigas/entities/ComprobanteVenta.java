@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -52,6 +55,7 @@ public class ComprobanteVenta {
     private String fechaCreacion;
 
     private String fechaActualizacion;
+    private static List<ComprobanteVenta> list;
 
     public ComprobanteVenta() {
     }
@@ -81,6 +85,12 @@ public class ComprobanteVenta {
         this.direccionCliente = direccionCliente;
         this.fechaCreacion = fechaCreacion;
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public static List<ComprobanteVenta> getList() {
+        List<ComprobanteVenta> mList = new ArrayList<>();
+        mList.add(new ComprobanteVenta());
+        return mList;
     }
 
     public long getCompId() {
