@@ -12,23 +12,24 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.ChargesAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Charges;
+import energigas.apps.systemstrategy.energigas.adapters.CajaPagoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaPago;
 
 /**
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesFragment extends Fragment implements ChargesAdapter.OnChargesClickListener {
+public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener {
 
-    public OnChargesClickListener listener;
+    public OnCajaPagoClickListener listener;
 
 
     private RecyclerView recyclerView;
 
-    public ChargesFragment() {
+    public CajaPagoFragment() {
 
     }
+    CajaPagoAdapter adapter;
 
     @Nullable
     @Override
@@ -38,7 +39,7 @@ public class ChargesFragment extends Fragment implements ChargesAdapter.OnCharge
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
 
-        ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(), this);
+        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -46,11 +47,11 @@ public class ChargesFragment extends Fragment implements ChargesAdapter.OnCharge
     }
 
     @Override
-    public void onChargesClickListener(Charges charges, View view) {
-        Snackbar.make(view, charges.getmDate(), Snackbar.LENGTH_LONG).show();
+    public void onCajaPagoClickListener(CajaPago cajaPago, View view) {
+        Snackbar.make(view, cajaPago.getFechaAccion(), Snackbar.LENGTH_LONG).show();
     }
 
-    public interface OnChargesClickListener {
-        void onCharfesClickListener(Charges charges, View view);
+    public interface OnCajaPagoClickListener {
+        void onCajaPagoClickListener(CajaPago cajaPago, View view);
     }
 }

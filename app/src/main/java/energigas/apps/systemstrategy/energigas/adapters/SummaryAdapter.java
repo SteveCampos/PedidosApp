@@ -11,12 +11,13 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
+import energigas.apps.systemstrategy.energigas.holders.SummaryHolder;
 
 /**
  * Created by kelvi on 20/07/2016.
  */
 
-public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHolder> {
+public class SummaryAdapter extends RecyclerView.Adapter<SummaryHolder> {
 
     // Store a member variable for the contacts
     private List<Summary> summaries;
@@ -29,7 +30,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SummaryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
         View contactView = null;
@@ -48,7 +49,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
         }
 
 
-        return new ViewHolder(contactView);
+        return new SummaryHolder(contactView);
     }
 
     @Override
@@ -57,8 +58,11 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(summaries.get(position));
+    public void onBindViewHolder(SummaryHolder holder, int position) {
+        //  holder.bind(summaries.get(position));
+
+        final Summary summary = summaries.get(position);
+        holder.nameTextView.setText(summary.getEfectivoRendir()+"");
     }
 
     @Override
@@ -66,22 +70,22 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.ViewHold
         return summaries.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
-        TextView nameTextView;
-
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
-        ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
-            super(itemView);
-            nameTextView = (TextView) itemView.findViewById(R.id.text_establishment_name);
-        }
-
-        void bind(Summary summary) {
-            nameTextView.setText(summary.getEfectivoRendir()+"");
-        }
-    }
+//    static class ViewHolder extends RecyclerView.ViewHolder {
+//        // Your holder should contain a member variable
+//        // for any view that will be set as you render a row
+//        TextView nameTextView;
+//
+//        // We also create a constructor that accepts the entire item row
+//        // and does the view lookups to find each subview
+//        ViewHolder(View itemView) {
+//            // Stores the itemView in a public final member variable that can be used
+//            // to access the context from any ViewHolder instance.
+//            super(itemView);
+//            nameTextView = (TextView) itemView.findViewById(R.id.text_establishment_name);
+//        }
+//
+//        void bind(Summary summary) {
+//            nameTextView.setText(summary.getEfectivoRendir()+"");
+//        }
+//    }
 }

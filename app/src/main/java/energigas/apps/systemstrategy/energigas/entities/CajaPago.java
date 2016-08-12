@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -22,10 +25,10 @@ public class CajaPago {
 
     private boolean anulado;
 
-    public CajaPago() {
-    }
+    private String comprobante;
+    private String serie;
 
-    public CajaPago(long cajPagId, double importe, long cajMovId, int usuarioId, String fechaAccion, boolean exportado, int tipoPagoId, boolean anulado) {
+    public CajaPago(long cajPagId, double importe, long cajMovId, int usuarioId, String fechaAccion, boolean exportado, int tipoPagoId, boolean anulado, String comprobante, String serie) {
         this.cajPagId = cajPagId;
         this.importe = importe;
         this.cajMovId = cajMovId;
@@ -34,7 +37,39 @@ public class CajaPago {
         this.exportado = exportado;
         this.tipoPagoId = tipoPagoId;
         this.anulado = anulado;
+        this.comprobante = comprobante;
+        this.serie = serie;
     }
+
+    public CajaPago() {
+    }
+
+    public String getComprobante() {
+        return comprobante;
+    }
+
+    public void setComprobante(String comprobante) {
+        this.comprobante = comprobante;
+    }
+
+    public String getSerie() {
+        return serie;
+    }
+
+    public void setSerie(String serie) {
+        this.serie = serie;
+    }
+
+//    public CajaPago(long cajPagId, double importe, long cajMovId, int usuarioId, String fechaAccion, boolean exportado, int tipoPagoId, boolean anulado) {
+//        this.cajPagId = cajPagId;
+//        this.importe = importe;
+//        this.cajMovId = cajMovId;
+//        this.usuarioId = usuarioId;
+//        this.fechaAccion = fechaAccion;
+//        this.exportado = exportado;
+//        this.tipoPagoId = tipoPagoId;
+//        this.anulado = anulado;
+//    }
 
     public long getCajPagId() {
         return cajPagId;
@@ -98,5 +133,13 @@ public class CajaPago {
 
     public void setAnulado(boolean anulado) {
         this.anulado = anulado;
+    }
+
+    public static List<CajaPago> getListCajaPago(){
+        List<CajaPago> cajaPagoList = new ArrayList<>();
+        cajaPagoList.add(new CajaPago(10,20.10,10,20,"10/08/2016",true,201,false,"F001","00000024"));
+        cajaPagoList.add(new CajaPago(10,20.10,10,20,"10/08/2016",true,201,false,"F001","00000024"));
+        cajaPagoList.add(new CajaPago(10,20.10,10,20,"10/08/2016",true,201,false,"F001","00000024"));
+        return cajaPagoList;
     }
 }
