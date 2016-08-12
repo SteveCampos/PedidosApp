@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -27,6 +30,16 @@ public class Utils {
     public static String getNameOfDay(Date date){
         SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
         return Utils.capitalize(parseFormat.format(date));
+    }
+
+    public static String getJsonObResult(JSONObject jsonObject){
+        String s = "";
+        try {
+            s = jsonObject.getJSONObject("Value").toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  s;
     }
 
     public static void showMap(Context context, Uri geoLocation) {

@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
@@ -24,10 +26,14 @@ public class Usuario {
 
     private String usuDTFechaCreacion;
 
+    private List<Rol> itemsRoles;
+
+    private Persona persona;
+
     public Usuario() {
     }
 
-    public Usuario(int usuIUsuarioId, String usuVUsuario, String usuVPassword, boolean usuBEstado, int usuIPersonaId, int usuIUsuarioActualizacion, String usuDTFechaActualizacion, int usuIUsuarioCreacion, String usuDTFechaCreacion) {
+    public Usuario(int usuIUsuarioId, String usuVUsuario, String usuVPassword, boolean usuBEstado, int usuIPersonaId, int usuIUsuarioActualizacion, String usuDTFechaActualizacion, int usuIUsuarioCreacion, String usuDTFechaCreacion,List<Rol> itemsRoles,Persona persona) {
         this.usuIUsuarioId = usuIUsuarioId;
         this.usuVUsuario = usuVUsuario;
         this.usuVPassword = usuVPassword;
@@ -37,6 +43,24 @@ public class Usuario {
         this.usuDTFechaActualizacion = usuDTFechaActualizacion;
         this.usuIUsuarioCreacion = usuIUsuarioCreacion;
         this.usuDTFechaCreacion = usuDTFechaCreacion;
+        this.itemsRoles = itemsRoles;
+        this.persona = persona;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+
+    public List<Rol> getItemsRoles() {
+        return itemsRoles;
+    }
+
+    public void setItemsRoles(List<Rol> itemsRoles) {
+        this.itemsRoles = itemsRoles;
     }
 
     public int getUsuIUsuarioId() {

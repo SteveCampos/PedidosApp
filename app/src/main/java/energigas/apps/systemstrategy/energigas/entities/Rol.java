@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
@@ -21,10 +23,12 @@ public class Rol {
 
     private int usuarioActualizacion;
 
+    private List<Acceso> itemsAccesos;
+
     public Rol() {
     }
 
-    public Rol(int id, String nombre, boolean estado, int parentId, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion) {
+    public Rol(int id, String nombre, boolean estado, int parentId, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion,List<Acceso> itemsAccesos) {
         this.id = id;
         this.nombre = nombre;
         this.estado = estado;
@@ -33,6 +37,15 @@ public class Rol {
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioCreacion = usuarioCreacion;
         this.usuarioActualizacion = usuarioActualizacion;
+        this.itemsAccesos =itemsAccesos;
+    }
+
+    public List<Acceso> getItemsAccesos() {
+        return itemsAccesos;
+    }
+
+    public void setItemsAccesos(List<Acceso> itemsAccesos) {
+        this.itemsAccesos = itemsAccesos;
     }
 
     public int getId() {

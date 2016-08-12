@@ -2,8 +2,10 @@ package energigas.apps.systemstrategy.energigas.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -12,6 +14,10 @@ import energigas.apps.systemstrategy.energigas.utils.Constants;
  * Created by KelvinThony on 11/08/2016.
  */
 public class DB_Usuario {
+
+    private static final String TAG = "DB_Usuario";
+
+
     public static final String _id = "_id";
     public static final String usuIUsuarioId = "usuIUsuarioId";
     public static final String usuVUsuario = "usuVUsuario";
@@ -57,6 +63,16 @@ public class DB_Usuario {
         }
     }
 
+    public boolean validateUserAndPassword(@NonNull String user, @NonNull String pass) {
+
+        Cursor cursor = mDb.rawQuery(" select * from " + SQLITE_TABLA_DB_USUARIO + " where " + usuVUsuario + " = '"+user+"' and " + usuVPassword + " = '"+pass+"'  ",null);
+        if (cursor.getCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public long createUsuario(@NonNull Usuario usuario) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(usuIUsuarioId, usuario.getUsuIUsuarioId());
@@ -85,5 +101,36 @@ public class DB_Usuario {
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.update(SQLITE_TABLA_DB_USUARIO, initialValues,
                 usuIUsuarioId + "=?", new String[]{"" + usuario.getUsuIUsuarioId()});
+    }
+
+    public boolean createWithPrivilegesUsuario(@NonNull Usuario usuario, @NonNull Context context) {
+
+        boolean aLong = true;
+
+        DB_Persona db_persona = new DB_Persona(context);
+        DB_Rol db_rol = new DB_Rol(context);
+        db_persona.open();
+        db_rol.open();
+
+        if (!db_rol.createAllRol(usuario, context)) {
+            aLong = false;
+            Log.e(TAG, "ERROR AL INSERTAR ROLES");
+            return aLong;
+        }
+
+        if (createUsuario(usuario) < 0) {
+            aLong = false;
+            Log.e(TAG, "ERROR AL INSERTAR USUARIO");
+            return aLong;
+        }
+        if (db_persona.createPersona(usuario.getPersona()) < 0) {
+            aLong = false;
+            Log.e(TAG, "ERROR AL INSERTAR PERSONA");
+            return aLong;
+        }
+        db_persona.close();
+        db_rol.close();
+
+        return aLong;
     }
 }

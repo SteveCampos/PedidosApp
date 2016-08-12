@@ -53,7 +53,7 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
         final CajaPago cajaPago = mCajaPagoList.get(position);
 
-        holder.mcomprobante.setText(cajaPago.getComprobante() + "-" + cajaPago.getSerie());
+        holder.mcomprobante.setText(cajaPago.getFechaAccion() + "-" + cajaPago.getFechaAccion());
         //  mserie.setText(charges.getmSerie());
         holder.mdate.setText(cajaPago.getFechaAccion());
         holder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));

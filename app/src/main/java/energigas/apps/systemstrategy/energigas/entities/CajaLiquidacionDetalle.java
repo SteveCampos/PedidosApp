@@ -23,10 +23,12 @@ public class CajaLiquidacionDetalle {
 
     private String fechaAtencion;
 
+    private long peId;
+
     public CajaLiquidacionDetalle() {
     }
 
-    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion) {
+    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion,long peId) {
         this.lidId = lidId;
         this.liId = liId;
         this.establecimientoId = establecimientoId;
@@ -36,6 +38,7 @@ public class CajaLiquidacionDetalle {
         this.estadoId = estadoId;
         this.orden = orden;
         this.fechaAtencion = fechaAtencion;
+        this.peId = peId;
     }
 
     public long getLidId() {
@@ -108,5 +111,13 @@ public class CajaLiquidacionDetalle {
 
     public void setFechaAtencion(String fechaAtencion) {
         this.fechaAtencion = fechaAtencion;
+    }
+
+    public long getPeId() {
+        return peId;
+    }
+
+    public void setPeId(long peId) {
+        this.peId = peId;
     }
 }

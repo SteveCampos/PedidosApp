@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Persona ;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
@@ -22,6 +22,10 @@ public class DB_Persona {
     public static final String perBEstado = "perBEstado";
     public static final String perITipoDocIdentidadId = "perITipoDocIdentidadId";
     public static final String perITipoPersonaId = "perITipoPersonaId";
+    public static final String perlUsuarioCreacion = "perlUsuarioCreacion";
+    public static final String perDTFechaCreacion = "perDTFechaCreacion";
+    public static final String perIUsuarioActualizacion = "perIUsuarioActualizacion";
+    public static final String perDTFechaActualizacion = "perDTFechaActualizacion";
     public static final String perIEmpresaId = "perIEmpresaId";
     public static final String perVEmail = "perVEmail";
     private DbHelper mDbHelper;
@@ -29,69 +33,74 @@ public class DB_Persona {
     private static final String SQLITE_TABLA_DB_PERSONA = "DB_Persona";
     private final Context mCtx;
     public static final String CREATE_TABLA_DB_PERSONA =
-            "create table " + SQLITE_TABLA_DB_PERSONA + " ("
-                    + _id + " integer primary key autoincrement,"
-                    + perIPersonaId + " integer ,"
-                    + perVRazonSocial + " text ,"
-                    + perVNombres + " text ,"
-                    + perVApellidoPaterno + " text ,"
-                    + perVApellidoMaterno + " text ,"
-                    + perVDocIdentidad + " text ,"
-                    + perBEstado + " text ,"
-                    + perITipoDocIdentidadId + " text ,"
-                    + perITipoPersonaId + " text ,"
-                    + perIEmpresaId + " text ,"
-                    + perVEmail + " text ,"
-                    + Constants._CLMEXPORT + " integer );";
-    public static final String DELETE_TABLA_DB_PERSONA = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_PERSONA;
-
-    public DB_Persona(Context ctx) {
+            "create table "+ SQLITE_TABLA_DB_PERSONA +" ("
+                    +_id+" integer primary key autoincrement,"
+                    + perIPersonaId +" integer ,"
+                    + perVRazonSocial +" text ,"
+                    + perVNombres +" text ,"
+                    + perVApellidoPaterno +" text ,"
+                    + perVApellidoMaterno +" text ,"
+                    + perVDocIdentidad +" text ,"
+                    + perBEstado +" integer ,"
+                    + perITipoDocIdentidadId +" integer ,"
+                    + perITipoPersonaId +" integer ,"
+                    + perlUsuarioCreacion +" integer ,"
+                    + perDTFechaCreacion +" text ,"
+                    + perIUsuarioActualizacion +" integer ,"
+                    + perDTFechaActualizacion +" text ,"
+                    + perIEmpresaId +" integer ,"
+                    + perVEmail +" text ,"
+                    + Constants._CLMEXPORT+" integer );";
+    public static final String DELETE_TABLA_DB_PERSONA = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_PERSONA ;
+    public DB_Persona (Context ctx) {
         this.mCtx = ctx;
     }
 
-    public DB_Persona open() {
+    public DB_Persona open()  {
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
-        return this;
+        return this ;
     }
-
     public void close() {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
-    }
-
-    public long createPersona(@NonNull Persona persona) {
+    } public long createPersona (@NonNull Persona persona) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(perIPersonaId, persona.getPerIPersonaId());
-        initialValues.put(perVRazonSocial, persona.getPerVRazonSocial());
-        initialValues.put(perVNombres, persona.getPerVNombres());
-        initialValues.put(perVApellidoPaterno, persona.getPerVApellidoPaterno());
-        initialValues.put(perVApellidoMaterno, persona.getPerVApellidoMaterno());
-        initialValues.put(perVDocIdentidad, persona.getPerVDocIdentidad());
-        initialValues.put(perBEstado, persona.getPerBEstado());
-        initialValues.put(perITipoDocIdentidadId, persona.getPerITipoDocIdentidadId());
-        initialValues.put(perITipoPersonaId, persona.getPerITipoPersonaId());
-        initialValues.put(perIEmpresaId, persona.getPerIEmpresaId());
-        initialValues.put(perVEmail, persona.getPerVEmail());
+        initialValues.put( perIPersonaId ,persona.getPerIPersonaId() );
+        initialValues.put( perVRazonSocial ,persona.getPerVRazonSocial() );
+        initialValues.put( perVNombres ,persona.getPerVNombres() );
+        initialValues.put( perVApellidoPaterno ,persona.getPerVApellidoPaterno() );
+        initialValues.put( perVApellidoMaterno ,persona.getPerVApellidoMaterno() );
+        initialValues.put( perVDocIdentidad ,persona.getPerVDocIdentidad() );
+        initialValues.put( perBEstado ,persona.isPerBEstado() );
+        initialValues.put( perITipoDocIdentidadId ,persona.getPerITipoDocIdentidadId() );
+        initialValues.put( perITipoPersonaId ,persona.getPerITipoPersonaId() );
+        initialValues.put( perlUsuarioCreacion ,persona.getPerlUsuarioCreacion() );
+        initialValues.put( perDTFechaCreacion ,persona.getPerDTFechaCreacion() );
+        initialValues.put( perIUsuarioActualizacion ,persona.getPerIUsuarioActualizacion() );
+        initialValues.put( perDTFechaActualizacion ,persona.getPerDTFechaActualizacion() );
+        initialValues.put( perIEmpresaId ,persona.getPerIEmpresaId() );
+        initialValues.put( perVEmail ,persona.getPerVEmail() );
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-        return mDb.insert(SQLITE_TABLA_DB_PERSONA, null, initialValues);
-    }
-
-    public long updatePersona(@NonNull Persona persona) {
+        return mDb.insert(SQLITE_TABLA_DB_PERSONA , null, initialValues);
+    } public long updatePersona (@NonNull Persona persona) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(perVRazonSocial, persona.getPerVRazonSocial());
-        initialValues.put(perVNombres, persona.getPerVNombres());
-        initialValues.put(perVApellidoPaterno, persona.getPerVApellidoPaterno());
-        initialValues.put(perVApellidoMaterno, persona.getPerVApellidoMaterno());
-        initialValues.put(perVDocIdentidad, persona.getPerVDocIdentidad());
-        initialValues.put(perBEstado, persona.getPerBEstado());
-        initialValues.put(perITipoDocIdentidadId, persona.getPerITipoDocIdentidadId());
-        initialValues.put(perITipoPersonaId, persona.getPerITipoPersonaId());
-        initialValues.put(perIEmpresaId, persona.getPerIEmpresaId());
-        initialValues.put(perVEmail, persona.getPerVEmail());
+        initialValues.put( perVRazonSocial ,persona.getPerVRazonSocial() );
+        initialValues.put( perVNombres ,persona.getPerVNombres() );
+        initialValues.put( perVApellidoPaterno ,persona.getPerVApellidoPaterno() );
+        initialValues.put( perVApellidoMaterno ,persona.getPerVApellidoMaterno() );
+        initialValues.put( perVDocIdentidad ,persona.getPerVDocIdentidad() );
+        initialValues.put( perBEstado ,persona.isPerBEstado() );
+        initialValues.put( perITipoDocIdentidadId ,persona.getPerITipoDocIdentidadId() );
+        initialValues.put( perITipoPersonaId ,persona.getPerITipoPersonaId() );
+        initialValues.put( perlUsuarioCreacion ,persona.getPerlUsuarioCreacion() );
+        initialValues.put( perDTFechaCreacion ,persona.getPerDTFechaCreacion() );
+        initialValues.put( perIUsuarioActualizacion ,persona.getPerIUsuarioActualizacion() );
+        initialValues.put( perDTFechaActualizacion ,persona.getPerDTFechaActualizacion() );
+        initialValues.put( perIEmpresaId ,persona.getPerIEmpresaId() );
+        initialValues.put( perVEmail ,persona.getPerVEmail() );
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-        return mDb.update(SQLITE_TABLA_DB_PERSONA, initialValues,
-                perIPersonaId + "=?", new String[]{"" + persona.getPerIPersonaId()});
-    }
-}
+        return mDb.update(SQLITE_TABLA_DB_PERSONA , initialValues,
+                perIPersonaId  + "=?", new String[]{"" + persona.getPerIPersonaId() });
+    }  }

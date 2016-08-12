@@ -20,10 +20,12 @@ public class PlanRutaDetalle {
 
     private int usuarioActualizacion;
 
+    private long peId;
+
     public PlanRutaDetalle() {
     }
 
-    public PlanRutaDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion) {
+    public PlanRutaDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId) {
         this.pddId = pddId;
         this.pdId = pdId;
         this.establecimientoId = establecimientoId;
@@ -31,6 +33,7 @@ public class PlanRutaDetalle {
         this.estado = estado;
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
+        this.peId = peId;
     }
 
     public long getPddId() {
@@ -87,5 +90,13 @@ public class PlanRutaDetalle {
 
     public void setUsuarioActualizacion(int usuarioActualizacion) {
         this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    public long getPeId() {
+        return peId;
+    }
+
+    public void setPeId(long peId) {
+        this.peId = peId;
     }
 }

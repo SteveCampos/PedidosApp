@@ -4,14 +4,21 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by KelvinThony on 11/08/2016.
  */
 public class DB_Rol {
+    private static final String TAG = "DB_Rol";
+
     public static final String _id = "_id";
     public static final String id = "id";
     public static final String nombre = "nombre";
@@ -67,6 +74,33 @@ public class DB_Rol {
         initialValues.put(usuarioActualizacion, rol.getUsuarioActualizacion());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_ROL, null, initialValues);
+    }
+
+    public boolean createAllRol(@NonNull Usuario usuario, Context context) {
+        DB_Acceso db_acceso = new DB_Acceso(context);
+        DB_RolUsuario db_rolUsuario = new DB_RolUsuario(context);
+        db_acceso.open();
+        db_rolUsuario.open();
+        boolean state = true;
+
+        for (Rol rol : usuario.getItemsRoles()) {
+            RolUsuario rolUsuario = new RolUsuario(usuario.getUsuIUsuarioId(), rol.getId());
+            Long insert = createRol(rol);
+            Long insertRolUsuario = db_rolUsuario.createRolUsuario(rolUsuario);
+            if ((insert & insertRolUsuario) < 0) {
+                Log.e(TAG, "ERROR AL INSERTAR ROLES");
+                state = false;
+                break;
+            } else {
+                state = db_acceso.createAllAcceso(rol, context);
+                if (!state) {
+                    break;
+                }
+            }
+
+        }
+        db_acceso.close();
+        return state;
     }
 
     public long updateRol(@NonNull Rol rol) {

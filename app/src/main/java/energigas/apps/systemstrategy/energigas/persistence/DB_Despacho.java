@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Despacho ;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
@@ -40,122 +40,119 @@ public class DB_Despacho {
     public static final String usuarioCreacion = "usuarioCreacion";
     public static final String estadoId = "estadoId";
     public static final String vehiculoId = "vehiculoId";
+    public static final String guiaRemision = "guiaRemision";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
     private static final String SQLITE_TABLA_DB_DESPACHO = "DB_Despacho";
     private final Context mCtx;
     public static final String CREATE_TABLA_DB_DESPACHO =
-            "create table " + SQLITE_TABLA_DB_DESPACHO + " ("
-                    + _id + " integer primary key autoincrement,"
-                    + despachoId + " integer ,"
-                    + peId + " integer ,"
-                    + pdId + " integer ,"
-                    + clienteId + " integer ,"
-                    + establecimientoId + " integer ,"
-                    + almacenEstId + " integer ,"
-                    + usuarioId + " integer ,"
-                    + placa + " text ,"
-                    + contadorInicial + " real ,"
-                    + contadorFinal + " real ,"
-                    + cantidadDespachada + " real ,"
-                    + horaInicio + " text ,"
-                    + horaFin + " text ,"
-                    + fechaDespacho + " text ,"
-                    + proId + " integer ,"
-                    + unId + " integer ,"
-                    + pIT + " real ,"
-                    + pFT + " real ,"
-                    + latitud + " text ,"
-                    + longitud + " text ,"
-                    + almacenVehId + " integer ,"
-                    + serie + " text ,"
-                    + numero + " real ,"
-                    + fechaCreacion + " integer ,"
-                    + usuarioCreacion + " text ,"
-                    + estadoId + " integer ,"
-                    + vehiculoId + " integer ,"
-                    + Constants._CLMEXPORT + " integer );";
-    public static final String DELETE_TABLA_DB_DESPACHO = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_DESPACHO;
-
-    public DB_Despacho(Context ctx) {
+            "create table "+ SQLITE_TABLA_DB_DESPACHO +" ("
+                    +_id+" integer primary key autoincrement,"
+                    + despachoId +" integer ,"
+                    + peId +" integer ,"
+                    + pdId +" integer ,"
+                    + clienteId +" integer ,"
+                    + establecimientoId +" integer ,"
+                    + almacenEstId +" integer ,"
+                    + usuarioId +" integer ,"
+                    + placa +" text ,"
+                    + contadorInicial +" real ,"
+                    + contadorFinal +" real ,"
+                    + cantidadDespachada +" real ,"
+                    + horaInicio +" text ,"
+                    + horaFin +" text ,"
+                    + fechaDespacho +" text ,"
+                    + proId +" integer ,"
+                    + unId +" integer ,"
+                    + pIT +" real ,"
+                    + pFT +" real ,"
+                    + latitud +" text ,"
+                    + longitud +" text ,"
+                    + almacenVehId +" integer ,"
+                    + serie +" text ,"
+                    + numero +" real ,"
+                    + fechaCreacion +" integer ,"
+                    + usuarioCreacion +" text ,"
+                    + estadoId +" integer ,"
+                    + vehiculoId +" integer ,"
+                    + guiaRemision +" text ,"
+                    + Constants._CLMEXPORT+" integer );";
+    public static final String DELETE_TABLA_DB_DESPACHO = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_DESPACHO ;
+    public DB_Despacho (Context ctx) {
         this.mCtx = ctx;
     }
 
-    public DB_Despacho open() {
+    public DB_Despacho open()  {
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
-        return this;
+        return this ;
     }
-
     public void close() {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
-    }
-
-    public long createDespacho(@NonNull Despacho despacho) {
+    } public long createDespacho (@NonNull Despacho despacho) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(despachoId, despacho.getDespachoId());
-        initialValues.put(peId, despacho.getPeId());
-        initialValues.put(pdId, despacho.getPdId());
-        initialValues.put(clienteId, despacho.getClienteId());
-        initialValues.put(establecimientoId, despacho.getEstablecimientoId());
-        initialValues.put(almacenEstId, despacho.getAlmacenEstId());
-        initialValues.put(usuarioId, despacho.getUsuarioId());
-        initialValues.put(placa, despacho.getPlaca());
-        initialValues.put(contadorInicial, despacho.getContadorInicial());
-        initialValues.put(contadorFinal, despacho.getContadorFinal());
-        initialValues.put(cantidadDespachada, despacho.getCantidadDespachada());
-        initialValues.put(horaInicio, despacho.getHoraInicio());
-        initialValues.put(horaFin, despacho.getHoraFin());
-        initialValues.put(fechaDespacho, despacho.getFechaDespacho());
-        initialValues.put(proId, despacho.getProId());
-        initialValues.put(unId, despacho.getUnId());
-        initialValues.put(pIT, despacho.getpIT());
-        initialValues.put(pFT, despacho.getpFT());
-        initialValues.put(latitud, despacho.getLatitud());
-        initialValues.put(longitud, despacho.getLongitud());
-        initialValues.put(almacenVehId, despacho.getAlmacenVehId());
-        initialValues.put(serie, despacho.getSerie());
-        initialValues.put(numero, despacho.getNumero());
-        initialValues.put(fechaCreacion, despacho.getFechaCreacion());
-        initialValues.put(usuarioCreacion, despacho.getUsuarioCreacion());
-        initialValues.put(estadoId, despacho.getEstadoId());
-        initialValues.put(vehiculoId, despacho.getVehiculoId());
+        initialValues.put( despachoId ,despacho.getDespachoId() );
+        initialValues.put( peId ,despacho.getPeId() );
+        initialValues.put( pdId ,despacho.getPdId() );
+        initialValues.put( clienteId ,despacho.getClienteId() );
+        initialValues.put( establecimientoId ,despacho.getEstablecimientoId() );
+        initialValues.put( almacenEstId ,despacho.getAlmacenEstId() );
+        initialValues.put( usuarioId ,despacho.getUsuarioId() );
+        initialValues.put( placa ,despacho.getPlaca() );
+        initialValues.put( contadorInicial ,despacho.getContadorInicial() );
+        initialValues.put( contadorFinal ,despacho.getContadorFinal() );
+        initialValues.put( cantidadDespachada ,despacho.getCantidadDespachada() );
+        initialValues.put( horaInicio ,despacho.getHoraInicio() );
+        initialValues.put( horaFin ,despacho.getHoraFin() );
+        initialValues.put( fechaDespacho ,despacho.getFechaDespacho() );
+        initialValues.put( proId ,despacho.getProId() );
+        initialValues.put( unId ,despacho.getUnId() );
+        initialValues.put( pIT ,despacho.getpIT() );
+        initialValues.put( pFT ,despacho.getpFT() );
+        initialValues.put( latitud ,despacho.getLatitud() );
+        initialValues.put( longitud ,despacho.getLongitud() );
+        initialValues.put( almacenVehId ,despacho.getAlmacenVehId() );
+        initialValues.put( serie ,despacho.getSerie() );
+        initialValues.put( numero ,despacho.getNumero() );
+        initialValues.put( fechaCreacion ,despacho.getFechaCreacion() );
+        initialValues.put( usuarioCreacion ,despacho.getUsuarioCreacion() );
+        initialValues.put( estadoId ,despacho.getEstadoId() );
+        initialValues.put( vehiculoId ,despacho.getVehiculoId() );
+        initialValues.put( guiaRemision ,despacho.getGuiaRemision() );
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-        return mDb.insert(SQLITE_TABLA_DB_DESPACHO, null, initialValues);
-    }
-
-    public long updateDespacho(@NonNull Despacho despacho) {
+        return mDb.insert(SQLITE_TABLA_DB_DESPACHO , null, initialValues);
+    } public long updateDespacho (@NonNull Despacho despacho) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(peId, despacho.getPeId());
-        initialValues.put(pdId, despacho.getPdId());
-        initialValues.put(clienteId, despacho.getClienteId());
-        initialValues.put(establecimientoId, despacho.getEstablecimientoId());
-        initialValues.put(almacenEstId, despacho.getAlmacenEstId());
-        initialValues.put(usuarioId, despacho.getUsuarioId());
-        initialValues.put(placa, despacho.getPlaca());
-        initialValues.put(contadorInicial, despacho.getContadorInicial());
-        initialValues.put(contadorFinal, despacho.getContadorFinal());
-        initialValues.put(cantidadDespachada, despacho.getCantidadDespachada());
-        initialValues.put(horaInicio, despacho.getHoraInicio());
-        initialValues.put(horaFin, despacho.getHoraFin());
-        initialValues.put(fechaDespacho, despacho.getFechaDespacho());
-        initialValues.put(proId, despacho.getProId());
-        initialValues.put(unId, despacho.getUnId());
-        initialValues.put(pIT, despacho.getpIT());
-        initialValues.put(pFT, despacho.getpFT());
-        initialValues.put(latitud, despacho.getLatitud());
-        initialValues.put(longitud, despacho.getLongitud());
-        initialValues.put(almacenVehId, despacho.getAlmacenVehId());
-        initialValues.put(serie, despacho.getSerie());
-        initialValues.put(numero, despacho.getNumero());
-        initialValues.put(fechaCreacion, despacho.getFechaCreacion());
-        initialValues.put(usuarioCreacion, despacho.getUsuarioCreacion());
-        initialValues.put(estadoId, despacho.getEstadoId());
-        initialValues.put(vehiculoId, despacho.getVehiculoId());
+        initialValues.put( peId ,despacho.getPeId() );
+        initialValues.put( pdId ,despacho.getPdId() );
+        initialValues.put( clienteId ,despacho.getClienteId() );
+        initialValues.put( establecimientoId ,despacho.getEstablecimientoId() );
+        initialValues.put( almacenEstId ,despacho.getAlmacenEstId() );
+        initialValues.put( usuarioId ,despacho.getUsuarioId() );
+        initialValues.put( placa ,despacho.getPlaca() );
+        initialValues.put( contadorInicial ,despacho.getContadorInicial() );
+        initialValues.put( contadorFinal ,despacho.getContadorFinal() );
+        initialValues.put( cantidadDespachada ,despacho.getCantidadDespachada() );
+        initialValues.put( horaInicio ,despacho.getHoraInicio() );
+        initialValues.put( horaFin ,despacho.getHoraFin() );
+        initialValues.put( fechaDespacho ,despacho.getFechaDespacho() );
+        initialValues.put( proId ,despacho.getProId() );
+        initialValues.put( unId ,despacho.getUnId() );
+        initialValues.put( pIT ,despacho.getpIT() );
+        initialValues.put( pFT ,despacho.getpFT() );
+        initialValues.put( latitud ,despacho.getLatitud() );
+        initialValues.put( longitud ,despacho.getLongitud() );
+        initialValues.put( almacenVehId ,despacho.getAlmacenVehId() );
+        initialValues.put( serie ,despacho.getSerie() );
+        initialValues.put( numero ,despacho.getNumero() );
+        initialValues.put( fechaCreacion ,despacho.getFechaCreacion() );
+        initialValues.put( usuarioCreacion ,despacho.getUsuarioCreacion() );
+        initialValues.put( estadoId ,despacho.getEstadoId() );
+        initialValues.put( vehiculoId ,despacho.getVehiculoId() );
+        initialValues.put( guiaRemision ,despacho.getGuiaRemision() );
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
-        return mDb.update(SQLITE_TABLA_DB_DESPACHO, initialValues,
-                despachoId + "=?", new String[]{"" + despacho.getDespachoId()});
-    }
-}
+        return mDb.update(SQLITE_TABLA_DB_DESPACHO , initialValues,
+                despachoId  + "=?", new String[]{"" + despacho.getDespachoId() });
+    }  }

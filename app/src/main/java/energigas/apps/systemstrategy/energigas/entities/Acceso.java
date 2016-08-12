@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
@@ -34,10 +36,12 @@ public class Acceso {
 
     private boolean movil;
 
+    private List<Privilegio> itemsPrivielgios;
+
     public Acceso() {
     }
 
-    public Acceso(int id, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil) {
+    public Acceso(int id, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil,List<Privilegio> itemsPrivielgios) {
         this.id = id;
         this.parentId = parentId;
         this.abreviacion = abreviacion;
@@ -52,6 +56,15 @@ public class Acceso {
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
         this.movil = movil;
+        this.itemsPrivielgios = itemsPrivielgios;
+    }
+
+    public List<Privilegio> getItemsPrivielgios() {
+        return itemsPrivielgios;
+    }
+
+    public void setItemsPrivielgios(List<Privilegio> itemsPrivielgios) {
+        this.itemsPrivielgios = itemsPrivielgios;
     }
 
     public int getId() {

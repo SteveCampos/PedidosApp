@@ -6,22 +6,40 @@ package energigas.apps.systemstrategy.energigas.entities;
 
 public class Persona {
 
-   private int  perIPersonaId;
+    private int perIPersonaId;
+
     private String perVRazonSocial;
+
     private String perVNombres;
+
     private String perVApellidoPaterno;
+
     private String perVApellidoMaterno;
+
     private String perVDocIdentidad;
-    private String perBEstado;
-    private String perITipoDocIdentidadId;
-    private String perITipoPersonaId;
-    private String perIEmpresaId;
+
+    private boolean perBEstado;
+
+    private int perITipoDocIdentidadId;
+
+    private int perITipoPersonaId;
+
+    private int perlUsuarioCreacion;
+
+    private String perDTFechaCreacion;
+
+    private int perIUsuarioActualizacion;
+
+    private String perDTFechaActualizacion;
+
+    private int perIEmpresaId;
+
     private String perVEmail;
 
     public Persona() {
     }
 
-    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, String perBEstado, String perITipoDocIdentidadId, String perITipoPersonaId, String perIEmpresaId, String perVEmail) {
+    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, boolean perBEstado, int perITipoDocIdentidadId, int perITipoPersonaId, int perlUsuarioCreacion, String perDTFechaCreacion, int perIUsuarioActualizacion, String perDTFechaActualizacion, int perIEmpresaId, String perVEmail) {
         this.perIPersonaId = perIPersonaId;
         this.perVRazonSocial = perVRazonSocial;
         this.perVNombres = perVNombres;
@@ -31,6 +49,10 @@ public class Persona {
         this.perBEstado = perBEstado;
         this.perITipoDocIdentidadId = perITipoDocIdentidadId;
         this.perITipoPersonaId = perITipoPersonaId;
+        this.perlUsuarioCreacion = perlUsuarioCreacion;
+        this.perDTFechaCreacion = perDTFechaCreacion;
+        this.perIUsuarioActualizacion = perIUsuarioActualizacion;
+        this.perDTFechaActualizacion = perDTFechaActualizacion;
         this.perIEmpresaId = perIEmpresaId;
         this.perVEmail = perVEmail;
     }
@@ -83,35 +105,67 @@ public class Persona {
         this.perVDocIdentidad = perVDocIdentidad;
     }
 
-    public String getPerBEstado() {
+    public boolean isPerBEstado() {
         return perBEstado;
     }
 
-    public void setPerBEstado(String perBEstado) {
+    public void setPerBEstado(boolean perBEstado) {
         this.perBEstado = perBEstado;
     }
 
-    public String getPerITipoDocIdentidadId() {
+    public int getPerITipoDocIdentidadId() {
         return perITipoDocIdentidadId;
     }
 
-    public void setPerITipoDocIdentidadId(String perITipoDocIdentidadId) {
+    public void setPerITipoDocIdentidadId(int perITipoDocIdentidadId) {
         this.perITipoDocIdentidadId = perITipoDocIdentidadId;
     }
 
-    public String getPerITipoPersonaId() {
+    public int getPerITipoPersonaId() {
         return perITipoPersonaId;
     }
 
-    public void setPerITipoPersonaId(String perITipoPersonaId) {
+    public void setPerITipoPersonaId(int perITipoPersonaId) {
         this.perITipoPersonaId = perITipoPersonaId;
     }
 
-    public String getPerIEmpresaId() {
+    public int getPerlUsuarioCreacion() {
+        return perlUsuarioCreacion;
+    }
+
+    public void setPerlUsuarioCreacion(int perlUsuarioCreacion) {
+        this.perlUsuarioCreacion = perlUsuarioCreacion;
+    }
+
+    public String getPerDTFechaCreacion() {
+        return perDTFechaCreacion;
+    }
+
+    public void setPerDTFechaCreacion(String perDTFechaCreacion) {
+        this.perDTFechaCreacion = perDTFechaCreacion;
+    }
+
+    public int getPerIUsuarioActualizacion() {
+        return perIUsuarioActualizacion;
+    }
+
+    public void setPerIUsuarioActualizacion(int perIUsuarioActualizacion) {
+        this.perIUsuarioActualizacion = perIUsuarioActualizacion;
+    }
+
+    public String getPerDTFechaActualizacion() {
+        return perDTFechaActualizacion;
+    }
+
+    public void setPerDTFechaActualizacion(String perDTFechaActualizacion) {
+        this.perDTFechaActualizacion = perDTFechaActualizacion;
+    }
+
+    public int getPerIEmpresaId() {
         return perIEmpresaId;
     }
 
-    public void setPerIEmpresaId(String perIEmpresaId) {
+    public void setPerIEmpresaId(int perIEmpresaId) {
         this.perIEmpresaId = perIEmpresaId;
     }
 

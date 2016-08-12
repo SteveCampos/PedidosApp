@@ -25,10 +25,13 @@ public class PlanDistribucion {
 
     private String periodo;
 
+    private int estadoId;
+    private int peId;
+
     public PlanDistribucion() {
     }
 
-    public PlanDistribucion(long pdId, String fechaInicio, String fechaFin, int usuarioCreaccion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int vehiculoId, int agenteId, String periodo) {
+    public PlanDistribucion(long pdId, String fechaInicio, String fechaFin, int usuarioCreaccion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int vehiculoId, int agenteId, String periodo,int estadoId,int peId) {
         this.pdId = pdId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -39,6 +42,24 @@ public class PlanDistribucion {
         this.vehiculoId = vehiculoId;
         this.agenteId = agenteId;
         this.periodo = periodo;
+        this.estadoId=estadoId;
+        this.peId=peId;
+    }
+
+    public int getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public int getPeId() {
+        return peId;
+    }
+
+    public void setPeId(int peId) {
+        this.peId = peId;
     }
 
     public long getPdId() {

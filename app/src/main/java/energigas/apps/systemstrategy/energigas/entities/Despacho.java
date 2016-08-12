@@ -57,16 +57,18 @@ public class Despacho {
 
     private String fechaCreacion;
 
-    private int usuarioCreacion;
+    private String usuarioCreacion;
 
     private int estadoId;
 
     private int vehiculoId;
 
+    private String guiaRemision;
+
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, String fechaCreacion, int usuarioCreacion, int estadoId, int vehiculoId) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId,String guiaRemision) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -94,6 +96,15 @@ public class Despacho {
         this.usuarioCreacion = usuarioCreacion;
         this.estadoId = estadoId;
         this.vehiculoId = vehiculoId;
+        this.guiaRemision = guiaRemision;
+    }
+
+    public String getGuiaRemision() {
+        return guiaRemision;
+    }
+
+    public void setGuiaRemision(String guiaRemision) {
+        this.guiaRemision = guiaRemision;
     }
 
     public long getDespachoId() {
@@ -288,11 +299,11 @@ public class Despacho {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public int getUsuarioCreacion() {
+    public String getUsuarioCreacion() {
         return usuarioCreacion;
     }
 
-    public void setUsuarioCreacion(int usuarioCreacion) {
+    public void setUsuarioCreacion(String usuarioCreacion) {
         this.usuarioCreacion = usuarioCreacion;
     }
 
@@ -316,7 +327,7 @@ public class Despacho {
         List<Despacho> list = new ArrayList<>();
         list.add(new Despacho(
                 1, 1, 1, 1, 1, 1, 1, "PLACA", 500.0, 1300.0, 800.0, "12:00", "12:00", "12/08/2016", 1, 1, 12.5, 65.0, "-11.656565", "-51.82525", 1,
-                "SERIE", 0.0, "12/08/2016", 1, 1, 1
+                "SERIE", 0.0, "12/08/2016", "", 1, 1,""
         ));
         return list;
     }

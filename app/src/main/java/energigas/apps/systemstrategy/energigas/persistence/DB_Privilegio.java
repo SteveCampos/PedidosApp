@@ -4,14 +4,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.entities.Privilegio;
+import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.RolPrivilegio;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by KelvinThony on 11/08/2016.
  */
 public class DB_Privilegio {
+
+    private static final String TAG = "DB_Privilegio";
+
     public static final String _id = "_id";
     public static final String id = "id";
     public static final String accesoId = "accesoId";
@@ -70,6 +78,28 @@ public class DB_Privilegio {
         initialValues.put(usuarioActualizacion, privilegio.getUsuarioActualizacion());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_PRIVILEGIO, null, initialValues);
+    }
+
+    public boolean createAllPrivilegios(@NonNull List<Privilegio> privilegioList, Context context, Rol rol) {
+        DB_RolPrivilegio db_rolPrivilegio = new DB_RolPrivilegio(context);
+        DB_Privilegio db_privilegio = new DB_Privilegio(context);
+        db_privilegio.open();
+        db_rolPrivilegio.open();
+        boolean state = true;
+
+        for (Privilegio privilegio : privilegioList) {
+            RolPrivilegio rolPrivilegio = new RolPrivilegio(rol.getId(), privilegio.getId());
+            Long insert = createPrivilegio(privilegio);
+            Long insertRolPrivilegio = db_rolPrivilegio.createRolPrivilegio(rolPrivilegio);
+            if ((insert & insertRolPrivilegio) < 0) {
+                state = false;
+                Log.e(TAG, "ERROR AL INSERTAR PRIVILEGIOS");
+                break;
+            }
+
+        }
+        db_privilegio.close();
+        return state;
     }
 
     public long updatePrivilegio(@NonNull Privilegio privilegio) {

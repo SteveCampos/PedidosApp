@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.interfaces;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 /**
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 
 public interface OnLoginAsyntaskListener {
 
+
     void onError(@NonNull String message);
 
     void onSuccess();
@@ -15,5 +17,7 @@ public interface OnLoginAsyntaskListener {
     void onErrorProcedure(@NonNull String message);
 
     void onCredentialsFail();
+
+    Context getContextActivity();
 
 }

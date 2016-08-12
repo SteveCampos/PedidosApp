@@ -4,14 +4,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.entities.Acceso;
+import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.RolAcceso;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by KelvinThony on 11/08/2016.
  */
 public class DB_Acceso {
+
+    private static final String TAG = "DB_Acceso";
+
+
     public static final String _id = "_id";
     public static final String id = "id";
     public static final String parentId = "parentId";
@@ -85,6 +94,34 @@ public class DB_Acceso {
         initialValues.put(movil, acceso.isMovil());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_ACCESO, null, initialValues);
+    }
+
+    public boolean createAllAcceso(@NonNull Rol  rol, Context context) {
+        DB_Privilegio db_privilegio = new DB_Privilegio(context);
+        DB_RolAcceso db_rolAcceso = new DB_RolAcceso(context);
+        db_privilegio.open();
+        db_rolAcceso.open();
+        boolean state = true;
+
+        for (Acceso acceso : rol.getItemsAccesos()) {
+
+            Long insert = createAcceso(acceso);
+            RolAcceso rolAcceso = new RolAcceso(rol.getId(),acceso.getId(),true);
+            Long insertRolAcceso = db_rolAcceso.createRolAcceso(rolAcceso);
+            if ((insert & insertRolAcceso) < 0) {
+                state = false;
+                Log.e(TAG,"ERROR AL INSERTAR ACCESOS");
+                break;
+            } else {
+                state = db_privilegio.createAllPrivilegios(acceso.getItemsPrivielgios(), context,rol);
+                if (!state) {
+                    break;
+                }
+            }
+
+        }
+        db_privilegio.close();
+        return state;
     }
 
     public long updateAcceso(@NonNull Acceso acceso) {

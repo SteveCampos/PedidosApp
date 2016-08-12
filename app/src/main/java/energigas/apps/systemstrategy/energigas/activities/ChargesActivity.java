@@ -73,7 +73,7 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
 
     @Override
     public void onCajaPagoClickListener(CajaPago cajaPago, View view) {
-        Snackbar.make(view,cajaPago.getComprobante(),Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view,cajaPago.getFechaAccion(),Snackbar.LENGTH_LONG).show();
     }
     public interface OnCajaPagoClickListener{
         void onCharfesClickListener(CajaPago charges, View view);

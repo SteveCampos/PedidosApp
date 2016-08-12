@@ -22,6 +22,7 @@ public class DB_CajaLiquidacionDetalle {
     public static final String estadoId = "estadoId";
     public static final String orden = "orden";
     public static final String fechaAtencion = "fechaAtencion";
+    public static final String peId = "peId";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
     private static final String SQLITE_TABLA_DB_CAJALIQUIDACIONDETALLE = "DB_CajaLiquidacionDetalle";
@@ -38,6 +39,7 @@ public class DB_CajaLiquidacionDetalle {
                     + estadoId + " integer ,"
                     + orden + " integer ,"
                     + fechaAtencion + " text ,"
+                    + peId + " integer ,"
                     + Constants._CLMEXPORT + " integer );";
     public static final String DELETE_TABLA_DB_CAJALIQUIDACIONDETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_CAJALIQUIDACIONDETALLE;
 
@@ -68,6 +70,7 @@ public class DB_CajaLiquidacionDetalle {
         initialValues.put(estadoId, cajaliquidaciondetalle.getEstadoId());
         initialValues.put(orden, cajaliquidaciondetalle.getOrden());
         initialValues.put(fechaAtencion, cajaliquidaciondetalle.getFechaAtencion());
+        initialValues.put(peId, cajaliquidaciondetalle.getPeId());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_CAJALIQUIDACIONDETALLE, null, initialValues);
     }
@@ -82,6 +85,7 @@ public class DB_CajaLiquidacionDetalle {
         initialValues.put(estadoId, cajaliquidaciondetalle.getEstadoId());
         initialValues.put(orden, cajaliquidaciondetalle.getOrden());
         initialValues.put(fechaAtencion, cajaliquidaciondetalle.getFechaAtencion());
+        initialValues.put(peId, cajaliquidaciondetalle.getPeId());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.update(SQLITE_TABLA_DB_CAJALIQUIDACIONDETALLE, initialValues,
                 lidId + "=?", new String[]{"" + cajaliquidaciondetalle.getLidId()});
