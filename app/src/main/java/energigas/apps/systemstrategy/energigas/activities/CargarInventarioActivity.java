@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
+import android.widget.LinearLayout;
 
 
 import butterknife.BindView;
@@ -27,6 +27,8 @@ public class CargarInventarioActivity extends AppCompatActivity {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.layout_not_found)
+    LinearLayout layout_not_found;
     private CollapsingToolbarLayout collapsingToolbar;
     LoadInventoryAdapter loadInventoryAdapter ;
     Inventory inventory ;
@@ -38,6 +40,9 @@ public class CargarInventarioActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         inventory = new Inventory();
         loadInventoryAdapter = new LoadInventoryAdapter(inventory.instanceListInventory(),this);
+
+        showEmptyView();
+
         recyclerView.setAdapter(loadInventoryAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -62,7 +67,21 @@ public class CargarInventarioActivity extends AppCompatActivity {
     }
 
     private void setLoadInventory(){
-        new LoadInventoryAsync(this,inventory,recyclerView).execute();
+        new LoadInventoryAsync(this).execute();
+        loadInventoryAdapter.addNewItem(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
+        showEmptyView();
+    }
+
+    private void showEmptyView() {
+        if (loadInventoryAdapter.getItemCount()>0){
+            layout_not_found.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        else{
+
+            layout_not_found.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override

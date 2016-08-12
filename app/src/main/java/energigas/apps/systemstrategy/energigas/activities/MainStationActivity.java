@@ -23,7 +23,7 @@ import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
-import energigas.apps.systemstrategy.energigas.fragments.ChargesFragment;
+import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
@@ -72,7 +72,7 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
         tabsAdapter.addFragment(new StationOrderFragment(), getString(R.string.order_title_name));
         //tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
         tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
-        tabsAdapter.addFragment(new ChargesFragment(), getString(R.string.activity_charges_account));
+        tabsAdapter.addFragment(new CajaPagoFragment(), getString(R.string.activity_charges_account));
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }

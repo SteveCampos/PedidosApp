@@ -11,18 +11,18 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.adapters.ChargesAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Charges;
-import energigas.apps.systemstrategy.energigas.fragments.ChargesFragment;
+import energigas.apps.systemstrategy.energigas.adapters.CajaPagoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaPago;
+import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
 
 /**
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesActivity extends AppCompatActivity implements ChargesAdapter.OnChargesClickListener{
+public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapter.OnCajaPagoClickListener{
 
 
-    public ChargesFragment.OnChargesClickListener listener;
+    public CajaPagoFragment.OnCajaPagoClickListener listener;
 
 
     private RecyclerView recyclerView;
@@ -31,6 +31,7 @@ public class ChargesActivity extends AppCompatActivity implements ChargesAdapter
 
     }
 
+    CajaPagoAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +40,7 @@ public class ChargesActivity extends AppCompatActivity implements ChargesAdapter
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_charges);
 
-        ChargesAdapter adapter = new ChargesAdapter(Charges.getCharges(),this);
+        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -71,10 +72,10 @@ public class ChargesActivity extends AppCompatActivity implements ChargesAdapter
     }
 
     @Override
-    public void onChargesClickListener(Charges charges, View view) {
-        Snackbar.make(view,charges.getmComprobante(),Snackbar.LENGTH_LONG).show();
+    public void onCajaPagoClickListener(CajaPago cajaPago, View view) {
+        Snackbar.make(view,cajaPago.getComprobante(),Snackbar.LENGTH_LONG).show();
     }
-    public interface OnChargesClickListener{
-        void onCharfesClickListener(Charges charges, View view);
+    public interface OnCajaPagoClickListener{
+        void onCharfesClickListener(CajaPago charges, View view);
     }
 }

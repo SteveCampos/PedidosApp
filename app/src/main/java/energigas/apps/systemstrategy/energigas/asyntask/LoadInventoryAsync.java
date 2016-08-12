@@ -2,6 +2,7 @@ package energigas.apps.systemstrategy.energigas.asyntask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,13 +19,10 @@ public class LoadInventoryAsync extends AsyncTask<String, Void, Void> {
     private ProgressDialog progressDialog;
     private Inventory inventory;
     private RecyclerView recyclerView;
-    private Activity activity;
+    private Context context;
 
-    public LoadInventoryAsync(Activity activity, Inventory inventory, RecyclerView recyclerView) {
-        progressDialog = new ProgressDialog(activity);
-        this.inventory = inventory;
-        this.activity = activity;
-        this.recyclerView = recyclerView;
+    public LoadInventoryAsync(Context context) {
+        progressDialog = new ProgressDialog(context);
     }
 
     @Override
@@ -51,10 +49,10 @@ public class LoadInventoryAsync extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        LoadInventoryAdapter loadInventoryAdapter = new LoadInventoryAdapter(inventory.getInventoryList(), activity);
+        /*LoadInventoryAdapter loadInventoryAdapter = new LoadInventoryAdapter(inventory.getInventoryList(), activity);
         recyclerView.setAdapter(loadInventoryAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setHasFixedSize(true);*/
+       // recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         progressDialog.dismiss();
     }
 }

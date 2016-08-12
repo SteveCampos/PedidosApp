@@ -52,6 +52,26 @@
 
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/layout_not_found"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_delivery_truck"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp" />
+
+                    <TextView
+                        android:gravity="center"
+                        android:text="No  ha cargado inventario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_marginTop="@dimen/table_row"
