@@ -212,7 +212,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
 
     private void createAndShowAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Generar Factura");
+        builder.setTitle("Generar Vista Previa Factura");
         builder.setMessage(adapter.getSelectedCount() + " Despachos Seleccionados");
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

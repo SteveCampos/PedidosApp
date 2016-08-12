@@ -25,14 +25,14 @@
                 android:id="@+id/tv_category"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                style="@style/TextAppearance.AppCompat.Large"
+                style="@style/TextAppearance.AppCompat.Medium"
                 android:text="Categories" />
 
             <TextView
                 android:id="@+id/tv_description"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                style="@style/TextAppearance.AppCompat.Medium"
+                style="@style/TextAppearance.AppCompat.Small"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:text="description" />
         </LinearLayout>
@@ -45,19 +45,9 @@
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_marginRight="@dimen/dimen_10dp"
             android:textColor="@color/md_light_green_500"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_centerInParent="true"
             tools:text="+100" />
-
-        <TextView
-            android:layout_below="@+id/tv_total"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_state"
-            android:text="COBRADO"
-            android:paddingTop="8dp"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />
 
     </RelativeLayout>
 

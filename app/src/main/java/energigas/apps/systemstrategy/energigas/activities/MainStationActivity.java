@@ -57,6 +57,7 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
         setToolbar();
         setTabsAdapterFragment();
         viewpager.setCurrentItem(1);
+        fab.setVisibility(View.GONE);
     }
 
     private void setToolbar() {
