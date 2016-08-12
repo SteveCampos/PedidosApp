@@ -126,9 +126,9 @@ public class CajaGasto {
 
     public static List<CajaGasto> getListCajaGastos(){
         List<CajaGasto> cajaGastos = new ArrayList<>();
-        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
-        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
-        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Quinua Power"));
+        cajaGastos.add(new CajaGasto(10,20,30,40,120,50,70,80,"28/07/2016", "Cambio de Aceite"));
+        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Peajes"));
+        cajaGastos.add(new CajaGasto(10,20,30,40,140,50,70,80,"28/07/2016","Almuerzo Semanal"));
         return cajaGastos;
     }
 }

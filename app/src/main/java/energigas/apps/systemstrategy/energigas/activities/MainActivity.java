@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,6 +199,10 @@ public class MainActivity extends AppCompatActivity
                 showToast(item);
                 closeAccount();
                 //startActivity(new Intent(this, LoginActivity.class));
+                break;
+            case R.id.nav_close_session:
+                Toast.makeText(MainActivity.this, R.string.action_close_session, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
