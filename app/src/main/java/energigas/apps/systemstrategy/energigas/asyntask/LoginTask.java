@@ -29,6 +29,7 @@ public class LoginTask extends AsyncTask<String, String, String> {
     private boolean aBoolean;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
+
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
         this.db_usuario = new DB_Usuario(context);
