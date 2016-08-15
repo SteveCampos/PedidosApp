@@ -38,7 +38,7 @@
                         android:id="@+id/textWeightStart"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Numero de comprobante"
+                        android:hint="Numero de serie"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 

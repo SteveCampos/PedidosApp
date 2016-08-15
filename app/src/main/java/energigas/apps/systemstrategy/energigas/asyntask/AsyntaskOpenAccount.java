@@ -1,31 +1,45 @@
 package energigas.apps.systemstrategy.energigas.asyntask;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONObject;
+
+import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 3/08/2016.
  */
 
 public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> {
-
-    OnAsyntaskListener onAsyntaskListener;
+private static final String TAG ="AsyntaskOpenAccount";
+    private OnAsyntaskListener onAsyntaskListener;
+    private RestAPI restAPI;
+    private JSONObject jsonObject;
 
     public AsyntaskOpenAccount(OnAsyntaskListener onAsyntaskListener) {
         this.onAsyntaskListener = onAsyntaskListener;
+        this.restAPI = new RestAPI();
     }
 
 
     @Override
     protected Void doInBackground(String... strings) {
 
-
         try {
-            Thread.sleep(1600);
-        } catch (InterruptedException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            jsonObject = restAPI.fins_GuardarLiquidacion(strings[0]);
+            CajaLiquidacion cajaLiquidacion = mapper.readValue(Utils.getJsonObResult(jsonObject),CajaLiquidacion.class);
+            Log.d(TAG,""+cajaLiquidacion.getAlmId());
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

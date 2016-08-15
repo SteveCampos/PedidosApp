@@ -30,14 +30,18 @@ public class DB_CajaLiquidacion {
     public static final String pFT = "pFT";
     public static final String fechaActualizacion = "fechaActualizacion";
     public static final String usuarioActualizacion = "usuarioActualizacion";
-    public static final String tipo = "tipo";
+    public static final String tipoId = "tipoId";
     public static final String placaVehiculo = "placaVehiculo";
-    public static final String vehiculoId = "vehiculoId";
-    public static final String almacenId = "almacenId";
+    public static final String veId = "veId";
+    public static final String almId = "almId";
     public static final String latitudInicio = "latitudInicio";
     public static final String longitudInicio = "longitudInicio";
     public static final String latitudFinal = "latitudFinal";
     public static final String longitudFinal = "longitudFinal";
+    public static final String pdId = "pdId";
+    public static final String pdfId = "pdfId";
+    public static final String saldoInicial = "saldoInicial";
+    public static final String saldoFinal = "saldoFinal";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
     private static final String SQLITE_TABLA_DB_CAJALIQUIDACION = "DB_CajaLiquidacion";
@@ -62,14 +66,18 @@ public class DB_CajaLiquidacion {
                     + pFT + " real ,"
                     + fechaActualizacion + " text ,"
                     + usuarioActualizacion + " integer ,"
-                    + tipo + " integer ,"
+                    + tipoId + " integer ,"
                     + placaVehiculo + " text ,"
-                    + vehiculoId + " integer ,"
-                    + almacenId + " integer ,"
+                    + veId + " integer ,"
+                    + almId + " integer ,"
                     + latitudInicio + " text ,"
                     + longitudInicio + " text ,"
                     + latitudFinal + " text ,"
                     + longitudFinal + " text ,"
+                    + pdId + " integer ,"
+                    + pdfId + " integer ,"
+                    + saldoInicial + " real ,"
+                    + saldoFinal + " real ,"
                     + Constants._CLMEXPORT + " integer );";
     public static final String DELETE_TABLA_DB_CAJALIQUIDACION = "DROP TABLE IF EXISTS " + SQLITE_TABLA_DB_CAJALIQUIDACION;
 
@@ -108,14 +116,18 @@ public class DB_CajaLiquidacion {
         initialValues.put(pFT, cajaliquidacion.getpFT());
         initialValues.put(fechaActualizacion, cajaliquidacion.getFechaActualizacion());
         initialValues.put(usuarioActualizacion, cajaliquidacion.getUsuarioActualizacion());
-        initialValues.put(tipo, cajaliquidacion.getTipo());
+        initialValues.put(tipoId, cajaliquidacion.getTipoId());
         initialValues.put(placaVehiculo, cajaliquidacion.getPlacaVehiculo());
-        initialValues.put(vehiculoId, cajaliquidacion.getVehiculoId());
-        initialValues.put(almacenId, cajaliquidacion.getAlmacenId());
+        initialValues.put(veId, cajaliquidacion.getVeId());
+        initialValues.put(almId, cajaliquidacion.getAlmId());
         initialValues.put(latitudInicio, cajaliquidacion.getLatitudInicio());
         initialValues.put(longitudInicio, cajaliquidacion.getLongitudInicio());
         initialValues.put(latitudFinal, cajaliquidacion.getLatitudFinal());
         initialValues.put(longitudFinal, cajaliquidacion.getLongitudFinal());
+        initialValues.put(pdId, cajaliquidacion.getPdId());
+        initialValues.put(pdfId, cajaliquidacion.getPdfId());
+        initialValues.put(saldoInicial, cajaliquidacion.getSaldoInicial());
+        initialValues.put(saldoFinal, cajaliquidacion.getSaldoFinal());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_CAJALIQUIDACION, null, initialValues);
     }
@@ -138,14 +150,18 @@ public class DB_CajaLiquidacion {
         initialValues.put(pFT, cajaliquidacion.getpFT());
         initialValues.put(fechaActualizacion, cajaliquidacion.getFechaActualizacion());
         initialValues.put(usuarioActualizacion, cajaliquidacion.getUsuarioActualizacion());
-        initialValues.put(tipo, cajaliquidacion.getTipo());
+        initialValues.put(tipoId, cajaliquidacion.getTipoId());
         initialValues.put(placaVehiculo, cajaliquidacion.getPlacaVehiculo());
-        initialValues.put(vehiculoId, cajaliquidacion.getVehiculoId());
-        initialValues.put(almacenId, cajaliquidacion.getAlmacenId());
+        initialValues.put(veId, cajaliquidacion.getVeId());
+        initialValues.put(almId, cajaliquidacion.getAlmId());
         initialValues.put(latitudInicio, cajaliquidacion.getLatitudInicio());
         initialValues.put(longitudInicio, cajaliquidacion.getLongitudInicio());
         initialValues.put(latitudFinal, cajaliquidacion.getLatitudFinal());
         initialValues.put(longitudFinal, cajaliquidacion.getLongitudFinal());
+        initialValues.put(pdId, cajaliquidacion.getPdId());
+        initialValues.put(pdfId, cajaliquidacion.getPdfId());
+        initialValues.put(saldoInicial, cajaliquidacion.getSaldoInicial());
+        initialValues.put(saldoFinal, cajaliquidacion.getSaldoFinal());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.update(SQLITE_TABLA_DB_CAJALIQUIDACION, initialValues,
                 liqId + "=?", new String[]{"" + cajaliquidacion.getLiqId()});

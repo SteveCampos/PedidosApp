@@ -13,6 +13,9 @@ import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.persistence.DB_Concepto;
+import energigas.apps.systemstrategy.energigas.persistence.DB_Estado;
+import energigas.apps.systemstrategy.energigas.persistence.DB_UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.persistence.DB_Usuario;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -26,6 +29,9 @@ public class LoginTask extends AsyncTask<String, String, String> {
     private JSONObject jsonObject = null;
     private OnLoginAsyntaskListener aListener;
     private DB_Usuario db_usuario;
+    private DB_Concepto db_concepto;
+    private DB_Estado db_estado;
+    private DB_UbicacionGeoreferencia db_ubicacionGeoreferencia;
     private Context context;
     private boolean aBoolean;
 
@@ -34,7 +40,13 @@ public class LoginTask extends AsyncTask<String, String, String> {
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
         this.db_usuario = new DB_Usuario(context);
+        this.db_concepto = new DB_Concepto(context);
+        this.db_estado = new DB_Estado(context);
+        this.db_ubicacionGeoreferencia = new DB_UbicacionGeoreferencia(context);
         db_usuario.open();
+        db_concepto.open();
+        db_estado.open();
+        db_ubicacionGeoreferencia.open();
 
     }
 
@@ -48,7 +60,13 @@ public class LoginTask extends AsyncTask<String, String, String> {
             jsonObject = restAPI.fobj_ObtenerUsuario(usuario, clave);
             Usuario objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObject), Usuario.class);
             jsonObject = restAPI.fobj_ObtenerDatosGenerales();
-            //BEGeneral beGeneral = mapper.readValue(Utils.getJsonObResult(jsonObject), BEGeneral.class);
+            BEGeneral beGeneral = mapper.readValue(Utils.getJsonObResult(jsonObject), BEGeneral.class);
+            db_concepto.createAllConcepto(beGeneral);
+            db_estado.createAllEstado(beGeneral);
+            db_ubicacionGeoreferencia.createUbicacionAllGeoreferencia(beGeneral);
+
+
+
             if (objUsuario.getUsuIUsuarioId() < 0) {
                 aListener.onCredentialsFail();
                 aBoolean = false;

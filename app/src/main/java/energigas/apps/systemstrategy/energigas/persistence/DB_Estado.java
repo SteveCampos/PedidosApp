@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
@@ -19,6 +21,10 @@ public class DB_Estado {
     public static final String parentId = "parentId";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
+
+    private static final String TAG = "DB_Estado";
+
+
     private static final String SQLITE_TABLA_DB_ESTADO = "DB_Estado";
     private final Context mCtx;
     public static final String CREATE_TABLA_DB_ESTADO =
@@ -55,6 +61,22 @@ public class DB_Estado {
         initialValues.put(parentId, estado.getParentId());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_ESTADO, null, initialValues);
+    }
+
+    public boolean createAllEstado(@NonNull BEGeneral general) {
+        boolean state = true;
+        for (Estado estado : general.getItemsEstados()) {
+
+            Long insert = createEstado(estado);
+
+            if ((insert) < 0) {
+                Log.e(TAG, "ERROR AL INSERTAR ROLES");
+                state = false;
+                break;
+            }
+
+        }
+        return state;
     }
 
     public long updateEstado(@NonNull Estado estado) {

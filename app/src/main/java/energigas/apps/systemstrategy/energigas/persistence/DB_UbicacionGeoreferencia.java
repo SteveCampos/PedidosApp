@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
@@ -20,6 +22,9 @@ public class DB_UbicacionGeoreferencia {
     public static final String tipoId = "tipoId";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
+
+    private static final String TAG = "DB_UbicacionGeor";
+
     private static final String SQLITE_TABLA_DB_UBICACIONGEOREFERENCIA = "DB_UbicacionGeoreferencia";
     private final Context mCtx;
     public static final String CREATE_TABLA_DB_UBICACIONGEOREFERENCIA =
@@ -58,6 +63,22 @@ public class DB_UbicacionGeoreferencia {
         initialValues.put(tipoId, ubicaciongeoreferencia.getTipoId());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_UBICACIONGEOREFERENCIA, null, initialValues);
+    }
+
+    public boolean createUbicacionAllGeoreferencia(@NonNull BEGeneral beGeneral) {
+        boolean state = true;
+        for (UbicacionGeoreferencia ubicacionGeoreferencia : beGeneral.getItemUbigeos()) {
+
+            Long insert = createUbicacionGeoreferencia(ubicacionGeoreferencia);
+
+            if ((insert) < 0) {
+                Log.e(TAG, "ERROR AL INSERTAR ROLES");
+                state = false;
+                break;
+            }
+
+        }
+        return state;
     }
 
     public long updateUbicacionGeoreferencia(@NonNull UbicacionGeoreferencia ubicaciongeoreferencia) {

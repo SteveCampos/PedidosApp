@@ -2,6 +2,8 @@ package energigas.apps.systemstrategy.energigas.fragments;
 
 
 import android.app.Dialog;
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,18 +15,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
+import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 
 /**
  * Created by kelvi on 8/08/2016.
  */
 
-public class AccountDialog extends DialogFragment implements View.OnClickListener, OnAsyntaskListener {
+public class AccountDialog extends DialogFragment implements View.OnClickListener, OnAsyntaskListener, OnLocationListener {
+
+    public static final String TAG = "AccountDialog";
 
     @BindView(R.id.loanding)
     ContentLoadingProgressBar loadingProgressBar;
@@ -41,6 +48,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @BindView(R.id.btn_cancel)
     Button btnCancel;
     FloatingActionButton fab;
+    private LocationVehiculeListener locationVehiculeListener;
+    private Location location;
 
     public AccountDialog setFloating(FloatingActionButton fab) {
         this.fab = fab;
@@ -51,6 +60,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
+        locationVehiculeListener = new LocationVehiculeListener(this);
         return dialog;
     }
 
@@ -70,6 +80,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
                 saveIsAvibleData();
                 break;
             case R.id.btn_cancel:
+                locationVehiculeListener.stopLocationUpdates();
                 dismiss();
                 break;
         }
@@ -77,9 +88,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
     private void saveIsAvibleData() {
         if (isNotEmtyEditText()) {
-            String kmInicial = editTextKI.getText().toString();
-            String pesoInicial = editTextWI.getText().toString();
-            String porcentajeInicial = editTextPI.getText().toString();
+
             showSendTask();
         } else {
             Snackbar.make(btnOk, "Complete los campos", Snackbar.LENGTH_SHORT).show();
@@ -113,8 +122,19 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
 
     private void showSendTask() {
-        showAnimation();
-        new AsyntaskOpenAccount(this).execute();
+        String usuarioId = "43";
+        String kmInicial = editTextKI.getText().toString();
+        String pesoInicial = editTextWI.getText().toString();
+        String porcentajeInicial = editTextPI.getText().toString();
+        if(location ==null){
+
+            Toast.makeText(getActivity(), "Ubiacion desconocida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String stringLiquidacion = usuarioId+"_"+kmInicial+"_"+pesoInicial+"_"+porcentajeInicial+"_"+location.getLatitude()+"_"+location.getLongitude()+"";
+        Log.d(TAG,""+stringLiquidacion);
+       // showAnimation();
+       // new AsyntaskOpenAccount(this).execute(stringLiquidacion);
     }
 
 
@@ -134,5 +154,17 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @Override
     public void onLoadErrorProcedure(String message) {
         hideAnimationProgress();
+    }
+
+
+
+    @Override
+    public void setLatAndLong(Location latAndLong) {
+        location = latAndLong;
+    }
+
+    @Override
+    public Context getContextActivity() {
+        return getActivity();
     }
 }
