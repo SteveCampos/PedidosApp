@@ -17,6 +17,8 @@ public class AlmacenHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_station_tank_capacity) public TextView capacity;
     @BindView(R.id.text_station_tank_politica) public TextView politica;
     @BindView(R.id.text_station_tank_capacity_neta) public TextView capacidadNeta;
+    @BindView(R.id.text_almacen_estado) public TextView estado;
+    @BindView(R.id.text_station_programed) public TextView programado;
 
 
     public AlmacenHolder(View itemView) {

@@ -40,7 +40,7 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_charges);
 
-        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this);
+        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this, this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

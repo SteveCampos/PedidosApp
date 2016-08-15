@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     // Store a member variable for the contacts
     private List<CajaPago> mCajaPagoList;
     // Store the context for easy access
+    private Context mContext;
 
     public interface OnCajaPagoClickListener {
         void onCajaPagoClickListener(CajaPago cajaPago, View view);
@@ -31,9 +34,10 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     public OnCajaPagoClickListener listener;
 
 
-    public CajaPagoAdapter(List<CajaPago> mCajaPagoList, OnCajaPagoClickListener listener) {
+    public CajaPagoAdapter(List<CajaPago> mCajaPagoList,Context mContext,OnCajaPagoClickListener listener) {
         this.mCajaPagoList = mCajaPagoList;
         this.listener = listener;
+        this.mContext = mContext;
     }
 
     @Override
@@ -53,10 +57,38 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
         final CajaPago cajaPago = mCajaPagoList.get(position);
 
-        holder.mcomprobante.setText(cajaPago.getFechaAccion() + "-" + cajaPago.getFechaAccion());
-        //  mserie.setText(charges.getmSerie());
-        holder.mdate.setText(cajaPago.getFechaAccion());
-        holder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));
+        //holder.mcomprobante.setText("");
+        //holder.mdate.setText("");
+        //Cholder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));
+
+
+        int resto = position % 3;
+
+        int color = R.color.dark_grey;
+        String estado = "COBRADO";
+        Double total = 0.00;
+        switch (resto){
+            case 0:
+                total = 1500.00;
+                estado = "POR COBRAR";
+                color =R.color.md_red_500;
+                break;
+            case 1:
+                total = 1200.00;
+                estado = "COBRADO";
+                color =R.color.md_green_500;
+                break;
+            case 2:
+                total = 2800.00;
+                estado = "COBRADO";
+                color = R.color.md_green_500;
+                break;
+
+        }
+
+        holder.mtotal.setText("S/. " + Utils.formatDouble(total));
+        holder.mEstado.setText(estado);
+        holder.mEstado.setTextColor(ContextCompat.getColor(mContext, color));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

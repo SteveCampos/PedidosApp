@@ -25,10 +25,10 @@
             android:layout_height="wrap_content"
             android:text="10562851"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_toStartOf="@+id/text_station_undefined" />
+            android:layout_toStartOf="@+id/text_station_programed" />
 
         <TextView
-            android:id="@+id/text_station_undefined"
+            android:id="@+id/text_station_programed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="300 GAL"

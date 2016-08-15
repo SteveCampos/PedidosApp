@@ -13,6 +13,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Comprobante;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.holders.ComprobanteVentaHolder;
+import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
 
 /**
  * Created by Steve on 12/08/2016.
@@ -22,10 +23,12 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     private static final String TAG = ComprobanteVenta.class.getSimpleName();
     private List<ComprobanteVenta> mList;
     private Context mContext;
+    private OnComprobanteVentaClickListener listener;
 
-    public ComprobanteVentaAdapter(List<ComprobanteVenta> mList, Context mContext) {
+    public ComprobanteVentaAdapter(List<ComprobanteVenta> mList, Context mContext, OnComprobanteVentaClickListener listener) {
         this.mList = mList;
         this.mContext = mContext;
+        this.listener = listener;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "CLICKED: " + view);
+                listener.onComprobanteVentaClickListener(comprobanteVenta, view);
             }
         });
     }
@@ -51,4 +55,5 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     public int getItemCount() {
         return mList.size();
     }
+
 }

@@ -50,4 +50,38 @@
     <color name="md_light_green_A400">#76FF03</color>
     <color name="md_light_green_A700">#64DD17</color>
 
+
+    <!--reds-->
+    <color name="md_red_50">#FFEBEE</color>
+    <color name="md_red_100">#FFCDD2</color>
+    <color name="md_red_200">#EF9A9A</color>
+    <color name="md_red_300">#E57373</color>
+    <color name="md_red_400">#EF5350</color>
+    <color name="md_red_500">#F44336</color>
+    <color name="md_red_600">#E53935</color>
+    <color name="md_red_700">#D32F2F</color>
+    <color name="md_red_800">#C62828</color>
+    <color name="md_red_900">#B71C1C</color>
+    <color name="md_red_A100">#FF8A80</color>
+    <color name="md_red_A200">#FF5252</color>
+    <color name="md_red_A400">#FF1744</color>
+    <color name="md_red_A700">#D50000</color>
+
+
+    <!--yellow -->
+    <color name="md_yellow_50">#FFFDE7</color>
+    <color name="md_yellow_100">#FFF9C4</color>
+    <color name="md_yellow_200">#FFF590</color>
+    <color name="md_yellow_300">#FFF176</color>
+    <color name="md_yellow_400">#FFEE58</color>
+    <color name="md_yellow_500">#FFEB3B</color>
+    <color name="md_yellow_600">#FDD835</color>
+    <color name="md_yellow_700">#FBC02D</color>
+    <color name="md_yellow_800">#F9A825</color>
+    <color name="md_yellow_900">#F57F17</color>
+    <color name="md_yellow_A100">#FFFF82</color>
+    <color name="md_yellow_A200">#FFFF00</color>
+    <color name="md_yellow_A400">#FFEA00</color>
+    <color name="md_yellow_A700">#FFD600</color>
+
 </resources>

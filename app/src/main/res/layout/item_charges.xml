@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Medium"
-                android:text="Categories" />
+                android:text="F001 - 00000216" />
 
             <TextView
                 android:id="@+id/txt_date"
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="description" />
+                android:text="Martes, 16 de Agosto" />
         </LinearLayout>
 
         <TextView
@@ -45,11 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_marginRight="@dimen/dimen_10dp"
-            android:textColor="@color/md_light_green_500"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            tools:text="+100" />
+            style="@style/TextAppearance.AppCompat.Title"
+            tools:text="S/. 600.00" />
 
         <TextView
+            android:id="@+id/text_cp_estado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="COBRADO"

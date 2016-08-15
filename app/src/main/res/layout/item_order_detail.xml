@@ -32,7 +32,7 @@
             android:id="@+id/text_order_detail_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="500 GALONES"
+            android:text="300 GALONES"
             android:layout_alignParentEnd="true"
             style="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent"

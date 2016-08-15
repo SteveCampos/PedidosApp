@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
@@ -29,9 +30,14 @@ import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformat
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
 
-public class MainStationActivity extends AppCompatActivity implements OrderedProductFragment.OnOrderedProductClickListener, OrderedProductFragment.OnDispatchClickListener,
-        StationOrderFragment.OnStationOrderClickListener {
+public class MainStationActivity extends AppCompatActivity
+        implements
+        OrderedProductFragment.OnOrderedProductClickListener,
+        OrderedProductFragment.OnDispatchClickListener,
+        StationOrderFragment.OnStationOrderClickListener
+{
 
 
     @BindView(R.id.toolbar)
@@ -154,4 +160,6 @@ public class MainStationActivity extends AppCompatActivity implements OrderedPro
             startActivity(intent);
         }
     }
+
+
 }

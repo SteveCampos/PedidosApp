@@ -71,7 +71,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         /** Change background color of the selected items  **/
         holder.itemView
                 .setBackgroundColor(mSelectedItemsIds.get(position, false) ? colorAccent
-                        : Color.TRANSPARENT);
+                        : Color.WHITE);
         holder.dispatchQuantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
 
 

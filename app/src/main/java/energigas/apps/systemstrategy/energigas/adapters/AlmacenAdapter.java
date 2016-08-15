@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +47,34 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
         holder.title.setText("Tanque " +  (++position));
+
+        int resto = position % 3;
+
+        int color = R.color.dark_grey;
+        String estado = "EN PROCESO";
+        String programado = "";
+
+        switch (resto){
+            case 0:
+                color = R.color.dark_grey;
+                estado = "NO PROGRAMADO";
+                break;
+            case 2:
+                programado = "500.00 GAL";
+                color = R.color.md_yellow_500;
+                estado = "EN PROCESO";
+                break;
+            case 1:
+                programado = "300.00 GAL";
+                color = R.color.md_green_500;
+                estado = "DESPACHADO";
+                break;
+
+        }
+
+        holder.programado.setText(programado);
+        holder.estado.setText(estado);
+        holder.estado.setTextColor(ContextCompat.getColor(mContext, color));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

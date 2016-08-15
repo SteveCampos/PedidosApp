@@ -39,7 +39,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
 
-        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(), this);
+        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(), getActivity(),this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -17,6 +17,7 @@ public class CajaPagoHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.txt_compserie) public TextView mcomprobante;
     @BindView(R.id.txt_date) public TextView mdate;
     @BindView(R.id.txt_total) public TextView mtotal;
+    @BindView(R.id.text_cp_estado) public TextView mEstado;
     public CajaPagoHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
