@@ -15,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ComprobanteVentaAdapter;
-import energigas.apps.systemstrategy.energigas.entities.Comprobante;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 
 /**

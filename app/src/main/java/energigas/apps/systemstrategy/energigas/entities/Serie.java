@@ -4,7 +4,7 @@ package energigas.apps.systemstrategy.energigas.entities;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Comprobante {
+public class Serie {
     private int compIComprobanteId;
 
     private int compITipoComprobanteId;
@@ -27,10 +27,10 @@ public class Comprobante {
 
     private boolean compBEstado;
 
-    public Comprobante() {
+    public Serie() {
     }
 
-    public Comprobante(int compIComprobanteId, int compITipoComprobanteId, String compVSerie, int compICorrelativo, String compVCodigo, int compIUsuarioCreacionId, int compIUsuarioActualizacionId, String compDTFechaCreacion, String compDTFechaActualizacion, int compIEmpresaId, boolean compBEstado) {
+    public Serie(int compIComprobanteId, int compITipoComprobanteId, String compVSerie, int compICorrelativo, String compVCodigo, int compIUsuarioCreacionId, int compIUsuarioActualizacionId, String compDTFechaCreacion, String compDTFechaActualizacion, int compIEmpresaId, boolean compBEstado) {
         this.compIComprobanteId = compIComprobanteId;
         this.compITipoComprobanteId = compITipoComprobanteId;
         this.compVSerie = compVSerie;

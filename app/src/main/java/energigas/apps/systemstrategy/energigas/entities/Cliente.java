@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -39,10 +41,14 @@ public class Cliente {
 
     private String cliVContacto;
 
+    private List<Establecimiento> itemsEstablecimientos;
+
+    private  Persona persona ;
+
     public Cliente() {
     }
 
-    public Cliente(int cliIClienteId, String cliVCodigo, int cliIPersonaId, int cliIUsuarioActualizacion, String cliDTFechaActualizacion, double cliDOMontoCredito, int cliIModalidadCreditoId, int cliIUsuarioCreacion, String cliDTFechaCreacion, int cliIEstadoId, int cliITipoClienteId, double cliDOSobreGiro, boolean cliBLineaCredito, String cliVTelefono, String cliVCelular, double cliDOCreditoDisponible, String cliVContacto) {
+    public Cliente(int cliIClienteId, String cliVCodigo, int cliIPersonaId, int cliIUsuarioActualizacion, String cliDTFechaActualizacion, double cliDOMontoCredito, int cliIModalidadCreditoId, int cliIUsuarioCreacion, String cliDTFechaCreacion, int cliIEstadoId, int cliITipoClienteId, double cliDOSobreGiro, boolean cliBLineaCredito, String cliVTelefono, String cliVCelular, double cliDOCreditoDisponible, String cliVContacto, List<Establecimiento> itemsEstablecimientos, Persona persona) {
         this.cliIClienteId = cliIClienteId;
         this.cliVCodigo = cliVCodigo;
         this.cliIPersonaId = cliIPersonaId;
@@ -60,6 +66,8 @@ public class Cliente {
         this.cliVCelular = cliVCelular;
         this.cliDOCreditoDisponible = cliDOCreditoDisponible;
         this.cliVContacto = cliVContacto;
+        this.itemsEstablecimientos = itemsEstablecimientos;
+        this.persona = persona;
     }
 
     public int getCliIClienteId() {
@@ -196,5 +204,21 @@ public class Cliente {
 
     public void setCliVContacto(String cliVContacto) {
         this.cliVContacto = cliVContacto;
+    }
+
+    public List<Establecimiento> getItemsEstablecimientos() {
+        return itemsEstablecimientos;
+    }
+
+    public void setItemsEstablecimientos(List<Establecimiento> itemsEstablecimientos) {
+        this.itemsEstablecimientos = itemsEstablecimientos;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 }

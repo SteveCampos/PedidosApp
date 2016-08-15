@@ -4,7 +4,7 @@ package energigas.apps.systemstrategy.energigas.entities;
  * Created by kelvi on 10/08/2016.
  */
 
-public class PlanRutaDetalle {
+public class PlanDistribucionDetalle {
 
     private long pddId;
 
@@ -22,10 +22,10 @@ public class PlanRutaDetalle {
 
     private long peId;
 
-    public PlanRutaDetalle() {
+    public PlanDistribucionDetalle() {
     }
 
-    public PlanRutaDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId) {
+    public PlanDistribucionDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId) {
         this.pddId = pddId;
         this.pdId = pdId;
         this.establecimientoId = establecimientoId;

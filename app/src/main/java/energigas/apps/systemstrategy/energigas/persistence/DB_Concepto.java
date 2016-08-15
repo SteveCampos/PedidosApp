@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
@@ -21,6 +23,10 @@ public class DB_Concepto {
     public static final String empresaId = "empresaId";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
+
+    private static final String TAG = "DB_Concepto";
+
+
     private static final String SQLITE_TABLA_DB_CONCEPTO = "DB_Concepto";
     private final Context mCtx;
     public static final String CREATE_TABLA_DB_CONCEPTO =
@@ -61,6 +67,22 @@ public class DB_Concepto {
         initialValues.put(empresaId, concept.getEmpresaId());
         initialValues.put(Constants._CLMEXPORT, Constants._CREADO);
         return mDb.insert(SQLITE_TABLA_DB_CONCEPTO, null, initialValues);
+    }
+
+    public boolean createAllConcepto(@NonNull BEGeneral beGeneral) {
+        boolean state = true;
+        for (Concepto concepto : beGeneral.getItemsConceptos()) {
+
+            Long insert = createConcepto(concepto);
+
+            if ((insert) < 0) {
+                Log.e(TAG, "ERROR AL INSERTAR ROLES");
+                state = false;
+                break;
+            }
+
+        }
+        return state;
     }
 
     public long updateConcepto(@NonNull Concepto concept) {

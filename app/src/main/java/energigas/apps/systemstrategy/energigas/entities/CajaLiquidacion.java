@@ -1,10 +1,13 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
 public class CajaLiquidacion {
+
     private long liqId;
 
     private int usuarioId;
@@ -39,13 +42,13 @@ public class CajaLiquidacion {
 
     private int usuarioActualizacion;
 
-    private int tipo;
+    private int tipoId;
 
     private String placaVehiculo;
 
-    private int vehiculoId;
+    private int veId;
 
-    private int almacenId;
+    private int almId;
 
     private String latitudInicio;
 
@@ -55,10 +58,24 @@ public class CajaLiquidacion {
 
     private String longitudFinal;
 
+    private long pdId;
+
+    private int pdfId;
+
+    private double saldoInicial;
+
+    private double saldoFinal;
+
+    private PlanDistribucion planDistribucionD ;
+    private List<Cliente> itemsClientes ;
+    private List<CajaLiquidacionDetalle> itemsLiquidacion;
+    private List<Serie> itemsSeries;
+
+
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipo, String placaVehiculo, int vehiculoId, int almacenId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries) {
         this.liqId = liqId;
         this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
@@ -76,14 +93,22 @@ public class CajaLiquidacion {
         this.pFT = pFT;
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
-        this.tipo = tipo;
+        this.tipoId = tipoId;
         this.placaVehiculo = placaVehiculo;
-        this.vehiculoId = vehiculoId;
-        this.almacenId = almacenId;
+        this.veId = veId;
+        this.almId = almId;
         this.latitudInicio = latitudInicio;
         this.longitudInicio = longitudInicio;
         this.latitudFinal = latitudFinal;
         this.longitudFinal = longitudFinal;
+        this.pdId = pdId;
+        this.pdfId = pdfId;
+        this.saldoInicial = saldoInicial;
+        this.saldoFinal = saldoFinal;
+        this.planDistribucionD = planDistribucionD;
+        this.itemsClientes = itemsClientes;
+        this.itemsLiquidacion = itemsLiquidacion;
+        this.itemsSeries = itemsSeries;
     }
 
     public long getLiqId() {
@@ -222,12 +247,12 @@ public class CajaLiquidacion {
         this.usuarioActualizacion = usuarioActualizacion;
     }
 
-    public int getTipo() {
-        return tipo;
+    public int getTipoId() {
+        return tipoId;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+    public void setTipoId(int tipoId) {
+        this.tipoId = tipoId;
     }
 
     public String getPlacaVehiculo() {
@@ -238,20 +263,20 @@ public class CajaLiquidacion {
         this.placaVehiculo = placaVehiculo;
     }
 
-    public int getVehiculoId() {
-        return vehiculoId;
+    public int getVeId() {
+        return veId;
     }
 
-    public void setVehiculoId(int vehiculoId) {
-        this.vehiculoId = vehiculoId;
+    public void setVeId(int veId) {
+        this.veId = veId;
     }
 
-    public int getAlmacenId() {
-        return almacenId;
+    public int getAlmId() {
+        return almId;
     }
 
-    public void setAlmacenId(int almacenId) {
-        this.almacenId = almacenId;
+    public void setAlmId(int almId) {
+        this.almId = almId;
     }
 
     public String getLatitudInicio() {
@@ -284,5 +309,69 @@ public class CajaLiquidacion {
 
     public void setLongitudFinal(String longitudFinal) {
         this.longitudFinal = longitudFinal;
+    }
+
+    public long getPdId() {
+        return pdId;
+    }
+
+    public void setPdId(long pdId) {
+        this.pdId = pdId;
+    }
+
+    public int getPdfId() {
+        return pdfId;
+    }
+
+    public void setPdfId(int pdfId) {
+        this.pdfId = pdfId;
+    }
+
+    public double getSaldoInicial() {
+        return saldoInicial;
+    }
+
+    public void setSaldoInicial(double saldoInicial) {
+        this.saldoInicial = saldoInicial;
+    }
+
+    public double getSaldoFinal() {
+        return saldoFinal;
+    }
+
+    public void setSaldoFinal(double saldoFinal) {
+        this.saldoFinal = saldoFinal;
+    }
+
+    public PlanDistribucion getPlanDistribucionD() {
+        return planDistribucionD;
+    }
+
+    public void setPlanDistribucionD(PlanDistribucion planDistribucionD) {
+        this.planDistribucionD = planDistribucionD;
+    }
+
+    public List<Cliente> getItemsClientes() {
+        return itemsClientes;
+    }
+
+    public void setItemsClientes(List<Cliente> itemsClientes) {
+        this.itemsClientes = itemsClientes;
+    }
+
+    public List<CajaLiquidacionDetalle> getItemsLiquidacion() {
+        return itemsLiquidacion;
+    }
+
+    public void setItemsLiquidacion(List<CajaLiquidacionDetalle> itemsLiquidacion) {
+        this.itemsLiquidacion = itemsLiquidacion;
+    }
+
+    public List<Serie> getItemsSeries() {
+        return itemsSeries;
+    }
+
+    public void setItemsSeries(List<Serie> itemsSeries) {
+        this.itemsSeries = itemsSeries;
     }
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.entities.Comprobante;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.holders.ComprobanteVentaHolder;
 

@@ -1,10 +1,13 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
 public class PlanDistribucion {
+
     private long pdId;
 
     private String fechaInicio;
@@ -26,12 +29,17 @@ public class PlanDistribucion {
     private String periodo;
 
     private int estadoId;
-    private int peId;
+
+    private double meta;
+
+    private double porcentaje;
+
+    private List<PlanDistribucionDetalle> items;
 
     public PlanDistribucion() {
     }
 
-    public PlanDistribucion(long pdId, String fechaInicio, String fechaFin, int usuarioCreaccion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int vehiculoId, int agenteId, String periodo,int estadoId,int peId) {
+    public PlanDistribucion(long pdId, String fechaInicio, String fechaFin, int usuarioCreaccion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int vehiculoId, int agenteId, String periodo, int estadoId, double meta, double porcentaje, List<PlanDistribucionDetalle> items) {
         this.pdId = pdId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -42,24 +50,10 @@ public class PlanDistribucion {
         this.vehiculoId = vehiculoId;
         this.agenteId = agenteId;
         this.periodo = periodo;
-        this.estadoId=estadoId;
-        this.peId=peId;
-    }
-
-    public int getEstadoId() {
-        return estadoId;
-    }
-
-    public void setEstadoId(int estadoId) {
         this.estadoId = estadoId;
-    }
-
-    public int getPeId() {
-        return peId;
-    }
-
-    public void setPeId(int peId) {
-        this.peId = peId;
+        this.meta = meta;
+        this.porcentaje = porcentaje;
+        this.items = items;
     }
 
     public long getPdId() {
@@ -140,5 +134,37 @@ public class PlanDistribucion {
 
     public void setPeriodo(String periodo) {
         this.periodo = periodo;
+    }
+
+    public int getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public double getMeta() {
+        return meta;
+    }
+
+    public void setMeta(double meta) {
+        this.meta = meta;
+    }
+
+    public double getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(double porcentaje) {
+        this.porcentaje = porcentaje;
+    }
+
+    public List<PlanDistribucionDetalle> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PlanDistribucionDetalle> items) {
+        this.items = items;
     }
 }
