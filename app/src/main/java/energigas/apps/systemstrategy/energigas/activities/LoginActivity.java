@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // startActivity(new Intent(this, MainActivity.class));
                 // finish();
             } else {
-                Toast.makeText(getApplicationContext(), "Login Incorrecto", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Login Incorrecto", Toast.LENGTH_LONG).show();
             }
         }
     }

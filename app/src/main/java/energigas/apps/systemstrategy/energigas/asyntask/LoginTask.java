@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.persistence.DB_Usuario;
@@ -46,7 +47,8 @@ public class LoginTask extends AsyncTask<String, String, String> {
         try {
             jsonObject = restAPI.fobj_ObtenerUsuario(usuario, clave);
             Usuario objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObject), Usuario.class);
-
+            jsonObject = restAPI.fobj_ObtenerDatosGenerales();
+            //BEGeneral beGeneral = mapper.readValue(Utils.getJsonObResult(jsonObject), BEGeneral.class);
             if (objUsuario.getUsuIUsuarioId() < 0) {
                 aListener.onCredentialsFail();
                 aBoolean = false;
