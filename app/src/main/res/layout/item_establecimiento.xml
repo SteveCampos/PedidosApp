@@ -29,7 +29,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="4dp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/idLinear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,6 +48,7 @@
 
                 <TextView
                     android:id="@+id/txtdireccion"
+                    android:layout_below="@+id/txtnombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_address"
@@ -58,6 +59,7 @@
 
                 <TextView
                     android:id="@+id/txtubicacion"
+                    android:layout_below="@+id/txtdireccion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_marker"
@@ -68,7 +70,20 @@
                     android:drawableLeft="@drawable/ic_marker" />
 
 
-            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ATENDIDO"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txtdireccion"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:textColor="@color/md_light_green_400"
+                    />
+
+
+            </RelativeLayout>
+
+
 
             <TextView
                 android:id="@+id/txtpoints"
@@ -83,15 +98,7 @@
                 android:drawableLeft="@drawable/ic_star"
                 android:layout_alignParentRight="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ATENDIDO"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                style="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/md_light_green_400"
-                />
+
 
         </RelativeLayout>
 
