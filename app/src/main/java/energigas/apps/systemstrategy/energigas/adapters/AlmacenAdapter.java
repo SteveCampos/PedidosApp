@@ -80,7 +80,14 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "CLICKED: " + view);
-                listener.onAlmacenClickListener(almacen, view);
+                listener.onAlmacenClickListener(almacen, view, 0);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                listener.onAlmacenClickListener(almacen, view, 1);
+                return true;
             }
         });
     }
@@ -91,6 +98,6 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     }
 
     public interface OnAlmacenClickListener{
-        void onAlmacenClickListener(Almacen almacen, View view);
+        void onAlmacenClickListener(Almacen almacen, View view, int typeClick);
     }
 }

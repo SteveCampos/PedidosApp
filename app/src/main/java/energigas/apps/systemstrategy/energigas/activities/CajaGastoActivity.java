@@ -74,7 +74,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_today));
-        tabsAdapter.addFragment(InventarioFragment.newIntance(), getString(R.string.activity_expenses_week));
+        tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_week));
         mainViewPager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(mainViewPager);
     }

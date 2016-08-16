@@ -3,7 +3,10 @@ package energigas.apps.systemstrategy.energigas.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +18,9 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
+import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.adapters.AlmacenAdapter;
+import energigas.apps.systemstrategy.energigas.dialogs.AlertDialogFragment;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 
 /**
@@ -48,7 +53,45 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
     }
 
     @Override
-    public void onAlmacenClickListener(Almacen almacen, View view) {
-        startActivity(new Intent(getActivity(), DispatchActivity.class));
+    public void onAlmacenClickListener(Almacen almacen, View view, int type) {
+
+        int position = recyclerView.getChildAdapterPosition(view);
+
+        if (type ==1 && position == 2) {
+            showAlertDialog();
+            return;
+        }
+
+        String message = "REDIRECT";
+        boolean redirect = false;
+        Class clase = DispatchActivity.class;
+        switch (position){
+            case 0://DESPACHADO, REDIRECT TO PRINT
+                message = "DESPACHADO";
+                redirect = true;
+                clase = PrintDispatch.class;
+                break;
+            case 1://EN PROCESO
+                message = "EN PROCESO";
+                redirect = true;
+                clase = DispatchActivity.class;
+                break;
+            case 2:
+                //NO PROGRAMADO
+                message = "No Programado, mantenga presionado para Autoprogramar";
+                break;
+        }
+
+        Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
+
+        if (redirect){
+            startActivity(new Intent(getActivity(), clase));
+        }
+    }
+
+    private void showAlertDialog() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        AlertDialogFragment alertDialog = AlertDialogFragment.newInstance("Autoprogramar");
+        alertDialog.show(fm, "fragment_alert");
     }
 }
