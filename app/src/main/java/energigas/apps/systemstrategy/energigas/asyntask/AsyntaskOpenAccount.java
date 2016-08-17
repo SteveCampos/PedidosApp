@@ -34,10 +34,16 @@ private static final String TAG ="AsyntaskOpenAccount";
         try {
             ObjectMapper mapper = new ObjectMapper();
             jsonObject = restAPI.fins_GuardarLiquidacion(strings[0]);
+            Log.d(TAG," :"+strings);
+            Log.d(TAG,": "+jsonObject.toString());
             CajaLiquidacion cajaLiquidacion = mapper.readValue(Utils.getJsonObResult(jsonObject),CajaLiquidacion.class);
-            Log.d(TAG,""+cajaLiquidacion.getAlmId());
+            Log.d(TAG,""+cajaLiquidacion.getLiqId());
+            if (cajaLiquidacion.getLiqId()>0){
+                Log.d(TAG,""+cajaLiquidacion.getFechaActualizacion());
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d(TAG,": ERROR : "+jsonObject.toString());
         }
 
         return null;

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION =4;
     private static final String DATABASE_NAME = "Energigas.sqlite";
 
     public DbHelper(Context context) {

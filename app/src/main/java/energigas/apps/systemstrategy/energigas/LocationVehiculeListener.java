@@ -20,7 +20,7 @@ public class LocationVehiculeListener implements LocationListener {
 
     private static final String TAG = "LocationVehiculeListener";
     private OnLocationListener onLocationListener;
-    private static final long MIN_TIME_BW_UPDATES = (1000 * 60 * 1) / 6;
+    private static final long MIN_TIME_BW_UPDATES = 20*1000;
     private Context context;
     protected LocationManager locationManager;
 

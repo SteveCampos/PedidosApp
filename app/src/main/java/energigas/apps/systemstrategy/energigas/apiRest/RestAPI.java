@@ -142,4 +142,18 @@ public class RestAPI {
         return result;
     }
 
+    public JSONObject fobj_ObtenerLiquidacionId(long vint_LiquidacionId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fobj_ObtenerLiquidacionId");
+        p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

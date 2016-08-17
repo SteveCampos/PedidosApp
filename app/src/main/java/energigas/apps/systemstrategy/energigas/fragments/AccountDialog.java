@@ -133,8 +133,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         }
         String stringLiquidacion = usuarioId+"_"+kmInicial+"_"+pesoInicial+"_"+porcentajeInicial+"_"+location.getLatitude()+"_"+location.getLongitude()+"";
         Log.d(TAG,""+stringLiquidacion);
-       // showAnimation();
-       // new AsyntaskOpenAccount(this).execute(stringLiquidacion);
+        showAnimation();
+       new AsyntaskOpenAccount(this).execute(stringLiquidacion);
     }
 
 
