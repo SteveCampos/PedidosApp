@@ -1,13 +1,17 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Rol {
-    private int id;
+public class Rol extends SugarRecord {
+
+    private int idRol;
 
     private String nombre;
 
@@ -23,13 +27,14 @@ public class Rol {
 
     private int usuarioActualizacion;
 
+    @Ignore
     private List<Acceso> itemsAccesos;
 
     public Rol() {
     }
 
-    public Rol(int id, String nombre, boolean estado, int parentId, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion,List<Acceso> itemsAccesos) {
-        this.id = id;
+    public Rol(int idRol, String nombre, boolean estado, int parentId, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion, List<Acceso> itemsAccesos) {
+        this.idRol = idRol;
         this.nombre = nombre;
         this.estado = estado;
         this.parentId = parentId;
@@ -37,23 +42,15 @@ public class Rol {
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioCreacion = usuarioCreacion;
         this.usuarioActualizacion = usuarioActualizacion;
-        this.itemsAccesos =itemsAccesos;
-    }
-
-    public List<Acceso> getItemsAccesos() {
-        return itemsAccesos;
-    }
-
-    public void setItemsAccesos(List<Acceso> itemsAccesos) {
         this.itemsAccesos = itemsAccesos;
     }
 
-    public int getId() {
-        return id;
+    public int getIdRol() {
+        return idRol;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
     }
 
     public String getNombre() {
@@ -110,5 +107,13 @@ public class Rol {
 
     public void setUsuarioActualizacion(int usuarioActualizacion) {
         this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    public List<Acceso> getItemsAccesos() {
+        return itemsAccesos;
+    }
+
+    public void setItemsAccesos(List<Acceso> itemsAccesos) {
+        this.itemsAccesos = itemsAccesos;
     }
 }

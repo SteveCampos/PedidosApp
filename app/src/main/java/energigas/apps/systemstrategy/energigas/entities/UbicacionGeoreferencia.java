@@ -1,11 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class UbicacionGeoreferencia {
-    private int id;
+public class UbicacionGeoreferencia extends SugarRecord {
+
+    private int idUbicacionGeoRef;
 
     private String codigo;
 
@@ -18,20 +21,20 @@ public class UbicacionGeoreferencia {
     public UbicacionGeoreferencia() {
     }
 
-    public UbicacionGeoreferencia(int id, String codigo, String descripcion, int parentId, int tipoId) {
-        this.id = id;
+    public UbicacionGeoreferencia(int idUbicacionGeoRef, String codigo, String descripcion, int parentId, int tipoId) {
+        this.idUbicacionGeoRef = idUbicacionGeoRef;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.parentId = parentId;
         this.tipoId = tipoId;
     }
 
-    public int getId() {
-        return id;
+    public int getIdUbicacionGeoRef() {
+        return idUbicacionGeoRef;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdUbicacionGeoRef(int idUbicacionGeoRef) {
+        this.idUbicacionGeoRef = idUbicacionGeoRef;
     }
 
     public String getCodigo() {

@@ -1,12 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class Estado {
+public class Estado extends SugarRecord {
 
-    private int id;
+    private int idEstado;
 
     private String objeto;
 
@@ -17,19 +19,19 @@ public class Estado {
     public Estado() {
     }
 
-    public Estado(int id, String objeto, String descripcion, int parentId) {
-        this.id = id;
+    public Estado(int idEstado, String objeto, String descripcion, int parentId) {
+        this.idEstado = idEstado;
         this.objeto = objeto;
         this.descripcion = descripcion;
         this.parentId = parentId;
     }
 
-    public int getId() {
-        return id;
+    public int getIdEstado() {
+        return idEstado;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 
     public String getObjeto() {

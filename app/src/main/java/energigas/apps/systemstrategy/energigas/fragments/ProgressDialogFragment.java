@@ -12,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.MainActivity;
 import energigas.apps.systemstrategy.energigas.asyntask.LoginTask;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
-import energigas.apps.systemstrategy.energigas.persistence.DB_Usuario;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -25,7 +27,7 @@ import energigas.apps.systemstrategy.energigas.persistence.DB_Usuario;
 
 public class ProgressDialogFragment extends DialogFragment implements OnLoginAsyntaskListener {
     private static final String TAG = "ProgressDialogFragment";
-    private DB_Usuario db_usuario;
+
 
     public static ProgressDialogFragment newIntance(@NonNull String usuario, @NonNull String clave) {
 
@@ -42,17 +44,23 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        db_usuario = new DB_Usuario(getActivity());
-        db_usuario.open();
         String usuario = getArguments().getString("usuario");
         String clave = getArguments().getString("clave");
-        if (db_usuario.validateUserAndPassword(usuario, clave)) {
-            dismiss();
-            initMain();
+        List<Usuario> ss = Usuario.listAll(Usuario.class);
+        Log.d(TAG, "COUNT : " + ss.size());
+        if (ss.size() > 0) {
+            List<Usuario> dbUsuarioa = Usuario.find(Usuario.class, " usu_V_Usuario = ?  and usu_V_Password = ? ", new String[]{usuario, clave});
+            Log.d(TAG, "LOGIN : " + dbUsuarioa.get(0).getUsuVUsuario());
+            if (dbUsuarioa.size() > 0) {
+                initMain();
+            } else {
+                new LoginTask(this).execute(usuario, clave);
+            }
+
         } else {
             new LoginTask(this).execute(usuario, clave);
         }
-        db_usuario.close();
+
         return dialog;
     }
 
@@ -68,6 +76,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     public void onError(@NonNull String message) {
         Log.d(TAG, "onError" + " " + message);
         Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 
     @Override
@@ -77,7 +86,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     @Override
     public void onErrorProcedure(@NonNull String message) {
-
+        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
         dismiss();
 
     }

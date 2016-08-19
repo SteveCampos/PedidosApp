@@ -1,12 +1,15 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+
+import com.orm.SugarRecord;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 15/08/2016.
  */
 
-public class BEGeneral {
+public class BEGeneral extends SugarRecord {
 
     private List<Concepto> itemsConceptos;
     private List<Estado> itemsEstados;

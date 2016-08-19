@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.orm.SugarTransactionHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
@@ -66,9 +69,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDialogAccount() {
-        new AccountDialog()
+
+
+
+        /*new AccountDialog()
                 .setFloating(fab)
-                .show(getSupportFragmentManager(),null);
+                .show(getSupportFragmentManager(),null);*/
     }
 
     private void initViews() {

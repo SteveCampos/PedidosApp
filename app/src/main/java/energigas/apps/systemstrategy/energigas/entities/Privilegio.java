@@ -1,12 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Privilegio {
+public class Privilegio  extends SugarRecord{
 
-    private int id;
+    private int idPrivilegio;
 
     private int accesoId;
 
@@ -27,8 +29,8 @@ public class Privilegio {
     public Privilegio() {
     }
 
-    public Privilegio(int id, int accesoId, String nombre, String descripcion, boolean estado, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion) {
-        this.id = id;
+    public Privilegio(int idPrivilegio, int accesoId, String nombre, String descripcion, boolean estado, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion) {
+        this.idPrivilegio = idPrivilegio;
         this.accesoId = accesoId;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -39,12 +41,12 @@ public class Privilegio {
         this.usuarioActualizacion = usuarioActualizacion;
     }
 
-    public int getId() {
-        return id;
+    public int getIdPrivilegio() {
+        return idPrivilegio;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdPrivilegio(int idPrivilegio) {
+        this.idPrivilegio = idPrivilegio;
     }
 
     public int getAccesoId() {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
@@ -20,7 +21,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.input_password)
     EditText editTextPassword;
     @BindView(R.id.btn_login)
-    AppCompatButton ButtonLogin;
+    AppCompatButton buttonLogin;
 
     private static final String TAG = "LoginActivity";
 
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        ButtonLogin.setOnClickListener(this);
+        buttonLogin.setOnClickListener(this);
 
     }
 
@@ -48,20 +49,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         if (valida) {
             startLogin(mEmail, mPassword);
-            if (mEmail.equals("admin") && mPassword.equals("123")) {
 
-
-                // startActivity(new Intent(this, MainActivity.class));
-                // finish();
-            } else {
-                //Toast.makeText(getApplicationContext(), "Login Incorrecto", Toast.LENGTH_LONG).show();
-            }
         }
     }
 
     private void startLogin(String usuario, String clave) {
 
-        ProgressDialogFragment.newIntance(usuario,clave).show(getSupportFragmentManager(),"xd");
+        ProgressDialogFragment.newIntance(usuario, clave).show(getSupportFragmentManager(), "xd");
 
     }
 
@@ -74,8 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
-
 
 
 }

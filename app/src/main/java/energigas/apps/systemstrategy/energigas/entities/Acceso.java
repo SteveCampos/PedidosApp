@@ -1,14 +1,18 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Acceso {
+public class Acceso extends SugarRecord {
 
-    private int id;
+    private int idAcceso;
 
     private int parentId;
 
@@ -36,13 +40,14 @@ public class Acceso {
 
     private boolean movil;
 
+    @Ignore
     private List<Privilegio> itemsPrivielgios;
 
     public Acceso() {
     }
 
-    public Acceso(int id, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil,List<Privilegio> itemsPrivielgios) {
-        this.id = id;
+    public Acceso(int idAcceso, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil, List<Privilegio> itemsPrivielgios) {
+        this.idAcceso = idAcceso;
         this.parentId = parentId;
         this.abreviacion = abreviacion;
         this.descripcion = descripcion;
@@ -59,20 +64,12 @@ public class Acceso {
         this.itemsPrivielgios = itemsPrivielgios;
     }
 
-    public List<Privilegio> getItemsPrivielgios() {
-        return itemsPrivielgios;
+    public int getIdAcceso() {
+        return idAcceso;
     }
 
-    public void setItemsPrivielgios(List<Privilegio> itemsPrivielgios) {
-        this.itemsPrivielgios = itemsPrivielgios;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setIdAcceso(int idAcceso) {
+        this.idAcceso = idAcceso;
     }
 
     public int getParentId() {
@@ -177,5 +174,13 @@ public class Acceso {
 
     public void setMovil(boolean movil) {
         this.movil = movil;
+    }
+
+    public List<Privilegio> getItemsPrivielgios() {
+        return itemsPrivielgios;
+    }
+
+    public void setItemsPrivielgios(List<Privilegio> itemsPrivielgios) {
+        this.itemsPrivielgios = itemsPrivielgios;
     }
 }

@@ -5,48 +5,47 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orm.SugarRecord;
+import com.orm.SugarTransactionHelper;
+
 
 import org.json.JSONObject;
 
+
+import java.util.List;
+
+
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.entities.Acceso;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
+import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
-import energigas.apps.systemstrategy.energigas.persistence.DB_Concepto;
-import energigas.apps.systemstrategy.energigas.persistence.DB_Estado;
-import energigas.apps.systemstrategy.energigas.persistence.DB_UbicacionGeoreferencia;
-import energigas.apps.systemstrategy.energigas.persistence.DB_Usuario;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class LoginTask extends AsyncTask<String, String, String> {
+public class LoginTask extends AsyncTask<String, String, String> implements SugarTransactionHelper.Callback {
     private static final String TAG = "LoginTask";
 
-    private JSONObject jsonObject = null;
+    private JSONObject jsonObjectUsuario = null;
+    private JSONObject jsonObjectConceptos = null;
+
     private OnLoginAsyntaskListener aListener;
-    private DB_Usuario db_usuario;
-    private DB_Concepto db_concepto;
-    private DB_Estado db_estado;
-    private DB_UbicacionGeoreferencia db_ubicacionGeoreferencia;
     private Context context;
-    private boolean aBoolean;
+    private int result = 0;
+    private Usuario objUsuario;
+    private BEGeneral objGeneral;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
 
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
-        this.db_usuario = new DB_Usuario(context);
-        this.db_concepto = new DB_Concepto(context);
-        this.db_estado = new DB_Estado(context);
-        this.db_ubicacionGeoreferencia = new DB_UbicacionGeoreferencia(context);
-        db_usuario.open();
-        db_concepto.open();
-        db_estado.open();
-        db_ubicacionGeoreferencia.open();
 
     }
 
@@ -56,41 +55,91 @@ public class LoginTask extends AsyncTask<String, String, String> {
         String usuario = strings[0];
         String clave = strings[1];
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         try {
-            jsonObject = restAPI.fobj_ObtenerUsuario(usuario, clave);
-            Usuario objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObject), Usuario.class);
-            jsonObject = restAPI.fobj_ObtenerDatosGenerales();
-            BEGeneral beGeneral = mapper.readValue(Utils.getJsonObResult(jsonObject), BEGeneral.class);
-            db_concepto.createAllConcepto(beGeneral);
-            db_estado.createAllEstado(beGeneral);
-            db_ubicacionGeoreferencia.createUbicacionAllGeoreferencia(beGeneral);
 
+            jsonObjectUsuario = restAPI.fobj_ObtenerUsuario(usuario, clave);
+            objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObjectUsuario), Usuario.class);
 
+            jsonObjectConceptos = restAPI.fobj_ObtenerDatosGenerales();
+            objGeneral = mapper.readValue(Utils.getJsonObResult(jsonObjectConceptos), BEGeneral.class);
+            if (Utils.isSuccessful(jsonObjectUsuario) && Utils.isSuccessful(jsonObjectConceptos)) {
 
-            if (objUsuario.getUsuIUsuarioId() < 0) {
-                aListener.onCredentialsFail();
-                aBoolean = false;
-            } else {
-                Log.d(TAG, " USUARIO: " + objUsuario.getUsuIUsuarioId());
-                aBoolean = db_usuario.createWithPrivilegesUsuario(objUsuario, context);
+                if (objUsuario.getUsuIUsuarioId() < 0) {
+                    result = 1;
+                } else {
+                    SugarTransactionHelper.doInTransaction(this);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "Error: " + e.getMessage());
-            aListener.onError(e.getMessage());
+            result = 2;
         }
+
 
         return null;
     }
 
+
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        db_usuario.close();
-        if (aBoolean) {
-            aListener.onSuccess();
+
+        switch (result) {
+            case 1://Credenciales incorrectas
+                aListener.onCredentialsFail();
+                break;
+            case 2://Error en la conexion
+                aListener.onError("Error en la conexion al servidor");
+                break;
+            case 3://Error al insertar data
+                aListener.onError("Error en guardar los datos");
+                break;
+            case 4://Error en la base de datos del servidor
+                aListener.onErrorProcedure("Erroe en la base de datos del servidor");
+                break;
+            case 5://Ejecuto correctamente
+                aListener.onSuccess();
+                break;
         }
     }
 
 
+    @Override
+    public void manipulateInTransaction() {
+
+        objUsuario.save();
+        objUsuario.getPersona().save();
+        List<Rol> rols = objUsuario.getItemsRoles();
+        SugarRecord.saveInTx(rols);
+        for (Rol rol : rols) {
+            List<Acceso> accesos = rol.getItemsAccesos();
+            SugarRecord.saveInTx(accesos);
+            for (Acceso acceso : accesos) {
+                SugarRecord.saveInTx(acceso.getItemsPrivielgios());
+            }
+        }
+
+        /**DATOS GENERALES**/
+
+        SugarRecord.saveInTx(objGeneral.getItemsConceptos());
+        SugarRecord.saveInTx(objGeneral.getItemsEstados());
+        SugarRecord.saveInTx(objGeneral.getItemUbigeos());
+
+            List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
+
+        for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias){
+            Log.d(TAG," : "+georeferencia.getDescripcion());
+        }
+
+
+        result = 5;
+    }
+
+    @Override
+    public void errorInTransaction(String error) {
+        result = 3;
+    }
 }

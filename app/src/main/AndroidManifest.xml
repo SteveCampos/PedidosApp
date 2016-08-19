@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
@@ -17,9 +18,9 @@
 
 
         <meta-data android:name="DATABASE" android:value="energigas.db" />
-        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="energigas.apps.systemstrategy.energigas" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="energigas.apps.systemstrategy.energigas.entities" />
 
 
 

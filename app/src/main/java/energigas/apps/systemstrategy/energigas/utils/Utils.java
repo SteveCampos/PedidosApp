@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,10 +37,22 @@ public class Utils {
         String s = "";
         try {
             s = jsonObject.getJSONObject("Value").toString();
+            Log.d("JSON RESULT",""+jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return  s;
+    }
+
+    public static boolean isSuccessful(JSONObject jsonObject){
+        boolean s = false;
+        try {
+            s = jsonObject.getBoolean("Successful");
+            Log.d("JSON RESULT",""+jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 
     public static void showMap(Context context, Uri geoLocation) {

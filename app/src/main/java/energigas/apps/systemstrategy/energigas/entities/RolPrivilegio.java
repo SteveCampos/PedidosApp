@@ -1,10 +1,12 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class RolPrivilegio {
+public class RolPrivilegio extends SugarRecord{
     private int rolId;
 
     private int privilegioId;

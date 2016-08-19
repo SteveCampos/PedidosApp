@@ -1,12 +1,15 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Usuario {
+public class Usuario extends SugarRecord{
 
     private int usuIUsuarioId;
 
@@ -26,14 +29,15 @@ public class Usuario {
 
     private String usuDTFechaCreacion;
 
+    @Ignore
     private List<Rol> itemsRoles;
-
+    @Ignore
     private Persona persona;
 
     public Usuario() {
     }
 
-    public Usuario(int usuIUsuarioId, String usuVUsuario, String usuVPassword, boolean usuBEstado, int usuIPersonaId, int usuIUsuarioActualizacion, String usuDTFechaActualizacion, int usuIUsuarioCreacion, String usuDTFechaCreacion,List<Rol> itemsRoles,Persona persona) {
+    public Usuario(int usuIUsuarioId, String usuVUsuario, String usuVPassword, boolean usuBEstado, int usuIPersonaId, int usuIUsuarioActualizacion, String usuDTFechaActualizacion, int usuIUsuarioCreacion, String usuDTFechaCreacion, List<Rol> itemsRoles, Persona persona) {
         this.usuIUsuarioId = usuIUsuarioId;
         this.usuVUsuario = usuVUsuario;
         this.usuVPassword = usuVPassword;
