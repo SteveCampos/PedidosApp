@@ -48,7 +48,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
         String clave = getArguments().getString("clave");
         List<Usuario> ss = Usuario.listAll(Usuario.class);
         Log.d(TAG, "COUNT : " + ss.size());
-        if (ss.size() > 0) {
+        if (-1 > 0) {
             List<Usuario> dbUsuarioa = Usuario.find(Usuario.class, " usu_V_Usuario = ?  and usu_V_Password = ? ", new String[]{usuario, clave});
             Log.d(TAG, "LOGIN : " + dbUsuarioa.get(0).getUsuVUsuario());
             if (dbUsuarioa.size() > 0) {

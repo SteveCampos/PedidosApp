@@ -1,13 +1,18 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class CajaLiquidacion {
+public class CajaLiquidacion extends SugarRecord{
 
+    @Unique
     private long liqId;
 
     private int usuarioId;
@@ -66,9 +71,14 @@ public class CajaLiquidacion {
 
     private double saldoFinal;
 
-    private PlanDistribucion planDistribucionD ;
-    private List<Cliente> itemsClientes ;
+
+    @Ignore
+    private PlanDistribucion planDistribucionD;
+    @Ignore
+    private List<Cliente> itemsClientes;
+    @Ignore
     private List<CajaLiquidacionDetalle> itemsLiquidacion;
+    @Ignore
     private List<Serie> itemsSeries;
 
 

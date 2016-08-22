@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+//apply from: '../maven_push.gradle'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 24
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+
+dependencies {
+
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.google.guava:guava:18.0'
+    testCompile 'junit:junit:4.12'
+}
+
+
+task libraryJar(type: Jar) {
+//    dependsOn assembleRelease
+    from android.sourceSets.main.java.srcDirs,
+         ['build/intermediates/classes/release/'] // Add the release classes into the jar
+    baseName 'sugar'
+}
+

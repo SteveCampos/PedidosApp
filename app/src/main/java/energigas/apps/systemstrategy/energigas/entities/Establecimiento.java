@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.dsl.Unique;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  */
 
 public class Establecimiento {
-
+    @Unique
     private int estIEstablecimientoId;
 
     private String estVCodigo;
@@ -47,11 +49,14 @@ public class Establecimiento {
 
     private String estVContacto;
 
+    private List<Almacen> itemsAlmacen ;
+    private GeoUbicacion ubicacion;
+
     public Establecimiento() {
 
     }
 
-    public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto) {
+    public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto, List<Almacen> itemsAlmacen, GeoUbicacion ubicacion) {
         this.estIEstablecimientoId = estIEstablecimientoId;
         this.estVCodigo = estVCodigo;
         this.estVDescripcion = estVDescripcion;
@@ -71,6 +76,8 @@ public class Establecimiento {
         this.estVObservacion = estVObservacion;
         this.estVKeyFireBase = estVKeyFireBase;
         this.estVContacto = estVContacto;
+        this.itemsAlmacen = itemsAlmacen;
+        this.ubicacion = ubicacion;
     }
 
     public int getEstIEstablecimientoId() {
@@ -225,11 +232,27 @@ public class Establecimiento {
         this.estVContacto = estVContacto;
     }
 
+    public List<Almacen> getItemsAlmacen() {
+        return itemsAlmacen;
+    }
+
+    public void setItemsAlmacen(List<Almacen> itemsAlmacen) {
+        this.itemsAlmacen = itemsAlmacen;
+    }
+
+    public GeoUbicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(GeoUbicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     public static List<Establecimiento> getList(){
         List<Establecimiento> listEstablecimiento = new ArrayList<>();
         for (int i= 0; i<= 10; i++){
             listEstablecimiento.add(new Establecimiento(100, "1000", "Descripción", 1, 1, 1, 1, "993061806", "993061806",
-                    1, "16/02/16", 1, "16/02/16", 1, 1, "126/06/16", "Observacion", "KEyFirebase", "Contacto"));
+                    1, "16/02/16", 1, "16/02/16", 1, 1, "126/06/16", "Observacion", "KEyFirebase", "Contacto",null,null));
             /*
             listEstablecimiento.add(new Establecimiento("Agropacking Export S.A.","car. panamericana norte km. 1076","2.0","1.4 km","externo"));
             listEstablecimiento.add(new Establecimiento("Alsur Peru S.A.C.","av.Juan Pablo II N°  1130 MZA","4.0","7 km","interno"));
@@ -237,6 +260,4 @@ public class Establecimiento {
         }
         return listEstablecimiento;
     }
-
-
 }

@@ -1,12 +1,18 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
+
 import java.util.List;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class Cliente {
+public class Cliente extends SugarRecord{
+
+    @Unique
     private int cliIClienteId;
 
     private String cliVCodigo;
@@ -40,9 +46,9 @@ public class Cliente {
     private double cliDOCreditoDisponible;
 
     private String cliVContacto;
-
+    @Ignore
     private List<Establecimiento> itemsEstablecimientos;
-
+    @Ignore
     private  Persona persona ;
 
     public Cliente() {

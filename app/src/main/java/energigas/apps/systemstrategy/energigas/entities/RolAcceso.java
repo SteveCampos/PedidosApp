@@ -1,14 +1,16 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 09/08/2016.
  */
 
 public class RolAcceso  extends SugarRecord{
+    @Unique
     private int rolId;
-
+    @Unique
     private int accesoId;
 
     private boolean accesoDefault;

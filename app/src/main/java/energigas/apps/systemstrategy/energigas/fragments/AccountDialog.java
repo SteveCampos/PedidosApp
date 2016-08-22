@@ -142,6 +142,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     public void onLoadSuccess(String message) {
         Log.d("LOADSUCCESS", "kelvin: " + message);
         dismiss();
+        locationVehiculeListener.stopLocationUpdates();
         fab.hide();
     }
 

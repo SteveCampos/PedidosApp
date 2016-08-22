@@ -20,7 +20,11 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.Acceso;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
+import energigas.apps.systemstrategy.energigas.entities.Privilegio;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.RolAcceso;
+import energigas.apps.systemstrategy.energigas.entities.RolPrivilegio;
+import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
@@ -114,24 +118,36 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         objUsuario.getPersona().save();
         List<Rol> rols = objUsuario.getItemsRoles();
         SugarRecord.saveInTx(rols);
+        int count = 0;
         for (Rol rol : rols) {
             List<Acceso> accesos = rol.getItemsAccesos();
+            RolUsuario rolUsuario = new RolUsuario(objUsuario.getUsuIUsuarioId(), rol.getIdRol());
+            rolUsuario.save();
             SugarRecord.saveInTx(accesos);
             for (Acceso acceso : accesos) {
+
+                RolAcceso rolAcceso = new RolAcceso(rol.getIdRol(), acceso.getIdAcceso(), true);
+                rolAcceso.save();
                 SugarRecord.saveInTx(acceso.getItemsPrivielgios());
+
+                for (Privilegio privilegio : acceso.getItemsPrivielgios()) {
+                    RolPrivilegio rolPrivilegio = new RolPrivilegio(rol.getIdRol(), privilegio.getAccesoId());
+                    rolPrivilegio.save();
+                    count++;
+                }
             }
         }
-
+        Log.d(TAG, " DATOS INSERTADOS : " + count);
         /**DATOS GENERALES**/
 
         SugarRecord.saveInTx(objGeneral.getItemsConceptos());
         SugarRecord.saveInTx(objGeneral.getItemsEstados());
         SugarRecord.saveInTx(objGeneral.getItemUbigeos());
 
-            List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
+        List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
 
-        for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias){
-            Log.d(TAG," : "+georeferencia.getDescripcion());
+        for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias) {
+            Log.d(TAG, " : " + georeferencia.getDescripcion());
         }
 
 

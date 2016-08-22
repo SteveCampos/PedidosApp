@@ -2,6 +2,7 @@ package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 
 public class Rol extends SugarRecord {
-
+    @Unique
     private int idRol;
 
     private String nombre;

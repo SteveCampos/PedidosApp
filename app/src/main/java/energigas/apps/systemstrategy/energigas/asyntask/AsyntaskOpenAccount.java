@@ -3,24 +3,42 @@ package energigas.apps.systemstrategy.energigas.asyntask;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orm.SugarRecord;
+import com.orm.SugarTransactionHelper;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 3/08/2016.
  */
 
-public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> {
-private static final String TAG ="AsyntaskOpenAccount";
+public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implements SugarTransactionHelper.Callback {
+    private static final String TAG = "AsyntaskOpenAccount";
     private OnAsyntaskListener onAsyntaskListener;
     private RestAPI restAPI;
     private JSONObject jsonObject;
+    private int estado = 0;
+    private String message = "";
+    private CajaLiquidacion cajaLiquidacion;
 
     public AsyntaskOpenAccount(OnAsyntaskListener onAsyntaskListener) {
         this.onAsyntaskListener = onAsyntaskListener;
@@ -34,16 +52,33 @@ private static final String TAG ="AsyntaskOpenAccount";
         try {
             ObjectMapper mapper = new ObjectMapper();
             jsonObject = restAPI.fins_GuardarLiquidacion(strings[0]);
-            Log.d(TAG," :"+strings);
-            Log.d(TAG,": "+jsonObject.toString());
-            CajaLiquidacion cajaLiquidacion = mapper.readValue(Utils.getJsonObResult(jsonObject),CajaLiquidacion.class);
-            Log.d(TAG,""+cajaLiquidacion.getLiqId());
-            if (cajaLiquidacion.getLiqId()>0){
-                Log.d(TAG,""+cajaLiquidacion.getFechaActualizacion());
+            Log.d(TAG, " :" + strings[0]);
+            Log.d(TAG, ": " + jsonObject.toString());
+
+            if (Utils.isSuccessful(jsonObject)) {
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                cajaLiquidacion = mapper.readValue(Utils.getJsonObResult(jsonObject), CajaLiquidacion.class);
+                Log.d(TAG, "" + cajaLiquidacion.getLiqId());
+                if (cajaLiquidacion.getLiqId() > 0) {
+                    Log.d(TAG, "" + cajaLiquidacion.getFechaActualizacion());
+                    SugarTransactionHelper.doInTransaction(this);
+                } else {
+                    estado = Constants.ERROR_PROCEDIMIENTO;
+                    message = "Error de procedimiento";
+                }
+
+            } else {
+                estado = Constants.ERROR_PROCEDIMIENTO;
+                message = "Error de procedimiento";
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,": ERROR : "+jsonObject.toString());
+            Log.d(TAG, ": ERROR : " + jsonObject.toString());
+            estado = Constants.ERROR_CONEXION;
+            message = "" + e.getMessage();
+
         }
 
         return null;
@@ -52,7 +87,70 @@ private static final String TAG ="AsyntaskOpenAccount";
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        //onAsyntaskListener.onLoadSuccess("Ok");
-        onAsyntaskListener.onLoadError("Error");
+
+        switch (estado) {
+            case Constants.ERROR_PROCEDIMIENTO:
+                onAsyntaskListener.onLoadErrorProcedure(message);
+                break;
+            case Constants.ERROR_CONEXION:
+                onAsyntaskListener.onLoadError(message);
+                break;
+            case Constants.ERROR_GUARDAR:
+                onAsyntaskListener.onLoadError(message);
+                break;
+            case Constants.OPERACION_EXITOSA:
+                onAsyntaskListener.onLoadSuccess(message);
+                break;
+            default:
+                onAsyntaskListener.onLoadError(message);
+                break;
+        }
+
+    }
+
+    @Override
+    public void manipulateInTransaction() {
+
+        Long insert = cajaLiquidacion.save();
+        if (insert > 0) {
+            PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
+            planDistribucion.save();
+            List<PlanDistribucionDetalle> planDistribucionDetalles = planDistribucion.getItems();
+            SugarRecord.saveInTx(planDistribucionDetalles);
+            List<Cliente> clientes = cajaLiquidacion.getItemsClientes();
+            SugarRecord.saveInTx(clientes);
+            for (Cliente cliente : clientes) {
+                List<Establecimiento> establecimientos = cliente.getItemsEstablecimientos();
+                SugarRecord.saveInTx(establecimientos);
+                for (Establecimiento establecimiento : establecimientos) {
+                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
+                    SugarRecord.saveInTx(almacens);
+                    GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
+                    geoUbicacion.save();
+                }
+
+                Persona persona = cliente.getPersona();
+                persona.save();
+            }
+
+            List<CajaLiquidacionDetalle> cajaLiquidacionDetalles = cajaLiquidacion.getItemsLiquidacion();
+            SugarRecord.saveInTx(cajaLiquidacionDetalles);
+
+
+            List<Serie> series = cajaLiquidacion.getItemsSeries();
+            SugarRecord.saveInTx(series);
+            estado = Constants.OPERACION_EXITOSA;
+        }else{
+            message = "Error al guardar";
+            estado = Constants.ERROR_GUARDAR;
+        }
+
+
+
+    }
+
+    @Override
+    public void errorInTransaction(String error) {
+        this.message = error;
     }
 }

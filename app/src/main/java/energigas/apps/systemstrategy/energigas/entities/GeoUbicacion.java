@@ -1,11 +1,15 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class GeoUbicacion {
+public class GeoUbicacion extends SugarRecord{
 
+    @Unique
     private int ubId;
 
     private int ugId;

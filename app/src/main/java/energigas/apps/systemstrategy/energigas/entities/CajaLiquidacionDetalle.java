@@ -1,10 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
 public class CajaLiquidacionDetalle {
+
+    @Unique
     private long lidId;
 
     private long liId;

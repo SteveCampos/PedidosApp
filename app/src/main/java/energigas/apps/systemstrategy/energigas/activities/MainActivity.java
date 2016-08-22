@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        /*new AccountDialog()
+        new AccountDialog()
                 .setFloating(fab)
-                .show(getSupportFragmentManager(),null);*/
+                .show(getSupportFragmentManager(),null);
     }
 
     private void initViews() {
