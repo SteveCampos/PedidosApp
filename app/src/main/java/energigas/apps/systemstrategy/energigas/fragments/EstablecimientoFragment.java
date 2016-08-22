@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.orm.SugarContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -38,7 +41,14 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        SugarContext.init(getActivity());
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStop() {
+        SugarContext.terminate();
+        super.onStop();
     }
 
     @Nullable
@@ -47,13 +57,20 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        establecimientoList = Establecimiento.getList();
+        establecimientoList = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }
+
+    /*
+    private List<Establecimiento> list(List<Establecimiento> list){
+        for (int i=0; i<list.size(); i++){
+            GeoUbicacion.find(GeoUbicacion.class, "name = ? and title = ?", "satya", "title1");
+        }
+    }*/
 
     @Override
     public void onAttach(Context context) {

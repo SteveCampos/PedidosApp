@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import com.orm.SugarContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,8 +67,16 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        SugarContext.init(this);
         hideFloatingButton();
         initViews();
+    }
+
+
+    @Override
+    protected void onStop() {
+        SugarContext.terminate();
+        super.onStop();
     }
 
     private void hideFloatingButton(){
@@ -184,6 +194,7 @@ public class MainActivity extends AppCompatActivity
         // TODO: handle navigation
         // Closing drawer on item click
         drawer.closeDrawers();
+        list();
 
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
@@ -221,6 +232,13 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         return true;
+    }
+
+    private List<Establecimiento> list(){
+        //List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento where name = ?", "satya");
+        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
+        Log.d(TAG, "List<Establecimiento> size: " + list.size());
+        return list;
     }
 
     private void closeAccount() {

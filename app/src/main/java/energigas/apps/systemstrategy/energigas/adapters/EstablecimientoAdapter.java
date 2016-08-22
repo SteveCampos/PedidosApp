@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -57,14 +58,11 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
       //  holder.bind(mListEstablecimientos.get(position), mContext, listener);
         final Establecimiento establecimiento = mListEstablecimientos.get(position);
 
-
-
-        /*
-        holder.maddress.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
-        holder.mname.setText(""+establecimiento.getEstIClienteId());
-        holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
-        holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
-        holder.imageView2.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(establecimiento.getEstVCodigo())));*/
+        holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
+        holder.mubicacion.setText(establecimiento.getUbicacion().getDescripcion());
+        //holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
+        //holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
+        //holder.imageView2.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(establecimiento.getEstVCodigo())));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

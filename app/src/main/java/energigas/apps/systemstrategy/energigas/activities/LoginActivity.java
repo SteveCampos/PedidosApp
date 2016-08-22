@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkLogin(){
-        if (Utils.isLogin(this)){
+        if (Utils.isSignin(this)){
             startActivity(new Intent(this, MainActivity.class));
         }
     }

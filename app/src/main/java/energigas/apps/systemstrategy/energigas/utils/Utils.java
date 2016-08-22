@@ -80,7 +80,7 @@ public class Utils {
         editor.apply();
     }
 
-    public static boolean isLogin(Context context){
+    public static boolean isSignin(Context context){
         SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(context);
         return mSettings.getBoolean("state_login", false);
     }

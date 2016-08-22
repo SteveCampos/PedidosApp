@@ -32,7 +32,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  */
 
 public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implements SugarTransactionHelper.Callback {
-    private static final String TAG = "AsyntaskOpenAccount";
+    private static final String TAG = "";
     private OnAsyntaskListener onAsyntaskListener;
     private RestAPI restAPI;
     private JSONObject jsonObject;
