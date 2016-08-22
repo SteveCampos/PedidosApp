@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,6 +34,13 @@ public class Utils {
     public static String getNameOfDay(Date date){
         SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
         return Utils.capitalize(parseFormat.format(date));
+    }
+
+    public static String getDatePhone(){
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
+        String nowAsString = new SimpleDateFormat("dd/MM/yyyy").format(now);
+        return nowAsString;
     }
 
     public static String getJsonObResult(JSONObject jsonObject){

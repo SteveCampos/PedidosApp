@@ -17,9 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
@@ -143,6 +146,12 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         Log.d("LOADSUCCESS", "kelvin: " + message);
         dismiss();
         locationVehiculeListener.stopLocationUpdates();
+
+        List<PlanDistribucion> planDistribucions = PlanDistribucion.listAll(PlanDistribucion.class);
+        Log.d(TAG, "kelvin: " + planDistribucions.size());
+        for (PlanDistribucion item : planDistribucions){
+            Log.d(TAG,item.getFechaInicio());
+        }
         fab.hide();
     }
 

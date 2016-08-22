@@ -2,6 +2,9 @@ package energigas.apps.systemstrategy.energigas.entities;
 
 import android.app.AlarmManager;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +12,8 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Almacen {
-
+public class Almacen extends SugarRecord {
+    @Unique
     private int almId;
 
     private String nombre;

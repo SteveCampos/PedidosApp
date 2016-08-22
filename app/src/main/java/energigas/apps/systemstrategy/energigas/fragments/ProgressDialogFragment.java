@@ -104,7 +104,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     private void initMain() {
         startActivity(new Intent(getActivity(), MainActivity.class));
-        getActivity().finish();
+       // getActivity().finish();
     }
 
 }

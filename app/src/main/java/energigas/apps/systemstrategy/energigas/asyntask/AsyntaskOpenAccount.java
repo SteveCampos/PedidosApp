@@ -111,18 +111,77 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     @Override
     public void manipulateInTransaction() {
 
+
         Long insert = cajaLiquidacion.save();
+        boolean estadoB = true;
         if (insert > 0) {
             PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
-            planDistribucion.save();
+            Long a = planDistribucion.save();
+            Log.d(TAG, "ID PlanDistribucion " + a);
+
             List<PlanDistribucionDetalle> planDistribucionDetalles = planDistribucion.getItems();
-            SugarRecord.saveInTx(planDistribucionDetalles);
+            for (PlanDistribucionDetalle detalle : planDistribucionDetalles) {
+
+                Long deta = detalle.save();
+                if (deta < 0) {
+                    estadoB = false;
+                }
+                Log.d(TAG, " PlanDistribucionDetalle " + deta);
+
+            }
+
+            Log.d(TAG, " INSERTO PLAN DISTRIBUCION DETALLE " + estadoB);
+            estadoB = true;
+            boolean estadoAl = true;
+            boolean estadoEst = true;
             List<Cliente> clientes = cajaLiquidacion.getItemsClientes();
-            SugarRecord.saveInTx(clientes);
+
             for (Cliente cliente : clientes) {
+                Long cli = cliente.save();
+                if (cli < 0) {
+                    estadoB = false;
+                }
+                Log.d(TAG, " INSERTO CLIENTE " + cli);
+                /**Insertar Establecimientos**/
+
+                for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
+                    Long est = establecimiento.save();
+                    if (est < 0) {
+                        estadoEst = false;
+                    }
+                    Log.d(TAG, " INSERTO ESTABLECIMIENTO " + est);
+
+                    /**Insertar Almacen**/
+
+                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
+                    for (Almacen almacen : almacens) {
+                        Long alm = almacen.save();
+                        if (est < 0) {
+                            estadoAl = false;
+                        }
+                        Log.d(TAG, " INSERTO ALMACEN " + alm);
+
+                        Long geo = establecimiento.getUbicacion().save();
+                        Log.d(TAG, " INSERTO GEOUBICACION " + geo);
+                    }
+                }
+
+
+            }
+
+            Log.d(TAG, " INSERTO CLIENTE " + estadoB);
+            Log.d(TAG, " INSERTO ESTABLECIMIENTO " + estadoEst);
+            Log.d(TAG, " INSERTO ALMACEN " + estadoAl);
+
+            for (Cliente cliente : cajaLiquidacion.getItemsClientes()) {
+
+
                 List<Establecimiento> establecimientos = cliente.getItemsEstablecimientos();
                 SugarRecord.saveInTx(establecimientos);
+
+
                 for (Establecimiento establecimiento : establecimientos) {
+
                     List<Almacen> almacens = establecimiento.getItemsAlmacen();
                     SugarRecord.saveInTx(almacens);
                     GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
@@ -133,24 +192,17 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                 persona.save();
             }
 
-            List<CajaLiquidacionDetalle> cajaLiquidacionDetalles = cajaLiquidacion.getItemsLiquidacion();
-            SugarRecord.saveInTx(cajaLiquidacionDetalles);
 
-
-            List<Serie> series = cajaLiquidacion.getItemsSeries();
-            SugarRecord.saveInTx(series);
             estado = Constants.OPERACION_EXITOSA;
-        }else{
-            message = "Error al guardar";
-            estado = Constants.ERROR_GUARDAR;
+
         }
-
-
-
     }
 
     @Override
-    public void errorInTransaction(String error) {
+    public void
+    errorInTransaction(String error) {
         this.message = error;
+        estado = Constants.ERROR_GUARDAR;
+        Log.d(TAG, "CORRECTAMENTE");
     }
 }

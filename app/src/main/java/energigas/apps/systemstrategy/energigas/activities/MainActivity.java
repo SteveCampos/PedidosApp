@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.orm.SugarTransactionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +30,11 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 
 public class MainActivity extends AppCompatActivity
@@ -65,12 +65,18 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        hideFloatingButton();
         initViews();
     }
 
+    private void hideFloatingButton(){
+        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class," fecha_Inicio=? ",new String[]{Utils.getDatePhone()});
+        if (planDistribucion.size()>0){
+            fab.hide();
+        }
+    }
+
     private void showDialogAccount() {
-
-
 
         new AccountDialog()
                 .setFloating(fab)
