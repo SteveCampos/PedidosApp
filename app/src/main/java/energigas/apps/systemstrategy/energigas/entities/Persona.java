@@ -1,13 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class Persona extends SugarRecord{
+public class Persona extends SugarRecord {
     @Unique
     private int perIPersonaId;
 
@@ -39,12 +40,14 @@ public class Persona extends SugarRecord{
 
     private String perVEmail;
 
+    @Ignore
+    private GeoUbicacion ubicacion;
 
 
     public Persona() {
     }
 
-    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, boolean perBEstado, int perITipoDocIdentidadId, int perITipoPersonaId, int perlUsuarioCreacion, String perDTFechaCreacion, int perIUsuarioActualizacion, String perDTFechaActualizacion, int perIEmpresaId, String perVEmail) {
+    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, boolean perBEstado, int perITipoDocIdentidadId, int perITipoPersonaId, int perlUsuarioCreacion, String perDTFechaCreacion, int perIUsuarioActualizacion, String perDTFechaActualizacion, int perIEmpresaId, String perVEmail, GeoUbicacion ubicacion) {
         this.perIPersonaId = perIPersonaId;
         this.perVRazonSocial = perVRazonSocial;
         this.perVNombres = perVNombres;
@@ -60,6 +63,15 @@ public class Persona extends SugarRecord{
         this.perDTFechaActualizacion = perDTFechaActualizacion;
         this.perIEmpresaId = perIEmpresaId;
         this.perVEmail = perVEmail;
+        this.ubicacion = ubicacion;
+    }
+
+    public GeoUbicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(GeoUbicacion ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public int getPerIPersonaId() {

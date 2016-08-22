@@ -75,7 +75,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, ": ERROR : " + jsonObject.toString());
+            Log.d(TAG, ": ERROR : " + e.getMessage());
             estado = Constants.ERROR_CONEXION;
             message = "" + e.getMessage();
 

@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by jairc on 19/07/2016.
  */
 
-public class Establecimiento {
+public class Establecimiento extends SugarRecord {
     @Unique
     private int estIEstablecimientoId;
 

@@ -113,7 +113,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
     private boolean isNotEmtyEditText() {
 
-        if ((editTextKI.getText().toString().length() & editTextWI.getText().toString().length() & editTextPI.getText().toString().length()) > 0) {
+        if (editTextKI.getText().toString().length() > 0 && editTextWI.getText().toString().length() >0 && editTextPI.getText().toString().length() >0) {
             return true;
         }
         return false;
@@ -128,7 +128,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         String porcentajeInicial = editTextPI.getText().toString();
         if(location ==null){
 
-            Toast.makeText(getActivity(), "Ubiacion desconocida", Toast.LENGTH_SHORT).show();
+            Snackbar.make(btnOk, "Ubicacion desconocida", Snackbar.LENGTH_SHORT).show();
             return;
         }
         String stringLiquidacion = usuarioId+"_"+kmInicial+"_"+pesoInicial+"_"+porcentajeInicial+"_"+location.getLatitude()+"_"+location.getLongitude()+"";
@@ -149,7 +149,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @Override
     public void onLoadError(String message) {
         hideAnimationProgress();
-
+        Snackbar.make(btnOk, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

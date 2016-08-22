@@ -116,6 +116,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
 
         objUsuario.save();
         objUsuario.getPersona().save();
+        objUsuario.getPersona().getUbicacion().save();
         List<Rol> rols = objUsuario.getItemsRoles();
         SugarRecord.saveInTx(rols);
         int count = 0;

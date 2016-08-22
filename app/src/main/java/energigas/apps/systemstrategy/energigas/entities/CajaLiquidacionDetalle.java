@@ -1,12 +1,13 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class CajaLiquidacionDetalle {
+public class CajaLiquidacionDetalle extends SugarRecord {
 
     @Unique
     private long lidId;
