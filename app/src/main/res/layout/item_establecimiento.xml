@@ -1,15 +1,15 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearConstraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
     <android.support.v7.widget.CardView
-        style="@style/categoriesCardViewButtons"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:foreground="?android:attr/selectableItemBackground"
-        android:padding="8dp">
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,10 +41,15 @@
 
                 <TextView
                     android:id="@+id/txtnombre"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_name"
-                    android:textAppearance="@style/TextViewMedium" />
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:textSize="16sp"
+                    android:layout_toStartOf="@+id/txtpoints"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    />
 
                 <TextView
                     android:id="@+id/txtdireccion"
@@ -53,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_address"
                     android:padding="2dp"
-                    android:textAppearance="@style/TextViewSmall"
+                    style="@style/TextAppearance.AppCompat.Small"
                     />
 
 
@@ -75,28 +80,29 @@
                     android:layout_height="wrap_content"
                     android:text="ATENDIDO"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@+id/txtdireccion"
+                    android:layout_alignBottom="@+id/txtubicacion"
                     style="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/md_light_green_400"
                     />
 
 
+                <TextView
+                    android:id="@+id/txtpoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:drawablePadding="8dp"
+                    android:textAppearance="@style/TextViewSmall"
+                    android:drawableStart="@drawable/ic_star"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:drawableLeft="@drawable/ic_star"
+                    android:layout_alignParentRight="true" />
+
             </RelativeLayout>
 
 
 
-            <TextView
-                android:id="@+id/txtpoints"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5"
-                android:drawablePadding="8dp"
-                android:textAppearance="@style/TextViewSmall"
-                android:drawableStart="@drawable/ic_star"
-                android:gravity="center"
-                android:layout_alignParentEnd="true"
-                android:drawableLeft="@drawable/ic_star"
-                android:layout_alignParentRight="true" />
 
 
 
@@ -104,6 +110,3 @@
 
 
     </android.support.v7.widget.CardView>
-
-
-</android.support.constraint.ConstraintLayout>

@@ -7,37 +7,34 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardPreventCornerOverlap="false"
-    card_view:cardUseCompatPadding="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="@dimen/activity_vertical_margin"
-        >
+        android:padding="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/text_station_product_title"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GLP"
             android:layout_toStartOf="@+id/text_station_product_quantity"
-            style="@style/TextAppearance.AppCompat.Title"
-            />
+            android:text="GLP" />
 
         <TextView
             android:id="@+id/text_station_product_quantity"
+            style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="300.00 GAL"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
-            style="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorAccent"
-            />
+            android:text="300.00 GAL"
+            android:textColor="@color/colorAccent"/>
     </RelativeLayout>
 
 

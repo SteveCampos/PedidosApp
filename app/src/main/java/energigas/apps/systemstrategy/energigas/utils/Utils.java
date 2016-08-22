@@ -2,7 +2,9 @@ package energigas.apps.systemstrategy.energigas.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -61,5 +63,17 @@ public class Utils {
         if (intent.resolveActivity(context.getPackageManager()) != null) {
             context.startActivity(intent);
         }
+    }
+
+    public static void saveStateLogin(Context context, boolean state){
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean("state_login", state);
+        editor.apply();
+    }
+
+    public static boolean isLogin(Context context){
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(context);
+        return mSettings.getBoolean("state_login", false);
     }
 }

@@ -47,7 +47,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     private BEGeneral objGeneral;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
-
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
 
@@ -150,8 +149,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias) {
             Log.d(TAG, " : " + georeferencia.getDescripcion());
         }
-
-
+        Utils.saveStateLogin(context, true);
         result = 5;
     }
 

@@ -1,19 +1,23 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.fragments.ProgressDialogFragment;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.input_email)
@@ -31,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         buttonLogin.setOnClickListener(this);
-
+        checkLogin();
     }
 
     public void conectlogin() {
@@ -54,9 +58,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startLogin(String usuario, String clave) {
-
         ProgressDialogFragment.newIntance(usuario, clave).show(getSupportFragmentManager(), "xd");
+    }
 
+    private void checkLogin(){
+        if (Utils.isLogin(this)){
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
 
@@ -68,6 +76,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+
 
 
 }

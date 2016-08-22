@@ -236,12 +236,12 @@
 
 
     <!--String Listar Establecimientos-->
-    <string name="estable_default_empresa">Agropacking Export S.A.</string>
-    <string name="estable_default_name">Agropacking Export S.A.</string>
+    <string name="estable_default_empresa">ENERGIGAS S.A.C.</string>
+    <string name="estable_default_name">Est. La Molina</string>
     <string name="estable_default_address">Panamericana Norte Km 1076 Piura</string>
     <string name="estable_default_description">3:00 - 7:00 p.m.</string>
     <string name="estable_action_attend">Atender</string>
-    <string name="estable_default_marker">516 km</string>
+    <string name="estable_default_marker">5.4 km</string>
 
 
     <!--##############################-->
