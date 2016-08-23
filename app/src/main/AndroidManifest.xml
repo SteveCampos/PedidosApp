@@ -15,14 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
-
         <meta-data android:name="DATABASE" android:value="energigas.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="energigas.apps.systemstrategy.energigas.entities" />
-
-
 
         <activity
             android:name=".activities.MainActivity"
@@ -83,7 +79,7 @@
         <activity
             android:name=".activities.CajaGastoActivity"
             android:label="@string/activity_expenses_account"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ChargesActivity"
             android:label="@string/activity_charges_account"
@@ -121,7 +117,7 @@
         <activity
             android:name=".activities.Configuration"
             android:label="@string/title_activity_configuration"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
