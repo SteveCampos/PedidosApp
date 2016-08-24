@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.orm.SugarContext;
+import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener {
 
 
+    private static final String TAG = EstablecimientoFragment.class.getSimpleName();
     public OnEstablecimientoClickListener listener;
     private EstablecimientoAdapter adapter;
     private List<Establecimiento> establecimientoList = new ArrayList<>();
@@ -56,8 +58,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-
-        establecimientoList = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
+        establecimientoList = getEstablecimientoList();
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
@@ -65,12 +66,26 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
         return recyclerView;
     }
 
-    /*
-    private List<Establecimiento> list(List<Establecimiento> list){
+
+    private List<Establecimiento> getEstablecimientoList(){
+
+
+        List<Establecimiento> list= Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
+
         for (int i=0; i<list.size(); i++){
-            GeoUbicacion.find(GeoUbicacion.class, "name = ? and title = ?", "satya", "title1");
+            Establecimiento establecimiento = list.get(i);
+
+            List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", ""+establecimiento.getUbId());
+            Log.d(TAG, "List<GeoUbicacion> size: " + geoUbicacions.size());
+            //CHECKAR QUE LA LISTA DE OBJETOS ANIDADOS, NO ESTÉ VACÍA.
+            if (geoUbicacions.size()>0){
+                Log.d(TAG, "geoUbicacions.get(0).getDescripcion(): "+ geoUbicacions.get(0).getDescripcion());
+                establecimiento.setUbicacion(geoUbicacions.get(0));
+            }
+            list.set(i, establecimiento);
         }
-    }*/
+        return  list;
+    }
 
     @Override
     public void onAttach(Context context) {

@@ -21,6 +21,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class EstablecimientoAdapter extends RecyclerView.Adapter<EstablecimientoHolder> {
 
 
+    private static final String TAG = EstablecimientoAdapter.class.getSimpleName();
     // Store a member variable for the contacts
     private List<Establecimiento> mListEstablecimientos;
     // Store the context for easy access
@@ -59,7 +60,14 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         final Establecimiento establecimiento = mListEstablecimientos.get(position);
 
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
-//        holder.mubicacion.setText(establecimiento.getUbicacion().getDescripcion());
+        GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
+        Log.d(TAG, "GeoUbicacion: "+ geoUbicacion);
+        //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.
+        if (geoUbicacion!=null){
+
+            holder.maddress.setText(geoUbicacion.getDescripcion());
+        }
+
         //holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
         //holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
         //holder.imageView2.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(establecimiento.getEstVCodigo())));

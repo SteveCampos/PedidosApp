@@ -50,6 +50,7 @@ public class Establecimiento extends SugarRecord {
 
     private String estVContacto;
 
+
     private List<Almacen> itemsAlmacen ;
     private GeoUbicacion ubicacion;
 
