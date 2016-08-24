@@ -60,7 +60,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
         establecimientoList = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
-        //recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }

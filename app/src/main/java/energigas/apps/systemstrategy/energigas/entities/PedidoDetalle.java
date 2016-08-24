@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +10,12 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class PedidoDetalle {
+public class PedidoDetalle extends SugarRecord {
+
+    @Unique
+    private int pdId;
 
     private long peId;
-
-    private int pdId;
 
     private int productoId;//PRODUCTO NOMBRE, UNIDAD DE MEDIDA
 

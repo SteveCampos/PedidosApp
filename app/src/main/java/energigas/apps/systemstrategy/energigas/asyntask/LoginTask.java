@@ -19,7 +19,15 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.Acceso;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Privilegio;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
 import energigas.apps.systemstrategy.energigas.entities.RolAcceso;
@@ -28,6 +36,7 @@ import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -39,14 +48,17 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
 
     private JSONObject jsonObjectUsuario = null;
     private JSONObject jsonObjectConceptos = null;
+    private JSONObject jsonLiquidacion = null;
 
     private OnLoginAsyntaskListener aListener;
     private Context context;
     private int result = 0;
     private Usuario objUsuario;
     private BEGeneral objGeneral;
+    private CajaLiquidacion cajaLiquidacion;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
+
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
 
@@ -72,6 +84,8 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
                 if (objUsuario.getUsuIUsuarioId() < 0) {
                     result = 1;
                 } else {
+                    jsonLiquidacion = restAPI.fobj_ObtenerLiquidacion(objUsuario.getUsuIUsuarioId());
+                    cajaLiquidacion = mapper.readValue(Utils.getJsonObResult(jsonLiquidacion), CajaLiquidacion.class);
                     SugarTransactionHelper.doInTransaction(this);
                 }
             }
@@ -150,7 +164,100 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
             Log.d(TAG, " : " + georeferencia.getDescripcion());
         }
         Utils.saveStateLogin(context, true);
+
+
+        if (cajaLiquidacion.getLiqId() > 0) {
+            saveLiquidacion();
+        }
+
+
         result = 5;
+    }
+
+    public void saveLiquidacion() {
+
+        Long insert = cajaLiquidacion.save();
+        boolean estadoB = true;
+        if (insert > 0) {
+            PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
+            Long a = planDistribucion.save();
+            Log.d(TAG, "ID PlanDistribucion " + a);
+
+            List<PlanDistribucionDetalle> planDistribucionDetalles = planDistribucion.getItems();
+            for (PlanDistribucionDetalle detalle : planDistribucionDetalles) {
+
+                Long deta = detalle.save();
+                if (deta < 0) {
+                    estadoB = false;
+                }
+                Log.d(TAG, " PlanDistribucionDetalle " + deta);
+
+            }
+
+            Log.d(TAG, " INSERTO PLAN DISTRIBUCION DETALLE " + estadoB);
+            estadoB = true;
+            boolean estadoAl = true;
+            boolean estadoEst = true;
+            List<Cliente> clientes = cajaLiquidacion.getItemsClientes();
+
+            for (Cliente cliente : clientes) {
+                Long cli = cliente.save();
+                if (cli < 0) {
+                    estadoB = false;
+                }
+                Log.d(TAG, " INSERTO CLIENTE " + cli);
+                /**Insertar Establecimientos**/
+
+                for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
+                    Long est = establecimiento.save();
+                    if (est < 0) {
+                        estadoEst = false;
+                    }
+                    Log.d(TAG, " INSERTO ESTABLECIMIENTO " + est);
+
+                    /**Insertar Almacen**/
+
+                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
+                    for (Almacen almacen : almacens) {
+                        Long alm = almacen.save();
+                        if (est < 0) {
+                            estadoAl = false;
+                        }
+                        Log.d(TAG, " INSERTO ALMACEN " + alm);
+
+                        Long geo = establecimiento.getUbicacion().save();
+                        Log.d(TAG, " INSERTO GEOUBICACION " + geo);
+                    }
+                }
+
+
+            }
+
+            Log.d(TAG, " INSERTO CLIENTE " + estadoB);
+            Log.d(TAG, " INSERTO ESTABLECIMIENTO " + estadoEst);
+            Log.d(TAG, " INSERTO ALMACEN " + estadoAl);
+
+            for (Cliente cliente : cajaLiquidacion.getItemsClientes()) {
+
+
+                List<Establecimiento> establecimientos = cliente.getItemsEstablecimientos();
+                SugarRecord.saveInTx(establecimientos);
+
+
+                for (Establecimiento establecimiento : establecimientos) {
+
+                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
+                    SugarRecord.saveInTx(almacens);
+                    GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
+                    geoUbicacion.save();
+                }
+
+                Persona persona = cliente.getPersona();
+                persona.save();
+            }
+
+
+        }
     }
 
     @Override

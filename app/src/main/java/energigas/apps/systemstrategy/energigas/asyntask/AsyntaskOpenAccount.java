@@ -19,6 +19,8 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
@@ -32,7 +34,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  */
 
 public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implements SugarTransactionHelper.Callback {
-    private static final String TAG = "";
+    private static final String TAG = "AsyntaskOpenAccount";
     private OnAsyntaskListener onAsyntaskListener;
     private RestAPI restAPI;
     private JSONObject jsonObject;
@@ -113,6 +115,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
 
 
         Long insert = cajaLiquidacion.save();
+
         boolean estadoB = true;
         if (insert > 0) {
             PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
@@ -192,7 +195,23 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                 persona.save();
             }
 
-
+            boolean pedidos = true;
+            boolean pedidodetalle = true;
+            List<Pedido> pedidoList = cajaLiquidacion.getItemsPedidos();
+            for (Pedido pedido : pedidoList){
+                Long p =pedido.save();
+                if (p<0){
+                    pedidos = false;
+                }                List<PedidoDetalle> pedidoDetalles = pedido.getItems();
+                for (PedidoDetalle pedidoDetalle : pedidoDetalles){
+                       Long pd = pedidoDetalle.save();
+                    if (pd<0){
+                        pedidodetalle = false;
+                    }
+                }
+            }
+            Log.d(TAG, " INSERTO PEDIDO " + pedidos);
+            Log.d(TAG, " INSERTO PEDIDO DETALLE " + pedidodetalle);
             estado = Constants.OPERACION_EXITOSA;
 
         }

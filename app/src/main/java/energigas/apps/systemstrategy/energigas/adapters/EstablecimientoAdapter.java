@@ -59,7 +59,7 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         final Establecimiento establecimiento = mListEstablecimientos.get(position);
 
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
-        holder.mubicacion.setText(establecimiento.getUbicacion().getDescripcion());
+//        holder.mubicacion.setText(establecimiento.getUbicacion().getDescripcion());
         //holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
         //holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
         //holder.imageView2.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(establecimiento.getEstVCodigo())));

@@ -84,4 +84,6 @@ public class Utils {
         SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(context);
         return mSettings.getBoolean("state_login", false);
     }
+
+
 }

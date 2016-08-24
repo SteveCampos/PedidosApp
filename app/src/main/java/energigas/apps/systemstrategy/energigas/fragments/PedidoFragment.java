@@ -40,10 +40,10 @@ public class PedidoFragment extends Fragment implements PedidoAdapter.OnPedidoCl
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
-        PedidoAdapter adapter = new PedidoAdapter(Pedido.getList(),getActivity(),this);
+       /* PedidoAdapter adapter = new PedidoAdapter(Pedido.getList(),getActivity(),this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));*/
         return recyclerView;
     }
 

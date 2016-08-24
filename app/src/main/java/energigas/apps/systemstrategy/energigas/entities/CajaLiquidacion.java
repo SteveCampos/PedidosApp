@@ -80,12 +80,14 @@ public class CajaLiquidacion extends SugarRecord{
     private List<CajaLiquidacionDetalle> itemsLiquidacion;
     @Ignore
     private List<Serie> itemsSeries;
+    @Ignore
+    private  List<Pedido> itemsPedidos;
 
 
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos) {
         this.liqId = liqId;
         this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
@@ -119,6 +121,15 @@ public class CajaLiquidacion extends SugarRecord{
         this.itemsClientes = itemsClientes;
         this.itemsLiquidacion = itemsLiquidacion;
         this.itemsSeries = itemsSeries;
+        this.itemsPedidos = itemsPedidos;
+    }
+
+    public List<Pedido> getItemsPedidos() {
+        return itemsPedidos;
+    }
+
+    public void setItemsPedidos(List<Pedido> itemsPedidos) {
+        this.itemsPedidos = itemsPedidos;
     }
 
     public long getLiqId() {

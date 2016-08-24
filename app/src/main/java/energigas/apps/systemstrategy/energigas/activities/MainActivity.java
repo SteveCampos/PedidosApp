@@ -155,9 +155,9 @@ public class MainActivity extends AppCompatActivity
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
-        //adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
-        adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
+      adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
+     //  adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
+   adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
 

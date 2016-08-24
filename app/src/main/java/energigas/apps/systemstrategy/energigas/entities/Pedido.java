@@ -1,5 +1,9 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,20 +14,8 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by Steve on 21/07/2016.
  */
 
-public class Pedido {
-    /*
-    private Establecimiento establecimiento;
-    private int priority;
-    private long idSqlite;
-    private String idRemoto;
-    private long startTime;
-    private long endTime;
-    private long dispatchTime;
-
-    private long orderDate;
-    private long dispatchDate;
-
-    private List<OrderProduct> productList = new ArrayList<>();*/
+public class Pedido extends SugarRecord {
+    @Unique
     private long peId;
 
     private String serie;
@@ -111,11 +103,13 @@ public class Pedido {
     private long compId;
 
     private long greId;
+    @Ignore
+    private List<PedidoDetalle> items;
 
     public Pedido() {
     }
 
-    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId) {
+    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId, List<PedidoDetalle> items) {
         this.peId = peId;
         this.serie = serie;
         this.numero = numero;
@@ -160,6 +154,7 @@ public class Pedido {
         this.scopCerrado = scopCerrado;
         this.compId = compId;
         this.greId = greId;
+        this.items = items;
     }
 
     public long getPeId() {
@@ -514,78 +509,11 @@ public class Pedido {
         this.greId = greId;
     }
 
-    public static List<Pedido> getList(){
-        List<Pedido> list = new ArrayList<>();
-        list.add(new Pedido(
-                1, "SERIE", 1,1,1,1,"16/06/16", "16/06/16", "16/06/16", 1, 0.0, true, 1, "16/06/16", 1, "Dirección Entrega", "16/06/16", 1,
-                "16/06/16", 1, 0.0, 0.0, 1, 1, "Scope", "12:00", "14:00", "16/06/16", true, 1, "Motivo Cancelado", "Motivo Revertido", "16/06/16", 1, "18:00",
-                "19:00", true, "F001-9900", "G900", "18:00", 1, true, 1, 1
-        ));
-        return list;
+    public List<PedidoDetalle> getItems() {
+        return items;
     }
 
-    /*
-    public String[] getProductsName(){
-        String productsName[] = new String[]{"",""};
-
-        List<OrderProduct> orderProducts =  getProductList();
-
-        int i= 0;
-        int size = orderProducts.size();
-        for (OrderProduct product: orderProducts) {
-            i++;
-            //productsName[0] += Utils.capitalize(product.getProduct().getName()) + " " + Utils.formatDouble(product.getQuantityProduct()) + " "+ product.getProduct().getUnidadMedida();
-            productsName[0] +=  product.getProduct().getName().toUpperCase();
-            productsName[1] +=  Utils.formatDouble(product.getQuantityProduct()) + " "+ product.getProduct().getUnidadMedida();
-
-            if (i!=size){
-                productsName[0] += "\n";
-                productsName[1] += "\n";
-            }
-        }
-
-        return productsName;
+    public void setItems(List<PedidoDetalle> items) {
+        this.items = items;
     }
-
-
-
-    public static List<Pedido> getList() {
-        List<Pedido> listOrders = new ArrayList<>();
-
-        long time = new Date().getTime();
-
-        Product glp = new Product(1, "1000", "GLP", "GALONES");
-        Product gnv = new Product(2, "1001", "GNV", "LITROS");
-
-        List<OrderDispatch> orderDispatches = new ArrayList<>();
-        orderDispatches.add(new OrderDispatch(100.00, "TANQUE 100", "0001261796", 55.00, 79.00, time, time, time, 199.1, 439.1 ));
-        orderDispatches.add(new OrderDispatch(200.00, "TANQUE 200", "0001261796", 55.00, 79.00, time, time, time, 199.1, 439.1 ));
-
-
-        List<OrderProduct> orderProducts = new ArrayList<>();
-        orderProducts.add(new OrderProduct(glp, 1, "2000", 300, orderDispatches));
-        //orderProducts.add(new OrderProduct(gnv, 2, "2001", 300, orderDispatches));
-
-
-        Pedido order = new Pedido(
-                new Establecimiento("Agropacking Export S.A.","car. panamericana norte km. 1076","2.0","1.4 km","externo"),
-                1,
-                1,
-                "3000",
-                time,
-                time,
-                time,
-                time,
-                time,
-                orderProducts
-        );
-
-        for (int i= 0; i< 2; i++){
-            listOrders.add(order);
-        }
-
-        return listOrders;
-    }*/
-
-
 }
