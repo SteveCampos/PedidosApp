@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.orm.SugarContext;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -46,6 +48,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         String usuario = getArguments().getString("usuario");
         String clave = getArguments().getString("clave");
+        SugarContext.init(getActivity());
         List<Usuario> ss = Usuario.listAll(Usuario.class);
         Log.d(TAG, "COUNT : " + ss.size());
         if (ss.size() > 0) {
@@ -107,4 +110,9 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
        // getActivity().finish();
     }
 
+    @Override
+    public void onStop() {
+        SugarContext.terminate();
+        super.onStop();
+    }
 }

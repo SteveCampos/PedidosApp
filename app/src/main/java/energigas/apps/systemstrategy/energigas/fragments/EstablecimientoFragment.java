@@ -68,8 +68,6 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
 
     private List<Establecimiento> getEstablecimientoList(){
-
-
         List<Establecimiento> list= Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
 
         for (int i=0; i<list.size(); i++){

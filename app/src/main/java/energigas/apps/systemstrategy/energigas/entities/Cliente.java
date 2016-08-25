@@ -46,6 +46,7 @@ public class Cliente extends SugarRecord{
     private double cliDOCreditoDisponible;
 
     private String cliVContacto;
+
     @Ignore
     private List<Establecimiento> itemsEstablecimientos;
     @Ignore

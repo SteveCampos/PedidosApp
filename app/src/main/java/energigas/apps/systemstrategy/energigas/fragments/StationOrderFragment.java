@@ -43,12 +43,14 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
 
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
+        pedidos = new ArrayList<>();
+        //NULL
+        pedidos.add(new Pedido());
 
-       // pedidos = Pedido.getList();
-       // adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
-      //  recyclerView.setAdapter(adapter);
-        //recyclerView.setHasFixedSize(true);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
     }
 

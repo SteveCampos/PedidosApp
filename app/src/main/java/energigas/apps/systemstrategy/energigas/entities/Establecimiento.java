@@ -20,6 +20,7 @@ public class Establecimiento extends SugarRecord {
 
     private int estIClienteId;
 
+    //GEOUBICACION
     private int ubId;
 
     private int estICategoriaId;
@@ -50,8 +51,8 @@ public class Establecimiento extends SugarRecord {
 
     private String estVContacto;
 
-
     private List<Almacen> itemsAlmacen ;
+
     private GeoUbicacion ubicacion;
 
     public Establecimiento() {

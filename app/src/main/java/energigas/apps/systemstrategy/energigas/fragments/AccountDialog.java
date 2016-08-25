@@ -159,7 +159,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @Override
     public void onLoadError(String message) {
         hideAnimationProgress();
-        Snackbar.make(btnOk, message, Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override

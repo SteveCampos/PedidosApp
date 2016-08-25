@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         SugarContext.terminate();
-        super.onStop();
+        super.onDestroy();
     }
 
     private void hideFloatingButton(){
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity
         Adapter adapter = new Adapter(getSupportFragmentManager());
       adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
      //  adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
-   adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
+        adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
 
@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity
         // TODO: handle navigation
         // Closing drawer on item click
         drawer.closeDrawers();
-        list();
 
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
@@ -233,14 +232,6 @@ public class MainActivity extends AppCompatActivity
         }
         return true;
     }
-
-    private List<Establecimiento> list(){
-        //List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento where name = ?", "satya");
-        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
-        Log.d(TAG, "List<Establecimiento> size: " + list.size());
-        return list;
-    }
-
     private void closeAccount() {
 /*
         View viewDialog = getLayoutInflater().inflate(R.layout.layout_dialog_close_account, null);
