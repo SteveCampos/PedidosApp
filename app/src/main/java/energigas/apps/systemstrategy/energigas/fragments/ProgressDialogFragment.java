@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.orm.SugarContext;
-
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -30,7 +28,9 @@ import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListene
 public class ProgressDialogFragment extends DialogFragment implements OnLoginAsyntaskListener {
     private static final String TAG = "ProgressDialogFragment";
 
-
+    private boolean allowStateLoss = false;
+    private boolean shouldDismiss = false;
+    private Context context;
     public static ProgressDialogFragment newIntance(@NonNull String usuario, @NonNull String clave) {
 
         ProgressDialogFragment fragment = new ProgressDialogFragment();
@@ -45,10 +45,12 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+        context = getActivity().getApplicationContext();
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        setRetainInstance(true);
+        setCancelable(false);
         String usuario = getArguments().getString("usuario");
         String clave = getArguments().getString("clave");
-        SugarContext.init(getActivity());
         List<Usuario> ss = Usuario.listAll(Usuario.class);
         Log.d(TAG, "COUNT : " + ss.size());
         if (ss.size() > 0) {
@@ -78,7 +80,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     @Override
     public void onError(@NonNull String message) {
         Log.d(TAG, "onError" + " " + message);
-        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+        setMessage(message);
         dismiss();
     }
 
@@ -89,15 +91,19 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     @Override
     public void onErrorProcedure(@NonNull String message) {
-        Toast.makeText(getActivity(), "" + message, Toast.LENGTH_SHORT).show();
+        setMessage(message);
         dismiss();
 
+    }
+
+    private void setMessage(String message){
+        Toast.makeText(context, "" + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCredentialsFail() {
         dismiss();
-        Toast.makeText(getActivity(), "Credenciales erroneas", Toast.LENGTH_SHORT).show();
+        setMessage("Credenciales erroneas");
     }
 
     @Override
@@ -110,9 +116,45 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
        // getActivity().finish();
     }
 
+    //keeping dialog after rotation
     @Override
-    public void onStop() {
-        SugarContext.terminate();
-        super.onStop();
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
     }
+
+
+    @Override
+    public void dismissAllowingStateLoss() {
+        if (getActivity() != null) { // it's "safer" to dismiss
+            shouldDismiss = false;
+            super.dismissAllowingStateLoss();
+        } else
+            allowStateLoss = shouldDismiss = true;
+    }
+
+    @Override
+    public void dismiss() {
+        if (getActivity() != null) { // it's "safer" to dismiss
+            shouldDismiss = false;
+            super.dismiss();
+        } else {
+            shouldDismiss = true;
+            allowStateLoss = false;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //check if we should dismiss the dialog after rotation
+        if (shouldDismiss) {
+            if (allowStateLoss)
+                dismissAllowingStateLoss();
+            else
+                dismiss();
+        }
+    }
+
 }

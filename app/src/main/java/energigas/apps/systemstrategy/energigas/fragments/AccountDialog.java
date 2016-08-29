@@ -62,6 +62,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+        setCancelable(false);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
         locationVehiculeListener = new LocationVehiculeListener(this);
         return dialog;
@@ -153,20 +154,24 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         for (PlanDistribucion item : planDistribucions){
             Log.d(TAG,item.getFechaInicio());
         }
+        setMessage(message);
         fab.hide();
     }
 
     @Override
     public void onLoadError(String message) {
         hideAnimationProgress();
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public void onLoadErrorProcedure(String message) {
         hideAnimationProgress();
+        setMessage(message);
     }
-
+    private void setMessage(String message){
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
 
 
     @Override

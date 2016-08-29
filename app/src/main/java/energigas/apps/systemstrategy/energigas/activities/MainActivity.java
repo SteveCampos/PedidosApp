@@ -34,6 +34,7 @@ import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
+import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        CajaExistenteFragment.newIntance("43").show(getSupportFragmentManager(),"");
         SugarContext.init(this);
         hideFloatingButton();
         initViews();
@@ -233,43 +235,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     private void closeAccount() {
-/*
-        View viewDialog = getLayoutInflater().inflate(R.layout.layout_dialog_close_account, null);
 
-        final ContentLoadingProgressBar loadingProgressBar = (ContentLoadingProgressBar) viewDialog.findViewById(R.id.loanding);
-
-
-        final ViewGroup viewGroupInfo = (ViewGroup) viewDialog.findViewById(R.id.viewinfo);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        // builder.setTitle(getString(R.string.main_dialog_title));
-        builder.setView(viewDialog);
-        builder.setCancelable(false);
-        final Button buttonAcceptar = (Button) viewDialog.findViewById(R.id.btn_ok);
-        final Button buttonCancel = (Button) viewDialog.findViewById(R.id.btn_cancel);
-
-        final AlertDialog dialog = builder.create();
-        buttonAcceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTitle(agent.getmRuta());
-                TextView nameAgent = (TextView) navigationView.findViewById(R.id.nvtxtagente);
-                TextView rutaAgent = (TextView) navigationView.findViewById(R.id.nvtxtruta);
-                nameAgent.setText(agent.getmName());
-                rutaAgent.setText(agent.getmRuta());
-                viewGroupInfo.setVisibility(View.GONE);
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                buttonAcceptar.setVisibility(View.GONE);
-                buttonCancel.setVisibility(View.GONE);
-                new AsyntaskOpenAccount(MainActivity.this, fab, dialog).execute();
-            }
-        });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();*/
     }
 
     private void setCurrentItem(int position) {

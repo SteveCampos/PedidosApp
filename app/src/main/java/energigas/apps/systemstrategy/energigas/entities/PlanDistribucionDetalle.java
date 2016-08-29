@@ -26,10 +26,14 @@ public class PlanDistribucionDetalle extends SugarRecord {
 
     private long peId;
 
+    private int agenteId;
+
+    private int veId;
+
     public PlanDistribucionDetalle() {
     }
 
-    public PlanDistribucionDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId) {
+    public PlanDistribucionDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId, int agenteId, int veId) {
         this.pddId = pddId;
         this.pdId = pdId;
         this.establecimientoId = establecimientoId;
@@ -38,6 +42,8 @@ public class PlanDistribucionDetalle extends SugarRecord {
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
         this.peId = peId;
+        this.agenteId = agenteId;
+        this.veId = veId;
     }
 
     public long getPddId() {
@@ -102,5 +108,21 @@ public class PlanDistribucionDetalle extends SugarRecord {
 
     public void setPeId(long peId) {
         this.peId = peId;
+    }
+
+    public int getAgenteId() {
+        return agenteId;
+    }
+
+    public void setAgenteId(int agenteId) {
+        this.agenteId = agenteId;
+    }
+
+    public int getVeId() {
+        return veId;
+    }
+
+    public void setVeId(int veId) {
+        this.veId = veId;
     }
 }

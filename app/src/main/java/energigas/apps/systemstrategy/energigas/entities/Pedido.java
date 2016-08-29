@@ -103,13 +103,17 @@ public class Pedido extends SugarRecord {
     private long compId;
 
     private long greId;
+
+   private double porImpuesto;
+
+
     @Ignore
     private List<PedidoDetalle> items;
 
     public Pedido() {
     }
 
-    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId, List<PedidoDetalle> items) {
+    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId, double porImpuesto, List<PedidoDetalle> items) {
         this.peId = peId;
         this.serie = serie;
         this.numero = numero;
@@ -154,6 +158,7 @@ public class Pedido extends SugarRecord {
         this.scopCerrado = scopCerrado;
         this.compId = compId;
         this.greId = greId;
+        this.porImpuesto = porImpuesto;
         this.items = items;
     }
 
@@ -507,6 +512,14 @@ public class Pedido extends SugarRecord {
 
     public void setGreId(long greId) {
         this.greId = greId;
+    }
+
+    public double getPorImpuesto() {
+        return porImpuesto;
+    }
+
+    public void setPorImpuesto(double porImpuesto) {
+        this.porImpuesto = porImpuesto;
     }
 
     public List<PedidoDetalle> getItems() {

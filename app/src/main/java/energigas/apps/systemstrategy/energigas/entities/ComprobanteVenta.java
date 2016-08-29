@@ -55,12 +55,17 @@ public class ComprobanteVenta {
     private String fechaCreacion;
 
     private String fechaActualizacion;
+
+   private int  porImpuesto;
+
+
     private static List<ComprobanteVenta> list;
+
 
     public ComprobanteVenta() {
     }
 
-    public ComprobanteVenta(long compId, String serie, int numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion) {
+    public ComprobanteVenta(long compId, String serie, int numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, int porImpuesto) {
         this.compId = compId;
         this.serie = serie;
         this.numDoc = numDoc;
@@ -85,12 +90,7 @@ public class ComprobanteVenta {
         this.direccionCliente = direccionCliente;
         this.fechaCreacion = fechaCreacion;
         this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public static List<ComprobanteVenta> getList() {
-        List<ComprobanteVenta> mList = new ArrayList<>();
-        mList.add(new ComprobanteVenta());
-        return mList;
+        this.porImpuesto = porImpuesto;
     }
 
     public long getCompId() {
@@ -283,5 +283,21 @@ public class ComprobanteVenta {
 
     public void setFechaActualizacion(String fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public int getPorImpuesto() {
+        return porImpuesto;
+    }
+
+    public void setPorImpuesto(int porImpuesto) {
+        this.porImpuesto = porImpuesto;
+    }
+
+    public static List<ComprobanteVenta> getList() {
+        return list;
+    }
+
+    public static void setList(List<ComprobanteVenta> list) {
+        ComprobanteVenta.list = list;
     }
 }
