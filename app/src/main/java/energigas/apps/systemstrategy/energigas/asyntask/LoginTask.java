@@ -25,6 +25,8 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
@@ -36,7 +38,7 @@ import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
-import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -118,6 +120,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
                 aListener.onErrorProcedure("Erroe en la base de datos del servidor");
                 break;
             case 5://Ejecuto correctamente
+                Session.saveSession(context, objUsuario);
                 aListener.onSuccess();
                 break;
         }
@@ -255,6 +258,31 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
                 Persona persona = cliente.getPersona();
                 persona.save();
             }
+            boolean estaPed = true;
+            boolean estPedDet = true;
+            int count =0;
+            for (Pedido pedido : cajaLiquidacion.getItemsPedidos()){
+                Long ped = pedido.save();
+                if (ped<0){
+                    estaPed = false;
+                }
+                else{
+                    for (PedidoDetalle pedidoDetalle : pedido.getItems()){
+                        Long pediDet = pedidoDetalle.save();
+                        if (pediDet<0){
+
+                            estPedDet = false;
+                        }
+                        count++;
+                    }
+                }
+            }
+            List<PedidoDetalle> pedidoDetallea = PedidoDetalle.listAll(PedidoDetalle.class);
+            for (PedidoDetalle pedido : pedidoDetallea){
+                Log.d(TAG,"idPedidoDetalle: "+pedido.getPdId()+" - idPedido :"+pedido.getPeId());
+            }
+            Log.d(TAG," Pedido"+estaPed);
+            Log.d(TAG," Pedido detalle"+estPedDet+"-  "+count);
 
 
         }

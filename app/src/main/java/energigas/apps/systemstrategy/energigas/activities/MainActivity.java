@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-import com.orm.SugarContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +32,12 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 
@@ -61,36 +62,35 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawer)
     DrawerLayout drawer;
     Agent agent;
+    private Usuario usuario;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        usuario = Session.getSession(this);
         ButterKnife.bind(this);
-        CajaExistenteFragment.newIntance("43").show(getSupportFragmentManager(),"");
-        SugarContext.init(this);
         hideFloatingButton();
         initViews();
     }
 
 
-    @Override
-    protected void onDestroy() {
-        SugarContext.terminate();
-        super.onDestroy();
-    }
 
     private void hideFloatingButton(){
+
         List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class," fecha_Inicio=? ",new String[]{Utils.getDatePhone()});
         if (planDistribucion.size()>0){
             fab.hide();
+        }else{
+            CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId()+"").show(getSupportFragmentManager(),"");
         }
     }
 
     private void showDialogAccount() {
 
         new AccountDialog()
+                .setUser(usuario)
                 .setFloating(fab)
                 .show(getSupportFragmentManager(),null);
     }
@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
         Snackbar.make(fab, establecimiento.getEstVDescripcion(), Snackbar.LENGTH_LONG).show();
+        Session.saveEstablecimiento(getApplicationContext(),establecimiento);
         startActivity(new Intent(MainActivity.this, MainStationActivity.class));
     }
 

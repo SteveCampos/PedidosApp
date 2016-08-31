@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.StationOrdersAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.utils.Log;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,14 +30,11 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
     private RecyclerView recyclerView;
     private StationOrdersAdapter adapter;
     private OnStationOrderClickListener listener;
-
+    private static final String TAG = "StationOrderFragment";
     public interface OnStationOrderClickListener{
         void onStationOrderClickListener(Pedido pedido);
     }
 
-    public StationOrderFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -43,9 +43,8 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
 
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        pedidos = new ArrayList<>();
-        //NULL
-        pedidos.add(new Pedido());
+        Log.d(TAG,Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+"");
+        pedidos = Pedido.find(Pedido.class," establecimiento_Id = ?",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
 
         adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
         recyclerView.setAdapter(adapter);

@@ -18,8 +18,10 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.MainActivity;
 import energigas.apps.systemstrategy.energigas.asyntask.LoginTask;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -51,12 +53,18 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
         setCancelable(false);
         String usuario = getArguments().getString("usuario");
         String clave = getArguments().getString("clave");
+
         List<Usuario> ss = Usuario.listAll(Usuario.class);
         Log.d(TAG, "COUNT : " + ss.size());
         if (ss.size() > 0) {
             List<Usuario> dbUsuarioa = Usuario.find(Usuario.class, " usu_V_Usuario = ?  and usu_V_Password = ? ", new String[]{usuario, clave});
            // Log.d(TAG, "LOGIN : " + dbUsuarioa.get(0).getUsuVUsuario());
             if (dbUsuarioa.size() > 0) {
+                Persona persona = Persona.findById(Persona.class, dbUsuarioa.get(0).getUsuIPersonaId());
+                dbUsuarioa.get(0).setPersona(persona);
+                Usuario objUsuario  = dbUsuarioa.get(0);
+                /**Guardar la sesion**/
+                Session.saveSession(getActivity(), objUsuario);
                 initMain();
             } else {
                 new LoginTask(this).execute(usuario, clave);
@@ -68,6 +76,8 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
         return dialog;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +96,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     @Override
     public void onSuccess() {
+
         initMain();
     }
 

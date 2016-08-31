@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +18,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.utils.Log;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -36,10 +40,11 @@ public class FragmentStationInformation extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private Establecimiento establecimiento;
     private OnFragmentInteractionListener mListener;
-
-    @BindView(R.id.btn_map) AppCompatButton buttonMap;
+    private static final String TAG = "FragmentStationInformation";
+    @BindView(R.id.btn_map)
+    AppCompatButton buttonMap;
 
     public FragmentStationInformation() {
         // Required empty public constructor
@@ -66,6 +71,7 @@ public class FragmentStationInformation extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -76,7 +82,9 @@ public class FragmentStationInformation extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
+
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "").get(0);
+        View view = inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -101,7 +109,7 @@ public class FragmentStationInformation extends Fragment {
     }
 
     @OnClick(R.id.btn_map)
-    public void showMap(){
+    public void showMap() {
         float latitude = (float) -12.062865;
         float longitude = (float) -77.040253;
         String uri = String.format(Locale.getDefault(), "geo:%f,%f", latitude, longitude);

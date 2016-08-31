@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
 import java.util.ArrayList;
@@ -51,8 +52,9 @@ public class Establecimiento extends SugarRecord {
 
     private String estVContacto;
 
+    @Ignore
     private List<Almacen> itemsAlmacen ;
-
+    @Ignore
     private GeoUbicacion ubicacion;
 
     public Establecimiento() {

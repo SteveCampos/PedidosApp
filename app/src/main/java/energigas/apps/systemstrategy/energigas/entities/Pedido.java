@@ -15,6 +15,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  */
 
 public class Pedido extends SugarRecord {
+
     @Unique
     private long peId;
 

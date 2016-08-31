@@ -110,12 +110,9 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
 
     }
 
-    @Override
-    public void manipulateInTransaction() {
-
+    public void saveLiquidacion() {
 
         Long insert = cajaLiquidacion.save();
-
         boolean estadoB = true;
         if (insert > 0) {
             PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
@@ -194,27 +191,34 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                 Persona persona = cliente.getPersona();
                 persona.save();
             }
-
-            boolean pedidos = true;
-            boolean pedidodetalle = true;
-            List<Pedido> pedidoList = cajaLiquidacion.getItemsPedidos();
-            for (Pedido pedido : pedidoList){
-                Long p =pedido.save();
-                if (p<0){
-                    pedidos = false;
-                }                List<PedidoDetalle> pedidoDetalles = pedido.getItems();
-                for (PedidoDetalle pedidoDetalle : pedidoDetalles){
-                       Long pd = pedidoDetalle.save();
-                    if (pd<0){
-                        pedidodetalle = false;
+            boolean estaPed = true;
+            boolean estPedDet = true;
+            for (Pedido pedido : cajaLiquidacion.getItemsPedidos()) {
+                Long ped = pedido.save();
+                if (ped < 0) {
+                    estaPed = false;
+                } else {
+                    for (PedidoDetalle pedidoDetalle : pedido.getItems()) {
+                        Long pediDet = pedidoDetalle.save();
+                        if (pediDet < 0) {
+                            estPedDet = false;
+                        }
                     }
                 }
             }
-            Log.d(TAG, " INSERTO PEDIDO " + pedidos);
-            Log.d(TAG, " INSERTO PEDIDO DETALLE " + pedidodetalle);
-            estado = Constants.OPERACION_EXITOSA;
+
+            Log.d(TAG, " Pedido" + estaPed);
+            Log.d(TAG, " Pedido detalle" + estPedDet);
+
 
         }
+    }
+
+    @Override
+    public void manipulateInTransaction() {
+
+
+        saveLiquidacion();
     }
 
     @Override

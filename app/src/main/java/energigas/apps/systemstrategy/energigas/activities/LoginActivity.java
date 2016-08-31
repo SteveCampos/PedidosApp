@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.orm.SugarContext;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

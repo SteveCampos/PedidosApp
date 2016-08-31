@@ -118,6 +118,7 @@ public class DispatchFragment extends Fragment {
         inputQuantityInitial.setText("900.00");
         inputQuantityFinal.setText("1000.00");
         input_tank_initial.setText("56.25");
+
         input_tank_final.setText("62.5");
     }
     @Override

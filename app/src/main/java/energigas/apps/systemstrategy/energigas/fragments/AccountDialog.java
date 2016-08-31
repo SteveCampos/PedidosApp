@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
@@ -51,11 +52,17 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     @BindView(R.id.btn_cancel)
     Button btnCancel;
     FloatingActionButton fab;
+    Usuario usuario;
     private LocationVehiculeListener locationVehiculeListener;
     private Location location;
 
     public AccountDialog setFloating(FloatingActionButton fab) {
         this.fab = fab;
+        return this;
+    }
+
+    public AccountDialog setUser(Usuario user) {
+        this.usuario = user;
         return this;
     }
 
@@ -114,32 +121,29 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     }
 
 
-
     private boolean isNotEmtyEditText() {
 
-        if (editTextKI.getText().toString().length() > 0 && editTextWI.getText().toString().length() >0 && editTextPI.getText().toString().length() >0) {
+        if (editTextKI.getText().toString().length() > 0 && editTextWI.getText().toString().length() > 0 && editTextPI.getText().toString().length() > 0) {
             return true;
         }
         return false;
     }
 
 
-
     private void showSendTask() {
 
-        String usuarioId = "43";
+        String usuarioId = usuario.getUsuIUsuarioId()+"";
         String kmInicial = editTextKI.getText().toString();
         String pesoInicial = editTextWI.getText().toString();
         String porcentajeInicial = editTextPI.getText().toString();
-        if(location ==null){
-
+        if (location == null) {
             Snackbar.make(btnOk, "Ubicacion desconocida", Snackbar.LENGTH_SHORT).show();
             return;
         }
-        String stringLiquidacion = usuarioId+"_"+kmInicial+"_"+pesoInicial+"_"+porcentajeInicial+"_"+location.getLatitude()+"_"+location.getLongitude()+"";
-        Log.d(TAG,""+stringLiquidacion);
+        String stringLiquidacion = usuarioId + "_" + kmInicial + "_" + pesoInicial + "_" + porcentajeInicial + "_" + location.getLatitude() + "_" + location.getLongitude() + "";
+        Log.d(TAG, "" + stringLiquidacion);
         showAnimation();
-       new AsyntaskOpenAccount(this).execute(stringLiquidacion);
+        new AsyntaskOpenAccount(this).execute(stringLiquidacion);
     }
 
 
@@ -151,8 +155,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
         List<PlanDistribucion> planDistribucions = PlanDistribucion.listAll(PlanDistribucion.class);
         Log.d(TAG, "kelvin: " + planDistribucions.size());
-        for (PlanDistribucion item : planDistribucions){
-            Log.d(TAG,item.getFechaInicio());
+        for (PlanDistribucion item : planDistribucions) {
+            Log.d(TAG, item.getFechaInicio());
         }
         setMessage(message);
         fab.hide();
@@ -169,7 +173,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         hideAnimationProgress();
         setMessage(message);
     }
-    private void setMessage(String message){
+
+    private void setMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 

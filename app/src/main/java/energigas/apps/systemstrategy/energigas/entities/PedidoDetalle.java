@@ -12,7 +12,10 @@ import java.util.List;
 
 public class PedidoDetalle extends SugarRecord {
 
+
     @Unique
+    private String idDetalle;
+
     private int pdId;
 
     private long peId;
@@ -44,9 +47,12 @@ public class PedidoDetalle extends SugarRecord {
     public PedidoDetalle() {
     }
 
-    public PedidoDetalle(long peId, int pdId, int productoId, double cantidad, double cantidadAtendida, double importe, int usuarioId, String fechaAccion, double precioUnitario, double costoVenta, int unidadId, int estadoAtencionId, double precio, String golpe) {
-        this.peId = peId;
+
+
+    public PedidoDetalle(String idDetalle, int pdId, long peId, int productoId, double cantidad, double cantidadAtendida, double importe, int usuarioId, String fechaAccion, double precioUnitario, double costoVenta, int unidadId, int estadoAtencionId, double precio, String golpe) {
+        this.idDetalle = idDetalle;
         this.pdId = pdId;
+        this.peId = peId;
         this.productoId = productoId;
         this.cantidad = cantidad;
         this.cantidadAtendida = cantidadAtendida;
@@ -59,6 +65,14 @@ public class PedidoDetalle extends SugarRecord {
         this.estadoAtencionId = estadoAtencionId;
         this.precio = precio;
         this.golpe = golpe;
+    }
+
+    public String getIdDetalle() {
+        return idDetalle;
+    }
+
+    public void setIdDetalle(String idDetalle) {
+        this.idDetalle = idDetalle;
     }
 
     public long getPeId() {

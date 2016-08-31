@@ -69,15 +69,14 @@ public class CajaExistenteFragment extends DialogFragment {
     }
 
 
-
-    class ExisteCaja extends AsyncTask<String,String,String> implements SugarTransactionHelper.Callback {
+    class ExisteCaja extends AsyncTask<String, String, String> implements SugarTransactionHelper.Callback {
         private RestAPI restAPI;
         private JSONObject jsonObject;
         private String message = "";
         private CajaLiquidacion cajaLiquidacion;
 
 
-        public ExisteCaja(){
+        public ExisteCaja() {
             this.restAPI = new RestAPI();
         }
 
@@ -127,12 +126,9 @@ public class CajaExistenteFragment extends DialogFragment {
             dismiss();
         }
 
-        @Override
-        public void manipulateInTransaction() {
-
+        public void saveLiquidacion() {
 
             Long insert = cajaLiquidacion.save();
-
             boolean estadoB = true;
             if (insert > 0) {
                 PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
@@ -211,27 +207,34 @@ public class CajaExistenteFragment extends DialogFragment {
                     Persona persona = cliente.getPersona();
                     persona.save();
                 }
-
-                boolean pedidos = true;
-                boolean pedidodetalle = true;
-                List<Pedido> pedidoList = cajaLiquidacion.getItemsPedidos();
-                for (Pedido pedido : pedidoList){
-                    Long p =pedido.save();
-                    if (p<0){
-                        pedidos = false;
-                    }                List<PedidoDetalle> pedidoDetalles = pedido.getItems();
-                    for (PedidoDetalle pedidoDetalle : pedidoDetalles){
-                        Long pd = pedidoDetalle.save();
-                        if (pd<0){
-                            pedidodetalle = false;
+                boolean estaPed = true;
+                boolean estPedDet = true;
+                for (Pedido pedido : cajaLiquidacion.getItemsPedidos()) {
+                    Long ped = pedido.save();
+                    if (ped < 0) {
+                        estaPed = false;
+                    } else {
+                        for (PedidoDetalle pedidoDetalle : pedido.getItems()) {
+                            Long pediDet = pedidoDetalle.save();
+                            if (pediDet < 0) {
+                                estPedDet = false;
+                            }
                         }
                     }
                 }
-                Log.d(TAG, " INSERTO PEDIDO " + pedidos);
-                Log.d(TAG, " INSERTO PEDIDO DETALLE " + pedidodetalle);
+
+                Log.d(TAG, " Pedido" + estaPed);
+                Log.d(TAG, " Pedido detalle" + estPedDet);
 
 
             }
+        }
+
+        @Override
+        public void manipulateInTransaction() {
+            saveLiquidacion();
+
+
         }
 
 

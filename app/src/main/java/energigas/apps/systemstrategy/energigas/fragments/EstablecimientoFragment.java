@@ -43,13 +43,13 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        SugarContext.init(getActivity());
+        //SugarContext.init(getActivity());
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onStop() {
-        SugarContext.terminate();
+       // SugarContext.terminate();
         super.onStop();
     }
 

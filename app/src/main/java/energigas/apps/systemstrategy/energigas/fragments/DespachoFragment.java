@@ -16,6 +16,8 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.adapters.DespachoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +27,7 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
     private List<Despacho> list;
     private RecyclerView recyclerView;
     private DespachoAdapter adapter;
-
+    private Pedido pedido;
     public DespachoFragment() {
         // Required empty public constructor
     }
@@ -35,11 +37,12 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        pedido = Session.getPedido(getActivity());
         recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        adapter = new DespachoAdapter(Despacho.getList(), getActivity(), this);
+        list = Despacho.find(Despacho.class," pe_Id=?  ",new String[]{pedido.getPeId()+""});
+        adapter = new DespachoAdapter(list, getActivity(), this);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);

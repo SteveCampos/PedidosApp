@@ -16,11 +16,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
@@ -31,13 +33,13 @@ import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 public class MainStationActivity extends AppCompatActivity
         implements
         OrderedProductFragment.OnOrderedProductClickListener,
         OrderedProductFragment.OnDispatchClickListener,
-        StationOrderFragment.OnStationOrderClickListener
-{
+        StationOrderFragment.OnStationOrderClickListener {
 
 
     @BindView(R.id.toolbar)
@@ -52,10 +54,15 @@ public class MainStationActivity extends AppCompatActivity
     private ActionMode actionMode;
 
     private CustomTabsAdapter tabsAdapter;
+
+    private Establecimiento establecimiento;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_station);
+        establecimiento = Session.getSessionEstablecimiento(this);
         ButterKnife.bind(this);
         initViews();
     }
@@ -74,12 +81,13 @@ public class MainStationActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
-    private void setTabsAdapterFragment (){
+
+    private void setTabsAdapterFragment() {
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new FragmentStationInformation(), getString(R.string.title_activity_main_station));
         tabsAdapter.addFragment(new StationOrderFragment(), getString(R.string.order_title_name));
         //tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
-        tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
+       // tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
         tabsAdapter.addFragment(new CajaPagoFragment(), getString(R.string.activity_charges_account));
         tabsAdapter.addFragment(new ComprobanteVentaFragment(), "Facturas");
         viewpager.setAdapter(tabsAdapter);
@@ -96,6 +104,7 @@ public class MainStationActivity extends AppCompatActivity
         Snackbar.make(fab, orderProduct.getProductOrderedTitle() + typeClick, Snackbar.LENGTH_LONG).show();
         startSupportActionMode(mActionModeCallback);
     }
+
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
 
@@ -150,6 +159,7 @@ public class MainStationActivity extends AppCompatActivity
 
     @Override
     public void onStationOrderClickListener(Pedido pedido) {
+        Session.savePedido(getApplicationContext(),pedido);
         startActivity(new Intent(MainStationActivity.this, StationOrderActivity.class));
     }
 

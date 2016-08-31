@@ -11,9 +11,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.fragments.DespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.OrderDetailFragment;
 import energigas.apps.systemstrategy.energigas.fragments.AlmacenFragment;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 public class StationOrderActivity extends AppCompatActivity {
 
@@ -27,10 +29,14 @@ public class StationOrderActivity extends AppCompatActivity {
     FloatingActionButton fab;
     private CustomTabsAdapter tabsAdapter;
 
+    private Pedido pedido;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_order);
+        pedido = Pedido.find(Pedido.class," pe_Id = ?  ",new String[]{Session.getPedido(this).getPeId()+""}).get(0);
+
         ButterKnife.bind(this);
         initViews();
     }
@@ -39,14 +45,14 @@ public class StationOrderActivity extends AppCompatActivity {
     private void initViews() {
         setToolbar();
         setTabsAdapterFragment();
-        viewpager.setCurrentItem(1);
+        viewpager.setCurrentItem(0);
     }
 
     private void setToolbar() {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) //
         {
-            setTitle("Pedido 1");
+            setTitle("Pedido "+pedido.getNumero());
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -58,5 +64,6 @@ public class StationOrderActivity extends AppCompatActivity {
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }
+
 
 }

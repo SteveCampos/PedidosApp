@@ -14,5 +14,4 @@ public class Application  extends SugarApp {
         super.onCreate();
     }
 
-
 }
