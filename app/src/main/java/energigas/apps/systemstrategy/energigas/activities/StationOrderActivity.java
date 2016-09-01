@@ -59,8 +59,9 @@ public class StationOrderActivity extends AppCompatActivity {
     private void setTabsAdapterFragment (){
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(new OrderDetailFragment(), "ITEM");
-        tabsAdapter.addFragment(new DespachoFragment(), "DESPACHOS");
         tabsAdapter.addFragment(new AlmacenFragment(), "TANQUES");
+        tabsAdapter.addFragment(new DespachoFragment(), "DESPACHOS");
+
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }

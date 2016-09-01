@@ -22,15 +22,20 @@ import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.adapters.AlmacenAdapter;
 import energigas.apps.systemstrategy.energigas.dialogs.AlertDialogFragment;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmacenClickListener {
 
-    private List<Almacen> almacenList = new ArrayList<>();
+    private List<Almacen> almacenList ;
     private RecyclerView recyclerView;
     private AlmacenAdapter adapter;
+    private Pedido pedido;
+    private Establecimiento establecimiento;
 
     public AlmacenFragment() {
         // Required empty public constructor
@@ -43,8 +48,8 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
         // Inflate the layout for this fragment
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-
-        almacenList = Almacen.getList();
+        pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
+        almacenList = Almacen.find(Almacen.class," establecimiento_Id = ?  ",new String[]{pedido.getEstablecimientoId()+""});
         adapter = new AlmacenAdapter(almacenList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
@@ -81,7 +86,8 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
                 message = "No Programado, mantenga presionado para Autoprogramar";
                 break;
         }
-
+        clase = DispatchActivity.class;
+        Session.saveAlmacen(getActivity(),almacen);
         Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
 
         if (redirect){

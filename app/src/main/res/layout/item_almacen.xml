@@ -52,7 +52,7 @@
             android:id="@+id/text_station_tank_politica"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="85% or 1105 GAL"
+            android:text="85% o 1105 GAL"
             android:layout_below="@+id/text_station_tank_capacity"
             />
         

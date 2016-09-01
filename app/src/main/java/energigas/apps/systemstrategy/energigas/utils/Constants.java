@@ -15,6 +15,8 @@ public class Constants {
     public static final int ERROR_GUARDAR=-3;
     public static final int OPERACION_EXITOSA=-4;
 
+    public static final int CURRENT =0;
+
 
     /**Nombres de la Session**/
 
@@ -37,6 +39,11 @@ public class Constants {
 
     public static final String SESSION_PEDIDO="SESSION_PEDIDO";
     public static final String IDPEDIDO="IDPEDIDO";
+
+    /**Nombres de Almacen**/
+
+    public static final String SESSION_ALMACEN="SESSION_ALMACEN";
+    public static final String IDALMACEN="IDALMACEN";
 
 
 }

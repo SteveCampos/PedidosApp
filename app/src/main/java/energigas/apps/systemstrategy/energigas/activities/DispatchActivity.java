@@ -1,10 +1,9 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
-import android.content.Intent;
-import android.net.Uri;
+
+import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,8 +13,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +23,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.Dispatch;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.DispatchFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
-public class DispatchActivity extends AppCompatActivity implements DispatchFragment.OnFragmentInteractionListener {
+public class DispatchActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -41,12 +47,31 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
     @BindView(R.id.textview_dispatch_station)
     TextView textviewStation;
 
+    private Establecimiento establecimiento;
+    private Almacen almacen;
+    private onNextActivity mListener;
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dispatch);
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(0);
+        almacen = Almacen.find(Almacen.class, " alm_Id = ? ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
         ButterKnife.bind(this);
         initViews();
+    }
+
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof onNextActivity) {
+            mListener = (onNextActivity) fragment;
+        } else {
+            throw new RuntimeException(fragment.toString()
+                    + " must implement onNextActivity");
+        }
     }
 
     private void initViews() {
@@ -86,15 +111,26 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
     }
 
     private void setTexts() {
-        /*textViewTank.setText("Tanque T100");
-        textViewProduct.setText("GLP");
-        textviewStation.setText("Est. La Molina");*/
+        textViewTank.setText(almacen.getNombre());
+        textViewProduct.setText(almacen.getNombre());
+        textviewStation.setText(establecimiento.getEstVDescripcion());
     }
 
     @OnClick(R.id.fab)
-    void dispatch(){
-        finish();
-        startActivity(new Intent(DispatchActivity.this, PrintDispatch.class));
+    void dispatch() {
+
+        DialogGeneral.isConfirm(DispatchActivity.this, " ATENCION...!!!  ", " ¿ Esta seguro de generar despacho ?", new DialogGeneralListener() {
+            @Override
+            public void onSavePressed() {
+               mListener.onNextListener();
+            }
+
+            @Override
+            public void onCancelPressed() {
+                Toast.makeText(DispatchActivity.this,"Cancelo",Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 
@@ -103,11 +139,6 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new DispatchFragment(), getString(R.string.dispatch_name));
         viewPager.setAdapter(adapter);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 
@@ -141,4 +172,11 @@ public class DispatchActivity extends AppCompatActivity implements DispatchFragm
             return mFragmentTitleList.get(position);
         }
     }
+
+
+    public interface onNextActivity {
+        void onNextListener();
+    }
+
+
 }

@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
@@ -13,6 +14,34 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
  */
 
 public class Session {
+
+
+
+    public static boolean saveAlmacen(Context context, Almacen almacen) {
+
+        try {
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_ALMACEN, Context.MODE_PRIVATE).edit();
+            editor.putInt(Constants.IDALMACEN,almacen.getAlmId());
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+
+    public static Almacen getAlmacen(Context context) {
+
+        Almacen almacen = new Almacen();
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_ALMACEN, Context.MODE_PRIVATE);
+        almacen.setAlmId(prefs.getInt(Constants.IDALMACEN, 0));
+        return almacen;
+
+    }
 
 
     public static boolean savePedido(Context context, Pedido pedido) {

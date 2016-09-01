@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -57,8 +56,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
     private Dispatch mainDispatch;
+
 
     //******* Widgets  to see preview print
 /*

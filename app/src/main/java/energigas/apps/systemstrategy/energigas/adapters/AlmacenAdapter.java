@@ -28,7 +28,7 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
 
     private OnAlmacenClickListener listener;
 
-    public AlmacenAdapter(List<Almacen> almacenList, Context mContext, OnAlmacenClickListener listener) {
+    public  AlmacenAdapter(List<Almacen> almacenList, Context mContext, OnAlmacenClickListener listener) {
         this.almacenList = almacenList;
         this.mContext = mContext;
         this.listener = listener;
@@ -47,10 +47,10 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
         holder.title.setText("Tanque " +  (++position));
-
-        int resto = position % 3;
-
         int color = R.color.dark_grey;
+       /* int resto = position % 3;
+
+
         String estado = "EN PROCESO";
         String programado = "";
 
@@ -71,10 +71,12 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
                 break;
 
         }
+        */
 
-        holder.programado.setText(programado);
-        holder.estado.setText(estado);
+       // holder.programado.setText(programado);
+        holder.estado.setText("");
         holder.estado.setTextColor(ContextCompat.getColor(mContext, color));
+        holder.capacidadNeta.setText(almacen.getCapacidadNeta()+" GAL");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
