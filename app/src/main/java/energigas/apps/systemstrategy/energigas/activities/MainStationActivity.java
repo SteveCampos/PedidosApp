@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +34,7 @@ import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 public class MainStationActivity extends AppCompatActivity
@@ -51,6 +53,9 @@ public class MainStationActivity extends AppCompatActivity
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.tv_description)
+    TextView textViewDescripcion;
+
     private ActionMode actionMode;
 
     private CustomTabsAdapter tabsAdapter;
@@ -62,7 +67,7 @@ public class MainStationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_station);
-        establecimiento = Session.getSessionEstablecimiento(this);
+        establecimiento = Establecimiento.find(Establecimiento.class," est_I_Establecimiento_Id = ? ",new String[]{  Session.getSessionEstablecimiento(this).getEstIEstablecimientoId()+"" }).get(Constants.CURRENT);
         ButterKnife.bind(this);
         initViews();
     }
@@ -72,6 +77,8 @@ public class MainStationActivity extends AppCompatActivity
         setTabsAdapterFragment();
         viewpager.setCurrentItem(1);
         fab.setVisibility(View.GONE);
+
+        textViewDescripcion.setText(establecimiento.getEstVDescripcion());
     }
 
     private void setToolbar() {

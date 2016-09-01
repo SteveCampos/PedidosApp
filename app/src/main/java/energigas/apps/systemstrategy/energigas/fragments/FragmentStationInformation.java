@@ -19,6 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -41,6 +43,7 @@ public class FragmentStationInformation extends Fragment {
     private String mParam1;
     private String mParam2;
     private Establecimiento establecimiento;
+    private GeoUbicacion geoUbicacion;
     private OnFragmentInteractionListener mListener;
     private static final String TAG = "FragmentStationInformation";
     @BindView(R.id.btn_map)
@@ -83,7 +86,8 @@ public class FragmentStationInformation extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "").get(0);
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "").get(Constants.CURRENT);
+        geoUbicacion = GeoUbicacion.find(GeoUbicacion.class," ub_Id = ? ",new String[]{ establecimiento.getUbId()+"" }).get(Constants.CURRENT);
         View view = inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -110,8 +114,8 @@ public class FragmentStationInformation extends Fragment {
 
     @OnClick(R.id.btn_map)
     public void showMap() {
-        float latitude = (float) -12.062865;
-        float longitude = (float) -77.040253;
+        float latitude = (float) Double.parseDouble(geoUbicacion.getLatitud());
+        float longitude = (float)Double.parseDouble(geoUbicacion.getLongitud());
         String uri = String.format(Locale.getDefault(), "geo:%f,%f", latitude, longitude);
         Utils.showMap(getActivity(), Uri.parse(uri));
     }

@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +43,8 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        EstablecimientoFragment.OnEstablecimientoClickListener{
-        //OrdersFragment.OnOrdersClickListener
+        EstablecimientoFragment.OnEstablecimientoClickListener {
+    //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -76,14 +75,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void hideFloatingButton() {
 
-    private void hideFloatingButton(){
-
-        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class," fecha_Inicio=? ",new String[]{Utils.getDatePhone()});
-        if (planDistribucion.size()>0){
+        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class, " fecha_Inicio=? ", new String[]{Utils.getDatePhone()});
+        if (planDistribucion.size() > 0) {
             fab.hide();
-        }else{
-            CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId()+"").show(getSupportFragmentManager(),"");
+        } else {
+            CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId() + "").show(getSupportFragmentManager(), "");
         }
     }
 
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         new AccountDialog()
                 .setUser(usuario)
                 .setFloating(fab)
-                .show(getSupportFragmentManager(),null);
+                .show(getSupportFragmentManager(), null);
     }
 
     private void initViews() {
@@ -157,8 +155,8 @@ public class MainActivity extends AppCompatActivity
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-      adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
-     //  adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
+        adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
+        //  adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
         adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
@@ -234,6 +232,7 @@ public class MainActivity extends AppCompatActivity
         }
         return true;
     }
+
     private void closeAccount() {
 
     }
@@ -279,7 +278,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
         Snackbar.make(fab, establecimiento.getEstVDescripcion(), Snackbar.LENGTH_LONG).show();
-        Session.saveEstablecimiento(getApplicationContext(),establecimiento);
+        Session.saveEstablecimiento(getApplicationContext(), establecimiento);
         startActivity(new Intent(MainActivity.this, MainStationActivity.class));
     }
 
