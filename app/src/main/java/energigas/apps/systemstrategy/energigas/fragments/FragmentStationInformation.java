@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -44,10 +47,25 @@ public class FragmentStationInformation extends Fragment {
     private String mParam2;
     private Establecimiento establecimiento;
     private GeoUbicacion geoUbicacion;
+    private Persona persona;
     private OnFragmentInteractionListener mListener;
     private static final String TAG = "FragmentStationInformation";
     @BindView(R.id.btn_map)
     AppCompatButton buttonMap;
+    @BindView(R.id.frag_st_title)
+    AppCompatTextView frag_st_title;
+    @BindView(R.id.frag_st_description)
+    AppCompatTextView frag_st_description;
+    @BindView(R.id.frag_st_lt_long)
+    AppCompatTextView frag_st_lt_long;
+    @BindView(R.id.frag_st_cliente_name)
+    AppCompatTextView frag_st_cliente_name;
+    @BindView(R.id.est_frag_description)
+    AppCompatTextView est_frag_description;
+    @BindView(R.id.est_frag_iddocument)
+    AppCompatTextView est_frag_iddocument;
+    @BindView(R.id.est_frag_lati_long)
+    AppCompatTextView est_frag_lati_long;
 
     public FragmentStationInformation() {
         // Required empty public constructor
@@ -75,6 +93,7 @@ public class FragmentStationInformation extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,12 +104,26 @@ public class FragmentStationInformation extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "").get(Constants.CURRENT);
-        geoUbicacion = GeoUbicacion.find(GeoUbicacion.class," ub_Id = ? ",new String[]{ establecimiento.getUbId()+"" }).get(Constants.CURRENT);
         View view = inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
         ButterKnife.bind(this, view);
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "").get(Constants.CURRENT);
+        geoUbicacion = GeoUbicacion.find(GeoUbicacion.class," ub_Id = ? ",new String[]{ establecimiento.getUbId()+"" }).get(Constants.CURRENT);
+        Cliente cliente = Cliente.find(Cliente.class, " cli_I_Cliente_Id=?",new String[] { establecimiento.getEstIClienteId()+""}).get(Constants.CURRENT);
+        persona = Persona.find(Persona.class," per_I_Persona_Id = ? ",new String[]{cliente.getCliIPersonaId()+""}).get(Constants.CURRENT);
+
+        Log.d(TAG,"OBJECT CLIENTE"+cliente);
+        senddata();
         return view;
+    }
+
+    public void senddata(){
+        frag_st_title.setText(establecimiento.getEstVDescripcion()+"");
+        frag_st_description.setText(geoUbicacion.getDescripcion()+"");
+        frag_st_lt_long.setText(geoUbicacion.getLatitud()+","+geoUbicacion.getLongitud()+"");
+        frag_st_cliente_name.setText("Energigas S.A.C"+"");
+        est_frag_description.setText(establecimiento.getEstVDescripcion());
+        est_frag_iddocument.setText(persona.getPerVDocIdentidad()+"");
+        est_frag_lati_long.setText(geoUbicacion.getLatitud()+","+geoUbicacion.getLongitud()+"");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

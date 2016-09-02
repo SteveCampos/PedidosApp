@@ -14,6 +14,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin">
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
+            android:id="@+id/frag_st_title"
             android:layout_height="wrap_content"
             android:text="EST. LA MOLINA"
             android:gravity="center"
@@ -21,6 +22,7 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/frag_st_description"
             android:padding="@dimen/article_subheading"
             android:text="Car. Panamericana Norte Km 1076. Piura - Piura."
             android:gravity="center"
@@ -28,6 +30,7 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/frag_st_lt_long"
             android:text="Lat: -19.7563846, Lon: -79.05815"
             android:gravity="center"
             style="@style/TextAppearance.AppCompat.Caption"/>
@@ -77,6 +80,7 @@
                         <android.support.v7.widget.AppCompatTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:id="@+id/frag_st_cliente_name"
                             android:text="ENERGIGAS S.AC."
                             android:gravity="center"
                             style="@style/TextAppearance.AppCompat.Title"
@@ -84,12 +88,14 @@
                         <android.support.v7.widget.AppCompatTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:id="@+id/est_frag_iddocument"
                             android:text="10766795264"
                             android:gravity="center"
                             style="@style/TextAppearance.AppCompat.Large"
                             />
                         <android.support.v7.widget.AppCompatTextView
                             android:layout_width="match_parent"
+                            android:id="@+id/est_frag_lati_long"
                             android:layout_height="wrap_content"
                             android:text="Lat: -19.7563846, Lon: -79.05815"
                             android:gravity="center"
@@ -103,6 +109,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/est_frag_description"
                     android:text="AV. MIRAFLORES 1076 FLORA TRISTÁN. CRUCE AV. AVIACIÓN."
                     android:gravity="center"
                     style="@style/TextAppearance.AppCompat.Caption"
