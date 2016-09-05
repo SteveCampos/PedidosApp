@@ -120,7 +120,7 @@ public class FragmentStationInformation extends Fragment {
         frag_st_title.setText(establecimiento.getEstVDescripcion()+"");
         frag_st_description.setText(geoUbicacion.getDescripcion()+"");
         frag_st_lt_long.setText(geoUbicacion.getLatitud()+","+geoUbicacion.getLongitud()+"");
-        frag_st_cliente_name.setText("Energigas S.A.C"+"");
+        frag_st_cliente_name.setText(persona.getPerVRazonSocial()+"");
         est_frag_description.setText(establecimiento.getEstVDescripcion());
         est_frag_iddocument.setText(persona.getPerVDocIdentidad()+"");
         est_frag_lati_long.setText(geoUbicacion.getLatitud()+","+geoUbicacion.getLongitud()+"");

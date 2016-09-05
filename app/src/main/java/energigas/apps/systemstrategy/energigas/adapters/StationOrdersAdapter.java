@@ -11,8 +11,11 @@ import java.util.Date;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoPedidoHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -50,6 +53,19 @@ public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPe
     public void onBindViewHolder(EstablecimientoPedidoHolder holder, int position) {
         final Pedido pedido = pedidoList.get(position);
 
+        Estado estados = Estado.find(Estado.class," id_Estado = ?",new String[]{pedido.getEstadoId()+""}).get(Constants.CURRENT);
+        PedidoDetalle pedidoDetalle=PedidoDetalle.find(PedidoDetalle.class," pe_Id = ?",new String[]{pedido.getPeId()+""}).get(Constants.CURRENT);
+
+        //  if(estados!=null) {
+        holder.scope.setText(pedido.getScop()+"");
+        holder.state.setText(estados.getDescripcion() + "");
+        holder.quantity.setText(pedidoDetalle.getCantidad()+"");
+        //long dateprogrameddate = Long.parseLong(pedido.getFechaEntregaProgramada()+"");
+       // String data= pedido.getFechaEntregaProgramada();
+       // Long lObj1 = new Long(data);
+        holder.programedDate.setText(Utils.getNameOfDay(new Date(pedido.getFechaEntregaProgramada())));
+
+        //}
         /*
         holder.title.setText(pedido.getProductsName()[0]);
         holder.quantity.setText(pedido.getProductsName()[1]);

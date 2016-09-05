@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,10 +27,10 @@ import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClic
  */
 public class ComprobanteVentaFragment extends Fragment implements OnComprobanteVentaClickListener {
 
-    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
 
-    private List<ComprobanteVenta> list;
+    private List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
     private ComprobanteVentaAdapter adapter;
 
     public ComprobanteVentaFragment() {
@@ -40,10 +41,24 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.recycler_view, container, false);
-        ButterKnife.bind(this, view);
-        initViews();
-        return view;
+       // View view = inflater.inflate(R.layout.recycler_view, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(
+                R.layout.recycler_view, container, false);
+       // ButterKnife.bind(this, view);
+
+//        adapter = new ComprobanteVentaAdapter(comprobanteVentas, getActivity(), this);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerView.setAdapter(adapter);
+
+        adapter = new ComprobanteVentaAdapter(comprobanteVentas, getActivity(), this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return recyclerView;
+
+//        initViews();
+
+       // return view;
     }
 
     private void initViews() {

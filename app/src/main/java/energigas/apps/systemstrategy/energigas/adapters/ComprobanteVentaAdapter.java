@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
@@ -41,6 +42,8 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     public void onBindViewHolder(ComprobanteVentaHolder holder, int position) {
         final ComprobanteVenta comprobanteVenta = mList.get(position);
 
+
+        holder.txt_factura.setText("F0001");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +56,10 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     @Override
     public int getItemCount() {
         return mList.size();
+       // return mList == null ? 0: mList.size();
+        //if(mlist == null){
+        // return 0}ekse {
+        // return mlist.size}
     }
-
 }
+

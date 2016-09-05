@@ -105,11 +105,22 @@ public class Pedido extends SugarRecord {
 
     private long greId;
 
-   private double porImpuesto;
+    private double porImpuesto;
 
 
     @Ignore
     private List<PedidoDetalle> items;
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    @Ignore
+    Estado estado;
 
     public Pedido() {
     }

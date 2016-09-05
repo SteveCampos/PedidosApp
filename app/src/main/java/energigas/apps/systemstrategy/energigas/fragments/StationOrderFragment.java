@@ -16,7 +16,9 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.StationOrdersAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
@@ -27,25 +29,28 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
 
 
     private List<Pedido> pedidos = new ArrayList<>();
+    private List<Estado> estado= new ArrayList<>();
+    //private Estado estado;
     private RecyclerView recyclerView;
     private StationOrdersAdapter adapter;
     private OnStationOrderClickListener listener;
     private static final String TAG = "StationOrderFragment";
-    public interface OnStationOrderClickListener{
+
+    public interface OnStationOrderClickListener {
         void onStationOrderClickListener(Pedido pedido);
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        recyclerView= (RecyclerView) inflater.inflate(
+        recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        Log.d(TAG,Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+"");
-        pedidos = Pedido.find(Pedido.class," establecimiento_Id = ?",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
+        //  pedidos= getPedidos();
+        pedidos = Pedido.find(Pedido.class, " establecimiento_Id = ?", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""});
+        Log.d(TAG, Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "");
 
+        //estado=Estado.find(Estado.class," id_Estado = ?",new String[]{pedidos.get()});
         adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
@@ -53,9 +58,12 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
         return recyclerView;
     }
 
+
+
+
     @Override
     public void onOrderClickListener(Pedido pedido) {
-        if (listener!=null){
+        if (listener != null) {
             listener.onStationOrderClickListener(pedido);
         }
     }
@@ -63,9 +71,9 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnStationOrderClickListener){
+        if (context instanceof OnStationOrderClickListener) {
             listener = (OnStationOrderClickListener) context;
-        }else{
+        } else {
             throw new RuntimeException(context.toString() +
                     " must implement OnStationOrderClickListener");
         }
