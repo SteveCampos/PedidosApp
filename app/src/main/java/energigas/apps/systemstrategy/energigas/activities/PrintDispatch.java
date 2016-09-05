@@ -29,8 +29,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 public class PrintDispatch extends AppCompatActivity implements View.OnClickListener {
     private Boolean isFabOpen = false;
@@ -56,7 +64,12 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    private Dispatch mainDispatch;
+    private Despacho mainDispatch;
+    private Almacen almacen;
+    private Establecimiento establecimiento;
+    private Vehiculo vehiculo;
+    private Persona agente;
+    private Cliente cliente;
 
 
     //******* Widgets  to see preview print
@@ -103,10 +116,15 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_dispatch);
-        mainDispatch = new Dispatch(1, "Energigas SAC", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro", "(511) 2033001", "Lima", "Peru", "20145852413", "10 - San Fernando", "Calle Santa Teresa 171 Urbanizacion Los Sauces - Ate", "-12.5484, -71.9824", "PE-7845", "Julio Paredes", "F001-000008", "26/07/2016", "8:00 am", "9:00 am", "5000", "3000", "2000", "100%", "60%", "TANK-002825", "143810","198554214");
+        mainDispatch = Despacho.find(Despacho.class," despacho_Id=? ",new String[]{Session.getDespacho(this).getDespachoId()+""}).get(Constants.CURRENT);
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
+        almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
+        vehiculo = Vehiculo.findWithQuery(Vehiculo.class," SELECT V.* FROM VEHICULO_USUARIO VU, VEHICULO V WHERE VU.VE_ID = V.VE_ID AND VU.USUARIO_ID="+Session.getSession(this).getUsuIUsuarioId()+"; ",new String[]{}).get(Constants.CURRENT);
+        agente = Persona.findWithQuery(Persona.class,"SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = "+Session.getSession(this).getUsuIUsuarioId()+" ;",null).get(Constants.CURRENT);
+        cliente = Cliente.find(Cliente.class," CLI_I_CLIENTE_ID = ? ",new String[]{establecimiento.getEstIEstablecimientoId()+""}).get(Constants.CURRENT);
+        Persona persona = Persona.find(Persona.class," CLI_I_PERSONA_ID=? ",new String[]{cliente.getCliIPersonaId()+""}).get(Constants.CURRENT);
+        cliente.setPersona(persona);
         ButterKnife.bind(this);
-
-
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
@@ -196,7 +214,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(mainDispatch);
+                printDispatch.printNow(mainDispatch,almacen,establecimiento,vehiculo,agente,cliente);
 
                 break;
             case R.id.fabDisconec:

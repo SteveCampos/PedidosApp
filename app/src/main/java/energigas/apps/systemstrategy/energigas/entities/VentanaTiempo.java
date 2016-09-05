@@ -5,6 +5,7 @@ package energigas.apps.systemstrategy.energigas.entities;
  */
 
 public class VentanaTiempo {
+
     private int veId;
 
     private int establecimientoId;

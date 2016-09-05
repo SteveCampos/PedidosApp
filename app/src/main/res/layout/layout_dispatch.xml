@@ -34,6 +34,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignRight="@+id/inputlayout_requested_quantity"
             android:layout_centerInParent="true"
+            android:id="@+id/btnDistpach"
             android:text="@string/dispatch_button_requested" />
     </RelativeLayout>
 

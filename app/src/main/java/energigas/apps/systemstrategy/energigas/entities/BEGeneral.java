@@ -47,4 +47,5 @@ public class BEGeneral extends SugarRecord {
     public void setItemUbigeos(List<UbicacionGeoreferencia> itemUbigeos) {
         this.itemUbigeos = itemUbigeos;
     }
+
 }

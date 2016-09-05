@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
@@ -14,6 +15,32 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
  */
 
 public class Session {
+
+    public static boolean saveDespacho(Context context, Despacho despacho) {
+
+        try {
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_DESPACHO, Context.MODE_PRIVATE).edit();
+            editor.putLong(Constants.IDDESPACHO,despacho.getDespachoId());
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+
+    public static Despacho getDespacho(Context context) {
+
+        Despacho despacho = new Despacho();
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_DESPACHO, Context.MODE_PRIVATE);
+        despacho.setDespachoId(prefs.getLong(Constants.IDDESPACHO, 0));
+        return despacho;
+
+    }
 
 
 
@@ -59,6 +86,8 @@ public class Session {
 
 
     }
+
+
 
 
     public static Pedido getPedido(Context context) {

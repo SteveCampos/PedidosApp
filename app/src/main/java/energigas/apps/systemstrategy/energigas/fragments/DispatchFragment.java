@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.orm.SugarRecord;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,11 +28,16 @@ import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.VehiculoDispositivo;
+import energigas.apps.systemstrategy.energigas.entities.VehiculoUsuario;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -44,6 +53,8 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
+
+    private static final String TAG = "DispatchFragment";
     //BINDING VIEW
 
     @BindView(R.id.input_requested_quantity)
@@ -60,7 +71,8 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     TextInputEditText input_tank_final;
     @BindView(R.id.buttonContometer)
     AppCompatButton buttonContometer;
-
+    @BindView(R.id.btnDistpach)
+    AppCompatButton compatButtonDistpach;
 
     private Unbinder unbinder;
     private static final String ARG_PARAM1 = "param1";
@@ -76,10 +88,13 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     private Establecimiento establecimiento;
     private Almacen almacen;
     private Usuario usuario;
+    private Pedido pedido;
+    private Serie serie;
 
     private OnFragmentInteractionListener mListener;
     private LocationVehiculeListener locationVehiculeListener;
     private Location latAndLong;
+
 
     public DispatchFragment() {
         // Required empty public constructor
@@ -119,12 +134,59 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
                 R.layout.layout_dispatch, container, false);
         unbinder = ButterKnife.bind(this, view);
         locationVehiculeListener = new LocationVehiculeListener(this);
+        pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);
         pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(getActivity()).getAlmId() + ""}).get(Constants.CURRENT);
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(getActivity()).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, Constants.TIPO_ID_COMPROBANTE_DESPACHO), null).get(Constants.CURRENT);
         fillInputs();
+        saveDespacho();
         return view;
+    }
+
+    private void saveDespacho() {
+
+        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(usuario.getUsuIUsuarioId()), new String[]{}).get(Constants.CURRENT).getNumero();
+        Toast.makeText(getActivity(), "numero para este  despacho" + numeroDespacho, Toast.LENGTH_SHORT).show();
+
+        despacho = new Despacho(
+                Integer.parseInt(numeroDespacho),
+                pedidoDetalle.getPeId(),
+                pedidoDetalle.getPdId(),
+                establecimiento.getEstIClienteId(),
+                establecimiento.getEstIEstablecimientoId(),
+                almacen.getAlmId(),
+                usuario.getUsuIUsuarioId(),
+                almacen.getPlaca(),
+                0.0,//modificar luego Listo
+                0.0, //modificar luego Listo
+                0.0,// modificar luego Listo
+                "", // modificar luego Listo
+                "",// modificar luego Listo
+                Utils.getDatePhone(),
+                pedidoDetalle.getProductoId(),
+                pedidoDetalle.getUnidadId(),
+                0.0,// modificar luego Listo
+                0.0,// modificar luego Listo
+                "",// modificar luego Listo
+                "",// modificar luego Listo
+                almacen.getAlmId(),
+                serie.getCompVSerie(), // Serie Listo.
+                Utils.completaZeros(numeroDespacho, serie.getParametro()),
+                Utils.getDatePhone(),
+                usuario.getUsuVUsuario(),
+                Constants.PEDIDO_CREADO,
+                almacen.getVehiculoId(),
+                pedido.getGuiaRemision()
+
+        );
+    }
+
+    @OnClick(R.id.btnDistpach)
+    public void btnDistpach(View view) {
+        Toast.makeText(getActivity(), inputRequestedQuantity.getText().toString(), Toast.LENGTH_SHORT).show();
+        despacho.setCantidadDespachada(Double.parseDouble(inputRequestedQuantity.getText().toString()));
     }
 
     private void fillInputs() {
@@ -147,6 +209,16 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
         inputQuantityFinal.setText("1000.00");
         input_tank_initial.setText("56.25");
         input_tank_final.setText("62.5");
+
+        /** Guardar los datos del cronometro**/
+
+        despacho.setContadorInicial(Double.parseDouble(inputQuantityInitial.getText().toString()));
+        despacho.setContadorFinal(Double.parseDouble(inputQuantityFinal.getText().toString()));
+        despacho.setHoraInicio("17:39");
+        despacho.setHoraFin("18:39");
+
+        despacho.setpIT(Double.parseDouble(input_tank_initial.getText().toString()));
+        despacho.setpFT(Double.parseDouble(input_tank_final.getText().toString()));
 
 
     }
@@ -178,40 +250,13 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
 
         if (latAndLong != null) {
 
-            despacho = new Despacho(
-                    12,
-                    pedidoDetalle.getPeId(),
-                    pedidoDetalle.getPdId(),
-                    establecimiento.getEstIClienteId(),
-                    establecimiento.getEstIEstablecimientoId(),
-                    almacen.getAlmId(),
-                    usuario.getUsuIUsuarioId(),
-                    almacen.getPlaca(),
-                    Double.parseDouble(inputQuantityInitial.getText().toString()),
-                    Double.parseDouble(inputQuantityFinal.getText().toString()),
-                    Double.parseDouble(inputDispensedQuantity.getText().toString()),
-                    Utils.getDatePhone(),
-                    Utils.getDatePhone(),
-                    Utils.getDatePhone(),
-                    pedidoDetalle.getProductoId(),
-                    pedidoDetalle.getUnidadId(),
-                    Double.parseDouble(input_tank_initial.getText().toString()),
-                    Double.parseDouble(input_tank_final.getText().toString()),
-                    latAndLong.getLatitude()+"",
-                    latAndLong.getLongitude()+"",
-                    almacen.getAlmId(),
-                    pedidoDetalle.getFechaAccion(),
-                    pedidoDetalle.getCantidad(),
-                    Utils.getDatePhone(),
-                    usuario.getUsuVUsuario(),
-                    1,
-                    almacen.getVehiculoId(),
-                    ""
-
-                    );
-
-
+            /**Guardar los datos  de posicion gps**/
+            despacho.setLatitud(latAndLong.getLatitude() + "");
+            despacho.setLongitud(latAndLong.getLongitude() + "");
+            pedidoDetalle.setCantidadAtendida(despacho.getCantidadDespachada());
             Toast.makeText(getActivity(), "NEXT", Toast.LENGTH_SHORT).show();
+            despacho.save();
+            Session.saveDespacho(getActivity(),despacho);
             startActivity(new Intent(getActivity(), PrintDispatch.class));
             getActivity().finish();
         }

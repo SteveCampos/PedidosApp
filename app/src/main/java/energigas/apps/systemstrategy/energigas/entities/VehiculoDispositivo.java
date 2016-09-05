@@ -1,12 +1,15 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class VehiculoDispositivo {
-
-    private int id;
+public class VehiculoDispositivo extends SugarRecord {
+    @Unique
+    private int vehiculoDispositivoId;
 
     private int veId;
 
@@ -22,8 +25,8 @@ public class VehiculoDispositivo {
     public VehiculoDispositivo() {
     }
 
-    public VehiculoDispositivo(int id, int veId, int dmId, boolean estado, String latitud, String longitud) {
-        this.id = id;
+    public VehiculoDispositivo(int vehiculoDispositivoId, int veId, int dmId, boolean estado, String latitud, String longitud) {
+        this.vehiculoDispositivoId = vehiculoDispositivoId;
         this.veId = veId;
         this.dmId = dmId;
         this.estado = estado;
@@ -31,12 +34,12 @@ public class VehiculoDispositivo {
         this.longitud = longitud;
     }
 
-    public int getId() {
-        return id;
+    public int getVehiculoDispositivoId() {
+        return vehiculoDispositivoId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setVehiculoDispositivoId(int vehiculoDispositivoId) {
+        this.vehiculoDispositivoId = vehiculoDispositivoId;
     }
 
     public int getVeId() {

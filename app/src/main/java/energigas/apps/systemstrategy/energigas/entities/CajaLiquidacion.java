@@ -82,12 +82,22 @@ public class CajaLiquidacion extends SugarRecord{
     private List<Serie> itemsSeries;
     @Ignore
     private  List<Pedido> itemsPedidos;
+    @Ignore
+    private List<Dispositivo> itemsDispositivos ;
+    @Ignore
+    private Vehiculo vehiculo;
+    @Ignore
+    private List<VehiculoDispositivo> itemsVehiculoDispositivo ;
+    @Ignore
+    private VehiculoUsuario vehiculoUsuario ;
+    @Ignore
+    private List<DispositivoSerie> itemsDispositivoSeries;
 
 
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos, List<Dispositivo> itemsDispositivos, Vehiculo vehiculo, List<VehiculoDispositivo> itemsVehiculoDispositivo, VehiculoUsuario vehiculoUsuario, List<DispositivoSerie> itemsDispositivoSeries) {
         this.liqId = liqId;
         this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
@@ -122,14 +132,11 @@ public class CajaLiquidacion extends SugarRecord{
         this.itemsLiquidacion = itemsLiquidacion;
         this.itemsSeries = itemsSeries;
         this.itemsPedidos = itemsPedidos;
-    }
-
-    public List<Pedido> getItemsPedidos() {
-        return itemsPedidos;
-    }
-
-    public void setItemsPedidos(List<Pedido> itemsPedidos) {
-        this.itemsPedidos = itemsPedidos;
+        this.itemsDispositivos = itemsDispositivos;
+        this.vehiculo = vehiculo;
+        this.itemsVehiculoDispositivo = itemsVehiculoDispositivo;
+        this.vehiculoUsuario = vehiculoUsuario;
+        this.itemsDispositivoSeries = itemsDispositivoSeries;
     }
 
     public long getLiqId() {
@@ -394,5 +401,53 @@ public class CajaLiquidacion extends SugarRecord{
 
     public void setItemsSeries(List<Serie> itemsSeries) {
         this.itemsSeries = itemsSeries;
+    }
+
+    public List<Pedido> getItemsPedidos() {
+        return itemsPedidos;
+    }
+
+    public void setItemsPedidos(List<Pedido> itemsPedidos) {
+        this.itemsPedidos = itemsPedidos;
+    }
+
+    public List<Dispositivo> getItemsDispositivos() {
+        return itemsDispositivos;
+    }
+
+    public void setItemsDispositivos(List<Dispositivo> itemsDispositivos) {
+        this.itemsDispositivos = itemsDispositivos;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    public List<VehiculoDispositivo> getItemsVehiculoDispositivo() {
+        return itemsVehiculoDispositivo;
+    }
+
+    public void setItemsVehiculoDispositivo(List<VehiculoDispositivo> itemsVehiculoDispositivo) {
+        this.itemsVehiculoDispositivo = itemsVehiculoDispositivo;
+    }
+
+    public VehiculoUsuario getVehiculoUsuario() {
+        return vehiculoUsuario;
+    }
+
+    public void setVehiculoUsuario(VehiculoUsuario vehiculoUsuario) {
+        this.vehiculoUsuario = vehiculoUsuario;
+    }
+
+    public List<DispositivoSerie> getItemsDispositivoSeries() {
+        return itemsDispositivoSeries;
+    }
+
+    public void setItemsDispositivoSeries(List<DispositivoSerie> itemsDispositivoSeries) {
+        this.itemsDispositivoSeries = itemsDispositivoSeries;
     }
 }

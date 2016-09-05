@@ -32,10 +32,12 @@ public class Serie extends SugarRecord{
 
     private boolean compBEstado;
 
+    private int parametro;
+
     public Serie() {
     }
 
-    public Serie(int compIComprobanteId, int compITipoComprobanteId, String compVSerie, int compICorrelativo, String compVCodigo, int compIUsuarioCreacionId, int compIUsuarioActualizacionId, String compDTFechaCreacion, String compDTFechaActualizacion, int compIEmpresaId, boolean compBEstado) {
+    public Serie(int compIComprobanteId, int compITipoComprobanteId, String compVSerie, int compICorrelativo, String compVCodigo, int compIUsuarioCreacionId, int compIUsuarioActualizacionId, String compDTFechaCreacion, String compDTFechaActualizacion, int compIEmpresaId, boolean compBEstado, int parametro) {
         this.compIComprobanteId = compIComprobanteId;
         this.compITipoComprobanteId = compITipoComprobanteId;
         this.compVSerie = compVSerie;
@@ -47,6 +49,15 @@ public class Serie extends SugarRecord{
         this.compDTFechaActualizacion = compDTFechaActualizacion;
         this.compIEmpresaId = compIEmpresaId;
         this.compBEstado = compBEstado;
+        this.parametro = parametro;
+    }
+
+    public int getParametro() {
+        return parametro;
+    }
+
+    public void setParametro(int parametro) {
+        this.parametro = parametro;
     }
 
     public int getCompIComprobanteId() {

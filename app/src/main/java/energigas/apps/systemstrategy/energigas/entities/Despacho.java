@@ -57,7 +57,7 @@ public class Despacho extends SugarRecord{
 
     private String serie;
 
-    private double numero;
+    private String numero;
 
     private String fechaCreacion;
 
@@ -72,7 +72,7 @@ public class Despacho extends SugarRecord{
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, double numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId,String guiaRemision) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -287,11 +287,11 @@ public class Despacho extends SugarRecord{
         this.serie = serie;
     }
 
-    public double getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(double numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
@@ -327,12 +327,5 @@ public class Despacho extends SugarRecord{
         this.vehiculoId = vehiculoId;
     }
 
-    public static List<Despacho> getList() {
-        List<Despacho> list = new ArrayList<>();
-        list.add(new Despacho(
-                1, 1, 1, 1, 1, 1, 1, "PLACA", 500.0, 1300.0, 800.0, "12:00", "12:00", "12/08/2016", 1, 1, 12.5, 65.0, "-11.656565", "-51.82525", 1,
-                "SERIE", 0.0, "12/08/2016", "", 1, 1,""
-        ));
-        return list;
-    }
+
 }

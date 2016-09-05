@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 
+import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.Acceso;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
@@ -58,11 +59,13 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     private Usuario objUsuario;
     private BEGeneral objGeneral;
     private CajaLiquidacion cajaLiquidacion;
+    ManipuleData manipuleData;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
 
         this.aListener = loginAsyntaskListener;
         this.context = aListener.getContextActivity();
+        manipuleData = new ManipuleData();
 
     }
 
@@ -170,123 +173,14 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
 
 
         if (cajaLiquidacion.getLiqId() > 0) {
-            saveLiquidacion();
+                manipuleData.saveLiquidacion(cajaLiquidacion);
         }
 
 
         result = 5;
     }
 
-    public void saveLiquidacion() {
 
-        Long insert = cajaLiquidacion.save();
-        boolean estadoB = true;
-        if (insert > 0) {
-            PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();
-            Long a = planDistribucion.save();
-            Log.d(TAG, "ID PlanDistribucion " + a);
-
-            List<PlanDistribucionDetalle> planDistribucionDetalles = planDistribucion.getItems();
-            for (PlanDistribucionDetalle detalle : planDistribucionDetalles) {
-
-                Long deta = detalle.save();
-                if (deta < 0) {
-                    estadoB = false;
-                }
-                Log.d(TAG, " PlanDistribucionDetalle " + deta);
-
-            }
-
-            Log.d(TAG, " INSERTO PLAN DISTRIBUCION DETALLE " + estadoB);
-            estadoB = true;
-            boolean estadoAl = true;
-            boolean estadoEst = true;
-            List<Cliente> clientes = cajaLiquidacion.getItemsClientes();
-
-            for (Cliente cliente : clientes) {
-                Long cli = cliente.save();
-                if (cli < 0) {
-                    estadoB = false;
-                }
-                Log.d(TAG, " INSERTO CLIENTE " + cli);
-                /**Insertar Establecimientos**/
-
-                for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
-                    Long est = establecimiento.save();
-                    if (est < 0) {
-                        estadoEst = false;
-                    }
-                    Log.d(TAG, " INSERTO ESTABLECIMIENTO " + est);
-
-                    /**Insertar Almacen**/
-
-                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
-                    for (Almacen almacen : almacens) {
-                        Long alm = almacen.save();
-                        if (est < 0) {
-                            estadoAl = false;
-                        }
-                        Log.d(TAG, " INSERTO ALMACEN " + alm);
-
-                        Long geo = establecimiento.getUbicacion().save();
-                        Log.d(TAG, " INSERTO GEOUBICACION " + geo);
-                    }
-                }
-
-
-            }
-
-            Log.d(TAG, " INSERTO CLIENTE " + estadoB);
-            Log.d(TAG, " INSERTO ESTABLECIMIENTO " + estadoEst);
-            Log.d(TAG, " INSERTO ALMACEN " + estadoAl);
-
-            for (Cliente cliente : cajaLiquidacion.getItemsClientes()) {
-
-
-                List<Establecimiento> establecimientos = cliente.getItemsEstablecimientos();
-                SugarRecord.saveInTx(establecimientos);
-
-
-                for (Establecimiento establecimiento : establecimientos) {
-
-                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
-                    SugarRecord.saveInTx(almacens);
-                    GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
-                    geoUbicacion.save();
-                }
-
-                Persona persona = cliente.getPersona();
-                persona.save();
-            }
-            boolean estaPed = true;
-            boolean estPedDet = true;
-            int count =0;
-            for (Pedido pedido : cajaLiquidacion.getItemsPedidos()){
-                Long ped = pedido.save();
-                if (ped<0){
-                    estaPed = false;
-                }
-                else{
-                    for (PedidoDetalle pedidoDetalle : pedido.getItems()){
-                        Long pediDet = pedidoDetalle.save();
-                        if (pediDet<0){
-
-                            estPedDet = false;
-                        }
-                        count++;
-                    }
-                }
-            }
-            List<PedidoDetalle> pedidoDetallea = PedidoDetalle.listAll(PedidoDetalle.class);
-            for (PedidoDetalle pedido : pedidoDetallea){
-                Log.d(TAG,"idPedidoDetalle: "+pedido.getPdId()+" - idPedido :"+pedido.getPeId());
-            }
-            Log.d(TAG," Pedido"+estaPed);
-            Log.d(TAG," Pedido detalle"+estPedDet+"-  "+count);
-
-
-        }
-    }
 
     @Override
     public void errorInTransaction(String error) {
