@@ -121,8 +121,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
         vehiculo = Vehiculo.findWithQuery(Vehiculo.class," SELECT V.* FROM VEHICULO_USUARIO VU, VEHICULO V WHERE VU.VE_ID = V.VE_ID AND VU.USUARIO_ID="+Session.getSession(this).getUsuIUsuarioId()+"; ",new String[]{}).get(Constants.CURRENT);
         agente = Persona.findWithQuery(Persona.class,"SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = "+Session.getSession(this).getUsuIUsuarioId()+" ;",null).get(Constants.CURRENT);
-        cliente = Cliente.find(Cliente.class," CLI_I_CLIENTE_ID = ? ",new String[]{establecimiento.getEstIEstablecimientoId()+""}).get(Constants.CURRENT);
-        Persona persona = Persona.find(Persona.class," CLI_I_PERSONA_ID=? ",new String[]{cliente.getCliIPersonaId()+""}).get(Constants.CURRENT);
+        cliente = Cliente.find(Cliente.class," CLI_I_CLIENTE_ID = ? ",new String[]{establecimiento.getEstIClienteId()+""}).get(Constants.CURRENT);
+        Persona persona = Persona.find(Persona.class," per_I_Persona_Id=? ",new String[]{cliente.getCliIPersonaId()+""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
         ButterKnife.bind(this);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);

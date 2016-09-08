@@ -28,13 +28,15 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 
 public class StationDispatchsFragment extends Fragment implements ActionMode.Callback, StationDispatchsAdapter.OnStationDispatchClickListener {
 
     private static final String TAG = StationDispatchsFragment.class.getSimpleName();
-    private List<OrderDispatch> dispatchList = new ArrayList<>();
+    private List<Despacho> dispatchList = new ArrayList<>();
     private RecyclerView recyclerView;
     private StationDispatchsAdapter adapter;
     private ActionMode mActionMode;
@@ -87,7 +89,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
     private void initiViews() {
-        dispatchList = OrderDispatch.getList();
+        dispatchList = Despacho.find(Despacho.class," pe_Id = ? ",new String[]{Session.getPedido(getActivity()).getPeId()+""});
         adapter = new StationDispatchsAdapter(dispatchList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
@@ -96,7 +98,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
     @Override
-    public void onStationDispatchClickListener(OrderDispatch orderDispatch, View view, int type) {
+    public void onStationDispatchClickListener(Despacho orderDispatch, View view, int type) {
         //If ActionMode not null select item
 
         int position = recyclerView.getChildAdapterPosition(view);
@@ -211,6 +213,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
     private void createAndShowAlertDialog() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Generar Vista Previa Factura");
         builder.setMessage(adapter.getSelectedCount() + " Despachos Seleccionados");

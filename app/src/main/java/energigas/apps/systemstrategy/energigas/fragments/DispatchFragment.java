@@ -255,10 +255,12 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
             despacho.setLongitud(latAndLong.getLongitude() + "");
             pedidoDetalle.setCantidadAtendida(despacho.getCantidadDespachada());
             Toast.makeText(getActivity(), "NEXT", Toast.LENGTH_SHORT).show();
-            despacho.save();
+            Long estad  = despacho.save();
+            Toast.makeText(getActivity(), "ESTADO: "+estad, Toast.LENGTH_SHORT).show();
             Session.saveDespacho(getActivity(),despacho);
+            if (estad >0){
             startActivity(new Intent(getActivity(), PrintDispatch.class));
-            getActivity().finish();
+            getActivity().finish();}
         }
 
     }

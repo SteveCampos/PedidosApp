@@ -7,7 +7,7 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class CajaGasto {
+public class CajaGasto{
     private long cajGasId;
 
     private long cajMoId;

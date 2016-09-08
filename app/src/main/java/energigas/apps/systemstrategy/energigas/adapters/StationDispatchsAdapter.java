@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 import energigas.apps.systemstrategy.energigas.holders.StationDispatchsHolder;
@@ -27,7 +28,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
 
     private static final String TAG = StationDispatchsAdapter.class.getSimpleName();
     // Store a member variable for the list;
-    private List<OrderDispatch> stationDispatches;
+    private List<Despacho> stationDispatches;
     // Store the context for easy access
     private Context mContext;
 
@@ -35,10 +36,10 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     private OnStationDispatchClickListener listener;
 
     public interface OnStationDispatchClickListener{
-        void onStationDispatchClickListener(OrderDispatch orderDispatch, View view, int typeListener);
+        void onStationDispatchClickListener(Despacho orderDispatch, View view, int typeListener);
     }
 
-    public StationDispatchsAdapter(List<OrderDispatch> stationDispatches, Context mContext, OnStationDispatchClickListener listener) {
+    public StationDispatchsAdapter(List<Despacho> stationDispatches, Context mContext, OnStationDispatchClickListener listener) {
         this.stationDispatches = stationDispatches;
         this.mContext = mContext;
         this.listener = listener;
@@ -56,7 +57,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
 
     @Override
     public void onBindViewHolder(StationDispatchsHolder holder, int position) {
-        final OrderDispatch dispatch = stationDispatches.get(position);
+        final Despacho dispatch = stationDispatches.get(position);
 
 
         int number = position;
@@ -64,7 +65,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
 
         holder.dispatchTank.setText("Tanque " + (number));
         holder.dispatchProduct.setText("GLP");
-        holder.dispatchQuantity.setText(dispatch.getQuantityDisptach() + " Gal");
+        holder.dispatchQuantity.setText(dispatch.getCantidadDespachada() + " Gal");
 
         int colorAccent = ContextCompat.getColor(mContext, R.color.colorAccent);
         int colorWhite = ContextCompat.getColor(mContext, R.color.white);

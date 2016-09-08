@@ -41,6 +41,12 @@ public class StationOrderActivity extends AppCompatActivity {
         initViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ButterKnife.bind(this);
+        initViews();
+    }
 
     private void initViews() {
         setToolbar();

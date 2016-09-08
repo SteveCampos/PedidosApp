@@ -14,14 +14,45 @@ public class BEGeneral extends SugarRecord {
     private List<Concepto> itemsConceptos;
     private List<Estado> itemsEstados;
     private List<UbicacionGeoreferencia> itemUbigeos;
+    private List<Producto> itemsProductos;
+    private List<Unidad> itemsUnidades;
+    private List<ProductoUnidad> itemsProductoUnidad;
+
 
     public BEGeneral() {
     }
 
-    public BEGeneral(List<Concepto> itemsConceptos, List<Estado> itemsEstados, List<UbicacionGeoreferencia> itemUbigeos) {
+    public BEGeneral(List<Concepto> itemsConceptos, List<Estado> itemsEstados, List<UbicacionGeoreferencia> itemUbigeos, List<Producto> itemsProductos, List<Unidad> itemsUnidades, List<ProductoUnidad> itemsProductoUnidad) {
         this.itemsConceptos = itemsConceptos;
         this.itemsEstados = itemsEstados;
         this.itemUbigeos = itemUbigeos;
+        this.itemsProductos = itemsProductos;
+        this.itemsUnidades = itemsUnidades;
+        this.itemsProductoUnidad = itemsProductoUnidad;
+    }
+
+    public List<Producto> getItemsProductos() {
+        return itemsProductos;
+    }
+
+    public void setItemsProductos(List<Producto> itemsProductos) {
+        this.itemsProductos = itemsProductos;
+    }
+
+    public List<Unidad> getItemsUnidades() {
+        return itemsUnidades;
+    }
+
+    public void setItemsUnidades(List<Unidad> itemsUnidades) {
+        this.itemsUnidades = itemsUnidades;
+    }
+
+    public List<ProductoUnidad> getItemsProductoUnidad() {
+        return itemsProductoUnidad;
+    }
+
+    public void setItemsProductoUnidad(List<ProductoUnidad> itemsProductoUnidad) {
+        this.itemsProductoUnidad = itemsProductoUnidad;
     }
 
     public List<Concepto> getItemsConceptos() {

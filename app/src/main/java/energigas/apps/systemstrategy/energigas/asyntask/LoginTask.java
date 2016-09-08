@@ -163,6 +163,9 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         SugarRecord.saveInTx(objGeneral.getItemsConceptos());
         SugarRecord.saveInTx(objGeneral.getItemsEstados());
         SugarRecord.saveInTx(objGeneral.getItemUbigeos());
+        SugarRecord.saveInTx(objGeneral.getItemsProductos());
+        SugarRecord.saveInTx(objGeneral.getItemsUnidades());
+        SugarRecord.saveInTx(objGeneral.getItemsProductoUnidad());
 
         List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
 
