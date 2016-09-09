@@ -17,8 +17,10 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.StationDispatchsHolder;
 import energigas.apps.systemstrategy.energigas.holders.StationProductsHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by Steve on 3/08/2016.
@@ -58,13 +60,14 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     @Override
     public void onBindViewHolder(StationDispatchsHolder holder, int position) {
         final Despacho dispatch = stationDispatches.get(position);
-
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{dispatch.getProId()+""}).get(Constants.CURRENT);
+        Log.d(TAG,"produclist"+producto);
 
         int number = position;
         number++;
 
         holder.dispatchTank.setText("Tanque " + (number));
-        holder.dispatchProduct.setText("GLP");
+        holder.dispatchProduct.setText(producto.getNombre());
         holder.dispatchQuantity.setText(dispatch.getCantidadDespachada() + " Gal");
 
         int colorAccent = ContextCompat.getColor(mContext, R.color.colorAccent);

@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.OrderDetailHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by Steve on 10/08/2016.
@@ -42,6 +45,16 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailHolder> 
     @Override
     public void onBindViewHolder(OrderDetailHolder holder, int position) {
         final PedidoDetalle pedidoDetalle = list.get(position);
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{pedidoDetalle.getProductoId()+""}).get(Constants.CURRENT);
+        //PedidoDetalle pedidoDetalle1 = PedidoDetalle.find(PedidoDetalle.class," id_Detalle = ?", new String[]{pedidoDetalle.getIdDetalle()+""}).get(Constants.CURRENT);
+        Pedido pedido = Pedido.find(Pedido.class, " pe_Id = ?", new String[]{pedidoDetalle.getPeId()+""}).get(Constants.CURRENT);
+        Log.d(TAG,"sentence list:"+producto.getProId());
+
+        /* SIN IGV*/
+        holder.title.setText(producto.getNombre()+"");
+        holder.quantity.setText(pedidoDetalle.getCantidad()+" GALONES");
+        holder.cost.setText("S/."+pedidoDetalle.getPrecioUnitario()+"");
+        holder.precio.setText("CON IGV: S/."+pedido.getiGV()+"");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

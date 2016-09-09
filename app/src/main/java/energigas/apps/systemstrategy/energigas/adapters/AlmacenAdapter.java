@@ -47,6 +47,12 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
         holder.title.setText("Tanque " +  (++position));
+
+        holder.capacity.setText(almacen.getStockMinimo()+" - "+almacen.getCapacidadNeta());
+        holder.politica.setText(almacen.getPolitica()+" - "+almacen.getCapacidadReal());
+        holder.capacidadNeta.setText(almacen.getCapacidadNeta()+"");
+        holder.programado.setText(almacen.getNombre());
+
         int color = R.color.dark_grey;
        /* int resto = position % 3;
 

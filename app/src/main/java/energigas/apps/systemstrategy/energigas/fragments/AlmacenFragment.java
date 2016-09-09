@@ -24,6 +24,7 @@ import energigas.apps.systemstrategy.energigas.dialogs.AlertDialogFragment;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
@@ -31,6 +32,7 @@ import energigas.apps.systemstrategy.energigas.utils.Session;
  */
 public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmacenClickListener {
 
+    private static final String TAG = "AlmacenFragment";
     private List<Almacen> almacenList ;
     private RecyclerView recyclerView;
     private AlmacenAdapter adapter;
@@ -48,8 +50,11 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
         // Inflate the layout for this fragment
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
-        almacenList = Almacen.find(Almacen.class," establecimiento_Id = ?  ",new String[]{pedido.getEstablecimientoId()+""});
+       // pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
+        //almacenList = Almacen.find(Almacen.class," establecimiento_Id = ?  ",new String[]{pedido.getEstablecimientoId()+""});
+        almacenList = Almacen.findWithQuery(Almacen.class," select capacidad_neta,* from almacen inner join establecimiento\n" +
+                "where almacen.id=establecimiento.id ");
+        Log.d(TAG, "Sentence :"+almacenList.size());
         adapter = new AlmacenAdapter(almacenList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);

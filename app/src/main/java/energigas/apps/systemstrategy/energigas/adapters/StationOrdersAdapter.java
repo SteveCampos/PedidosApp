@@ -14,6 +14,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoPedidoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -55,11 +56,12 @@ public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPe
 
         Estado estados = Estado.find(Estado.class," id_Estado = ?",new String[]{pedido.getEstadoId()+""}).get(Constants.CURRENT);
         PedidoDetalle pedidoDetalle=PedidoDetalle.find(PedidoDetalle.class," pe_Id = ?",new String[]{pedido.getPeId()+""}).get(Constants.CURRENT);
-
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{pedidoDetalle.getProductoId()+""}).get(Constants.CURRENT);
         //  if(estados!=null) {
         holder.scope.setText(pedido.getScop()+"");
         holder.state.setText(estados.getDescripcion() + "");
         holder.quantity.setText(pedidoDetalle.getCantidad()+"");
+        holder.title.setText(producto.getDescripcion()+"");
         //long dateprogrameddate = Long.parseLong(pedido.getFechaEntregaProgramada()+"");
        // String data= pedido.getFechaEntregaProgramada();
        // Long lObj1 = new Long(data);
