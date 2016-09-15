@@ -119,7 +119,7 @@ public class DispatchActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     void dispatch() {
 
-        DialogGeneral.isConfirm(DispatchActivity.this, " ATENCION...!!!  ", " ¿ Esta seguro de generar despacho ?", new DialogGeneralListener() {
+        DialogGeneral.isConfirm(DispatchActivity.this, " ATENCIÓN", " ¿ Está seguro de generar despacho ?", new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
                mListener.onNextListener();

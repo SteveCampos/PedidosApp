@@ -15,6 +15,7 @@ import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.OrderDetailHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 10/08/2016.
@@ -53,8 +54,9 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailHolder> 
         /* SIN IGV*/
         holder.title.setText(producto.getNombre()+"");
         holder.quantity.setText(pedidoDetalle.getCantidad()+" GALONES");
-        holder.cost.setText("S/."+pedidoDetalle.getPrecioUnitario()+"");
-        holder.precio.setText("CON IGV: S/."+pedido.getiGV()+"");
+        holder.cost.setText("S/."+ Utils.formatDouble(pedidoDetalle.getPrecioUnitario())+"");
+        holder.precio.setText("TOTAL: S/."+Utils.formatDouble(pedido.getTotal())+"\n" +
+                "IGV: S/." + Utils.formatDouble(pedido.getiGV()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

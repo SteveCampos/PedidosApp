@@ -95,7 +95,6 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     private LocationVehiculeListener locationVehiculeListener;
     private Location latAndLong;
 
-
     public DispatchFragment() {
         // Required empty public constructor
     }
@@ -148,7 +147,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     private void saveDespacho() {
 
         String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(usuario.getUsuIUsuarioId()), new String[]{}).get(Constants.CURRENT).getNumero();
-        Toast.makeText(getActivity(), "numero para este  despacho" + numeroDespacho, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "numero para este  despacho" + numeroDespacho, Toast.LENGTH_SHORT).show();
 
         despacho = new Despacho(
                 Integer.parseInt(numeroDespacho),
@@ -248,11 +247,13 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     @Override
     public void onNextListener() {
 
-        if (latAndLong != null) {
+        //if (latAndLong != null) {
 
             /**Guardar los datos  de posicion gps**/
-            despacho.setLatitud(latAndLong.getLatitude() + "");
-            despacho.setLongitud(latAndLong.getLongitude() + "");
+            despacho.setLatitud("77.56");
+            //despacho.setLatitud(latAndLong.getLatitude() + "");
+            despacho.setLongitud("67.85");
+            //despacho.setLongitud(latAndLong.getLongitude() + "");
             pedidoDetalle.setCantidadAtendida(despacho.getCantidadDespachada());
             Toast.makeText(getActivity(), "NEXT", Toast.LENGTH_SHORT).show();
             Long estad  = despacho.save();
@@ -261,7 +262,9 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
             if (estad >0){
             startActivity(new Intent(getActivity(), PrintDispatch.class));
             getActivity().finish();}
-        }
+        /*}else{
+            Toast.makeText(getActivity(), "Activar GPS, y volver a intentar.", Toast.LENGTH_SHORT).show();
+        }*/
 
     }
 

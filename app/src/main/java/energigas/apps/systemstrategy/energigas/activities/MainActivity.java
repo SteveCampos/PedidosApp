@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity
     Agent agent;
     private Usuario usuario;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity
         initViews();
     }
 
-
     private void hideFloatingButton() {
 
         List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class, " fecha_Inicio=? ", new String[]{Utils.getDatePhone()});
@@ -83,10 +81,10 @@ public class MainActivity extends AppCompatActivity
         } else {
             CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId() + "").show(getSupportFragmentManager(), "");
         }
+
     }
 
     private void showDialogAccount() {
-
         new AccountDialog()
                 .setUser(usuario)
                 .setFloating(fab)
@@ -109,7 +107,6 @@ public class MainActivity extends AppCompatActivity
             supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
-
         //
         viewPager.addOnPageChangeListener(this);
 
@@ -174,9 +171,7 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-
         if (id == R.id.action_settings) {
             return true;
         } else if (id == android.R.id.home) {
