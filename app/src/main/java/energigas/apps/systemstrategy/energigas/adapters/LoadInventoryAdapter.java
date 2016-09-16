@@ -22,7 +22,7 @@ import energigas.apps.systemstrategy.energigas.holders.LoadInvetoryHolder;
 public class LoadInventoryAdapter extends RecyclerView.Adapter<LoadInvetoryHolder> {
     List<Inventory> inventories;
     Context context;
-    LoadInvetoryHolder invetoryHolder;
+
 
     public LoadInventoryAdapter(List<Inventory> inventories, Context context) {
         this.inventories = inventories;

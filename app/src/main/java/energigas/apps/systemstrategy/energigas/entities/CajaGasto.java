@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class CajaGasto{
+
     private long cajGasId;
 
     private long cajMoId;

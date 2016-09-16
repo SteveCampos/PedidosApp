@@ -1,10 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class PlanPago {
+public class PlanPago extends SugarRecord {
+    @Unique
     private long planPaId;
 
     private long compId;
@@ -13,7 +17,7 @@ public class PlanPago {
 
     private String serie;
 
-    private int numDoc;
+    private String numDoc;
 
     private String glosa;
 
@@ -28,7 +32,7 @@ public class PlanPago {
     public PlanPago() {
     }
 
-    public PlanPago(long planPaId, long compId, String fechaPago, String serie, int numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion) {
+    public PlanPago(long planPaId, long compId, String fechaPago, String serie, String numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion) {
         this.planPaId = planPaId;
         this.compId = compId;
         this.fechaPago = fechaPago;
@@ -73,11 +77,11 @@ public class PlanPago {
         this.serie = serie;
     }
 
-    public int getNumDoc() {
+    public String getNumDoc() {
         return numDoc;
     }
 
-    public void setNumDoc(int numDoc) {
+    public void setNumDoc(String numDoc) {
         this.numDoc = numDoc;
     }
 

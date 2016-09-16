@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
+import energigas.apps.systemstrategy.energigas.activities.SellActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
@@ -106,13 +108,13 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         switch (type){
             case 0:
                 if (mActionMode != null)
-                    onListItemSelect(position);
+                    onListItemSelect(position,orderDispatch);
                 else
                     Log.d(TAG, "ON CLICK LISTENER");
                     //startActivity(new Intent(getActivity(), DispatchActivity.class));
                 break;
             case 1:
-                onListItemSelect(position);
+                onListItemSelect(position,orderDispatch);
                 break;
         }
     }
@@ -137,8 +139,8 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }*/
 
     //List item select method
-    private void onListItemSelect(int position) {
-        adapter.toggleSelection(position);//Toggle the selection
+    private void onListItemSelect(int position,Despacho despacho) {
+        adapter.toggleSelection(position,despacho);//Toggle the selection
         setActionMode(adapter.getSelectedCount());
     }
 
@@ -194,7 +196,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         switch (item.getItemId()) {
             case R.id.print:
                 createAndShowAlertDialog();
-                onDestroyActionMode(mActionMode);
+
                 return true;
             default:
                 return false;
@@ -217,12 +219,16 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Generar Vista Previa Factura");
-        builder.setMessage(adapter.getSelectedCount() + " Despachos Seleccionados");
+        builder.setMessage(adapter.getStationDispatchesSelected().size() + " Despachos Seleccionados");
+
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //TODO
+                List<String> strings = adapter.getIdsDispatchesSelected();
                 dialog.dismiss();
-                print();
+                iniciarVenta(strings);
+                onDestroyActionMode(mActionMode);
+               // print();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -233,6 +239,10 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+    private void iniciarVenta(List<String> strings ){
+        Session.saveIdsDespachos(strings,getActivity());
+        startActivity(new Intent(getActivity(), SellActivity.class));
     }
 
 

@@ -1,5 +1,8 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +10,13 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class ComprobanteVenta {
+public class ComprobanteVenta extends SugarRecord {
+    @Unique
     private long compId;
 
     private String serie;
 
-    private int numDoc;
+    private String numDoc;
 
     private int formaPagoId;
 
@@ -56,8 +60,7 @@ public class ComprobanteVenta {
 
     private String fechaActualizacion;
 
-   private int  porImpuesto;
-
+    private int porImpuesto;
 
     private static List<ComprobanteVenta> list;
 
@@ -65,7 +68,7 @@ public class ComprobanteVenta {
     public ComprobanteVenta() {
     }
 
-    public ComprobanteVenta(long compId, String serie, int numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, int porImpuesto) {
+    public ComprobanteVenta(long compId, String serie, String numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, int porImpuesto) {
         this.compId = compId;
         this.serie = serie;
         this.numDoc = numDoc;
@@ -109,11 +112,11 @@ public class ComprobanteVenta {
         this.serie = serie;
     }
 
-    public int getNumDoc() {
+    public String getNumDoc() {
         return numDoc;
     }
 
-    public void setNumDoc(int numDoc) {
+    public void setNumDoc(String numDoc) {
         this.numDoc = numDoc;
     }
 

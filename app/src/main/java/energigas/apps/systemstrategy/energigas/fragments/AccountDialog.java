@@ -22,12 +22,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * Created by kelvi on 8/08/2016.
@@ -148,17 +150,12 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
 
     @Override
-    public void onLoadSuccess(String message) {
+    public void onLoadSuccess(String message, CajaLiquidacion cajaLiquidacion) {
         Log.d("LOADSUCCESS", "kelvin: " + message);
         dismiss();
         locationVehiculeListener.stopLocationUpdates();
-
-        List<PlanDistribucion> planDistribucions = PlanDistribucion.listAll(PlanDistribucion.class);
-        Log.d(TAG, "kelvin: " + planDistribucions.size());
-        for (PlanDistribucion item : planDistribucions) {
-            Log.d(TAG, item.getFechaInicio());
-        }
         setMessage(message);
+        Session.saveCajaLiquidacion(getActivity(),cajaLiquidacion);
         fab.hide();
     }
 

@@ -22,6 +22,10 @@ public class Constants {
     public static final int CURRENT =0;
 
 
+    /**Nombres Caja Liquidacion**/
+
+    public static final String CAJA_LIQUIDACION="CAJA_LIQUIDACION";
+    public static final String CAJA_LIQUIDACION_ID="CAJA_LIQUIDACION_ID";
     /**Nombres de la Session**/
 
 
@@ -59,10 +63,38 @@ public class Constants {
     public static  final int TIPO_ID_DEVICE_CELULAR = 3;
 
     public static  final int TIPO_ID_COMPROBANTE_DESPACHO = 118;
-    public static  final int TIPO_ID_COMPROBANTE_FACTURA = 52;
+    public static  final int TIPO_ID_COMPROBANTE_FACTURA = 51;
+    public static  final int TIPO_ID_COMPROBANTE_BOLETA = 52;
     public static  final int TIPO_ID_COMPROBANTE_GUIA = 76;
     public static  final int TIPO_ID_COMPROBANTE_NOTA_CREDITO = 96;
 
 
+    /** PARA LISTAR OBJETOS**/
+    public static final String CONCEPTO_TIPO_COMPROBANTE_VENTA = "Comprobante";
+    public static final String CONCEPTO_FORMA_PAGO = "Forma Pago";
+    public static final String CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA = "Comprobante Venta";
+    public static final String CONCEPTO_TIPO_PAGO = "Tipo Pago";
+    public static final String CONCEPTO_CAJA_PAGO = "Caja Pago";
+
+
+    /**Guardar los IDS de los despachos seleccionados**/
+
+    public static final String DESPACHOS_IDS = "DESPACHOS_IDS";
+    public static final String DESPACHOS_IDS_ITEMS = "DESPACHOS_IDS_ITEMS";
+
+    /** Items Forma de pago**/
+    public static final String FORMA_PAGO_CONTADO = "Contado";
+    public static final String FORMA_PAGO_CREDITO = "Crédito";
+
+
+    public static final int COMPROBANTE_CREADO = 20;
+
+    public static final boolean COMPROBANTE_NO_ANULADO = false;
+    public static final boolean COMPROBANTE_ANULADO = true;
+
+    public static final int TIPO_VENTA_NORMAL = 90;
+
+    public static final boolean NO_EXPORTADO = false;
+    public static final boolean EXPORTADO = true;
 
 }

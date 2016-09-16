@@ -40,10 +40,10 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        recyclerView= (RecyclerView) inflater.inflate(
+        recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         pedido = Session.getPedido(getActivity());
-       list  = PedidoDetalle.find(PedidoDetalle.class," pe_Id = ? ",new String[]{pedido.getPeId()+""});
+        list = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{pedido.getPeId() + ""});
         adapter = new OrderDetailAdapter(list, getActivity());
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);

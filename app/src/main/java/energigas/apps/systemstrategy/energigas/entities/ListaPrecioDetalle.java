@@ -1,11 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class ListaPrecioDetalle {
-
+public class ListaPrecioDetalle extends SugarRecord{
+    @Unique
     private long lpdId;
 
     private int lpId;
