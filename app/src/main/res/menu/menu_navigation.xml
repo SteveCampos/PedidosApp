@@ -21,6 +21,11 @@
             android:icon="@drawable/ic_hand_cash"
             android:tint="@color/colorAccent"
             android:title="@string/collect_title_inventory" />
+        <item
+            android:id="@+id/nav_bluetooth"
+            android:icon="@drawable/ic_bluetooth_black_24dp"
+            android:tint="@color/colorAccent"
+            android:title="@string/bluetooth_title_name" />
 
 
     </group>
@@ -38,6 +43,7 @@
                 android:icon="@drawable/ic_close_white_24dp"
                 android:tint="@color/colorAccent"
                 android:title="@string/action_close_account" />
+
         </menu>
     </item>
     <item android:title="@string/title_activity_settings">

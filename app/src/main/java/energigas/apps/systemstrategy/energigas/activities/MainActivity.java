@@ -224,6 +224,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.nav_bluetooth:
+                startActivity(new Intent(this, BluetoothActivity.class));
+                break;
         }
         return true;
     }

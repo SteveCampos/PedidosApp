@@ -53,6 +53,7 @@
     <string name="expenses_title_name">Gastos</string>
     <string name="collect_title_name">Cobranzas</string>
     <string name="collect_title_inventory">Cargar Inventario</string>
+    <string name="bluetooth_title_name">Configurar Bluetooth</string>
     <string name="summary_title_name">Resumen</string>
 
 
