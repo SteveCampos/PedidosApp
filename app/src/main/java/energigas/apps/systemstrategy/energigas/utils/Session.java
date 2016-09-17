@@ -2,8 +2,14 @@ package energigas.apps.systemstrategy.energigas.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
@@ -16,12 +22,36 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
 
 public class Session {
 
+    public static boolean saveIdsDespachos(List<String> despachos, Context context) {
+
+        try {
+
+            Set<String> set = new HashSet<>();
+            set.addAll(despachos);
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.DESPACHOS_IDS, Context.MODE_PRIVATE).edit();
+            editor.putStringSet(Constants.DESPACHOS_IDS_ITEMS, set);
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+    public static String[] getIdsDespachos(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.DESPACHOS_IDS, Context.MODE_PRIVATE);
+        Set<String> set = prefs.getStringSet(Constants.DESPACHOS_IDS_ITEMS, null);
+        return set.toArray(new String[set.size()]) ;
+    }
+
     public static boolean saveDespacho(Context context, Despacho despacho) {
 
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_DESPACHO, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.IDDESPACHO,despacho.getDespachoId());
+            editor.putLong(Constants.IDDESPACHO, despacho.getDespachoId());
             editor.commit();
             return true;
 
@@ -43,13 +73,12 @@ public class Session {
     }
 
 
-
     public static boolean saveAlmacen(Context context, Almacen almacen) {
 
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_ALMACEN, Context.MODE_PRIVATE).edit();
-            editor.putInt(Constants.IDALMACEN,almacen.getAlmId());
+            editor.putInt(Constants.IDALMACEN, almacen.getAlmId());
             editor.commit();
             return true;
 
@@ -76,7 +105,7 @@ public class Session {
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.IDPEDIDO,pedido.getPeId());
+            editor.putLong(Constants.IDPEDIDO, pedido.getPeId());
             editor.commit();
             return true;
 
@@ -86,8 +115,6 @@ public class Session {
 
 
     }
-
-
 
 
     public static Pedido getPedido(Context context) {
@@ -105,7 +132,7 @@ public class Session {
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_ESTABLECIMIENTO, Context.MODE_PRIVATE).edit();
-            editor.putInt(Constants.IDESTABLECIMIENTO,establecimiento.getEstIEstablecimientoId());
+            editor.putInt(Constants.IDESTABLECIMIENTO, establecimiento.getEstIEstablecimientoId());
             editor.putString(Constants.ESTABLECIMIENTO, establecimiento.getEstVDescripcion());
             editor.commit();
             return true;
@@ -127,7 +154,6 @@ public class Session {
         return establecimiento;
 
     }
-
 
 
     public static boolean saveSession(Context context, Usuario usuario) {
@@ -163,5 +189,25 @@ public class Session {
         usuario.setPersona(persona);
         return usuario;
 
+    }
+
+    public static boolean saveCajaLiquidacion (Context context,CajaLiquidacion cajaLiquidacion){
+        try {
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE).edit();
+            editor.putLong(Constants.CAJA_LIQUIDACION_ID,cajaLiquidacion.getLiqId());
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public static CajaLiquidacion getCajaLiquidacion (Context context){
+
+        SharedPreferences prefs = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE);
+        CajaLiquidacion cajaLiquidacion =  new CajaLiquidacion();
+        cajaLiquidacion.setLiqId(prefs.getLong(Constants.CAJA_LIQUIDACION_ID,0));
+        return cajaLiquidacion;
     }
 }

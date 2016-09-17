@@ -44,12 +44,13 @@ public class PedidoDetalle extends SugarRecord {
 
     private String golpe;
 
+   private int almId;
+
     public PedidoDetalle() {
     }
 
 
-
-    public PedidoDetalle(String idDetalle, int pdId, long peId, int productoId, double cantidad, double cantidadAtendida, double importe, int usuarioId, String fechaAccion, double precioUnitario, double costoVenta, int unidadId, int estadoAtencionId, double precio, String golpe) {
+    public PedidoDetalle(String idDetalle, int pdId, long peId, int productoId, double cantidad, double cantidadAtendida, double importe, int usuarioId, String fechaAccion, double precioUnitario, double costoVenta, int unidadId, int estadoAtencionId, double precio, String golpe, int almId) {
         this.idDetalle = idDetalle;
         this.pdId = pdId;
         this.peId = peId;
@@ -65,6 +66,15 @@ public class PedidoDetalle extends SugarRecord {
         this.estadoAtencionId = estadoAtencionId;
         this.precio = precio;
         this.golpe = golpe;
+        this.almId = almId;
+    }
+
+    public int getAlmId() {
+        return almId;
+    }
+
+    public void setAlmId(int almId) {
+        this.almId = almId;
     }
 
     public String getIdDetalle() {

@@ -5,27 +5,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orm.SugarRecord;
 import com.orm.SugarTransactionHelper;
 
 import org.json.JSONObject;
 
-import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
-import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
-import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Cliente;
-import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
-import energigas.apps.systemstrategy.energigas.entities.Pedido;
-import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Persona;
-import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
-import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -102,7 +89,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                 onAsyntaskListener.onLoadError(message);
                 break;
             case Constants.OPERACION_EXITOSA:
-                onAsyntaskListener.onLoadSuccess(message);
+                onAsyntaskListener.onLoadSuccess(message,cajaLiquidacion);
                 break;
             default:
                 onAsyntaskListener.onLoadError(message);
@@ -121,8 +108,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     }
 
     @Override
-    public void
-    errorInTransaction(String error) {
+    public void errorInTransaction(String error) {
         this.message = error;
         estado = Constants.ERROR_GUARDAR;
         Log.d(TAG, "CORRECTAMENTE");

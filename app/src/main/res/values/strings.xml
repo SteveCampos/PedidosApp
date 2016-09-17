@@ -304,6 +304,7 @@
     <!-- ###### Charges Account  -->
     <string name="charges_account">22/08/16</string>
     <string name="activity_charges_account">Cobranza</string>
+    <string name="activity_charges_fac">Facturas</string>
     <!-- #### -->
 
     <string name="print_distpach_empresa">
@@ -438,4 +439,5 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_station_order">StationOrderActivity</string>
     <string name="title_activity_configuration">Configuration</string>
+    <string name="title_activity_sell">SellActivity</string>
 </resources>

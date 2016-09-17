@@ -10,7 +10,7 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Despacho extends SugarRecord{
+public class Despacho extends SugarRecord {
 
     @Unique
     private long despachoId;
@@ -69,10 +69,19 @@ public class Despacho extends SugarRecord{
 
     private String guiaRemision;
 
+    private double precioUnitarioSIGV;
+    private double precioUNitarioCIGV;
+    private double porImpuesto;
+    private double costoVenta;
+    private double importe;
+
+    private long compId;
+
+
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision, double precioUnitarioSIGV, double precioUNitarioCIGV, double porImpuesto, double costoVenta, double importe, long compId) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -101,6 +110,60 @@ public class Despacho extends SugarRecord{
         this.estadoId = estadoId;
         this.vehiculoId = vehiculoId;
         this.guiaRemision = guiaRemision;
+        this.precioUnitarioSIGV = precioUnitarioSIGV;
+        this.precioUNitarioCIGV = precioUNitarioCIGV;
+        this.porImpuesto = porImpuesto;
+        this.costoVenta = costoVenta;
+        this.importe = importe;
+        this.compId = compId;
+    }
+
+    public double getPrecioUnitarioSIGV() {
+        return precioUnitarioSIGV;
+    }
+
+    public void setPrecioUnitarioSIGV(double precioUnitarioSIGV) {
+        this.precioUnitarioSIGV = precioUnitarioSIGV;
+    }
+
+    public double getPrecioUNitarioCIGV() {
+        return precioUNitarioCIGV;
+    }
+
+    public void setPrecioUNitarioCIGV(double precioUNitarioCIGV) {
+        this.precioUNitarioCIGV = precioUNitarioCIGV;
+    }
+
+    public double getPorImpuesto() {
+        return porImpuesto;
+    }
+
+    public void setPorImpuesto(double porImpuesto) {
+        this.porImpuesto = porImpuesto;
+    }
+
+    public double getImporte() {
+        return importe;
+    }
+
+    public void setImporte(double importe) {
+        this.importe = importe;
+    }
+
+    public double getCostoVenta() {
+        return costoVenta;
+    }
+
+    public void setCostoVenta(double costoVenta) {
+        this.costoVenta = costoVenta;
+    }
+
+    public long getCompId() {
+        return compId;
+    }
+
+    public void setCompId(long compId) {
+        this.compId = compId;
     }
 
     public String getGuiaRemision() {

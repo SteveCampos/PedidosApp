@@ -97,7 +97,7 @@ public class MainStationActivity extends AppCompatActivity
        // tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
         tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
         tabsAdapter.addFragment(new CajaPagoFragment(), getString(R.string.activity_charges_account));
-        tabsAdapter.addFragment(new ComprobanteVentaFragment(), "Facturas");
+        tabsAdapter.addFragment(new ComprobanteVentaFragment(), getString(R.string.activity_charges_fac));
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
     }

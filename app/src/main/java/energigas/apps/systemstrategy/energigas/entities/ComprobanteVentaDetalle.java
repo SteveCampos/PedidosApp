@@ -1,19 +1,24 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class ComprobanteVentaDetalle {
-    private long compId;
+public class ComprobanteVentaDetalle extends SugarRecord{
 
+    @Unique
     private int compdId;
+
+    private long compId;
 
     private int proId;
 
     private int unidadId;
 
-    private int cantidad;
+    private double cantidad;
 
     private double precio;
 
@@ -26,13 +31,14 @@ public class ComprobanteVentaDetalle {
     private int usuarioActualizacion;
 
     private String fechaActualizacion;
+    private Long despachoId;
 
     public ComprobanteVentaDetalle() {
     }
 
-    public ComprobanteVentaDetalle(long compId, int compdId, int proId, int unidadId, int cantidad, double precio, double precioUnitario, double costoVenta, double importe, int usuarioActualizacion, String fechaActualizacion) {
-        this.compId = compId;
+    public ComprobanteVentaDetalle(int compdId, long compId, int proId, int unidadId, double cantidad, double precio, double precioUnitario, double costoVenta, double importe, int usuarioActualizacion, String fechaActualizacion, Long despachoId) {
         this.compdId = compdId;
+        this.compId = compId;
         this.proId = proId;
         this.unidadId = unidadId;
         this.cantidad = cantidad;
@@ -42,6 +48,15 @@ public class ComprobanteVentaDetalle {
         this.importe = importe;
         this.usuarioActualizacion = usuarioActualizacion;
         this.fechaActualizacion = fechaActualizacion;
+        this.despachoId = despachoId;
+    }
+
+    public Long getDespachoId() {
+        return despachoId;
+    }
+
+    public void setDespachoId(Long despachoId) {
+        this.despachoId = despachoId;
     }
 
     public long getCompId() {
@@ -76,11 +91,11 @@ public class ComprobanteVentaDetalle {
         this.unidadId = unidadId;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

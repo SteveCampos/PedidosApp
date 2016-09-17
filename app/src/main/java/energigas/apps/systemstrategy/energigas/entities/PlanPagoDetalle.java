@@ -1,14 +1,19 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class PlanPagoDetalle {
+public class PlanPagoDetalle extends SugarRecord {
+
+
+    @Unique
+    private int planPaDeId;
 
     private long planPaId;
-
-    private int planPaDeId;
 
     private String fecha;
 

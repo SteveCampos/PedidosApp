@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.MainActivity;
 import energigas.apps.systemstrategy.energigas.asyntask.LoginTask;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
@@ -95,8 +96,8 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     }
 
     @Override
-    public void onSuccess() {
-
+    public void onSuccess(CajaLiquidacion cajaLiquidacion) {
+        Session.saveCajaLiquidacion(getActivity(),cajaLiquidacion);
         initMain();
     }
 

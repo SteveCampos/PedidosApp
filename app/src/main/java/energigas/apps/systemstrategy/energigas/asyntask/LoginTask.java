@@ -124,7 +124,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
                 break;
             case 5://Ejecuto correctamente
                 Session.saveSession(context, objUsuario);
-                aListener.onSuccess();
+                aListener.onSuccess(cajaLiquidacion);
                 break;
         }
     }

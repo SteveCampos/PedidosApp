@@ -11,15 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
-import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
-import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.StationDispatchsHolder;
-import energigas.apps.systemstrategy.energigas.holders.StationProductsHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
@@ -36,8 +34,9 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
 
     private SparseBooleanArray mSelectedItemsIds;
     private OnStationDispatchClickListener listener;
+    private HashMap<Long, Despacho> longDespachoHashMap;
 
-    public interface OnStationDispatchClickListener{
+    public interface OnStationDispatchClickListener {
         void onStationDispatchClickListener(Despacho orderDispatch, View view, int typeListener);
     }
 
@@ -46,6 +45,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         this.mContext = mContext;
         this.listener = listener;
         mSelectedItemsIds = new SparseBooleanArray();
+        longDespachoHashMap = new HashMap<>();
     }
 
     @Override
@@ -60,8 +60,8 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     @Override
     public void onBindViewHolder(StationDispatchsHolder holder, int position) {
         final Despacho dispatch = stationDispatches.get(position);
-        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{dispatch.getProId()+""}).get(Constants.CURRENT);
-        Log.d(TAG,"produclist"+producto);
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{dispatch.getProId() + ""}).get(Constants.CURRENT);
+        Log.d(TAG, "produclist" + producto);
 
         int number = position;
         number++;
@@ -79,10 +79,10 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         holder.dispatchQuantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
 
 
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 listener.onStationDispatchClickListener(dispatch, view, 0);
             }
         });
@@ -95,6 +95,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         });
     }
 
+
     @Override
     public int getItemCount() {
         return stationDispatches.size();
@@ -106,8 +107,8 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
      */
 
     //Toggle selection methods
-    public void toggleSelection(int position) {
-        selectView(position, !mSelectedItemsIds.get(position));
+    public void toggleSelection(int position, Despacho despacho) {
+        selectView(position, !mSelectedItemsIds.get(position), despacho);
     }
 
 
@@ -120,18 +121,35 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
             toggleSelection(position);
         }*/
         mSelectedItemsIds = new SparseBooleanArray();
+        longDespachoHashMap = new HashMap<>();
         notifyDataSetChanged();
     }
 
 
     //Put or delete selected position into SparseBooleanArray
-    private void selectView(int position, boolean value) {
-        if (value)
+    private void selectView(int position, boolean value, Despacho despacho) {
+        if (value) {
             mSelectedItemsIds.put(position, true);
-        else
+            longDespachoHashMap.put(despacho.getDespachoId(), despacho);
+
+        } else {
             mSelectedItemsIds.delete(position);
+            longDespachoHashMap.remove(despacho.getDespachoId());
+        }
 
         notifyItemChanged(position);
+    }
+
+    public List<Despacho> getStationDispatchesSelected() {
+        return new ArrayList<Despacho>(longDespachoHashMap.values());
+    }
+
+    public List<String> getIdsDispatchesSelected() {
+        List<String> result = new ArrayList<>();
+        for (Despacho despacho : getStationDispatchesSelected()) {
+            result.add(despacho.getDespachoId()+"");
+        }
+        return result;
     }
 
     //Get total selected count
