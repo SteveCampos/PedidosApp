@@ -44,10 +44,11 @@ public class BluetoothDeviceAdapter extends RecyclerView.Adapter<BluetoothDevice
 
         holder.name.setText(device.getName());
         holder.adress.setText(device.getAddress());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 listener.onDeviceClickListener(device);
+                return true;
             }
         });
 
