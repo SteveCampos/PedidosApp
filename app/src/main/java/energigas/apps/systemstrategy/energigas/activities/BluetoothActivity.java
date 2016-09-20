@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,8 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
 
     BluetoothSPP bt;
 
+    boolean DEVICE_ANDROID = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,10 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
         toolbar.setTitle("Despacho Comandos");
+        setupBluetoothSPP();
+    }
+
+    private void setupBluetoothSPP(){
 
         bt = new BluetoothSPP(getActivity());
         if(!bt.isBluetoothAvailable()) {
@@ -91,26 +98,28 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
             public void onDataReceived(byte[] data, String message) {
                 // Do something when data incoming
                 Log.d(TAG, "data: "+ new String(data) + ", message: " + message);
-                textReaded.append("\nRECIBIDO: " + new String(data, Charsets.US_ASCII));
+                textReaded.append("\n " + new String(data, Charsets.US_ASCII));
+                scrollText();
+
             }
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-
-                textDevice.setText("DEVICE: " + name);
-                textAdress.setText("ADRESS: " + address);
+                initText(name, address);
             }
 
             @Override
             public void onDeviceDisconnected() {
-                Toast.makeText(getActivity(), "onDeviceDisconnected", Toast.LENGTH_LONG).show();
+                initText(null, null);
+                Toast.makeText(getActivity(), "DESCONECTADO.", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onDeviceConnectionFailed() {
-                Toast.makeText(getActivity(), "onDeviceConnectionFailed", Toast.LENGTH_LONG).show();
+                initText(null, null);
+                Toast.makeText(getActivity(), "FALLÓ LA CONEXIÓN. ASEGURESE QUE EL BLUETOOTH ESTÉ ENCENDIDO.", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -121,12 +130,23 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
         } else {
 
             bt.setupService();
-            bt.startService(BluetoothState.DEVICE_ANDROID);
+            bt.startService(DEVICE_ANDROID);
 
             initViews();
             //startConnect();
             // Do something if bluetooth is already enable
         }
+    }
+
+    public void initText(String device, String adress){
+        textDevice.setText("DEVICE: " + device);
+        textAdress.setText("ADRESS: " + adress);
+        textReaded.setText("LOG: \n");
+    }
+
+    private void setDeviceAndroid(boolean isAndroid){
+        DEVICE_ANDROID = isAndroid;
+        bt.setDeviceTarget(DEVICE_ANDROID);
     }
 
     @Override
@@ -138,23 +158,33 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String comando = "*#UD";
+
+        String comando = "#UD";
         switch (item.getItemId()) {
             case R.id.action_programar:
                 // User chose the "Settings" item, show the app settings UI...
-                comando = "*#PP99999.0*";
+                comando = "#PP00010.0";
                 break;
             case R.id.action_iniciar:
                 // User chose the "Settings" item, show the app settings UI...
-                comando = "*#ID*";
+                comando = "#ID";
                 break;
             case R.id.action_terminar:
-                comando = "*#TD*";
+                comando = "#TD";
                 // User chose the "Settings" item, show the app settings UI...
                 break;
             case R.id.action_get_last:
-                comando = "*#UD*";
+                comando = "#UD";
                 // User chose the "Settings" item, show the app settings UI...
+                break;
+            case R.id.action_target_android:
+
+                setDeviceAndroid(true);
+                Snackbar.make(toolbar, "Modo Android Seleccionado.", Snackbar.LENGTH_LONG).show();
+                break;
+            case R.id.action_target_other:
+                setDeviceAndroid(false);
+                Snackbar.make(toolbar, "Modo Serial Port Profile Seleccionado. Para Microcontroladores.", Snackbar.LENGTH_LONG).show();
                 break;
             default:
                 // If we got here, the user's action was not recognized.
@@ -162,18 +192,24 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
                 break;
         }
         eTCommands.setText(comando);
+        scrollText();
         return true;
     }
 
     private void initViews() {
-      textReaded.setMovementMethod(new ScrollingMovementMethod());
-
-        textDevice.setText("DEVICE: " + bt.getConnectedDeviceName());
-        textAdress.setText("ADRESS: " + bt.getConnectedDeviceAddress());
-
+        textReaded.setMovementMethod(new ScrollingMovementMethod());
+        initText(bt.getConnectedDeviceName(), bt.getConnectedDeviceAddress());
     }
 
 
+    private void scrollText(){
+        final int scrollAmount = textReaded.getLayout().getLineTop(textReaded.getLineCount()) - textReaded.getHeight();
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0)
+            textReaded.scrollTo(0, scrollAmount);
+        else
+            textReaded.scrollTo(0, 0);
+    }
     /*
     private void setRecycler() {
         bluetoothDeviceAdapter = new BluetoothDeviceAdapter(this);
@@ -182,16 +218,40 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
     }*/
 
     @OnClick(R.id.buttonScan)
-    public void fabClicked(){
+    public void buttonScan(){
         startConnect();
     }
 
-    @OnClick(R.id.buttonSend)
-    public void onClick(){
 
-        bt.send(eTCommands.getText().toString().getBytes(Charsets.US_ASCII), true);
+
+
+
+    @OnClick(R.id.buttonSend)
+    public void buttonSend(){
+
+
+        char STX = (char) 2;
+        char ETX = (char) 3;
+        String comando = eTCommands.getText().toString();
+
+
+        if (TextUtils.isEmpty(bt.getConnectedDeviceAddress())){
+            initText(null, null);
+            Snackbar.make(toolbar, "Seleccionar Dispositivo", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(comando)){
+            Snackbar.make(toolbar, "Introducir comando", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        byte[] bytes  = (STX + comando + ETX).getBytes(Charsets.US_ASCII);
+
+        bt.send(bytes, true);
         eTCommands.setText("");
-        textReaded.append("\nENVIADO: " + eTCommands.getText().toString());
+        textReaded.append("\n> " + comando);
         /*
         if (mBluetoothAdapter!=null && mBluetoothAdapter.isEnabled()){
             if (!mBluetoothAdapter.isDiscovering()){
@@ -253,7 +313,7 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
                         Toast.makeText(this, "RESULT_OK", Toast.LENGTH_SHORT).show();
 
                         bt.setupService();
-                        bt.startService(BluetoothState.DEVICE_ANDROID);
+                        bt.startService(DEVICE_ANDROID);
                         initViews();
 
 
@@ -262,19 +322,29 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
                     }
                 break;
             case BluetoothState.REQUEST_CONNECT_DEVICE:
+
+
                 if(resultCode == Activity.RESULT_OK)
-                    Toast.makeText(getActivity(), "SELECTED: " + data.getStringExtra(BluetoothState.EXTRA_DEVICE_ADDRESS), Toast.LENGTH_LONG).show();
 
-                if (bt==null){
-                    Toast.makeText(getActivity(), "bt==null", Toast.LENGTH_LONG).show();
-                }
+                    if (data != null) {
+
+                        Snackbar.make(toolbar, "DISPOSITIVO: "  +data.getStringExtra(BluetoothState.EXTRA_DEVICE_ADDRESS) , Snackbar.LENGTH_LONG).show();
+
+                        if (bt==null){
+                            Toast.makeText(getActivity(), "bt==null", Toast.LENGTH_LONG).show();
+                        }
 
 
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_ANDROID);
+                        /*
+                        bt.setupService();
+                        bt.startService(BluetoothState.DEVICE_ANDROID);*/
 
-                initViews();
-                    bt.connect(data);
+                        initViews();
+                        bt.connect(data);
+                    }else{
+
+                        Snackbar.make(toolbar, "No selecciono ningún dispositivo", Snackbar.LENGTH_LONG).show();
+                    }
 
                 break;
             /*

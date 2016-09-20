@@ -22,4 +22,17 @@
         android:title="OBTENER ÚLTIMO"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_target_android"
+        android:orderInCategory="100"
+        android:title="MODO ANDROID"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_target_other"
+        android:orderInCategory="100"
+        android:title="MODO SPP"
+        app:showAsAction="never" />
+
+
 </menu>
