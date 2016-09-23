@@ -1,10 +1,13 @@
 package energigas.apps.systemstrategy.energigas.threads;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 
 /**
  * Created by Steve on 16/09/2016.
@@ -43,6 +46,7 @@ public class BTConnectedThread extends Thread {
                 bytes = mmInStream.read(buffer);
                 // Send the obtained bytes to the UI activity
                 //mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                //listener.onRead(buffer);
                 //        .sendToTarget();
             } catch (IOException e) {
                 break;

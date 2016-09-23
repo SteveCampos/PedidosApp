@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -90,9 +91,15 @@ public class FragmentStationInformation extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttachFragment(Fragment childFragment) {
+        Log.d(TAG, "onAttachFragment");
+        super.onAttachFragment(childFragment);
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -103,6 +110,7 @@ public class FragmentStationInformation extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
         ButterKnife.bind(this, view);
@@ -114,6 +122,58 @@ public class FragmentStationInformation extends Fragment {
         Log.d(TAG,"OBJECT CLIENTE"+cliente);
         senddata();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    //fragment is active
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach");
+        super.onDetach();
+        mListener = null;
     }
 
     public void senddata(){
@@ -149,15 +209,11 @@ public class FragmentStationInformation extends Fragment {
     public void showMap() {
         float latitude = (float) Double.parseDouble(geoUbicacion.getLatitud());
         float longitude = (float)Double.parseDouble(geoUbicacion.getLongitud());
-        String uri = String.format(Locale.getDefault(), "geo:%f,%f", latitude, longitude);
+        String uri = String.format(Locale.getDefault(), "geo:%1$f,%2$f?q=%1$f,%2$f(%3$s)", latitude, longitude, establecimiento.getEstVDescripcion());
+        Log.d(TAG, "URI: " + uri);
         Utils.showMap(getActivity(), Uri.parse(uri));
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this

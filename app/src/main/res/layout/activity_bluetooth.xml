@@ -3,10 +3,87 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_bluetooth"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="energigas.apps.systemstrategy.energigas.activities.BluetoothActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        android:background="?attr/colorPrimary"
+        android:layout_alignParentTop="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/input_layout_message"
+        >
+        <TextView
+            android:id="@+id/textDevice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DEVICE"
+            />
+
+        <TextView
+            android:id="@+id/textAdress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADRESS"
+            />
+
+        <Button
+            android:id="@+id/buttonScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="SELECCIONAR DISPOSITIVO"
+            />
+
+        <!--
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/etCommands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:enabled="true"
+            android:minLines="2"
+            android:isScrollContainer="true"
+            android:hint="Introducir Comando"
+            android:textIsSelectable="true"
+            android:focusable="true"
+            android:padding="24dp"
+            style="@style/TextAppearance.AppCompat.Large"
+            />-->
+
+        <TextView
+            android:id="@+id/textReaded"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:enabled="true"
+            android:scrollbars = "vertical"
+            android:minLines="20"
+            android:isScrollContainer="true"
+            android:textIsSelectable="true"
+            android:focusable="true"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:text="LOG: \n"
+            />
+
+    </LinearLayout>
+
+
+
+    <!--
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_below="@+id/button"
@@ -20,4 +97,41 @@
         android:text="START"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    -->
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/buttonSend">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/etCommands"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="8dp"
+                android:hint="Introducir Comandos"
+                android:inputType="textCapSentences"
+                android:maxLines="4"
+                android:scrollHorizontally="false"
+                android:textSize="18sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="2dp"
+        android:src="@drawable/ic_send" />
+
 </RelativeLayout>

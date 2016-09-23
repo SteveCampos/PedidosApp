@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_programar"
+        android:orderInCategory="100"
+        android:title="PROGRAMAR"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_iniciar"
+        android:orderInCategory="100"
+        android:title="INICIAR"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_terminar"
+        android:orderInCategory="100"
+        android:title="TERMINAR"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_get_last"
+        android:orderInCategory="100"
+        android:title="OBTENER ÚLTIMO"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_target_android"
+        android:orderInCategory="100"
+        android:title="MODO ANDROID"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_target_other"
+        android:orderInCategory="100"
+        android:title="MODO SPP"
+        app:showAsAction="never" />
+
+
+</menu>
