@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         usuario = Session.getSession(this);
@@ -72,6 +73,46 @@ public class MainActivity extends AppCompatActivity
         hideFloatingButton();
         initViews();
     }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    //ACTIVIT IS RUNNING
+
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
 
     private void hideFloatingButton() {
 
@@ -276,17 +317,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
         Snackbar.make(fab, establecimiento.getEstVDescripcion(), Snackbar.LENGTH_LONG).show();
-        Session.saveEstablecimiento(getApplicationContext(), establecimiento);
-        startActivity(new Intent(MainActivity.this, MainStationActivity.class));
+        boolean success = Session.saveEstablecimiento(getApplicationContext(), establecimiento);
+        if (success)
+            startActivity(new Intent(MainActivity.this, MainStationActivity.class));
     }
-
-    /*
-    @Override
-    public void onPedidoClickListener(Pedido order, View view) {
-        //Snackbar.make(fab, order.getProductsName(), Snackbar.LENGTH_LONG).show();
-        startActivity(new Intent(this, OrderActivity.class));
-    }
-    */
 
     private static class Adapter extends FragmentPagerAdapter {
         private static final String TAG = "FragmentPagerAdapter";

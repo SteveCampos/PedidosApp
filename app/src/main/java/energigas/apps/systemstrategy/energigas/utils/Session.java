@@ -134,7 +134,7 @@ public class Session {
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_ESTABLECIMIENTO, Context.MODE_PRIVATE).edit();
             editor.putInt(Constants.IDESTABLECIMIENTO, establecimiento.getEstIEstablecimientoId());
             editor.putString(Constants.ESTABLECIMIENTO, establecimiento.getEstVDescripcion());
-            editor.commit();
+            editor.apply();
             return true;
 
         } catch (Exception e) {
@@ -196,7 +196,7 @@ public class Session {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE).edit();
             editor.putLong(Constants.CAJA_LIQUIDACION_ID,cajaLiquidacion.getLiqId());
-            editor.commit();
+            editor.apply();
             return true;
 
         } catch (Exception e) {
