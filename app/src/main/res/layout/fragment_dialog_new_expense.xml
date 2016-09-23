@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Spinner
-        android:id="@+id/sp_categories"
+        android:id="@+id/sp_tiposgastos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dimen_20dp"

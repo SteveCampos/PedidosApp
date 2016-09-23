@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CajaGastoAdapter;
@@ -29,12 +32,15 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
 
     private OnAddnewCajaGasto listenerAdd;
 
+
     private RecyclerView recyclerView;
 
     public CajaGastoFragment() {
 
     }
     CajaGastoAdapter adapter;
+
+    List<CajaGasto> cajaGastoList = new ArrayList<>();
 
 
 
@@ -46,7 +52,9 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_expenses);
 
-        adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
+        cajaGastoList=getCajaGastoList();
+        adapter = new CajaGastoAdapter(cajaGastoList, getActivity(), this,this);
+        //adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -55,8 +63,9 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
     }
 
     @Override
-    public void onCajaGastoClickListener(CajaGasto expenses, View view) {
-        Snackbar.make(view,expenses.getFechaCreacion(),Snackbar.LENGTH_LONG).show();
+    public void onCajaGastoClickListener(int action, CajaGasto expenses, View view) {
+        //Snackbar.make(view,expenses.getFechaCreacion(),Snackbar.LENGTH_LONG).show();
+        listener.onCajaGastoClickListener(action, expenses,view);
     }
 
     @Override
@@ -64,25 +73,34 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
         listenerAdd.onAddnewCajaGasto(date,total);
     }
 
-    public interface OnCajaGastoClickListener{
-        void onCajaGastoClickListener(CajaGasto expenses, View view);
-    }
 
+    public interface OnCajaGastoClickListener{
+        void onCajaGastoClickListener(int action, CajaGasto expenses, View view);
+    }
 
     public void  addnewExpenses(CajaGasto expenses){
         adapter.addnewCajaGasto(expenses);
+    }
+
+    public void updateNewExpenses(View view){
+        int position = recyclerView.getChildAdapterPosition(view);
+        adapter.notifyItemChanged(position);
+    }
+    public void removeExpense(CajaGasto cajaGasto, View view){
+        int position = recyclerView.getChildAdapterPosition(view);
+        adapter.remove(cajaGasto, position);
     }
 
     public interface OnAddnewCajaGasto{
         void onAddnewCajaGasto (String date,Double total);
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnAddnewCajaGasto){
             listenerAdd = (OnAddnewCajaGasto) context;
+            listener = (OnCajaGastoClickListener) context;
         }else{
             throw new RuntimeException(context.toString() +
                     " must implement OnAddnewExpenses");
@@ -93,5 +111,21 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
     public void onDetach() {
         super.onDetach();
         listenerAdd = null;
+        listener = null;
     }
+
+
+
+    private List<CajaGasto> getCajaGastoList(){
+        List<CajaGasto> list= CajaGasto.findWithQuery(CajaGasto.class, "Select * from Caja_Gasto");
+
+        for (int i=0; i<list.size(); i++){
+            CajaGasto cajaGasto = list.get(i);
+
+            list.set(i, cajaGasto);
+        }
+        return  list;
+    }
+
+
 }

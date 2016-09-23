@@ -1,27 +1,27 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.List;
-
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.activities.CajaGastoActivity;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
-import energigas.apps.systemstrategy.energigas.entities.Expenses;
 import energigas.apps.systemstrategy.energigas.holders.CajaGastoHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
+
 
 /**
  * Created by kikerojas on 30/07/2016.
  */
 
 public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
-
-
 
     private OnAddnewCajaGasto listenerAdd;
     // Store a member variable for the contacts
@@ -30,7 +30,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
     private Activity mactivity;
 
     public interface OnCajaGastoClickListener{
-        void onCajaGastoClickListener(CajaGasto CajaGasto, View view);
+        void onCajaGastoClickListener(int action, CajaGasto CajaGasto, View view);
     }
 
     public OnCajaGastoClickListener listener;
@@ -41,6 +41,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         this.mactivity = mactivity;
         this.listener = listener;
         this.listenerAdd = listenerAdd;
+        notifyDataSetChanged();
     }
 
     public void addnewCajaGasto(CajaGasto cajaGasto){
@@ -49,12 +50,16 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         notifyItemInserted(--position);//3 o 2 position
         listenerAdd.onAddnewCajaGasto("10/20/11", getTotal());
     }
+    public void remove(CajaGasto cajaGasto, int position){
+        mListCajaGasto.remove(cajaGasto);
+        notifyItemRemoved(position);
+    }
 
 
     public Double getTotal(){
         Double total = 0.0;
         for (int i=0; i < mListCajaGasto.size(); i++){
-            total += mListCajaGasto.get(i).getValorVenta();
+            total += mListCajaGasto.get(i).getImporte();
         }
         return total;
     }
@@ -71,20 +76,96 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
     }
 
     @Override
-    public void onBindViewHolder(CajaGastoHolder holder, int position) {
+    public void onBindViewHolder(final CajaGastoHolder holder, final int position) {
         // Get the data model based on position
 
         final CajaGasto cajaGasto = mListCajaGasto.get(position);
         Log.d(Utils.TAG, "onBindViewHolder: "+ position);
 
-        holder.mdocument.setText(cajaGasto.getFechaActualizacion());
+        holder.mdocument.setText(cajaGasto.getTipoGastoId()+"");
         holder.mdescription.setText(cajaGasto.getFechaCreacion());
         holder.mtotal.setText("S./ " + Utils.formatDouble(cajaGasto.getImporte()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onCajaGastoClickListener(cajaGasto, v);
+
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+
+              //  CharSequence items[] = new CharSequence[] {"Editar", "Eliminar"};
+                final CharSequence[] items = {"Editar", "Eliminar"};
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        mactivity);
+                alertDialogBuilder.setTitle("Selecione Opción");
+                alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+
+
+                        if (items[which].equals("Eliminar")) {
+                            alertDialogBuilder.setTitle("Eliminar");
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage("Desea eliminar!")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            // if this button is clicked, close
+                                            // current activity
+                                            //CajaGastoActivity.this.finish();
+                                            /*
+                                            CajaGasto cajaGasto1=CajaGasto.findById(CajaGasto.class,cajaGasto.getId());
+                                            cajaGasto1.delete();
+                                            Log.d("TESTING","GetIDCajaGasto: "+cajaGasto1);
+                                            mListCajaGasto.remove(position);
+                                            notifyItemRemoved(position);*/
+                                            listener.onCajaGastoClickListener(Constants.CLICK_ELIMINAR, cajaGasto, holder.itemView);
+
+                                        }
+                                    })
+                                    .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            // if this button is clicked, just close
+                                            // the dialog box and do nothing
+                                            dialog.cancel();
+                                        }
+                                    });
+
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+
+                        } else if (items[which].equals("Editar")) {
+                            //getProfilePicFromGallery();
+
+                            /*
+                            CajaGasto cajaGasto1=CajaGasto.findById(CajaGasto.class,cajaGasto.getId());
+                            cajaGasto1.save();
+                            Log.d("EDITAR","idgetId"+cajaGasto1);*/
+                            listener.onCajaGastoClickListener(Constants.CLICK_EDITAR, cajaGasto, holder.itemView);
+
+                        } else if (items[which].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+
+                    }
+                });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialogBuilder.show();
+                return false;
             }
         });
 
@@ -95,7 +176,6 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         Log.d(Utils.TAG, "getItemCount");
         return mListCajaGasto.size();
     }
-
 
 //    static class ViewHolder extends RecyclerView.ViewHolder {
 //        // Your holder should contain a member variable
@@ -132,9 +212,17 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
 //        }
 //    }
 
-    public interface OnAddnewCajaGasto{
+      public interface OnAddnewCajaGasto{
         void onAddnewCajaGasto (String date,Double total);
     }
+
+
+
+
+
+
+
+
 
 
 }
