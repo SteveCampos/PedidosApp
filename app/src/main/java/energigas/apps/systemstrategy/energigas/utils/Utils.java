@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -15,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import energigas.apps.systemstrategy.energigas.activities.BluetoothActivity;
 
 /**
  * Created by Steve on 21/07/2016.
@@ -113,6 +117,40 @@ public class Utils {
             return string;
 
     }
+
+
+    public static String getAndroidID(Context context){
+        String android_id;
+        android_id = get_android_id(context);
+        if (TextUtils.isEmpty(android_id)){
+            Log.d(TAG, "android_id is empty");
+            android_id = get_android_id(context);
+        }
+        return android_id;
+    }
+    private static String get_android_id(Context context){
+        return Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+    }
+
+    public static byte[] clearByte(byte[] data, int position){
+        byte[] x = new byte[data.length - position];
+        for(int i=position; i < data.length; i++){
+            x[i-position] = data[i];
+        }
+        return x;
+    }
+
+    public static byte[] clearUnsigned(byte[] x){
+        for(int i= 0; i< x.length; i++){
+            int signed = x[i] & 0xFF;
+            if(signed >= 128){
+                x[i] = (byte) 32;
+            }
+        }
+        return x;
+    }
+
 
 
 }
