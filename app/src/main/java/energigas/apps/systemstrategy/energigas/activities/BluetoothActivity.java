@@ -6,25 +6,21 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Charsets;
+import com.google.common.primitives.Chars;
 
-import java.nio.charset.Charset;
+import java.util.Date;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
@@ -35,11 +31,13 @@ import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.BluetoothDeviceAdapter;
 import energigas.apps.systemstrategy.energigas.broadcast.BluetoothBroadCast;
+import energigas.apps.systemstrategy.energigas.firebase.BluetoothFire;
+import energigas.apps.systemstrategy.energigas.firebase.MessageBluetooth;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothDeviceListener;
 import energigas.apps.systemstrategy.energigas.threads.BTAcceptThread;
-import energigas.apps.systemstrategy.energigas.threads.BTConnectThread;
 import energigas.apps.systemstrategy.energigas.utils.Log;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class BluetoothActivity extends AppCompatActivity implements BluetoothDeviceListener, BluetoothConnectionListener {
 
@@ -69,6 +67,9 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
 
     boolean DEVICE_ANDROID = false;
 
+    private BluetoothFire fireBluetooth;
+    private String androidID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,14 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
         setSupportActionBar(toolbar);
         toolbar.setTitle("Despacho Comandos");
         setupBluetoothSPP();
+        initFirebase();
+    }
+
+    private void initFirebase() {
+
+        androidID = Utils.getAndroidID(this);
+        fireBluetooth = new BluetoothFire(androidID);
+
     }
 
     private void setupBluetoothSPP(){
@@ -97,8 +106,22 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
                 // Do something when data incoming
-                Log.d(TAG, "data: "+ new String(data) + ", message: " + message);
-                textReaded.append("\n " + new String(data, Charsets.US_ASCII));
+                Log.d(TAG, "data: "+ data + ", message>: " + message);
+
+                MessageBluetooth messageBluetooth = new MessageBluetooth(
+                        message,
+                        getBytesToString(data),
+                        new String(data, Charsets.US_ASCII),
+                        "US_ASCII",
+                        new Date().getTime(),
+                        "RECEIVED",
+                        "",
+                        bt.getConnectedDeviceAddress()
+                );
+
+                fireBluetooth.saveMessage(messageBluetooth);
+                textReaded.append("\n " + new String(Utils.clearUnsigned(data), Charsets.US_ASCII));
+
                 scrollText();
 
             }
@@ -249,25 +272,35 @@ public class BluetoothActivity extends AppCompatActivity implements BluetoothDev
 
         byte[] bytes  = (STX + comando + ETX).getBytes(Charsets.US_ASCII);
 
+        MessageBluetooth messageBluetooth = new MessageBluetooth(
+                comando,
+                getBytesToString(bytes),
+                new String(bytes, Charsets.US_ASCII),
+                "US_ASCII",
+                 new Date().getTime(),
+                "SEND",
+                "",
+                bt.getConnectedDeviceAddress()
+        );
+
+        fireBluetooth.saveMessage(messageBluetooth);
+
+
+        Log.d(TAG, "buttonSend new String(bytes, Charsets.US_ASCII): " + new String(bytes, Charsets.US_ASCII));
+
+
         bt.send(bytes, true);
         eTCommands.setText("");
-        textReaded.append("\n> " + comando);
-        /*
-        if (mBluetoothAdapter!=null && mBluetoothAdapter.isEnabled()){
-            if (!mBluetoothAdapter.isDiscovering()){
-                bluetoothDeviceAdapter.clear();
-                if (mBluetoothAdapter.startDiscovery()){
-                    //upBroadCast();
-                    button.setText("SCANNING...");
-                }
-            }else {
-                if (mBluetoothAdapter.cancelDiscovery()){
-                    //offBroadcast();
-                    button.setText("START.");
-                }
-            }
 
-        }*/
+        textReaded.append("\n> " + comando);
+    }
+
+    public String getBytesToString(byte[] data){
+        String x = "";
+        for (byte aData : data) {
+            x += "_" + aData;
+        }
+        return x;
     }
 
     private void upBroadCast(){

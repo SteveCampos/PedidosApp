@@ -141,7 +141,6 @@ public class FragmentStationInformation extends Fragment {
         Log.d(TAG, "onResume");
         super.onResume();
     }
-
     //fragment is active
 
     @Override

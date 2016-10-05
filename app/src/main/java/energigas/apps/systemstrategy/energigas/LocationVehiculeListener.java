@@ -18,7 +18,7 @@ import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 
 public class LocationVehiculeListener implements LocationListener {
 
-    private static final String TAG = "LocationVehiculeListener";
+    private static final String TAG = LocationVehiculeListener.class.getSimpleName();
     private OnLocationListener onLocationListener;
     private static final long MIN_TIME_BW_UPDATES = 20*1000;
     private Context context;
@@ -28,7 +28,6 @@ public class LocationVehiculeListener implements LocationListener {
         this.onLocationListener = onLocationListener;
         context = onLocationListener.getContextActivity();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
 
         // TODO check is network/gps is enabled and display the system settings
         // see

@@ -97,4 +97,6 @@ public class Constants {
     public static final boolean NO_EXPORTADO = false;
     public static final boolean EXPORTADO = true;
 
+    public static final int CLICK_EDITAR = 100;
+    public static final int CLICK_ELIMINAR = 101;
 }
