@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +42,25 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.ProductoUnidad;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
+import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
+import energigas.apps.systemstrategy.energigas.fragments.EstablecerCuotasFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Log;
+import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
-public class SellActivity extends AppCompatActivity implements View.OnClickListener {
+public class SellActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private static final String TAG = "SellActivity";
 
     @BindView(R.id.spinnerTipoComprobante)
@@ -61,6 +77,28 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.recycler_despacho)
     RecyclerView recyclerView;
+    @BindView(R.id.btnVender)
+    Button buttonVender;
+    @BindView(R.id.direccion)
+    RadioButton radioDireccion;
+    @BindView(R.id.direccionFiscal)
+    RadioButton radioDireccionFical;
+    @BindView(R.id.groupRadio)
+    RadioGroup radioGroup;
+    @BindView(R.id.editDireccion)
+    EditText editTextDireccion;
+    @BindView(R.id.checkboxResumen)
+    CheckBox checkBoxResumen;
+    @BindView(R.id.editScop)
+    EditText editTextScop;
+
+
+    @BindView(R.id.textTotal)
+    TextView textTotal;
+    @BindView(R.id.textBaseImponible)
+    TextView textBaseImponible;
+    @BindView(R.id.textIGV)
+    TextView textIGV;
 
     Cliente cliente;
     Establecimiento establecimiento;
@@ -73,7 +111,14 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     Usuario usuario;
     CajaLiquidacion cajaLiquidacion;
     Serie serie;
+    Pedido pedido;
+    PlanPago planPago;
+    List<PlanPagoDetalle> planPagoDetalles;
+    CajaMovimiento cajaMovimiento;
 
+    //--
+    CajaComprobante cajaComprobante;
+    CajaPago cajaPago;
 
     /**
      * Obtener Objectos
@@ -83,16 +128,22 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
-        Toast.makeText(this, ""+Session.getCajaLiquidacion(this).getLiqId()+ "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + Session.getCajaLiquidacion(this).getLiqId() + "", Toast.LENGTH_SHORT).show();
+        pedido = Pedido.find(Pedido.class, "pe_Id=?", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
+        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, "ub_Id = ?", new String[]{establecimiento.getUbId() + ""}).get(Constants.CURRENT));
         cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
         Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
+        cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " persona_Id=? ", new String[]{persona.getPerIPersonaId() + ""}).get(Constants.CURRENT));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
+        Session.setDefineCuotas(this, Constants.ESTADO_FALSE, "");
         ButterKnife.bind(this);
         initViews();
         fab.setOnClickListener(this);
+        buttonVender.setOnClickListener(this);
+        hideLinear(getFormaPago());
 
     }
 
@@ -102,7 +153,36 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         DialogGeneral.isConfirm(this, "Atencion..!!!", "¿Esta seguro de guardar ?", new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
-                generarVenta();
+
+                switch (getFormaPago().getDescripcion()) {
+
+                    case Constants.FORMA_PAGO_CREDITO:
+
+                        if (!Session.getDefineCuotas(getApplicationContext())) {
+
+                            if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                                generarVenta();
+                                //  new EstablecerCuotasFragment().setParams(obtenerCalculos()).show(getSupportFragmentManager(), "");
+                                Intent intent = new Intent(getApplicationContext(), DefinirCuotasActivity.class);
+                                intent.putExtra(Constants.OBTENER_CUOTAS, obtenerCalculos());
+                                startActivity(intent);
+
+                            }
+                        } else {
+                            guardarVenta();
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                        }
+
+                        break;
+
+                    case Constants.FORMA_PAGO_CONTADO:
+                        generarVenta();
+                        guardarVenta();
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        break;
+                }
+
             }
 
             @Override
@@ -115,89 +195,234 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     private void generarVenta() {
 
 
-        serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR,getTipoComprobante().getIdConcepto()), null).get(Constants.CURRENT);
-
+        serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, getTipoComprobante().getIdConcepto()), null).get(Constants.CURRENT);
+        String numero = ComprobanteVenta.findWithQuery(ComprobanteVenta.class, Utils.getQueryNumberSell(), null).get(Constants.CURRENT).getNumDoc();
+        int compId = Integer.parseInt(numero);
 
         /**Comprobante de venta**/
         comprobanteVenta = new ComprobanteVenta();
-        comprobanteVenta.setCompId(0);
+        comprobanteVenta.setCompId(compId);
         comprobanteVenta.setSerie(serie.getCompVSerie());
-        comprobanteVenta.setNumDoc("");
+        comprobanteVenta.setNumDoc(Utils.completaZeros(numero, serie.getParametro()));
         comprobanteVenta.setFormaPagoId(getFormaPago().getIdConcepto());
         comprobanteVenta.setEstadoId(Constants.COMPROBANTE_CREADO);
-        comprobanteVenta.setBaseImponible(0.0);
-        comprobanteVenta.setIgv(0.0);
-        comprobanteVenta.setTotal(0.0);
+        comprobanteVenta.setBaseImponible(obtenerCalculos()[Constants.VENTA_BASE_IMPONIBLE]); //sin igv de todos los detalles sin igv
+        comprobanteVenta.setIgv(obtenerCalculos()[Constants.VENTA_IMPORTE_IGV]); // importe del  sum
+        comprobanteVenta.setTotal(obtenerCalculos()[Constants.VENTA_TOTAL]); // suma
         comprobanteVenta.setTipoComprobanteId(getTipoComprobante().getIdConcepto());
         comprobanteVenta.setClienteId(cliente.getCliIClienteId());
         comprobanteVenta.setComIUsuarioId(usuario.getUsuIUsuarioId());
         comprobanteVenta.setAnulado(Constants.COMPROBANTE_NO_ANULADO);
-        comprobanteVenta.setSaldo(0.0);
+        comprobanteVenta.setSaldo(obtenerCalculos()[Constants.VENTA_SALDO]); // si al contado 0 / si es al credito es total
         comprobanteVenta.setLqId(cajaLiquidacion.getLiqId());
         comprobanteVenta.setTipoVentaId(Constants.TIPO_VENTA_NORMAL);
         comprobanteVenta.setEstablecimientoId(establecimiento.getEstIEstablecimientoId());
         comprobanteVenta.setExportado(Constants.NO_EXPORTADO);
         comprobanteVenta.setDocIdentidad(cliente.getPersona().getPerVDocIdentidad());
-        comprobanteVenta.setValorResumen("");
-        comprobanteVenta.setCliente("");
-        comprobanteVenta.setDireccionCliente("");
+        comprobanteVenta.setValorResumen(NumberToLetterConverter.convertNumberToLetter(obtenerCalculos()[Constants.VENTA_TOTAL]));
+        comprobanteVenta.setCliente(cliente.getPersona().getPerVDocIdentidad());
+        comprobanteVenta.setDireccionCliente(cliente.getPersona().getUbicacion().getDescripcion());
         comprobanteVenta.setFechaCreacion(Utils.getDatePhone());
-        comprobanteVenta.setPorImpuesto(0);
+        comprobanteVenta.setPorImpuesto(obtenerCalculos()[Constants.VENTA_POR_IMPUESTO]);
         /**Comprobante de venta detalle**/
         comprobanteVentaDetalles = getComprobanteVentaDetalleList(comprobanteVenta);
-        CajaMovimiento cajaMovimiento = new CajaMovimiento(0, cajaLiquidacion.getLiqId(), 0, "", comprobanteVenta.getBaseImponible(), true, Utils.getDatePhone(), "", "", usuario.getUsuIUsuarioId(), Utils.getDatePhone(), "", 0);
+        Long cajaMovId = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
+        cajaMovimiento = new CajaMovimiento(cajaMovId, cajaLiquidacion.getLiqId(), getCatMov().getIdConcepto(), "SOLES", comprobanteVenta.getBaseImponible(), true, Utils.getDatePhone(), "", "", usuario.getUsuIUsuarioId(), Utils.getDatePhone(), "", Constants.CONCEPTO_TIPO_MOV_INGRESO);
 
 
         switch (getFormaPago().getDescripcion()) {
 
             case Constants.FORMA_PAGO_CREDITO:
-                generarVentaCredito(cajaMovimiento);
+                generarVentaCredito();
                 break;
 
             case Constants.FORMA_PAGO_CONTADO:
-                generarVentaContado(cajaMovimiento);
+                generarVentaContado();
                 break;
         }
 
 
-
-
-
-        Long compro = comprobanteVenta.save();
-        Log.d(TAG, " comprobanteVenta " + compro);
+        int scop = Integer.parseInt(editTextScop.getText().toString());
+        pedido.setScop(scop + "");
+        /*
         for (ComprobanteVentaDetalle comprobanteVentaDetalle : comprobanteVentaDetalles) {
             Long comproVenDeta = comprobanteVentaDetalle.save();
             Log.d(TAG, " ComprobanteVentaDetalle " + comproVenDeta);
+        }*/
+
+
+    }
+
+    public void guardarVenta() {
+
+        Long pedidoId = pedido.save();
+        Long cajaId = cajaMovimiento.save();
+        Long comproVentaId = comprobanteVenta.save();
+        SugarRecord.saveInTx(comprobanteVentaDetalles);//
+
+        Log.d(TAG, " cajaMovimiento " + cajaId);
+        Log.d(TAG, " comprobanteVenta " + comproVentaId);
+        Log.d(TAG, " pedidoId " + pedidoId);
+
+        /**Guardar para la exportacion**/
+
+        new SyncEstado(Integer.parseInt(pedido.getPeId() + ""), "Pedido", Integer.parseInt(pedido.getPeId() + ""), Constants.EXPORTAR).save();
+        new SyncEstado(0, "Caja_Movimiento", Integer.parseInt(cajaMovimiento.getCajMovId() + ""), Constants.EXPORTAR).save();
+        new SyncEstado(0, "Comprobante_Venta", Integer.parseInt(comprobanteVenta.getCompId() + ""), Constants.EXPORTAR).save();
+        for (ComprobanteVentaDetalle ventaDetalle : comprobanteVentaDetalles) {
+            Long id = new SyncEstado(0, "Comprobante_Venta_Detalle", ventaDetalle.getCompdId(), Constants.EXPORTAR).save();
+            Log.d(TAG, " SyncEstado VENTA DETALLE " + id);
+        }
+
+
+        switch (getFormaPago().getDescripcion()) {
+
+            case Constants.FORMA_PAGO_CREDITO:
+                Long insplanPago = planPago.save();
+                Log.d(TAG, " PlanPago " + insplanPago);
+
+
+                SugarRecord.saveInTx(this.planPagoDetalles);
+
+                new SyncEstado(0, "Plan_Pago", Integer.parseInt(planPago.getPlanPaId() + ""), Constants.EXPORTAR).save();
+                for (PlanPagoDetalle pagoDetalle : this.planPagoDetalles) {
+                    new SyncEstado(0, "Plan_pago_detalle", Integer.parseInt(pagoDetalle.getPlanPaDeId() + ""), Constants.EXPORTAR).save();
+                }
+                break;
+
+            case Constants.FORMA_PAGO_CONTADO:
+
+                Long cajaCom = cajaComprobante.save();
+                Long cajaPag = cajaPago.save();
+                Log.d(TAG, " CajaComprobante " + cajaCom);
+                Log.d(TAG, " CajaPago " + cajaPag);
+                new SyncEstado(0, "Caja_Comprobante", Integer.parseInt(cajaComprobante.getCajCompId() + ""), Constants.EXPORTAR).save();
+                new SyncEstado(0, "caja_Pago", Integer.parseInt(cajaPago.getCajPagId() + ""), Constants.EXPORTAR).save();
+
+
+                break;
+        }
+
+        //Vincular el comprobante con  los depachos
+        List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+
+        for (int i = 0; i < despachos.size(); i++) {
+            despachos.get(i).setCompId(comprobanteVenta.getCompId());
+            Long despachoId = despachos.get(i).save();
+            Log.d(TAG, "Actualizo despacho para agregar el comprobante: " + despachoId);
         }
 
 
     }
 
-    private void generarVentaCredito(CajaMovimiento cajaMovimiento) {
 
-        PlanPago planPago = new PlanPago(0, comprobanteVenta.getCompId(), "", "", "", "", true, 0.0, usuario.getUsuIUsuarioId(), Utils.getDatePhone());
-        PlanPagoDetalle planPagoDetalle = new PlanPagoDetalle(planPago.getPlanPaId(), 0, Utils.getDatePhone(), comprobanteVenta.getBaseImponible(), true, comprobanteVenta.getBaseImponible(), 0.0, 0.0, "", usuario.getUsuIUsuarioId(), Utils.getDatePhone(), cajaMovimiento.getCajMovId());
-        Long insplanPago = planPago.save();
-        Long insplanPagoDetalle = planPagoDetalle.save();
-        Log.d(TAG, " PlanPago " + insplanPago);
-        Log.d(TAG, " PlanPagoDetalle " + insplanPagoDetalle);
+    private Concepto getCatMov() {
+
+        Concepto concepto = new Concepto();
+
+        switch (getFormaPago().getDescripcion()) {
+
+            case Constants.FORMA_PAGO_CREDITO:
+                concepto = Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{Constants.CONCEPTO_CAT_MOV_VENTA_PLAN_PAGOS + ""}).get(Constants.CURRENT);
+                break;
+
+            case Constants.FORMA_PAGO_CONTADO:
+                concepto = Concepto.find(Concepto.class, "ID_CONCEPTO = ? ", new String[]{Constants.CONCEPTO_CAT_MOV_VENTA_CONTADO + ""}).get(Constants.CURRENT);
+                break;
+        }
+        return concepto;
     }
 
-    private void generarVentaContado(CajaMovimiento cajaMovimiento) {
-        CajaComprobante cajaComprobante = new CajaComprobante(0, cajaMovimiento.getCajMovId(), comprobanteVenta.getCompId(), comprobanteVenta.getBaseImponible(), usuario.getUsuIUsuarioId(), Utils.getDatePhone());
-        CajaPago cajaPago = new CajaPago(0, comprobanteVenta.getBaseImponible(), cajaMovimiento.getCajMovId(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), Constants.NO_EXPORTADO, getTipoPago().getIdConcepto(), false);
-        Long cajaCom = cajaComprobante.save();
-        Long cajaPag = cajaPago.save();
-        Log.d(TAG, " CajaComprobante " + cajaCom);
-        Log.d(TAG, " CajaPago " + cajaPag);
+    private String getGlosa() {
+
+        if (getFormaPago().getDescripcion().equals(Constants.FORMA_PAGO_CONTADO)) {
+            return "VENTA AL CONTADO";
+        }
+        return "VENTA AL CREDITO";
+
     }
+
+    private double[] obtenerCalculos() {
+
+        double[] doubles = new double[5];
+
+        List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+
+        double baseImponible = 0.0;
+        double importeIgv = 0.0;
+        double total = 0.0;
+        double porImpuesto = 0.0;
+
+
+        for (Despacho despacho : despachos) {
+
+            double baseImponibleDespacho = despacho.getPrecioUnitarioSIGV() * despacho.getCantidadDespachada();
+            double importeIgvDespacho = baseImponibleDespacho * despacho.getPorImpuesto();
+
+            baseImponible = baseImponible + baseImponibleDespacho;
+            importeIgv = importeIgv + importeIgvDespacho;
+            porImpuesto = despacho.getPorImpuesto();
+
+
+        }
+        total = baseImponible + importeIgv;
+        doubles[Constants.VENTA_BASE_IMPONIBLE] = Utils.getDoubleFormat(baseImponible);
+        doubles[Constants.VENTA_IMPORTE_IGV] = Utils.getDoubleFormat(importeIgv);
+        doubles[Constants.VENTA_TOTAL] = Utils.getDoubleFormat(total);
+        doubles[Constants.VENTA_SALDO] = Utils.getDoubleFormat(0.0);
+
+
+        if (!getFormaPago().getDescripcion().equals(Constants.FORMA_PAGO_CONTADO)) {
+            doubles[Constants.VENTA_SALDO] = Utils.getDoubleFormat(total);
+        }
+
+        doubles[Constants.VENTA_POR_IMPUESTO] = porImpuesto;
+        return doubles;
+
+    }
+
+    private void initImportesDetalle() {
+
+        double[] doubles = obtenerCalculos();
+        textTotal.setText(doubles[Constants.VENTA_TOTAL] + "");
+        textBaseImponible.setText(doubles[Constants.VENTA_BASE_IMPONIBLE] + "");
+        textIGV.setText(doubles[Constants.VENTA_IMPORTE_IGV] + "");
+
+    }
+
+    private Concepto getPorcentajeInteresMes() {
+        // return Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{"120"}).get(Constants.CURRENT);
+
+        return Concepto.find(Concepto.class, " CONCEPTO = ? AND  OBJETO = ? AND ESTADO = ? ", new String[]{Constants.CONCEPTO_CONCEPTO_PORCENTAJE_MES, Constants.CONCEPTO_OBJETO_PORCENTAJE_MES, Constants.CONCEPTO_ESTADO_PORCENTAJE_MES + ""}).get(Constants.CURRENT);
+    }
+
+    private void generarVentaCredito() {
+
+        Long planPagoId = PlanPago.findWithQuery(PlanPago.class, Utils.getQueryNumberPlanPago(), null).get(Constants.CURRENT).getPlanPaId();
+        planPago = new PlanPago(planPagoId, comprobanteVenta.getCompId(), "", comprobanteVenta.getSerie(), comprobanteVenta.getNumDoc(), getGlosa(), Constants.ESTADO_TRUE, Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), null);
+
+    }
+
+    private void generarVentaContado() {
+
+        Long cajaComprobanteId = CajaComprobante.findWithQuery(CajaComprobante.class, Utils.getQueryNumberCajaComprobante(), null).get(Constants.CURRENT).getCajCompId();
+        Long cajaPagoId = CajaPago.findWithQuery(CajaPago.class, Utils.getQueryNumberCajaPago(), null).get(Constants.CURRENT).getCajPagId();
+        cajaComprobante = new CajaComprobante(cajaComprobanteId, cajaMovimiento.getCajMovId(), comprobanteVenta.getCompId(), comprobanteVenta.getBaseImponible(), usuario.getUsuIUsuarioId(), Utils.getDatePhone());
+        cajaPago = new CajaPago(cajaPagoId, comprobanteVenta.getBaseImponible(), cajaMovimiento.getCajMovId(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), Constants.NO_EXPORTADO, getTipoPago().getIdConcepto(), Constants.ESTADO_FALSE);
+
+    }
+
 
     private List<ComprobanteVentaDetalle> getComprobanteVentaDetalleList(ComprobanteVenta comprobanteVenta) {
         List<ComprobanteVentaDetalle> comprobanteVentaDetalles = new ArrayList<>();
         List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+
+        int comprobanteVentaId = ComprobanteVentaDetalle.findWithQuery(ComprobanteVentaDetalle.class, Utils.getQueryNumberComprobanteVentaDetalle(), null).get(Constants.CURRENT).getCompdId();
+
         for (Despacho despacho : despachos) {
             ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, " pro_Id=? ", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
-            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUNitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), despacho.getDespachoId()));
+            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(comprobanteVentaId, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUNitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), despacho.getDespachoId()));
+            comprobanteVentaId++;
         }
         return comprobanteVentaDetalles;
     }
@@ -238,12 +463,58 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initViews() {
         toolbar();
-        initDespachos();
+        initDespachos(new ManipuleData().getDespachoResumen(this));
         initTipoComprobante();
         initFormaPago();
         initTipoPago();
+        initRadios();
+        setTextDireccion();
+        initCheckBox();
+        initImportesDetalle();
+        setScrop();
+    }
+
+    private void setScrop() {
+        editTextScop.setText(pedido.getScop() + "");
+    }
+
+    private void initCheckBox() {
+        checkBoxResumen.setChecked(true);
+        checkBoxResumen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    initDespachos(new ManipuleData().getDespachoResumen(getApplicationContext()));
+                } else {
+                    initDespachos(new ManipuleData().getDespachosToFactura(getApplicationContext()));
+                }
+            }
+        });
+    }
+
+    private void initRadios() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                setTextDireccion();
+            }
+        });
+    }
+
+    private void setTextDireccion() {
+        boolean isCheckedD = radioDireccion.isChecked();
+        boolean isCheckedDF = radioDireccionFical.isChecked();
+        String strings = "";
+        if (isCheckedD) {
+            strings = establecimiento.getUbicacion().getDescripcion();
+        }
+        if (isCheckedDF) {
+            strings = cliente.getPersona().getUbicacion().getDescripcion();
+        }
+        editTextDireccion.setText(strings);
 
     }
+
 
     private void initTipoComprobante() {
 
@@ -259,6 +530,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "SIZE: " + conceptoList.size());
         ConceptoAdapter conceptoArrayAdapter = new ConceptoAdapter(this, 0, conceptoList);
         spinnerFormaPago.setAdapter(conceptoArrayAdapter);
+        spinnerFormaPago.setOnItemSelectedListener(this);
     }
 
     private void initTipoPago() {
@@ -268,13 +540,15 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         spinnerTipoPago.setAdapter(conceptoArrayAdapter);
     }
 
-    private void initDespachos() {
-        List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+    private void initDespachos(List<Despacho> despachos) {
+
         DespachoFacturaAdapter despachoFacturaAdapter = new DespachoFacturaAdapter(despachos, this);
         recyclerView.setAdapter(despachoFacturaAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
     }
+
 
     private Concepto getTipoComprobante() {
         return (Concepto) spinnerTipoComprobante.getSelectedItem();
@@ -293,8 +567,73 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab:
+
+                break;
+            case R.id.btnVender:
                 dialogConfirmarVenta();
                 break;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Concepto concepto = (Concepto) adapterView.getSelectedItem();
+        //cliente.setCliDOCreditoDisponible(20.00);
+        hideLinear(concepto);
+        if (concepto.getIdConcepto() == Constants.CREDITO_ID)
+
+            if (cliente.getCliDOCreditoDisponible() < obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                DialogGeneral.isConfirm(this, "Solicitar Credito", "Solicitar Credito : 100 ", new DialogGeneralListener() {
+                    @Override
+                    public void onSavePressed() {
+
+                    }
+
+                    @Override
+                    public void onCancelPressed() {
+                        initFormaPago();
+                    }
+                });
+            }
+
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    private void hideLinear(Concepto concepto) {
+
+        if (concepto.getIdConcepto() == Constants.CREDITO_ID) {
+            spinnerTipoPago.setVisibility(View.GONE);
+        } else {
+            spinnerTipoPago.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Session.getDefineCuotas(getApplicationContext())) {
+            List<PlanPagoDetalle> planPagoDetalles = Session.getListCuotas(getApplicationContext());
+            if (planPagoDetalles != null) {
+
+                this.planPagoDetalles = planPagoDetalles;
+                for (int i = 0; i < this.planPagoDetalles.size(); i++) {
+
+                    this.planPagoDetalles.get(i).setPlanPaId(planPago.getPlanPaId());
+                    this.planPagoDetalles.get(i).setUsuarioAccion(usuario.getUsuIUsuarioId());
+                    this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
+                }
+
+                Toast.makeText(this, "TAMNAÑO"+ this.planPagoDetalles.size(), Toast.LENGTH_SHORT).show();
+
+            }
+
         }
     }
 }

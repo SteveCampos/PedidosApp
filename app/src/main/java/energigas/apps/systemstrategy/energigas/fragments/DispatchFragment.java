@@ -147,7 +147,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
 
     private void saveDespacho() {
 
-        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(usuario.getUsuIUsuarioId()), new String[]{}).get(Constants.CURRENT).getNumero();
+        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), new String[]{}).get(Constants.CURRENT).getNumero();
 
 
         despacho = new Despacho(
@@ -185,7 +185,6 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
                 pedidoDetalle.getCostoVenta(),
                 pedidoDetalle.getImporte(),
                 -1
-
 
 
         );
@@ -261,15 +260,19 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
             /**Guardar los datos  de posicion gps**/
             despacho.setLatitud(latAndLong.getLatitude() + "");
             despacho.setLongitud(latAndLong.getLongitude() + "");
+            /**Enviar Importe**/
+            despacho.setImporte(despacho.getPrecioUNitarioCIGV() * despacho.getCantidadDespachada());
             pedidoDetalle.setCantidadAtendida(despacho.getCantidadDespachada());
             Toast.makeText(getActivity(), "NEXT", Toast.LENGTH_SHORT).show();
-            Long estad  = despacho.save();
-            Toast.makeText(getActivity(), "ESTADO: "+estad, Toast.LENGTH_SHORT).show();
-            Session.saveDespacho(getActivity(),despacho);
-            if (estad >0){
-            startActivity(new Intent(getActivity(), PrintDispatch.class));
-            getActivity().finish();}
+            Long estad = despacho.save();
+            Toast.makeText(getActivity(), "ESTADO: " + estad, Toast.LENGTH_SHORT).show();
+            Session.saveDespacho(getActivity(), despacho);
+            if (estad > 0)
+                startActivity(new Intent(getActivity(), PrintDispatch.class));
+                getActivity().finish();
+
         }
+
 
     }
 

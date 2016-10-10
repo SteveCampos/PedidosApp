@@ -25,11 +25,13 @@ public class Concepto extends SugarRecord {
 
     private String fechaFin;
 
+    private String abreviatura;
+
 
     public Concepto() {
     }
 
-    public Concepto(int idConcepto, String objeto, String concepto, String descripcion, int estado, int empresaId, String fechaInicio, String fechaFin) {
+    public Concepto(int idConcepto, String objeto, String concepto, String descripcion, int estado, int empresaId, String fechaInicio, String fechaFin, String abreviatura) {
         this.idConcepto = idConcepto;
         this.objeto = objeto;
         this.concepto = concepto;
@@ -38,6 +40,15 @@ public class Concepto extends SugarRecord {
         this.empresaId = empresaId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.abreviatura = abreviatura;
+    }
+
+    public String getAbreviatura() {
+        return abreviatura;
+    }
+
+    public void setAbreviatura(String abreviatura) {
+        this.abreviatura = abreviatura;
     }
 
     public int getIdConcepto() {

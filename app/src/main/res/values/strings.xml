@@ -440,4 +440,5 @@
     <string name="title_activity_station_order">StationOrderActivity</string>
     <string name="title_activity_configuration">Configuration</string>
     <string name="title_activity_sell">SellActivity</string>
+    <string name="title_activity_definir_cuotas">DefinirCuotasActivity</string>
 </resources>

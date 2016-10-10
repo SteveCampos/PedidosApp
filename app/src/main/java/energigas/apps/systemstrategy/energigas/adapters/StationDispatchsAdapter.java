@@ -9,6 +9,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,14 +83,25 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (dispatch.getCompId() > 0) {
+                    Toast.makeText(mContext,"Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
+                } else {
 
-                listener.onStationDispatchClickListener(dispatch, view, 0);
+                    listener.onStationDispatchClickListener(dispatch, view, 0);
+                }
+
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                listener.onStationDispatchClickListener(dispatch, view, 1);
+                if (dispatch.getCompId() > 0) {
+                    Toast.makeText(mContext,"Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    listener.onStationDispatchClickListener(dispatch, view, 1);
+                }
+
                 return true;
             }
         });
@@ -147,7 +159,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     public List<String> getIdsDispatchesSelected() {
         List<String> result = new ArrayList<>();
         for (Despacho despacho : getStationDispatchesSelected()) {
-            result.add(despacho.getDespachoId()+"");
+            result.add(despacho.getDespachoId() + "");
         }
         return result;
     }

@@ -3,12 +3,14 @@ package energigas.apps.systemstrategy.energigas;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 
@@ -18,16 +20,18 @@ import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 
 public class LocationVehiculeListener implements LocationListener {
 
-    private static final String TAG = LocationVehiculeListener.class.getSimpleName();
+    private static final String TAG = "LocationVehiculeListener";
     private OnLocationListener onLocationListener;
-    private static final long MIN_TIME_BW_UPDATES = 20*1000;
+    private static final long MIN_TIME_BW_UPDATES = 1 * 1000;
     private Context context;
     protected LocationManager locationManager;
+    int i = 0;
 
     public LocationVehiculeListener(OnLocationListener onLocationListener) {
         this.onLocationListener = onLocationListener;
         context = onLocationListener.getContextActivity();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
 
         // TODO check is network/gps is enabled and display the system settings
         // see
@@ -38,10 +42,20 @@ public class LocationVehiculeListener implements LocationListener {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                MIN_TIME_BW_UPDATES, 0, this);
+                MIN_TIME_BW_UPDATES, 1, this);
+
+
+        Log.d("GPS Enabled", "GPS Enabled");
+        if (locationManager != null) {
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastKnownLocation != null) {
+                onLocationListener.setLatAndLong(lastKnownLocation);
+            }
+        }
 
 
     }
+
 
     public void stopLocationUpdates() {
 
@@ -54,6 +68,7 @@ public class LocationVehiculeListener implements LocationListener {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
+
                 return;
             }
             locationManager.removeUpdates(LocationVehiculeListener.this);
@@ -61,11 +76,14 @@ public class LocationVehiculeListener implements LocationListener {
     }
 
 
-
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
         onLocationListener.setLatAndLong(location);
+        if (i < 3) {
+            Toast.makeText(context, "Latitude: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
+        }
+        i++;
     }
 
     @Override

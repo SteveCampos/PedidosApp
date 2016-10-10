@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="energigas.apps.systemstrategy.energigas">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -14,31 +15,28 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="DATABASE"
-            android:value="energigas.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="5" />
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="true" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="energigas.apps.systemstrategy.energigas.entities" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBm0jZHssTPuPRwGUtppiBbFruFoIYEsT8"/>
 
+        <meta-data android:name="DATABASE" android:value="energigas.db" />
+        <meta-data android:name="VERSION" android:value="5" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="energigas.apps.systemstrategy.energigas.entities" />
 
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".activities.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait">
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.PrintFacturaActivity"
@@ -125,16 +123,14 @@
             android:name=".activities.Configuration"
             android:label="@string/title_activity_configuration"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.BluetoothActivity"
-            android:screenOrientation="portrait">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="app.akexorcist.bluetotohspp.library.DeviceList" />
+        <activity
+            android:name=".activities.SellActivity"
+            android:label="@string/title_activity_sell"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.DefinirCuotasActivity"
+            android:label="@string/title_activity_definir_cuotas"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

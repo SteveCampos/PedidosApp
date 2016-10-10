@@ -60,7 +60,7 @@ public class ComprobanteVenta extends SugarRecord {
 
     private String fechaActualizacion;
 
-    private int porImpuesto;
+    private double porImpuesto;
 
     private static List<ComprobanteVenta> list;
 
@@ -68,7 +68,7 @@ public class ComprobanteVenta extends SugarRecord {
     public ComprobanteVenta() {
     }
 
-    public ComprobanteVenta(long compId, String serie, String numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, int porImpuesto) {
+    public ComprobanteVenta(long compId, String serie, String numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, double porImpuesto) {
         this.compId = compId;
         this.serie = serie;
         this.numDoc = numDoc;
@@ -288,11 +288,11 @@ public class ComprobanteVenta extends SugarRecord {
         this.fechaActualizacion = fechaActualizacion;
     }
 
-    public int getPorImpuesto() {
+    public double getPorImpuesto() {
         return porImpuesto;
     }
 
-    public void setPorImpuesto(int porImpuesto) {
+    public void setPorImpuesto(double porImpuesto) {
         this.porImpuesto = porImpuesto;
     }
 

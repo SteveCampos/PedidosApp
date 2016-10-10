@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +18,7 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 
 /**
@@ -43,7 +48,7 @@ public class Session {
     public static String[] getIdsDespachos(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.DESPACHOS_IDS, Context.MODE_PRIVATE);
         Set<String> set = prefs.getStringSet(Constants.DESPACHOS_IDS_ITEMS, null);
-        return set.toArray(new String[set.size()]) ;
+        return set.toArray(new String[set.size()]);
     }
 
     public static boolean saveDespacho(Context context, Despacho despacho) {
@@ -126,6 +131,40 @@ public class Session {
 
     }
 
+    public static void setDefineCuotas(Context context, boolean estado, String list) {
+
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.DEFINE_CUOTAS_ESTADO, estado);
+        editor.putString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, list);
+        editor.commit();
+
+
+    }
+
+    public static boolean getDefineCuotas(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE);
+        return prefs.getBoolean(Constants.DEFINE_CUOTAS_ESTADO, false);
+    }
+
+    public static List<PlanPagoDetalle> getListCuotas(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE);
+        String json = prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null);
+        if (!prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null).equals("0")) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<PlanPagoDetalle> myObjects = mapper.readValue(json, new TypeReference<List<PlanPagoDetalle>>() {
+                });
+                return myObjects;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+        return null;
+    }
+
 
     public static boolean saveEstablecimiento(Context context, Establecimiento establecimiento) {
 
@@ -134,7 +173,7 @@ public class Session {
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_ESTABLECIMIENTO, Context.MODE_PRIVATE).edit();
             editor.putInt(Constants.IDESTABLECIMIENTO, establecimiento.getEstIEstablecimientoId());
             editor.putString(Constants.ESTABLECIMIENTO, establecimiento.getEstVDescripcion());
-            editor.apply();
+            editor.commit();
             return true;
 
         } catch (Exception e) {
@@ -191,23 +230,24 @@ public class Session {
 
     }
 
-    public static boolean saveCajaLiquidacion (Context context,CajaLiquidacion cajaLiquidacion){
+    public static boolean saveCajaLiquidacion(Context context, CajaLiquidacion cajaLiquidacion) {
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE).edit();
             editor.putLong(Constants.CAJA_LIQUIDACION_ID,cajaLiquidacion.getLiqId());
-            editor.apply();
+            editor.commit();
             return true;
 
         } catch (Exception e) {
             return false;
         }
     }
-    public static CajaLiquidacion getCajaLiquidacion (Context context){
+
+    public static CajaLiquidacion getCajaLiquidacion(Context context) {
 
         SharedPreferences prefs = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE);
-        CajaLiquidacion cajaLiquidacion =  new CajaLiquidacion();
-        cajaLiquidacion.setLiqId(prefs.getLong(Constants.CAJA_LIQUIDACION_ID,0));
+        CajaLiquidacion cajaLiquidacion = new CajaLiquidacion();
+        cajaLiquidacion.setLiqId(prefs.getLong(Constants.CAJA_LIQUIDACION_ID, 0));
         return cajaLiquidacion;
     }
 }

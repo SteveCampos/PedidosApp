@@ -1,8 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,7 +22,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
-import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.DispatchFragment;
@@ -50,7 +47,6 @@ public class DispatchActivity extends AppCompatActivity {
     private Establecimiento establecimiento;
     private Almacen almacen;
     private onNextActivity mListener;
-    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

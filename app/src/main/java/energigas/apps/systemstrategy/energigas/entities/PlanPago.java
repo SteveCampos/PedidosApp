@@ -1,7 +1,11 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
+
+import java.util.List;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -28,11 +32,14 @@ public class PlanPago extends SugarRecord {
     private int usuarioAccion;
 
     private String fechaAccion;
+    @Ignore
+    private List<PlanPagoDetalle> items;
+
 
     public PlanPago() {
     }
 
-    public PlanPago(long planPaId, long compId, String fechaPago, String serie, String numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion) {
+    public PlanPago(long planPaId, long compId, String fechaPago, String serie, String numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion, List<PlanPagoDetalle> items) {
         this.planPaId = planPaId;
         this.compId = compId;
         this.fechaPago = fechaPago;
@@ -43,6 +50,16 @@ public class PlanPago extends SugarRecord {
         this.porcentajeInteresMes = porcentajeInteresMes;
         this.usuarioAccion = usuarioAccion;
         this.fechaAccion = fechaAccion;
+        this.items = items;
+    }
+
+
+    public List<PlanPagoDetalle> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PlanPagoDetalle> items) {
+        this.items = items;
     }
 
     public long getPlanPaId() {

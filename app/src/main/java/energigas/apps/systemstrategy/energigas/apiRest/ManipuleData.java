@@ -185,45 +185,43 @@ public class ManipuleData {
         }
     }
 
+    private String getQueryDespacho(Context context) {
+        String[] params = Session.getIdsDespachos(context);
+        String parmsQuery = "";
+        for (int i = 0; i < params.length; i++) {
+
+            if (i == (params.length - 1)) {
+                parmsQuery = parmsQuery + params[i] + "";
+            } else {
+                parmsQuery = parmsQuery + params[i] + ",";
+            }
+
+        }
+
+        return parmsQuery;
+    }
+
     public List<Despacho> getDespachosToFactura(Context context) {
-
-        String[] params = Session.getIdsDespachos(context);
-        String parmsQuery = "";
-        for (int i = 0; i < params.length; i++) {
-
-            if (i == (params.length - 1)) {
-                parmsQuery = parmsQuery + params[i] + "";
-            } else {
-                parmsQuery = parmsQuery  + params[i] + ",";
-            }
-
-        }
-        String query = "SELECT * FROM DESPACHO WHERE  DESPACHO_ID IN (" + parmsQuery + ") ORDER BY DESPACHO_ID ";
-        return Despacho.findWithQuery(Despacho.class,query, null);
-
+        String query = "SELECT * FROM DESPACHO WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ") ORDER BY DESPACHO_ID ";
+        return Despacho.findWithQuery(Despacho.class, query, null);
     }
-    public Producto getDespachosRowIdsProducto(Context context) {
 
-        Producto productos = new Producto();
-        String[] params = Session.getIdsDespachos(context);
-        String parmsQuery = "";
-        for (int i = 0; i < params.length; i++) {
-
-            if (i == (params.length - 1)) {
-                parmsQuery = parmsQuery + params[i] + "";
-            } else {
-                parmsQuery = parmsQuery  + params[i] + ",";
-            }
-
-        }
-        String query = "SELECT * FROM ( SELECT * FROM DESPACHO WHERE  DESPACHO_ID IN ("+parmsQuery+") ORDER BY DESPACHO_ID ) GROUP BY PRO_ID";
-        for(Despacho despacho: Despacho.findWithQuery(Despacho.class,query, null)){
-            Producto producto = Producto.find(Producto.class," pro_Id=? ",new String[]{despacho.getProId()+""}).get(Constants.CURRENT);
-            productos = producto;
-        }
-
-        return productos;
-
+    public List<Despacho> getDespachoResumen(Context context) {
+        String query = "SELECT ID,USUARIO_CREACION,SERIE,PLACA,NUMERO,LONGITUD,LATITUD,HORA_INICIO,HORA_FIN,GUIA_REMISION,FECHA_DESPACHO,FECHA_CREACION," +
+                " SUM(PRECIO_UNITARIO_SIGV)  AS  PRECIO_UNITARIO_SIGV," +
+                " SUM(PRECIO_U_NITARIO_CIGV) AS PRECIO_U_NITARIO_CIGV ," +
+                " DESPACHO_ID," +
+                " SUM(COSTO_VENTA) AS COSTO_VENTA," +
+                " CONTADOR_INICIAL," +
+                " SUM(IMPORTE) AS IMPORTE," +
+                " CONTADOR_FINAL,COMP_ID," +
+                " SUM(POR_IMPUESTO) AS POR_IMPUESTO," +
+                " P_FT,P_IT," +
+                " SUM(CANTIDAD_DESPACHADA) AS CANTIDAD_DESPACHADA," +
+                " PE_ID,PD_ID,CLIENTE_ID,ESTABLECIMIENTO_ID,ESTADO_ID,PRO_ID,ALMACEN_VEH_ID,UN_ID,ALMACEN_EST_ID,USUARIO_ID,VEHICULO_ID" +
+                " FROM  DESPACHO WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ") ;";
+        return Despacho.findWithQuery(Despacho.class, query, null);
     }
+
 
 }

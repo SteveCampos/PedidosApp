@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin">
+
+    <LinearLayout
+        android:id="@+id/belowLinear"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/fecha_cuota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Despacho 1"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_10dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:gravity="center|left"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/cambiar_fecha"
+                android:text="Cambiar Fecha"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_14"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:gravity="center|right"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/precio_cuota"
+                android:text="200"
+                android:textSize="@dimen/text_size_14"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <DatePicker
+                android:visibility="gone"
+                android:calendarViewShown="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePickerFecha" />
+
+            <ImageButton
+                android:id="@+id/btnSaveDate"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:src="@drawable/ic_up_arrow"
+                android:layout_width="match_parent"
+                android:background="@color/md_green_50"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</android.support.v7.widget.CardView>

@@ -27,7 +27,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by Steve on 19/07/2016.
  */
 
-public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener {
+public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener       {
 
 
     private static final String TAG = EstablecimientoFragment.class.getSimpleName();
