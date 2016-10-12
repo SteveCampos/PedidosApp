@@ -18,19 +18,21 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CajaGastoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
+import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
+import energigas.apps.systemstrategy.energigas.utils.Log;
 
 /**
  * Created by kikerojas on 30/07/2016.
  */
 
 
-public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCajaGastoClickListener,CajaGastoAdapter.OnAddnewCajaGasto{
+public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCajaGastoClickListener{
 
 
     public OnCajaGastoClickListener listener;
 
-    private OnAddnewCajaGasto listenerAdd;
+   // private OnAddnewCajaGasto listenerAdd;
 
 
     private RecyclerView recyclerView;
@@ -53,7 +55,7 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_expenses);
 
         cajaGastoList=getCajaGastoList();
-        adapter = new CajaGastoAdapter(cajaGastoList, getActivity(), this,this);
+        adapter = new CajaGastoAdapter(cajaGastoList, getActivity(),this);
         //adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
@@ -65,17 +67,18 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
     @Override
     public void onCajaGastoClickListener(int action, CajaGasto expenses, View view) {
         //Snackbar.make(view,expenses.getFechaCreacion(),Snackbar.LENGTH_LONG).show();
-        listener.onCajaGastoClickListener(action, expenses,view);
+        listener.onCajaGastoClickListener(action,expenses,view);
     }
 
     @Override
     public void onAddnewCajaGasto(String date, Double total) {
-        listenerAdd.onAddnewCajaGasto(date,total);
+        listener.onAddnewCajaGasto(date,total);
     }
 
 
     public interface OnCajaGastoClickListener{
-        void onCajaGastoClickListener(int action, CajaGasto expenses, View view);
+        void onCajaGastoClickListener(int action,CajaGasto expenses, View view);
+        void onAddnewCajaGasto(String date,Double total);
     }
 
     public void  addnewExpenses(CajaGasto expenses){
@@ -91,15 +94,12 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
         adapter.remove(cajaGasto, position);
     }
 
-    public interface OnAddnewCajaGasto{
-        void onAddnewCajaGasto (String date,Double total);
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnAddnewCajaGasto){
-            listenerAdd = (OnAddnewCajaGasto) context;
+        if (context instanceof OnCajaGastoClickListener){
+            //listenerAdd = (OnAddnewCajaGasto) context;
             listener = (OnCajaGastoClickListener) context;
         }else{
             throw new RuntimeException(context.toString() +
@@ -110,7 +110,7 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
     @Override
     public void onDetach() {
         super.onDetach();
-        listenerAdd = null;
+       // listenerAdd = null;
         listener = null;
     }
 

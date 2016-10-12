@@ -1,9 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.support.annotation.Nullable;
+
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -133,4 +138,6 @@ public class CajaGasto extends SugarRecord {
         cajaGastos.add(new CajaGasto(10,20,30,40,140,50,70,80,"28/07/2016","Almuerzo Semanal"));
         return cajaGastos;
     }
+
+
 }

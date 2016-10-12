@@ -8,10 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.CajaGastoActivity;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
+import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
+import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
 import energigas.apps.systemstrategy.energigas.holders.CajaGastoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -23,24 +27,37 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
 
-    private OnAddnewCajaGasto listenerAdd;
+    private static final String TAG ="CAJAGASTOADAPTER" ;
+    //private OnAddnewCajaGasto listenerAdd;
     // Store a member variable for the contacts
     private List<CajaGasto> mListCajaGasto;
+
+
+    private List<CajaMovimiento> mListCajaMovimiento=new ArrayList<>();
+
     // Store the context for easy access
     private Activity mactivity;
 
     public interface OnCajaGastoClickListener{
         void onCajaGastoClickListener(int action, CajaGasto CajaGasto, View view);
+        void onAddnewCajaGasto (String date,Double total);
     }
 
     public OnCajaGastoClickListener listener;
 
 
-    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener, OnAddnewCajaGasto listenerAdd) {
+//    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener, OnAddnewCajaGasto listenerAdd) {
+//        this.mListCajaGasto = mListCajaGasto;
+//        this.mactivity = mactivity;
+//        this.listener = listener;
+//        this.listenerAdd = listenerAdd;
+//        notifyDataSetChanged();
+//    }
+
+    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener) {
         this.mListCajaGasto = mListCajaGasto;
         this.mactivity = mactivity;
         this.listener = listener;
-        this.listenerAdd = listenerAdd;
         notifyDataSetChanged();
     }
 
@@ -48,13 +65,12 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         mListCajaGasto.add(cajaGasto);
         int position = getItemCount();
         notifyItemInserted(--position);//3 o 2 position
-        listenerAdd.onAddnewCajaGasto("10/20/11", getTotal());
+        listener.onAddnewCajaGasto("10/20/11", getTotal());
     }
     public void remove(CajaGasto cajaGasto, int position){
         mListCajaGasto.remove(cajaGasto);
         notifyItemRemoved(position);
     }
-
 
     public Double getTotal(){
         Double total = 0.0;
@@ -80,11 +96,14 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         // Get the data model based on position
 
         final CajaGasto cajaGasto = mListCajaGasto.get(position);
-        Log.d(Utils.TAG, "onBindViewHolder: "+ position);
 
-        holder.mdocument.setText(cajaGasto.getTipoGastoId()+"");
-        holder.mdescription.setText(cajaGasto.getFechaCreacion());
+        Log.d(Utils.TAG, "onBindViewHolder: "+ position);
+      //  CajaMovimiento mcajamovimiento = CajaMovimiento.find(CajaMovimiento.class," caj_Mov_Id = ?",new String[]{cajaGasto.getCajMoId()+""}).get(Constants.CURRENT);
+        InformeGasto mInformeGasto = InformeGasto.find(InformeGasto.class,"caj_Gas_Id = ?",new String[]{cajaGasto.getCajGasId()+""}).get(Constants.CURRENT);
+        holder.mdocument.setText(mInformeGasto.getReferencia());
+        holder.mdescription.setText(cajaGasto.getImporte()+"");
         holder.mtotal.setText("S./ " + Utils.formatDouble(cajaGasto.getImporte()));
+        Log.d(TAG,"CAJAMOVIMIENTOCOUNT: "+mInformeGasto);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,16 +138,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
                                     .setCancelable(false)
                                     .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,int id) {
-                                            // if this button is clicked, close
-                                            // current activity
-                                            //CajaGastoActivity.this.finish();
-                                            /*
-                                            CajaGasto cajaGasto1=CajaGasto.findById(CajaGasto.class,cajaGasto.getId());
-                                            cajaGasto1.delete();
-                                            Log.d("TESTING","GetIDCajaGasto: "+cajaGasto1);
-                                            mListCajaGasto.remove(position);
-                                            notifyItemRemoved(position);*/
-                                            listener.onCajaGastoClickListener(Constants.CLICK_ELIMINAR, cajaGasto, holder.itemView);
+                                            listener.onCajaGastoClickListener(Constants.CLICK_ELIMINAR_CAJA_GASTO, cajaGasto, holder.itemView);
 
                                         }
                                     })
@@ -154,7 +164,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
                             CajaGasto cajaGasto1=CajaGasto.findById(CajaGasto.class,cajaGasto.getId());
                             cajaGasto1.save();
                             Log.d("EDITAR","idgetId"+cajaGasto1);*/
-                            listener.onCajaGastoClickListener(Constants.CLICK_EDITAR, cajaGasto, holder.itemView);
+                            listener.onCajaGastoClickListener(Constants.CLICK_EDITAR_CAJA_GASTO, cajaGasto, holder.itemView);
 
                         } else if (items[which].equals("Cancel")) {
                             dialog.dismiss();
@@ -211,10 +221,10 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
 //            });
 //        }
 //    }
-
-      public interface OnAddnewCajaGasto{
-        void onAddnewCajaGasto (String date,Double total);
-    }
+//
+//      public interface OnAddnewCajaGasto{
+//        void onAddnewCajaGasto (String date,Double total);
+//    }
 
 
 

@@ -1,10 +1,12 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class InformeGasto {
+public class InformeGasto extends SugarRecord {
     private long infGasId;
 
     private int tipoGastoId;
