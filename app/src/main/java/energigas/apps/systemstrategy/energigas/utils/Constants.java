@@ -7,104 +7,86 @@ import android.support.annotation.NonNull;
  */
 
 public class Constants {
-    public static final String _CLMEXPORT = "CLMEXPORT";
+    public static final String _CLMEXPORT="CLMEXPORT";
 
     public static final int _CREADO = 2;
 
     public static final int PEDIDO_CREADO = 9;
 
-    /**
-     * Estados AsyntaskListener
-     */
-    public static final int ERROR_PROCEDIMIENTO = -1;
-    public static final int ERROR_CONEXION = -2;
-    public static final int ERROR_GUARDAR = -3;
-    public static final int OPERACION_EXITOSA = -4;
+    /**Estados AsyntaskListener*/
+    public static final int ERROR_PROCEDIMIENTO=-1;
+    public static final int ERROR_CONEXION=-2;
+    public static final int ERROR_GUARDAR=-3;
+    public static final int OPERACION_EXITOSA=-4;
 
-    public static final int CURRENT = 0;
+    public static final int CURRENT =0;
 
 
-    /**
-     * Nombres Caja Liquidacion
-     **/
+    /**Nombres Caja Liquidacion**/
 
-    public static final String CAJA_LIQUIDACION = "CAJA_LIQUIDACION";
-    public static final String CAJA_LIQUIDACION_ID = "CAJA_LIQUIDACION_ID";
-    /**
-     * Nombres de la Session
-     **/
+    public static final String CAJA_LIQUIDACION="CAJA_LIQUIDACION";
+    public static final String CAJA_LIQUIDACION_ID="CAJA_LIQUIDACION_ID";
+    /**Nombres de la Session**/
 
 
-    public static final String SESSION = "SESSION";
-    public static final String IDUSUARIO = "IDUSUARIO";
-    public static final String USUARIO = "USUARIO";
-    public static final String NOMBRE = "NOMBRE";
-    public static final String APELLIDO_PATERNO = "APELLIDO_PATERNO";
-    public static final String APELLIDO_MATERNO = "APELLIDO_MATERNO";
+    public static final String SESSION="SESSION";
+    public static final String IDUSUARIO="IDUSUARIO";
+    public static final String USUARIO="USUARIO";
+    public static final String NOMBRE="NOMBRE";
+    public static final String APELLIDO_PATERNO="APELLIDO_PATERNO";
+    public static final String APELLIDO_MATERNO="APELLIDO_MATERNO";
 
 
-    /**
-     * Nombres de Establecimiento
-     **/
+    /**Nombres de Establecimiento**/
 
-    public static final String SESSION_ESTABLECIMIENTO = "SESSION_ESTABLECIMIENTO";
-    public static final String IDESTABLECIMIENTO = "IDESTABLECIMIENTO";
-    public static final String ESTABLECIMIENTO = "ESTABLECIMIENTO";
+    public static final String SESSION_ESTABLECIMIENTO="SESSION_ESTABLECIMIENTO";
+    public static final String IDESTABLECIMIENTO="IDESTABLECIMIENTO";
+    public static final String ESTABLECIMIENTO="ESTABLECIMIENTO";
 
-    /**
-     * Nombres de Pedido
-     **/
+    /**Nombres de Pedido**/
 
-    public static final String SESSION_PEDIDO = "SESSION_PEDIDO";
-    public static final String IDPEDIDO = "IDPEDIDO";
+    public static final String SESSION_PEDIDO="SESSION_PEDIDO";
+    public static final String IDPEDIDO="IDPEDIDO";
 
-    /**
-     * Nombres de Almacen
-     **/
+    /**Nombres de Almacen**/
 
-    public static final String SESSION_ALMACEN = "SESSION_ALMACEN";
-    public static final String IDALMACEN = "IDALMACEN";
+    public static final String SESSION_ALMACEN="SESSION_ALMACEN";
+    public static final String IDALMACEN="IDALMACEN";
 
     /**
      * Nombres de Despacho
      **/
 
-    public static final String SESSION_DESPACHO = "SESSION_DESPACHO";
-    public static final String IDDESPACHO = "IDDESPACHO";
+    public static final String SESSION_DESPACHO="SESSION_DESPACHO";
+    public static final String IDDESPACHO="IDDESPACHO";
 
-    /**
-     * ID PARA OBTENER SERIE
-     **/
+    /** ID PARA OBTENER SERIE**/
 
-    public static final int TIPO_ID_DEVICE_CELULAR = 3;
+    public static  final int TIPO_ID_DEVICE_CELULAR = 3;
 
-    public static final int TIPO_ID_COMPROBANTE_DESPACHO = 118;
-    public static final int TIPO_ID_COMPROBANTE_FACTURA = 51;
-    public static final int TIPO_ID_COMPROBANTE_BOLETA = 52;
-    public static final int TIPO_ID_COMPROBANTE_GUIA = 76;
-    public static final int TIPO_ID_COMPROBANTE_NOTA_CREDITO = 96;
+    public static  final int TIPO_ID_COMPROBANTE_DESPACHO = 118;
+    public static  final int TIPO_ID_COMPROBANTE_FACTURA = 51;
+    public static  final int TIPO_ID_COMPROBANTE_BOLETA = 52;
+    public static  final int TIPO_ID_COMPROBANTE_GUIA = 76;
+    public static  final int TIPO_ID_COMPROBANTE_NOTA_CREDITO = 96;
 
 
-    /**
-     * PARA LISTAR OBJETOS
-     **/
+    /** PARA LISTAR OBJETOS**/
     public static final String CONCEPTO_TIPO_COMPROBANTE_VENTA = "Comprobante";
     public static final String CONCEPTO_FORMA_PAGO = "Forma Pago";
     public static final String CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA = "Comprobante Venta";
     public static final String CONCEPTO_TIPO_PAGO = "Tipo Pago";
     public static final String CONCEPTO_CAJA_PAGO = "Caja Pago";
+    public static final String CONCEPTO_CAJA_GASTO= "Caja Gastos";
+    public static final String CONCEPTO_TIPO_GASTO = "Tipo Gasto";
 
 
-    /**
-     * Guardar los IDS de los despachos seleccionados
-     **/
+    /**Guardar los IDS de los despachos seleccionados**/
 
     public static final String DESPACHOS_IDS = "DESPACHOS_IDS";
     public static final String DESPACHOS_IDS_ITEMS = "DESPACHOS_IDS_ITEMS";
 
-    /**
-     * Items Forma de pago
-     **/
+    /** Items Forma de pago**/
     public static final String FORMA_PAGO_CONTADO = "Contado";
     public static final String FORMA_PAGO_CREDITO = "Crédito";
 
@@ -118,6 +100,11 @@ public class Constants {
 
     public static final boolean NO_EXPORTADO = false;
     public static final boolean EXPORTADO = true;
+
+
+    public static final int CLICK_EDITAR_CAJA_GASTO = 1;
+    public static final int CLICK_ELIMINAR_CAJA_GASTO = 2;
+
 
 
     public static final int VENTA_BASE_IMPONIBLE = 0;
