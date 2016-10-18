@@ -1,12 +1,14 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
 public class InformeGasto extends SugarRecord {
+    @Unique
     private long infGasId;
 
     private int tipoGastoId;
@@ -21,10 +23,20 @@ public class InformeGasto extends SugarRecord {
 
     private int catTipoGastoId;
 
+    private int estadoId;
+
     public InformeGasto() {
     }
 
-    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId) {
+    public int getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId, int estadoId) {
         this.infGasId = infGasId;
         this.tipoGastoId = tipoGastoId;
         this.cajGasId = cajGasId;
@@ -32,6 +44,7 @@ public class InformeGasto extends SugarRecord {
         this.fechaAccion = fechaAccion;
         this.referencia = referencia;
         this.catTipoGastoId = catTipoGastoId;
+        this.estadoId = estadoId;
     }
 
     public long getInfGasId() {

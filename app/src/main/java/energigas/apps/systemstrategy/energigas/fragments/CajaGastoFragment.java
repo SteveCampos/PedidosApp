@@ -117,7 +117,8 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
 
 
     private List<CajaGasto> getCajaGastoList(){
-        List<CajaGasto> list= CajaGasto.findWithQuery(CajaGasto.class, "Select * from Caja_Gasto");
+        List<CajaGasto> list= CajaGasto.findWithQuery(CajaGasto.class, "SELECT * FROM CAJA_GASTO CG,INFORME_GASTO IG WHERE CG.CAJ_GAS_ID=IG.CAJ_GAS_ID" +
+                " AND IG.ESTADO_ID=58");
 
         for (int i=0; i<list.size(); i++){
             CajaGasto cajaGasto = list.get(i);

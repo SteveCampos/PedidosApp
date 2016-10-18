@@ -41,14 +41,17 @@ import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Expenses;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.InventarioFragment;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -57,6 +60,9 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class CajaGastoActivity extends AppCompatActivity implements View.OnClickListener, CajaGastoFragment.OnCajaGastoClickListener {
     private static final String TAG = CajaGastoActivity.class.getSimpleName();
+    CajaLiquidacion cajaLiquidacion;
+    CajaGasto expenses;
+    Usuario usuario;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewCharges)
@@ -88,10 +94,13 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_expenses);
         ButterKnife.bind(this);
+        cajaLiquidacion= CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ",new String[]{Session.getCajaLiquidacion(this).getLiqId()+""}).get(Constants.CURRENT);
+        usuario=Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId()+""}).get(Constants.CURRENT);
         btndialog.setOnClickListener(this);
         setTabsAdapterFragment();
         setToolbar();
         setupCollapsingToolbar();
+
 
     }
 
@@ -250,7 +259,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
 
                     idCajagasto = idCajagasto + 1;
-                    CajaGasto expenses = new CajaGasto(idCajagasto,
+                    expenses = new CajaGasto(idCajagasto,
                             idCajagasto,
                             10,
                             20,
@@ -293,34 +302,37 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void manipulateInTransaction() {
                 //SAVE HERE!
+                long idMovimiento=CajaMovimiento.findWithQuery(CajaMovimiento.class,Utils.getQueryNumberCajaMov(),null).get(Constants.CURRENT).getCajMovId();
 
-                CajaMovimiento cajaMovimiento = new CajaMovimiento(mcajaGasto.getCajGasId(),
-                        12,
+                CajaMovimiento cajaMovimiento = new CajaMovimiento(idMovimiento,
+                        cajaLiquidacion.getLiqId(),
                         12,
                         "Soles",
-                        20.2,
+                        expenses.getImporte(),
                         true,
-                        "4/10/2016",
-                        "ASD",
+                        Utils.getDatePhoneTime(),
+                        " ",
                         mDescription,
-                        12,
-                        "4/10/2016",
+                        usuario.getUsuIUsuarioId(),
+                        Utils.getDatePhone(),
                         "Android",
                         12);
-                //cajaMovimiento.save();
+                cajaMovimiento.save();
 
                 mcajaGasto.save();
                 Log.d(TAG, "SSAVED CAJAMOVIEMTO : " + mcajaGasto.toString() + cajaMovimiento);
                 Log.d(TAG, "Description : " + mDescription);
                 //cajaMovimiento.save();
 
-                InformeGasto informeGasto1 = new InformeGasto(mcajaGasto.getCajGasId(),
+                long idInformeg=InformeGasto.findWithQuery(InformeGasto.class,Utils.getQueryNumberInform(),null).get(Constants.CURRENT).getInfGasId();
+                InformeGasto informeGasto1 = new InformeGasto(idInformeg,
                         11,
                         mcajaGasto.getCajGasId(),
                         13,
                         dateFormat.format(date),
                         mDescription,
-                        12);
+                        12,
+                        58);
                 informeGasto1.save();
                 Log.d(TAG, "INFORMEGASSTOS: " + informeGasto1);
             }
@@ -339,7 +351,9 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
             public void manipulateInTransaction() {
                 //CajaMovimiento mCajaMovimiento = CajaMovimiento.find(CajaMovimiento.class, " caj_Mov_Id = ?", new String[]{cajaGasto.getCajMoId() + ""}).get(Constants.CURRENT);
                 InformeGasto mInformeGasto = InformeGasto.find(InformeGasto.class, "caj_Gas_Id = ?", new String[]{cajaGasto.getCajGasId() + ""}).get(Constants.CURRENT);
-                mInformeGasto.delete();
+                //mInformeGasto.delete();
+                mInformeGasto.setEstadoId(59);
+                mInformeGasto.save();
                 Log.d(TAG, "  CajaMovimiento mCajaMovimiento " + mInformeGasto);
             }
 

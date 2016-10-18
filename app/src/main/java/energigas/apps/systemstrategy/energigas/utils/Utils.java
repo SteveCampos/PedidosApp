@@ -33,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.activities.BluetoothActivity;
 
 public class Utils {
 
+
     public static String TAG = "EnergigasApp";
 
     public static String capitalize(String input) {
@@ -60,6 +61,13 @@ public class Utils {
         Date now = new Date();
         Date alsoNow = Calendar.getInstance().getTime();
         String nowAsString = new SimpleDateFormat("dd/MM/yyyy").format(now);
+        return nowAsString;
+    }
+
+    public static String getDatePhoneTime() {
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
+        String nowAsString = new SimpleDateFormat("dd/MM/yyyy :hh:").format(now);
         return nowAsString;
     }
 
@@ -179,6 +187,13 @@ public class Utils {
                 ",CAT_MOV_ID,TIPO_MOV_ID,ESTADO FROM CAJA_MOVIMIENTO  ;";
     }
 
+    public static String getQueryNumberInform(){
+        return"SELECT  ID,REFERENCIA,FECHA_ACCION,CAT_TIPO_GASTO_ID,INF_GAS_ID,TIPO_GASTO_ID,USUARIO_ACCION," +
+                "CASE WHEN(SELECT COUNT(*) FROM INFORME_GASTO) IS 0 THEN (SELECT COUNT(*)FROM INFORME_GASTO)+1 ELSE MAX(INF_GAS_ID)+1 END AS 'INF_GAS_ID'\n" +
+                "FROM INFORME_GASTO   ;";
+
+    }
+
     public static String getQueryNumberPlanPago() {
         return "SELECT ID,SERIE,NUM_DOC,FECHA_ACCION,FECHA_PAGO,GLOSA,COMP_ID," +
                 "CASE  WHEN (SELECT COUNT(*) FROM PLAN_PAGO ) IS 0 THEN (SELECT COUNT(*) FROM PLAN_PAGO ) +1 ELSE MAX(PLAN_PA_ID)+1 END AS 'PLAN_PA_ID' " +
@@ -277,7 +292,6 @@ public class Utils {
         }
         return x;
     }
-
 
 
 }
