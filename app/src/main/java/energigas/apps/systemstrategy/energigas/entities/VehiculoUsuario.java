@@ -1,12 +1,16 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
 public class VehiculoUsuario extends SugarRecord{
+
+    @Unique
+    private String vehiculoUsuarioId;
 
     private int veId;
 
@@ -17,10 +21,19 @@ public class VehiculoUsuario extends SugarRecord{
     public VehiculoUsuario() {
     }
 
-    public VehiculoUsuario(int veId, int usuarioId, boolean responsable) {
+    public VehiculoUsuario(String vehiculoUsuarioId, int veId, int usuarioId, boolean responsable) {
+        this.vehiculoUsuarioId = vehiculoUsuarioId;
         this.veId = veId;
         this.usuarioId = usuarioId;
         this.responsable = responsable;
+    }
+
+    public String getVehiculoUsuarioId() {
+        return vehiculoUsuarioId;
+    }
+
+    public void setVehiculoUsuarioId(String vehiculoUsuarioId) {
+        this.vehiculoUsuarioId = vehiculoUsuarioId;
     }
 
     public int getVeId() {

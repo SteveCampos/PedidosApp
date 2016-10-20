@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.activities.DespachoActivity;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.adapters.AlmacenAdapter;
@@ -50,10 +51,9 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
         // Inflate the layout for this fragment
         recyclerView= (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-       // pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
-        //almacenList = Almacen.find(Almacen.class," establecimiento_Id = ?  ",new String[]{pedido.getEstablecimientoId()+""});
-        almacenList = Almacen.findWithQuery(Almacen.class," select capacidad_neta,* from almacen inner join establecimiento\n" +
-                "where almacen.id=establecimiento.id ");
+        // pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
+        almacenList = Almacen.find(Almacen.class," establecimiento_Id = ?  ",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
+       // almacenList = Almacen.findWithQuery(Almacen.class," select capacidad_neta,* from almacen inner join establecimiento " + "where almacen.id=establecimiento.id ");
         Log.d(TAG, "Sentence :"+almacenList.size());
         adapter = new AlmacenAdapter(almacenList, getActivity(), this);
         recyclerView.setAdapter(adapter);
@@ -91,7 +91,7 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
                 message = "No Programado, mantenga presionado para Autoprogramar";
                 break;
         }
-        clase = DispatchActivity.class;
+        clase = DespachoActivity.class;
         Session.saveAlmacen(getActivity(),almacen);
         Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
 

@@ -583,10 +583,10 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         if (concepto.getIdConcepto() == Constants.CREDITO_ID)
 
             if (cliente.getCliDOCreditoDisponible() < obtenerCalculos()[Constants.VENTA_TOTAL]) {
-                DialogGeneral.isConfirm(this, "Solicitar Credito", "Solicitar Credito : 100 ", new DialogGeneralListener() {
+                DialogGeneral.isConfirm(this, "Solicitar Credito", "Solicitar Credito : 1000 ", new DialogGeneralListener() {
                     @Override
                     public void onSavePressed() {
-
+                        cliente.setCliDOCreditoDisponible(1000.00);
                     }
 
                     @Override

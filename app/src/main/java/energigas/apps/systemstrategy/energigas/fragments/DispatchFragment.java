@@ -26,6 +26,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
@@ -90,6 +91,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
     private Usuario usuario;
     private Pedido pedido;
     private Serie serie;
+    private CajaLiquidacion cajaLiquidacion;
 
     private OnFragmentInteractionListener mListener;
     private LocationVehiculeListener locationVehiculeListener;
@@ -134,6 +136,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
                 R.layout.layout_dispatch, container, false);
         unbinder = ButterKnife.bind(this, view);
         locationVehiculeListener = new LocationVehiculeListener(this);
+        cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class," liq_Id = ? ",new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId()+""}).get(Constants.CURRENT);
         pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);
         pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
@@ -184,7 +187,8 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
                 pedido.getPorImpuesto(),
                 pedidoDetalle.getCostoVenta(),
                 pedidoDetalle.getImporte(),
-                -1
+                -1,
+                cajaLiquidacion.getLiqId()
 
 
         );
@@ -269,7 +273,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
             Session.saveDespacho(getActivity(), despacho);
             if (estad > 0)
                 startActivity(new Intent(getActivity(), PrintDispatch.class));
-                getActivity().finish();
+            getActivity().finish();
 
         }
 

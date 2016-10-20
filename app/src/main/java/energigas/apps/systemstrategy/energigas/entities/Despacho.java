@@ -3,9 +3,6 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -77,11 +74,13 @@ public class Despacho extends SugarRecord {
 
     private long compId;
 
+    private long liqId;
+
 
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision, double precioUnitarioSIGV, double precioUNitarioCIGV, double porImpuesto, double costoVenta, double importe, long compId) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision, double precioUnitarioSIGV, double precioUNitarioCIGV, double porImpuesto, double costoVenta, double importe, long compId, long liqId) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -116,6 +115,15 @@ public class Despacho extends SugarRecord {
         this.costoVenta = costoVenta;
         this.importe = importe;
         this.compId = compId;
+        this.liqId = liqId;
+    }
+
+    public long getLiqId() {
+        return liqId;
+    }
+
+    public void setLiqId(long liqId) {
+        this.liqId = liqId;
     }
 
     public double getPrecioUnitarioSIGV() {

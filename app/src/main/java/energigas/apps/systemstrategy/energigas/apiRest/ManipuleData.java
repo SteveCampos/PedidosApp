@@ -162,6 +162,10 @@ public class ManipuleData {
 
             Long inserVeh = cajaLiquidacion.getVehiculo().save();
             Log.d(TAG, " Vehiculo" + (inserVeh));
+
+            cajaLiquidacion.getVehiculo().getAlmacen().save();
+
+
             boolean estVeDis = true;
 
             for (VehiculoDispositivo vehiculoDispositivo : cajaLiquidacion.getItemsVehiculoDispositivo()) {

@@ -208,7 +208,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         btn_cancel.setOnClickListener(this);
 
 
-        conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_TIPO_GASTO, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
+        conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{"", "", String.valueOf("")});
         Log.d(TAG, "SIZE: " + conceptoList.size());
         ConceptoAdapter conceptoArrayAdapter = new ConceptoAdapter(this, 0, conceptoList);
         sp_tiposgastos.setAdapter(conceptoArrayAdapter);
@@ -378,10 +378,10 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onCajaGastoClickListener(int action, CajaGasto expenses, View view) {
         switch (action) {
-            case Constants.CLICK_EDITAR_CAJA_GASTO:
+            case Constants._CREADO:
                 update_dialog(expenses, view);
                 break;
-            case Constants.CLICK_ELIMINAR_CAJA_GASTO:
+            case 3:
 
                 Fragment expensesFragment = getFragment(0);
 

@@ -131,6 +131,13 @@
             android:name=".activities.DefinirCuotasActivity"
             android:label="@string/title_activity_definir_cuotas"
             android:theme="@style/AppTheme"></activity>
+
+
+        <activity android:name=".activities.DespachoActivity"
+            android:label="Despacho"
+            android:theme="@style/AppTheme"/>
+
+
     </application>
 
 </manifest>

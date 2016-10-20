@@ -293,5 +293,9 @@ public class Utils {
         return x;
     }
 
+    public static String getQuerDespachoVehiculo(int idUsuario){
+        return " SELECT * FROM ALMACEN WHERE VEHICULO_ID=(SELECT VE_ID FROM VEHICULO_USUARIO WHERE USUARIO_ID = "+idUsuario+" )";
+    }
+
 
 }

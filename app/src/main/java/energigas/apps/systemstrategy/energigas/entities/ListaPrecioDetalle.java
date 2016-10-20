@@ -29,10 +29,13 @@ public class ListaPrecioDetalle extends SugarRecord{
 
     private int usuarioActualizacion;
 
+    private double porImpuesto;
+
     public ListaPrecioDetalle() {
     }
 
-    public ListaPrecioDetalle(long lpdId, int lpId, int clienteId, int establecimientoId, int unId, int proId, double precio, double precioImp, String fechaActualizacion, int usuarioActualizacion) {
+    public ListaPrecioDetalle(double porImpuesto, long lpdId, int lpId, int clienteId, int establecimientoId, int unId, int proId, double precio, double precioImp, String fechaActualizacion, int usuarioActualizacion) {
+        this.porImpuesto = porImpuesto;
         this.lpdId = lpdId;
         this.lpId = lpId;
         this.clienteId = clienteId;
@@ -43,6 +46,14 @@ public class ListaPrecioDetalle extends SugarRecord{
         this.precioImp = precioImp;
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    public double getPorImpuesto() {
+        return porImpuesto;
+    }
+
+    public void setPorImpuesto(double porImpuesto) {
+        this.porImpuesto = porImpuesto;
     }
 
     public long getLpdId() {

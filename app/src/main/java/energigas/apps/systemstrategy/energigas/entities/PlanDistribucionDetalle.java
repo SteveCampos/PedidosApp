@@ -18,7 +18,11 @@ public class PlanDistribucionDetalle extends SugarRecord {
 
     private int orden;
 
-    private boolean estado;
+    private int estadoId;
+
+    private String fechaCreacion;
+
+    private int usuarioCreacion;
 
     private String fechaActualizacion;
 
@@ -33,17 +37,35 @@ public class PlanDistribucionDetalle extends SugarRecord {
     public PlanDistribucionDetalle() {
     }
 
-    public PlanDistribucionDetalle(long pddId, long pdId, int establecimientoId, int orden, boolean estado, String fechaActualizacion, int usuarioActualizacion, long peId, int agenteId, int veId) {
+    public PlanDistribucionDetalle(long pddId, long pdId, int establecimientoId, int orden, int estadoId, String fechaCreacion, int usuarioCreacion, String fechaActualizacion, int usuarioActualizacion, long peId, int agenteId, int veId) {
         this.pddId = pddId;
         this.pdId = pdId;
         this.establecimientoId = establecimientoId;
         this.orden = orden;
-        this.estado = estado;
+        this.estadoId = estadoId;
+        this.fechaCreacion = fechaCreacion;
+        this.usuarioCreacion = usuarioCreacion;
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioActualizacion = usuarioActualizacion;
         this.peId = peId;
         this.agenteId = agenteId;
         this.veId = veId;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public int getUsuarioCreacion() {
+        return usuarioCreacion;
+    }
+
+    public void setUsuarioCreacion(int usuarioCreacion) {
+        this.usuarioCreacion = usuarioCreacion;
     }
 
     public long getPddId() {
@@ -78,12 +100,12 @@ public class PlanDistribucionDetalle extends SugarRecord {
         this.orden = orden;
     }
 
-    public boolean isEstado() {
-        return estado;
+    public int isEstado() {
+        return estadoId;
     }
 
-    public void setEstado(boolean estado) {
-        this.estado = estado;
+    public void setEstado(int estado) {
+        this.estadoId = estado;
     }
 
     public String getFechaActualizacion() {

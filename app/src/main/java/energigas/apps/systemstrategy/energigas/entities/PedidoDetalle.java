@@ -44,7 +44,7 @@ public class PedidoDetalle extends SugarRecord {
 
     private String golpe;
 
-   private int almId;
+    private int almId;
 
     public PedidoDetalle() {
     }
@@ -68,6 +68,8 @@ public class PedidoDetalle extends SugarRecord {
         this.golpe = golpe;
         this.almId = almId;
     }
+
+
 
     public int getAlmId() {
         return almId;

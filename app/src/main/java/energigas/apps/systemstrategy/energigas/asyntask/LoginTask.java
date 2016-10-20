@@ -174,15 +174,20 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         }
         Utils.saveStateLogin(context, true);
 
+        if (cajaLiquidacion != null) {
+            if (cajaLiquidacion.getLiqId() > 0) {
+                if (cajaLiquidacion.getPlanDistribucionD() != null) {
+                    manipuleData.saveLiquidacion(cajaLiquidacion);
+                }
 
-        if (cajaLiquidacion.getLiqId() > 0) {
-                manipuleData.saveLiquidacion(cajaLiquidacion);
+
+            }
+
         }
 
 
         result = 5;
     }
-
 
 
     @Override

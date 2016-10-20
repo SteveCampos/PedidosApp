@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
 /**
@@ -47,10 +48,13 @@ public class Vehiculo extends SugarRecord{
 
     private int estadoId;
 
+    @Ignore
+    private Almacen almacen;
+
     public Vehiculo() {
     }
 
-    public Vehiculo(int veId, int tipoVehiculoId, int claseId, int tamanoId, int tipoConductorId, String modelo, double capacidadPeso, String placa, int marcaId, double costoHora, double costoKm, double costoSeguro, double costoSOAT, int usuarioCreacion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int empresaId, int estadoId) {
+    public Vehiculo(int veId, int tipoVehiculoId, int claseId, int tamanoId, int tipoConductorId, String modelo, double capacidadPeso, String placa, int marcaId, double costoHora, double costoKm, double costoSeguro, double costoSOAT, int usuarioCreacion, String fechaCreacion, int usuarioActualizacion, String fechaActualizacion, int empresaId, int estadoId, Almacen almacen) {
         this.veId = veId;
         this.tipoVehiculoId = tipoVehiculoId;
         this.claseId = claseId;
@@ -70,6 +74,15 @@ public class Vehiculo extends SugarRecord{
         this.fechaActualizacion = fechaActualizacion;
         this.empresaId = empresaId;
         this.estadoId = estadoId;
+        this.almacen = almacen;
+    }
+
+    public Almacen getAlmacen() {
+        return almacen;
+    }
+
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 
     public int getVeId() {

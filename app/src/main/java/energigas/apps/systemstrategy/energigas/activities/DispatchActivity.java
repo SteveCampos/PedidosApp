@@ -43,7 +43,6 @@ public class DispatchActivity extends AppCompatActivity {
     TextView textViewProduct;
     @BindView(R.id.textview_dispatch_station)
     TextView textviewStation;
-
     private Establecimiento establecimiento;
     private Almacen almacen;
     private onNextActivity mListener;
@@ -118,7 +117,7 @@ public class DispatchActivity extends AppCompatActivity {
         DialogGeneral.isConfirm(DispatchActivity.this, " ATENCIÓN", " ¿ Está seguro de generar despacho ?", new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
-               mListener.onNextListener();
+                mListener.onNextListener();
             }
 
             @Override
