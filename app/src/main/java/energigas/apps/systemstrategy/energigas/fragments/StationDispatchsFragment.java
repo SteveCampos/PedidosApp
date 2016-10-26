@@ -91,7 +91,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
     private void initiViews() {
-        dispatchList = Despacho.find(Despacho.class," pe_Id = ? ",new String[]{Session.getPedido(getActivity()).getPeId()+""});
+        dispatchList = Despacho.find(Despacho.class," establecimiento_Id = ? ",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
         Log.d(TAG,"Dispatch : "+ Session.getDespacho(getActivity()).getDespachoId() + "");
         adapter = new StationDispatchsAdapter(dispatchList, getActivity(), this);
         recyclerView.setAdapter(adapter);

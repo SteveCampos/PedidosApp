@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orm.SugarTransactionHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,17 +116,6 @@ public class DispatchActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     void dispatch() {
 
-        DialogGeneral.isConfirm(DispatchActivity.this, " ATENCIÓN", " ¿ Está seguro de generar despacho ?", new DialogGeneralListener() {
-            @Override
-            public void onSavePressed() {
-                mListener.onNextListener();
-            }
-
-            @Override
-            public void onCancelPressed() {
-                Toast.makeText(DispatchActivity.this,"Cancelo",Toast.LENGTH_LONG).show();
-            }
-        });
 
     }
 

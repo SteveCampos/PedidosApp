@@ -67,9 +67,14 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         int number = position;
         number++;
 
-        holder.dispatchTank.setText("Tanque " + (number));
+        holder.dispatchTank.setText("Despacho:  " + dispatch.getSerie()+"-"+dispatch.getNumero());
         holder.dispatchProduct.setText(producto.getNombre());
         holder.dispatchQuantity.setText(dispatch.getCantidadDespachada() + " Gal");
+        if (dispatch.getCompId()>0){
+            holder.dispatchState.setText("Facturado");
+        }else {
+            holder.dispatchState.setText("Despachado");
+        }
 
         int colorAccent = ContextCompat.getColor(mContext, R.color.colorAccent);
         int colorWhite = ContextCompat.getColor(mContext, R.color.white);

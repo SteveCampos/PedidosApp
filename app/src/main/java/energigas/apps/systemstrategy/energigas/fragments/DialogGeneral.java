@@ -22,40 +22,51 @@ public class DialogGeneral {
 
     private String title;
     private String message;
-
+    private boolean estado = false;
     private DialogGeneralListener dialogGeneralListener;
 
+    LayoutInflater layoutInflater ;
+    View view;
+    Activity activity;
+    Button btnOk;
+    Button btnCancel;
+    TextView textTitle ;
+    TextView textMessage ;
 
-    public DialogGeneral setTitle(String title) {
-        this.title = title;
+    public DialogGeneral (Activity activity){
+        this.activity = activity;
+        LayoutInflater layoutInflater = LayoutInflater.from(activity);
+        view = layoutInflater.inflate(R.layout.dialog_general, null);
+        btnOk = (Button) view.findViewById(R.id.btn_ok);
+        btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        textTitle = (TextView) view.findViewById(R.id.textTitle);
+        textMessage = (TextView) view.findViewById(R.id.textMessage);
+
+    }
+
+    public DialogGeneral setCancelable(boolean estado) {
+        this.estado = estado;
         return this;
     }
 
-    public DialogGeneral setMessage(String message) {
-        this.message = message;
+    public DialogGeneral setTextButtons(String textYes,String textNo){
+        btnOk.setText(textYes);
+        btnCancel.setText(textNo);
+        return this;
+    }
+
+    public DialogGeneral setMessages(String title,String message){
+        textTitle.setText(title);
+        textMessage.setText(message);
         return this;
     }
 
 
-    public static void isConfirm(Activity activity, String title, String message, DialogGeneralListener dialogGeneral) {
-
+    public  void showDialog(DialogGeneralListener dialogGeneral) {
 
         final DialogGeneralListener dialogGeneralListener = dialogGeneral;
 
-        LayoutInflater layoutInflater = LayoutInflater.from(activity);
-        View view = layoutInflater.inflate(R.layout.dialog_general, null);
-
         final AlertDialog alertD = new AlertDialog.Builder(activity).create();
-
-        Button btnOk = (Button) view.findViewById(R.id.btn_ok);
-        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
-
-
-        TextView textTitle = (TextView) view.findViewById(R.id.textTitle);
-        TextView textMessage = (TextView) view.findViewById(R.id.textMessage);
-
-        textTitle.setText(title);
-        textMessage.setText(message);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -73,11 +84,10 @@ public class DialogGeneral {
 
             }
         });
-        alertD.setCancelable(false);
+        alertD.setCancelable(this.estado);
         alertD.setView(view);
         alertD.show();
 
     }
-
 
 }

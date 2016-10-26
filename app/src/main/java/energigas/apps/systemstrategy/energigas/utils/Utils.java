@@ -10,10 +10,16 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DatePicker;
+import android.widget.Toast;
+
+import com.orm.SugarApp;
+import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -23,9 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import energigas.apps.systemstrategy.energigas.activities.BluetoothActivity;
+import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Steve on 21/07/2016.
@@ -39,7 +50,8 @@ public class Utils {
     public static String capitalize(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
-    public static double getDoubleFormat(double number){
+
+    public static double getDoubleFormat(double number) {
 
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ROOT);
         otherSymbols.setDecimalSeparator('.');
@@ -64,6 +76,11 @@ public class Utils {
         return nowAsString;
     }
 
+    public static String getQueryListComproVenta(String establecimientoId, String estadoId) {
+
+        return "SELECT * FROM COMPROBANTE_VENTA WHERE establecimiento_Id=" + establecimientoId + ";";
+    }
+
     public static String getDatePhoneTime() {
         Date now = new Date();
         Date alsoNow = Calendar.getInstance().getTime();
@@ -71,10 +88,10 @@ public class Utils {
         return nowAsString;
     }
 
-    public static java.util.Date getDateFromDatePicker(DatePicker datePicker){
+    public static java.util.Date getDateFromDatePicker(DatePicker datePicker) {
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth();
-        int year =  datePicker.getYear();
+        int year = datePicker.getYear();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
@@ -82,10 +99,10 @@ public class Utils {
         return calendar.getTime();
     }
 
-    public static Long getDateFromDatePickerMills(DatePicker datePicker){
+    public static Long getDateFromDatePickerMills(DatePicker datePicker) {
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth();
-        int year =  datePicker.getYear();
+        int year = datePicker.getYear();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
@@ -93,7 +110,7 @@ public class Utils {
         return calendar.getTimeInMillis();
     }
 
-    public static Long getDateMills(String fecha){
+    public static Long getDateMills(String fecha) {
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = null;
@@ -104,7 +121,8 @@ public class Utils {
         }
         return date.getTime();
     }
-    public static Date getDateFromString(String fecha){
+
+    public static Date getDateFromString(String fecha) {
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = null;
@@ -187,8 +205,8 @@ public class Utils {
                 ",CAT_MOV_ID,TIPO_MOV_ID,ESTADO FROM CAJA_MOVIMIENTO  ;";
     }
 
-    public static String getQueryNumberInform(){
-        return"SELECT  ID,REFERENCIA,FECHA_ACCION,CAT_TIPO_GASTO_ID,INF_GAS_ID,TIPO_GASTO_ID,USUARIO_ACCION," +
+    public static String getQueryNumberInform() {
+        return "SELECT  ID,REFERENCIA,FECHA_ACCION,CAT_TIPO_GASTO_ID,INF_GAS_ID,TIPO_GASTO_ID,USUARIO_ACCION," +
                 "CASE WHEN(SELECT COUNT(*) FROM INFORME_GASTO) IS 0 THEN (SELECT COUNT(*)FROM INFORME_GASTO)+1 ELSE MAX(INF_GAS_ID)+1 END AS 'INF_GAS_ID'\n" +
                 "FROM INFORME_GASTO   ;";
 
@@ -250,7 +268,7 @@ public class Utils {
     public static Date restarFechasDias(Date fch, int dias) {
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(fch.getTime());
-        cal.add(Calendar.DATE, (dias*=-1) );
+        cal.add(Calendar.DATE, (dias *= -1));
         return new java.sql.Date(cal.getTimeInMillis());
     }
 
@@ -261,40 +279,122 @@ public class Utils {
         return nowAsString;
     }
 
-    public static String getAndroidID(Context context){
+    public static String getAndroidID(Context context) {
         String android_id;
         android_id = get_android_id(context);
-        if (TextUtils.isEmpty(android_id)){
+        if (TextUtils.isEmpty(android_id)) {
             Log.d(TAG, "android_id is empty");
             android_id = get_android_id(context);
         }
         return android_id;
     }
-    private static String get_android_id(Context context){
+
+    private static String get_android_id(Context context) {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
 
-    public static byte[] clearByte(byte[] data, int position){
+    public static byte[] clearByte(byte[] data, int position) {
         byte[] x = new byte[data.length - position];
-        for(int i=position; i < data.length; i++){
-            x[i-position] = data[i];
+        for (int i = position; i < data.length; i++) {
+            x[i - position] = data[i];
         }
         return x;
     }
 
-    public static byte[] clearUnsigned(byte[] x){
-        for(int i= 0; i< x.length; i++){
+    public static byte[] clearUnsigned(byte[] x) {
+        for (int i = 0; i < x.length; i++) {
             int signed = x[i] & 0xFF;
-            if(signed >= 128){
+            if (signed >= 128) {
                 x[i] = (byte) 32;
             }
         }
         return x;
     }
 
-    public static String getQuerDespachoVehiculo(int idUsuario){
-        return " SELECT * FROM ALMACEN WHERE VEHICULO_ID=(SELECT VE_ID FROM VEHICULO_USUARIO WHERE USUARIO_ID = "+idUsuario+" )";
+    public static String getQuerDespachoVehiculo(int idUsuario) {
+        return " SELECT * FROM ALMACEN WHERE VEHICULO_ID=(SELECT VE_ID FROM VEHICULO_USUARIO WHERE USUARIO_ID = " + idUsuario + " )";
+    }
+
+    public static String separteUpperCase(String nombre) {
+
+        String[] r = nombre.split("(?=\\p{Upper})");
+        String strings = "";
+        for (int i = 0; i < r.length; i++) {
+
+            if (i == (r.length - 1)) {
+                strings = strings + r[i] + "";
+            } else {
+                strings = strings + r[i] + "_";
+            }
+
+        }
+
+        String stringNombre = strings.substring(0,1);
+        if (stringNombre.equals("_")){
+            strings = strings.substring(1,strings.length());
+        }
+
+        return strings;
+    }
+
+
+    public static <T> List<T> getListForExIn(Class<T> classType, boolean paraExportar) {
+
+        String nameTable = separteUpperCase(classType.getSimpleName());
+        int exportar = 0;
+        if (paraExportar){
+            exportar = 1;
+        }
+
+        List<SyncEstado> syncEstadoList = SyncEstado.findWithQuery(SyncEstado.class, "SELECT * FROM  SYNC_ESTADO WHERE nombre_Tabla = '" + nameTable + "' AND estado_Sync=" + exportar+ "; ", null);
+
+        String ids = "";
+        for (int i = 0; i < syncEstadoList.size(); i++) {
+
+            if (i == (syncEstadoList.size() - 1)) {
+                ids = ids + syncEstadoList.get(i).getCampoId() + "";
+            } else {
+                ids = ids + syncEstadoList.get(i).getCampoId() + ",";
+            }
+
+        }
+
+        return SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")",null);
+    }
+
+    public static <T> String getIdFromTable(Class<T> tClass) {
+
+        Field[] fields = tClass.getDeclaredFields();
+        String id = "";
+        for (Field field : fields) {
+
+            if (field.isAnnotationPresent(Unique.class)) {
+                System.out.println("" + field.getName());
+                id = separteUpperCase(field.getName());
+                Log.e("ServiceExport",id);
+            }
+        }
+
+        return id;
+    }
+
+    public static <T> String  getListStringFrom(T... objects) {
+
+        String listStrings = "";
+
+        for (int i = 0; i < objects.length; i++) {
+
+            if (i == (objects.length - 1)) {
+                listStrings = listStrings + objects[i].toString() + "";
+            } else {
+                listStrings = listStrings + objects[i].toString()+ ",";
+            }
+
+        }
+
+        return listStrings;
+
     }
 
 

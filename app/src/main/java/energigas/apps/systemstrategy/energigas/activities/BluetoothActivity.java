@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -36,7 +37,6 @@ import energigas.apps.systemstrategy.energigas.firebase.MessageBluetooth;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothDeviceListener;
 import energigas.apps.systemstrategy.energigas.threads.BTAcceptThread;
-import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class BluetoothActivity extends AppCompatActivity implements BluetoothDeviceListener, BluetoothConnectionListener {

@@ -12,6 +12,8 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.holders.ComprobanteVentaHolder;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
 
@@ -42,8 +44,16 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     public void onBindViewHolder(ComprobanteVentaHolder holder, int position) {
         final ComprobanteVenta comprobanteVenta = mList.get(position);
 
+        List<ComprobanteVentaDetalle> ventaDetalles = ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class," comp_Id = ? ",new String[]{comprobanteVenta.getCompId()+""});
+        String detalleString="";
+        for (ComprobanteVentaDetalle detalle : ventaDetalles){
+            Producto producto = Producto.find(Producto.class," pro_Id = ? ",new String[]{detalle.getProId()+""}).get(0);
+            detalleString = detalleString+" "+ producto.getDescripcion()+" \n";
+        }
 
-        holder.txt_factura.setText("F0001");
+        holder.txt_factura.setText(comprobanteVenta.getSerie()+"-"+comprobanteVenta.getNumDoc());
+        holder.textViewDetalle.setText(detalleString);
+        holder.textViewTotal.setText(comprobanteVenta.getTotal()+"");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -36,6 +36,7 @@ import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
+import energigas.apps.systemstrategy.energigas.services.ServiceExport;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         hideFloatingButton();
         initViews();
+
+        Intent serviceExport = new Intent(this, ServiceExport.class);
+        startService(serviceExport);
     }
 
     @Override

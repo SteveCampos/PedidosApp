@@ -3,13 +3,13 @@ package energigas.apps.systemstrategy.energigas.threads;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import energigas.apps.systemstrategy.energigas.utils.Log;
 
 /**
  * Created by Steve on 16/09/2016.

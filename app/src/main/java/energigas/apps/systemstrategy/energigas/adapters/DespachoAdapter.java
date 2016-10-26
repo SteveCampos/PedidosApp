@@ -41,7 +41,8 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
     public void onBindViewHolder(DespachoHolder holder, int position) {
 
         final  Despacho despacho = list.get(position);
-
+        holder.title.setText(despacho.getSerie()+"-"+despacho.getNumero());
+        holder.quantity.setText(despacho.getCantidadDespachada()+"");
         holder.information.setText(
                 "Despachado: " + despacho.getCantidadDespachada() + "\n\n" +
                 "Inicial: "+ despacho.getContadorInicial()+ "\n" +

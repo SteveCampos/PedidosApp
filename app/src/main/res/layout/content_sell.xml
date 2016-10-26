@@ -233,6 +233,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:minHeight="48dp" />
+                <Button
+                    android:id="@+id/btnDefinirCuotas"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:text="Cuotas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout

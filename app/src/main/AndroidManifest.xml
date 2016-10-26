@@ -137,6 +137,10 @@
             android:label="Despacho"
             android:theme="@style/AppTheme"/>
 
+        <service
+            android:name=".services.ServiceExport"
+            android:process=":Export" />
+
 
     </application>
 

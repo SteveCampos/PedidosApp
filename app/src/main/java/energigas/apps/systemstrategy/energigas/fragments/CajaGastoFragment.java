@@ -18,9 +18,6 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CajaGastoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
-import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
-import energigas.apps.systemstrategy.energigas.entities.Expenses;
-import energigas.apps.systemstrategy.energigas.utils.Log;
 
 /**
  * Created by kikerojas on 30/07/2016.

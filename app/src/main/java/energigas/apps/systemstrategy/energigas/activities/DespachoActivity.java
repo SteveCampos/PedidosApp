@@ -12,6 +12,7 @@ import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
+import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
@@ -38,9 +39,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orm.SugarRecord;
 import com.orm.SugarTransactionHelper;
 
 import java.util.ArrayList;
@@ -133,6 +134,12 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @BindView(R.id.editCantidadDespachada)
     EditText editTextCantidadDespachada;
 
+    @BindView(R.id.tanq_destino_orden_sugerencia)
+    TextView textViewOrdenSugerencia;
+
+    @BindView(R.id.text_despacho_serie_numero)
+    TextView textViewSerieNumero;
+
 
     private int typeWidgets = 1;
 
@@ -169,13 +176,54 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, Constants.TIPO_ID_COMPROBANTE_DESPACHO), null).get(Constants.CURRENT);
         almacenDistribuidor = Almacen.findWithQuery(Almacen.class, Utils.getQuerDespachoVehiculo(usuario.getUsuIUsuarioId()), new String[]{}).get(Constants.CURRENT);
         intanceAnimation();
+        toolbar();
+        setTextField();
+
+    }
+
+    private void toolbar() {
+
         setSupportActionBar(toolbar);
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setTitle("Despacho");
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    @OnClick(R.id.fabOrigenDisconect)
+    public void origenDisconect(View view) {
+        isConnected = false;
+    }
+
+    @OnClick(R.id.fabDestinoDisconect)
+    public void fabDestinoDisconect(View view) {
+        isConnected = false;
+    }
+
+
+    @OnClick(R.id.fabOrigenDisconect2)
+    public void fabOrigenDisconect2(View view) {
+        isConnected = false;
+    }
+
+
+    @OnClick(R.id.fabDestinoDisconect2)
+    public void fabDestinoDisconect2(View view) {
+        isConnected = false;
+    }
+
+    private void setTextField() {
+
+        textViewOrdenSugerencia.setText(": " + getCapacidadSugerencia() + "");
+        textViewSerieNumero.setText(": " + serie.getCompVSerie() + "-" + Utils.completaZeros(getNumeroDespacho(), serie.getParametro()));
+
+    }
+
+    private double getCapacidadSugerencia() {
+        double d = almacen.getCapacidadReal() - almacen.getStockPermanente();
+        return d;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,25 +240,21 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
         int id = item.getItemId();
 
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
 
-        DialogGeneral.isConfirm(DespachoActivity.this, "Atencion", "¿Esta seguro de salir?", new DialogGeneralListener() {
+        new DialogGeneral(DespachoActivity.this).setCancelable(false).setMessages("Retroceder", "¿Seguro de retroceder?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
-                // startActivity(new Intent(DespachoActivity.this,StationOrderActivity.class));
-                // DespachoActivity.this.finish();
                 DespachoActivity.super.onBackPressed();
             }
 
@@ -224,7 +268,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @OnClick(R.id.btnGuardar)
     public void clickBtnGuardar() {
 
-        DialogGeneral.isConfirm(DespachoActivity.this, "", "", new DialogGeneralListener() {
+        new DialogGeneral(DespachoActivity.this).setTextButtons("GUARDAR", "CANCELAR").setMessages("Atencion", "¿Seguro de guardar?").setCancelable(true).showDialog(new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
                 if (validateField()) {
@@ -232,7 +276,6 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 } else {
                     Toast.makeText(DespachoActivity.this, "Datos vacios", Toast.LENGTH_SHORT).show();
                 }
-
 
             }
 
@@ -262,14 +305,18 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         return true;
     }
 
+    private String getNumeroDespacho() {
+        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), new String[]{}).get(Constants.CURRENT).getNumero();
+        return numeroDespacho;
+    }
+
     private void saveDespacho() {
 
-        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), new String[]{}).get(Constants.CURRENT).getNumero();
 
         almacenDistribuidor = Almacen.find(Almacen.class, "", new String[]{}).get(Constants.CURRENT);
 
         despacho = new Despacho(
-                Integer.parseInt(numeroDespacho),
+                Integer.parseInt(getNumeroDespacho()),
                 pedidoDetalle.getPeId(),
                 pedidoDetalle.getPdId(),
                 establecimiento.getEstIClienteId(),
@@ -291,7 +338,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 "",// modificar luego Listo
                 almacen.getAlmId(),
                 serie.getCompVSerie(), // Serie Listo.
-                Utils.completaZeros(numeroDespacho, serie.getParametro()),
+                Utils.completaZeros(getNumeroDespacho(), serie.getParametro()),
                 Utils.getDatePhone(),
                 usuario.getUsuVUsuario(),
                 Constants.PEDIDO_CREADO,
@@ -322,6 +369,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         double cantidadStock = almacenDistribuidor.getStockActual() - Double.parseDouble(editTextCantidadDespachada.getText().toString());
         almacenDistribuidor.setStockActual(cantidadStock);
         almacenDistribuidor.save();
+        new SyncEstado(0,Utils.separteUpperCase(Despacho.class.getSimpleName()),Integer.parseInt(despacho.getDespachoId()+""),Constants.EXPORTAR).save();
         Session.saveDespacho(this, despacho);
         startActivity(new Intent(this, PrintDispatch.class));
         this.finish();
@@ -382,7 +430,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         editTexts.add(editTextContadorInicial);
         editTexts.add(editTextPorcentajeInicial);
         isEnableEditText(editTexts, false);
-        setValueTanqueOrigen(editTexts, "1000", "50%");
+        setValueTanqueOrigen(editTexts, "3000", "100");
     }
     /** ----end  ---- primera lectura**/
 
@@ -420,7 +468,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         editTexts.add(editTextDestinoContadorInicial);
         editTexts.add(editTextDestinoPorcentajeInicial);
         isEnableEditText(editTexts, false);
-        setValueTanqueOrigen(editTexts, "1000", "50%");
+        setValueTanqueOrigen(editTexts, "1000", "50");
     }
 
 
@@ -462,7 +510,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         editTexts.add(editOrigen2CF);
         editTexts.add(editOrigen2PF);
         isEnableEditText(editTexts, false);
-        setValueTanqueOrigen(editTexts, "100", "50%");
+        setValueTanqueOrigen(editTexts, "2000", "60");
     }
 
 
@@ -503,7 +551,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         editTexts.add(editDestino2CF);
         editTexts.add(editDestino2PF);
         isEnableEditText(editTexts, false);
-        setValueTanqueOrigen(editTexts, "1000", "50%");
+        setValueTanqueOrigen(editTexts, "3000", "100");
     }
 
 
@@ -558,16 +606,16 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private void affterAnimationError(FloatingActionButton tanque) {
 
-        tanque.setImageResource(R.drawable.ic_printer_sync_print);
+        tanque.setImageResource(R.drawable.ic_wireless_signal);
         tanque.startAnimation(rotate_backward);
         tanque.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorAccent)));
     }
 
     private void affterAnimationConnected(FloatingActionButton tanque) {
 
-        tanque.setImageResource(R.drawable.ic_printer_sync_ok);
+        tanque.setImageResource(R.drawable.ic_wireless_signal);
         tanque.startAnimation(rotate_backward);
-        tanque.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorAccent)));
+        tanque.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greem_background_item)));
     }
 
 

@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,7 +35,10 @@ import energigas.apps.systemstrategy.energigas.adapters.CuotasAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
+import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -59,6 +64,17 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
 
     private static final String TAG = "DefinirCuotasActivity";
 
+    @BindView(R.id.txtpoints)
+    TextView textViewPoints;
+    @BindView(R.id.txtnombre)
+    TextView textViewNombre;
+    @BindView(R.id.txtdireccion)
+    TextView textViewDireccion;
+    @BindView(R.id.txtubicacion)
+    TextView textViewUbicacion;
+    @BindView(R.id.textAtendido)
+    TextView textViewAtencion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +88,31 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
         conceptoCredito = Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{cliente.getCliIModalidadCreditoId() + ""}).get(Constants.CURRENT);
+        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class," ub_Id = ?",new String[]{establecimiento.getUbId()+""}).get(Constants.CURRENT));
         btnOk.setOnClickListener(this);
+        toolbar();
+        initViewsDisable();
         initDefinirCuotas();
         initMostrarDetalle(getPlanPagoDetalle());
+        setTextTextViews();
+    }
+
+    private void toolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    private void setTextTextViews(){
+        textViewNombre.setText(establecimiento.getEstVDescripcion());
+        textViewDireccion.setText(establecimiento.getUbicacion().getDescripcion());
+    }
+    private void initViewsDisable(){
+        textViewPoints.setVisibility(View.INVISIBLE);
+        textViewUbicacion.setVisibility(View.GONE);
+        textViewAtencion.setVisibility(View.GONE);
     }
 
     private void initDefinirCuotas() {
@@ -213,7 +251,46 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
         dialog.show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_menu_accountsummary, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        new DialogGeneral(DefinirCuotasActivity.this).setCancelable(false).setMessages("Retroceder", "¿Seguro de retroceder?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
+            @Override
+            public void onSavePressed() {
+                DefinirCuotasActivity.super.onBackPressed();
+            }
+
+            @Override
+            public void onCancelPressed() {
+
+            }
+        });
+    }
 
 
 }

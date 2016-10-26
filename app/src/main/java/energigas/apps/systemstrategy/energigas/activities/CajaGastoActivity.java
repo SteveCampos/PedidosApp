@@ -214,27 +214,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         sp_tiposgastos.setAdapter(conceptoArrayAdapter);
 
 
-        // Log.d(TAG,"CONCEPTOID:"+ sp_tiposgastos);
 
-//        conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_TIPO_GASTO, String.valueOf(Constants.CLICK_EDITAR)});
-//        //creating adapter for spinner
-//        final String[] nameList = new String[conceptoList.size()];
-//
-//        for (int i = 0; i < conceptoList.size(); i++) {
-//                nameList[i] = conceptoList.get(i).getDescripcion(); //create array of name
-//        }
-//
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, nameList);
-//        //drop down layout style - list view with radio button
-//        // Drop down layout style - list view with radio button
-//
-//
-//
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        // attaching data adapter to spinner
-//        sp_tiposgastos.setAdapter(dataAdapter);
-
-        //  String test = String.valueOf(sp_tiposgastos.getSelectedItem());
 
 
         btnsave.setOnClickListener(new View.OnClickListener() {
@@ -368,8 +348,6 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onAddnewCajaGasto(String date, Double total) {
         txtotal.setText("S/." + Utils.formatDouble(total));
-//        String date2 = dateFormat.format(date);
-//        Log.d(TAG,"Date : "+ date2);
         txtdate.setText("4/10/2016");
         Log.d("DATE", "date " + date + total);
     }

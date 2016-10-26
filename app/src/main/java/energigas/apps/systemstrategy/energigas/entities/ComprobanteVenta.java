@@ -62,7 +62,7 @@ public class ComprobanteVenta extends SugarRecord {
 
     private double porImpuesto;
 
-    private static List<ComprobanteVenta> list;
+    //private static List<ComprobanteVenta> list;
 
 
     public ComprobanteVenta() {
@@ -296,11 +296,5 @@ public class ComprobanteVenta extends SugarRecord {
         this.porImpuesto = porImpuesto;
     }
 
-    public static List<ComprobanteVenta> getList() {
-        return list;
-    }
 
-    public static void setList(List<ComprobanteVenta> list) {
-        ComprobanteVenta.list = list;
-    }
 }

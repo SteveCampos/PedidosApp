@@ -38,7 +38,6 @@ import energigas.apps.systemstrategy.energigas.entities.VehiculoUsuario;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
-import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 

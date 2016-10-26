@@ -11,11 +11,17 @@ import energigas.apps.systemstrategy.energigas.R;
 /**
  * Created by Steve on 12/08/2016.
  */
-public class ComprobanteVentaHolder extends RecyclerView.ViewHolder{
+public class ComprobanteVentaHolder extends RecyclerView.ViewHolder {
 
-   @BindView(R.id.txt_factura) public TextView txt_factura;
+    @BindView(R.id.txt_factura)
+    public TextView txt_factura;
+    @BindView(R.id.text_cv_details)
+    public TextView textViewDetalle;
+    @BindView(R.id.text_cv_total)
+    public TextView textViewTotal;
+
     public ComprobanteVentaHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

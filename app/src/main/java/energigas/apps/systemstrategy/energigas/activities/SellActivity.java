@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orm.SugarRecord;
+import com.orm.SugarTransactionHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,15 +58,13 @@ import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
-import energigas.apps.systemstrategy.energigas.fragments.EstablecerCuotasFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
-import energigas.apps.systemstrategy.energigas.utils.Log;
 import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
-public class SellActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class SellActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, SugarTransactionHelper.Callback {
     private static final String TAG = "SellActivity";
 
     @BindView(R.id.spinnerTipoComprobante)
@@ -99,6 +103,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     TextView textBaseImponible;
     @BindView(R.id.textIGV)
     TextView textIGV;
+    @BindView(R.id.btnDefinirCuotas)
+    Button buttonCuotas;
 
     Cliente cliente;
     Establecimiento establecimiento;
@@ -124,6 +130,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
      * Obtener Objectos
      **/
 
+    Concepto conceptoCredito;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +145,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
         cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " persona_Id=? ", new String[]{persona.getPerIPersonaId() + ""}).get(Constants.CURRENT));
+
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
         Session.setDefineCuotas(this, Constants.ESTADO_FALSE, "");
         ButterKnife.bind(this);
@@ -149,39 +158,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     private void dialogConfirmarVenta() {
 
-
-        DialogGeneral.isConfirm(this, "Atencion..!!!", "¿Esta seguro de guardar ?", new DialogGeneralListener() {
+        new DialogGeneral(SellActivity.this).setTextButtons("GUARDAR", "CANCELAR").setMessages("Atencion", "¿Esta seguro de guardar?").setCancelable(true).showDialog(new DialogGeneralListener() {
             @Override
             public void onSavePressed() {
 
-                switch (getFormaPago().getDescripcion()) {
+                if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
 
-                    case Constants.FORMA_PAGO_CREDITO:
+                    SugarTransactionHelper.doInTransaction(SellActivity.this);
 
-                        if (!Session.getDefineCuotas(getApplicationContext())) {
-
-                            if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
-                                generarVenta();
-                                //  new EstablecerCuotasFragment().setParams(obtenerCalculos()).show(getSupportFragmentManager(), "");
-                                Intent intent = new Intent(getApplicationContext(), DefinirCuotasActivity.class);
-                                intent.putExtra(Constants.OBTENER_CUOTAS, obtenerCalculos());
-                                startActivity(intent);
-
-                            }
-                        } else {
-                            guardarVenta();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-
-                        }
-
-                        break;
-
-                    case Constants.FORMA_PAGO_CONTADO:
-                        generarVenta();
-                        guardarVenta();
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        break;
+                } else {
+                    Toast.makeText(SellActivity.this, "No Cuenta con credito", Toast.LENGTH_SHORT).show();
                 }
+
 
             }
 
@@ -190,6 +178,17 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+    }
+
+
+    private void saveVenta() {
+
+        generarVenta();
+        guardarVenta();
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        this.finish();
+
     }
 
     private void generarVenta() {
@@ -278,8 +277,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         switch (getFormaPago().getDescripcion()) {
 
             case Constants.FORMA_PAGO_CREDITO:
+
                 Long insplanPago = planPago.save();
                 Log.d(TAG, " PlanPago " + insplanPago);
+
+                if (!Session.getDefineCuotas(SellActivity.this)) {
+                    Date fecha = Calendar.getInstance().getTime();
+                    int diasCredito = Integer.parseInt(conceptoCredito.getAbreviatura());
+                    String fechaPago = Utils.getStringDate(Utils.sumarFechasDias(fecha, diasCredito));
+                    int idPlanPagoDetalle = PlanPagoDetalle.findWithQuery(PlanPagoDetalle.class, Utils.getQueryNumberPlanPagoDetalle(), null).get(Constants.CURRENT).getPlanPaDeId();
+                    this.planPagoDetalles = new ArrayList<>();
+                    this.planPagoDetalles.add(new PlanPagoDetalle(planPago.getPlanPaId(), idPlanPagoDetalle, Utils.getDatePhone(), obtenerCalculos()[Constants.VENTA_TOTAL], Constants.ESTADO_TRUE, obtenerCalculos()[Constants.VENTA_BASE_IMPONIBLE], Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), obtenerCalculos()[Constants.VENTA_TOTAL], fechaPago, usuario.getUsuIUsuarioId(), Utils.getDatePhone(), cajaMovimiento.getCajMovId()));
+                }
 
 
                 SugarRecord.saveInTx(this.planPagoDetalles);
@@ -288,6 +297,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 for (PlanPagoDetalle pagoDetalle : this.planPagoDetalles) {
                     new SyncEstado(0, "Plan_pago_detalle", Integer.parseInt(pagoDetalle.getPlanPaDeId() + ""), Constants.EXPORTAR).save();
                 }
+
                 break;
 
             case Constants.FORMA_PAGO_CONTADO:
@@ -315,6 +325,23 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        new DialogGeneral(SellActivity.this).setCancelable(false).setMessages("Retroceder", "¿Seguro de retroceder?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
+            @Override
+            public void onSavePressed() {
+                SellActivity.super.onBackPressed();
+            }
+
+            @Override
+            public void onCancelPressed() {
+
+            }
+        });
+
+
+    }
 
     private Concepto getCatMov() {
 
@@ -471,11 +498,57 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         setTextDireccion();
         initCheckBox();
         initImportesDetalle();
-        setScrop();
+        setScop();
+        buttonCuotas.setOnClickListener(this);
+
+        if (cliente.getCliIModalidadCreditoId() <= 0) {
+            conceptoCredito = new Concepto();
+            conceptoCredito.setAbreviatura("0");
+
+            Toast.makeText(SellActivity.this, "No tiene modalidad de credito", Toast.LENGTH_SHORT).show();
+            enableButtonCredito(false);
+        } else {
+            conceptoCredito = Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{cliente.getCliIModalidadCreditoId() + ""}).get(Constants.CURRENT);
+
+        }
     }
 
-    private void setScrop() {
+    private void enableButtonCredito(boolean estado) {
+        buttonCuotas.setEnabled(estado);
+        buttonCuotas.setBackgroundColor(getResources().getColor(R.color.md_red_100));
+    }
+
+
+    private void setScop() {
+
+
         editTextScop.setText(pedido.getScop() + "");
+        editTextScop.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //  Toast.makeText(SellActivity.this, "Count - " + s.toString().length(), Toast.LENGTH_SHORT).show();
+                if (s.toString().length() >= 9) {
+                    Log.d(TAG, "onTextChanged > 8 : " + s);
+                    editTextScop.setText(s.toString().substring(0, 8));
+                    System.out.println(TAG + "   onTextChanged > 8 : " + s);
+                    // Toast.makeText(SellActivity.this, ""+TAG+ "   onTextChanged > 8 : "+s, Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "onTextChanged < 8 : " + s);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     private void initCheckBox() {
@@ -526,7 +599,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initFormaPago() {
-        List<Concepto> conceptoList = Concepto.find(Concepto.class, " CONCEPTO = ? AND  OBJETO = ? ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
+        // List<Concepto> conceptoList = Concepto.find(Concepto.class, " CONCEPTO = ? AND  OBJETO = ? ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
+        List<Concepto> conceptoList = Concepto.findWithQuery(Concepto.class, " SELECT * FROM CONCEPTO WHERE CONCEPTO = ? AND  OBJETO = ?  ORDER BY id_Concepto desc ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
+
         Log.d(TAG, "SIZE: " + conceptoList.size());
         ConceptoAdapter conceptoArrayAdapter = new ConceptoAdapter(this, 0, conceptoList);
         spinnerFormaPago.setAdapter(conceptoArrayAdapter);
@@ -572,6 +647,35 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnVender:
                 dialogConfirmarVenta();
                 break;
+            case R.id.btnDefinirCuotas:
+
+                if (!Session.getDefineCuotas(getApplicationContext()) && validarCampos()) {
+
+                    if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
+
+
+                        generarVenta();
+                        //  new EstablecerCuotasFragment().setParams(obtenerCalculos()).show(getSupportFragmentManager(), "");
+                        Intent intent = new Intent(getApplicationContext(), DefinirCuotasActivity.class);
+                        intent.putExtra(Constants.OBTENER_CUOTAS, obtenerCalculos());
+                        startActivity(intent);
+
+                    } else {
+                        Toast.makeText(SellActivity.this, "No Cuenta con credito", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    private boolean validarCampos() {
+
+
+        if (editTextScop.getText().toString().length() == 8) {
+            return true;
+        } else {
+            Toast.makeText(this, "Ingrese correctamenre el Scop", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -580,21 +684,28 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Concepto concepto = (Concepto) adapterView.getSelectedItem();
         //cliente.setCliDOCreditoDisponible(20.00);
         hideLinear(concepto);
-        if (concepto.getIdConcepto() == Constants.CREDITO_ID)
+        if (concepto.getIdConcepto() == Constants.CREDITO_ID) {
+            buttonCuotas.setVisibility(View.VISIBLE);
 
             if (cliente.getCliDOCreditoDisponible() < obtenerCalculos()[Constants.VENTA_TOTAL]) {
-                DialogGeneral.isConfirm(this, "Solicitar Credito", "Solicitar Credito : 1000 ", new DialogGeneralListener() {
+
+                new DialogGeneral(SellActivity.this).setTextButtons("SI", "NO").setMessages("Atencion", "¿Esta seguro de solicitar credito?").setCancelable(true).showDialog(new DialogGeneralListener() {
                     @Override
                     public void onSavePressed() {
-                        cliente.setCliDOCreditoDisponible(1000.00);
+                        cliente.setCliDOCreditoDisponible(10000.00);
+
                     }
 
                     @Override
                     public void onCancelPressed() {
-                        initFormaPago();
+
                     }
                 });
+
             }
+        } else {
+            buttonCuotas.setVisibility(View.GONE);
+        }
 
     }
 
@@ -614,11 +725,11 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
         if (Session.getDefineCuotas(getApplicationContext())) {
+            buttonCuotas.setEnabled(false);
             List<PlanPagoDetalle> planPagoDetalles = Session.getListCuotas(getApplicationContext());
             if (planPagoDetalles != null) {
 
@@ -630,10 +741,20 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                     this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
                 }
 
-                Toast.makeText(this, "TAMNAÑO"+ this.planPagoDetalles.size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "TAMAÑO" + this.planPagoDetalles.size(), Toast.LENGTH_SHORT).show();
 
             }
 
         }
+    }
+
+    @Override
+    public void manipulateInTransaction() {
+        saveVenta();
+    }
+
+    @Override
+    public void errorInTransaction(String error) {
+        Toast.makeText(SellActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
     }
 }

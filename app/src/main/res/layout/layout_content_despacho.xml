@@ -91,10 +91,10 @@
                         android:layout_row="0"
                         android:clickable="true"
                         android:visibility="invisible"
-                        app:backgroundTint="@color/greem_background_item"
+                        app:backgroundTint="@color/md_red_A400"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_security_off" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabOrigenRemoto"
@@ -103,10 +103,11 @@
                         android:layout_column="0"
                         android:layout_row="1"
                         android:clickable="true"
+                        app:backgroundTint="@color/md_yellow_A400"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_bluetooth_signal_indicator" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabOrigenManual"
@@ -116,9 +117,10 @@
                         android:layout_row="2"
                         android:clickable="true"
                         android:visibility="invisible"
+                        app:backgroundTint="@color/md_yellow_900"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_tap" />
 
 
                     <android.support.design.widget.FloatingActionButton
@@ -131,7 +133,7 @@
                         app:fabSize="mini"
                         app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_wireless_signal" />
 
 
                 </GridLayout>
@@ -261,34 +263,24 @@
                         android:layout_column="1"
                         android:layout_row="0"
                         android:clickable="true"
+                        app:backgroundTint="@color/md_red_A400"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_security_off" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabDestinoRemoto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
+                        app:backgroundTint="@color/md_yellow_A400"
                         android:layout_row="1"
                         android:clickable="true"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fabDestinoManual"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_row="2"
-                        android:clickable="true"
-                        android:visibility="invisible"
-                        app:fabSize="mini"
-                        app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_bluetooth_signal_indicator"/>
 
 
                     <android.support.design.widget.FloatingActionButton
@@ -301,7 +293,20 @@
                         app:fabSize="mini"
                         app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_wireless_signal" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fabDestinoManual"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_row="2"
+                        android:clickable="true"
+                        android:visibility="invisible"
+                        app:fabSize="mini"
+                        app:backgroundTint="@color/md_yellow_900"
+                        app:pressedTranslationZ="@dimen/print_translation_z"
+                        app:srcCompat="@drawable/ic_tap"/>
 
 
                 </GridLayout>
@@ -483,11 +488,12 @@
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:layout_row="0"
+                        app:backgroundTint="@color/md_red_A400"
                         android:clickable="true"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_security_off" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabOrigenRemoto2"
@@ -495,11 +501,12 @@
                         android:layout_height="wrap_content"
                         android:layout_column="0"
                         android:layout_row="1"
+                        app:backgroundTint="@color/md_yellow_A400"
                         android:clickable="true"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_bluetooth_signal_indicator" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabOrigenManual2"
@@ -509,9 +516,10 @@
                         android:layout_row="2"
                         android:clickable="true"
                         android:visibility="invisible"
+                        app:backgroundTint="@color/md_yellow_900"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_tap" />
 
 
                     <android.support.design.widget.FloatingActionButton
@@ -524,7 +532,7 @@
                         app:fabSize="mini"
                         app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_wireless_signal" />
 
 
                 </GridLayout>
@@ -610,13 +618,14 @@
                         android:id="@+id/fabDestinoDisconect2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:backgroundTint="@color/md_red_A400"
                         android:layout_column="1"
                         android:layout_row="0"
                         android:clickable="true"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_security_off" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabDestinoRemoto2"
@@ -624,11 +633,12 @@
                         android:layout_height="wrap_content"
                         android:layout_column="0"
                         android:layout_row="1"
+                        app:backgroundTint="@color/md_yellow_A400"
                         android:clickable="true"
                         android:visibility="invisible"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_bluetooth_signal_indicator" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fabDestinoManual2"
@@ -638,9 +648,10 @@
                         android:layout_row="2"
                         android:clickable="true"
                         android:visibility="invisible"
+                        app:backgroundTint="@color/md_yellow_900"
                         app:fabSize="mini"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_tap" />
 
 
                     <android.support.design.widget.FloatingActionButton
@@ -653,7 +664,7 @@
                         app:fabSize="mini"
                         app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
                         app:pressedTranslationZ="@dimen/print_translation_z"
-                        app:srcCompat="@drawable/ic_add_white_24dp" />
+                        app:srcCompat="@drawable/ic_wireless_signal" />
 
 
                 </GridLayout>
