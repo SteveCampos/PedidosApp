@@ -138,7 +138,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
                                     .setCancelable(false)
                                     .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,int id) {
-                                            listener.onCajaGastoClickListener(3, cajaGasto, holder.itemView);
+                                            listener.onCajaGastoClickListener(Constants.CLICK_ELIMINAR_CAJA_GASTO, cajaGasto, holder.itemView);
 
                                         }
                                     })
@@ -164,7 +164,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
                             CajaGasto cajaGasto1=CajaGasto.findById(CajaGasto.class,cajaGasto.getId());
                             cajaGasto1.save();
                             Log.d("EDITAR","idgetId"+cajaGasto1);*/
-                            listener.onCajaGastoClickListener(3, cajaGasto, holder.itemView);
+                            listener.onCajaGastoClickListener(Constants.CLICK_EDITAR_CAJA_GASTO, cajaGasto, holder.itemView);
 
                         } else if (items[which].equals("Cancel")) {
                             dialog.dismiss();

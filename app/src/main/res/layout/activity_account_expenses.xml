@@ -15,7 +15,7 @@
             android:id="@+id/collapse_toolbar2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_collapsing"
-            android:fitsSystemWindows="true"
+            android:fitsSystemWindows="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="@dimen/expanded_title_margin_bottom"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"

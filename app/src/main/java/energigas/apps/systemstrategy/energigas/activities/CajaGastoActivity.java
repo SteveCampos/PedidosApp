@@ -115,8 +115,8 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     private void setTabsAdapterFragment() {
         tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_today));
-        tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_week));
+        tabsAdapter.addFragment(new CajaGastoFragment(), "");// getString(R.string.activity_expenses_today)
+//        tabsAdapter.addFragment(new CajaGastoFragment(), getString(R.string.activity_expenses_week));
         mainViewPager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(mainViewPager);
     }
@@ -208,7 +208,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         btn_cancel.setOnClickListener(this);
 
 
-        conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{"", "", String.valueOf("")});
+        conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_TIPO_GASTO, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
         Log.d(TAG, "SIZE: " + conceptoList.size());
         ConceptoAdapter conceptoArrayAdapter = new ConceptoAdapter(this, 0, conceptoList);
         sp_tiposgastos.setAdapter(conceptoArrayAdapter);
@@ -356,10 +356,10 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onCajaGastoClickListener(int action, CajaGasto expenses, View view) {
         switch (action) {
-            case Constants._CREADO:
+            case Constants.CLICK_EDITAR_CAJA_GASTO:
                 update_dialog(expenses, view);
                 break;
-            case 3:
+            case Constants.CLICK_ELIMINAR_CAJA_GASTO:
 
                 Fragment expensesFragment = getFragment(0);
 
