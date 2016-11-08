@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -134,5 +136,19 @@ public class ListaPrecioDetalle extends SugarRecord{
 
     public void setUsuarioActualizacion(int usuarioActualizacion) {
         this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    @Override
+    public String toString() {
+        return ""+precio+"-"+unId;
+    }
+
+    public static ListaPrecioDetalle getPrecioDetalle(String establecimientoId,String unidadId,String productoId,String planPrecioId){
+
+        List<ListaPrecioDetalle> listaPrecioDetalles = ListaPrecioDetalle.find(ListaPrecioDetalle.class,"establecimiento_Id=? AND un_Id=? AND pro_Id=? AND lp_Id=?",new String[]{establecimientoId,unidadId,productoId,planPrecioId});
+        if (listaPrecioDetalles.size()>0){
+         return    listaPrecioDetalles.get(0);
+        }
+        return null;
     }
 }

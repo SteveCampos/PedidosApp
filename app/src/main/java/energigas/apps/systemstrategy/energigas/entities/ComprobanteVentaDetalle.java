@@ -3,11 +3,13 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class ComprobanteVentaDetalle extends SugarRecord{
+public class ComprobanteVentaDetalle extends SugarRecord {
 
     @Unique
     private int compdId;
@@ -145,5 +147,9 @@ public class ComprobanteVentaDetalle extends SugarRecord{
 
     public void setFechaActualizacion(String fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public static List<ComprobanteVentaDetalle> comprobanteVentaDetalles(String compdId) {
+        return ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class, " comp_Id=? ", new String[]{compdId});
     }
 }

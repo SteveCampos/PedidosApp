@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
@@ -27,6 +29,7 @@ import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.fragments.AgregarDespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.ComprobanteVentaFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
@@ -42,9 +45,9 @@ public class MainStationActivity extends AppCompatActivity
         implements
         OrderedProductFragment.OnOrderedProductClickListener,
         OrderedProductFragment.OnDispatchClickListener,
-        StationOrderFragment.OnStationOrderClickListener {
+        StationOrderFragment.OnStationOrderClickListener, TabLayout.OnTabSelectedListener {
 
-
+private static final String TAG = "MainStationActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewpager)
@@ -72,13 +75,17 @@ public class MainStationActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initViews();
     }
+    @OnClick(R.id.fab)
+    public void agregarDespacho(View view){
+        new AgregarDespachoFragment().show(getSupportFragmentManager(),"");
+    }
 
     private void initViews() {
         setToolbar();
         setTabsAdapterFragment();
         viewpager.setCurrentItem(1);
-        fab.setVisibility(View.GONE);
 
+        fab.setVisibility(View.GONE);
         textViewDescripcion.setText(establecimiento.getEstVDescripcion());
     }
 
@@ -100,6 +107,9 @@ public class MainStationActivity extends AppCompatActivity
         tabsAdapter.addFragment(new ComprobanteVentaFragment(), getString(R.string.activity_charges_fac));
         viewpager.setAdapter(tabsAdapter);
         tabLayout.setupWithViewPager(viewpager);
+
+
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     @Override
@@ -180,4 +190,24 @@ public class MainStationActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Log.d(TAG,tab.getPosition()+"");
+
+        if (tab.getPosition()==2){
+            fab.setVisibility(View.VISIBLE);
+        }else{
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
 }

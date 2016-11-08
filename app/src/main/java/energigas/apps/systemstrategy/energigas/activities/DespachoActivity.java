@@ -3,8 +3,10 @@ package energigas.apps.systemstrategy.energigas.activities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.ConectarDispositivoAsyn;
+import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
@@ -17,13 +19,17 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
+import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -47,7 +53,7 @@ import com.orm.SugarTransactionHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DespachoActivity extends AppCompatActivity implements BluetoothConnectionListener, SugarTransactionHelper.Callback {
+public class DespachoActivity extends AppCompatActivity implements BluetoothConnectionListener, SugarTransactionHelper.Callback, OnLocationListener, ExportObjectsListener {
 
     private Boolean isConnected = false;
     private Boolean isFabOpen = false;
@@ -161,12 +167,15 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
      * Animation
      **/
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+    private LocationVehiculeListener locationVehiculeListener;
+    private Location latAndLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_despacho);
         ButterKnife.bind(this);
+        locationVehiculeListener = new LocationVehiculeListener(this);
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
         pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
         pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
@@ -306,62 +315,62 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     }
 
     private String getNumeroDespacho() {
-        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), new String[]{}).get(Constants.CURRENT).getNumero();
+        String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), null).get(Constants.CURRENT).getNumero();
         return numeroDespacho;
     }
 
     private void saveDespacho() {
 
+        if (latAndLong == null) {
+            errorInTransaction("Update no Location");
+            return;
+        }
 
         almacenDistribuidor = Almacen.find(Almacen.class, "", new String[]{}).get(Constants.CURRENT);
 
+
         despacho = new Despacho(
-                Integer.parseInt(getNumeroDespacho()),
-                pedidoDetalle.getPeId(),
+                Long.parseLong(getNumeroDespacho()),
+                pedido.getPeId(),
                 pedidoDetalle.getPdId(),
-                establecimiento.getEstIClienteId(),
+                pedido.getClienteId(),
                 establecimiento.getEstIEstablecimientoId(),
                 almacen.getAlmId(),
                 usuario.getUsuIUsuarioId(),
                 almacen.getPlaca(),
-                0.0,//modificar luego Listo
-                0.0, //modificar luego Listo
-                0.0,// modificar luego Listo
-                "", // modificar luego Listo
-                "",// modificar luego Listo
+                Double.parseDouble(editTextContadorInicial.getText().toString()),
+                Double.parseDouble(editOrigen2CF.getText().toString()),
+                Double.parseDouble(editTextCantidadDespachada.getText().toString()),
+                "17:35",
+                "18:00",
                 Utils.getDatePhone(),
                 pedidoDetalle.getProductoId(),
                 pedidoDetalle.getUnidadId(),
-                0.0,// modificar luego Listo
-                0.0,// modificar luego Listo
-                "",// modificar luego Listo
-                "",// modificar luego Listo
-                almacen.getAlmId(),
-                serie.getCompVSerie(), // Serie Listo.
+                Double.parseDouble(editTextPorcentajeInicial.getText().toString()),
+                Double.parseDouble(editOrigen2PF.getText().toString()),
+                latAndLong.getLatitude() + "",
+                latAndLong.getLongitude() + "",
+                almacenDistribuidor.getAlmId(),
+                serie.getCompVSerie(),
                 Utils.completaZeros(getNumeroDespacho(), serie.getParametro()),
                 Utils.getDatePhone(),
-                usuario.getUsuVUsuario(),
-                Constants.PEDIDO_CREADO,
-                almacen.getVehiculoId(),
+                usuario.getUsuIUsuarioId(),
+                Constants.DESPACHO_CREADO,
+                almacenDistribuidor.getVehiculoId(),
                 pedido.getGuiaRemision(),
+                cajaLiquidacion.getLiqId(),
                 pedidoDetalle.getPrecio(),
                 pedidoDetalle.getPrecioUnitario(),
                 pedido.getPorImpuesto(),
                 pedidoDetalle.getCostoVenta(),
                 pedidoDetalle.getImporte(),
-                -1,
-                cajaLiquidacion.getLiqId()
-
-
+                Double.parseDouble(editTextDestinoContadorInicial.getText().toString()),
+                Double.parseDouble(editTextPorcentajeInicial.getText().toString()),
+                Double.parseDouble(editTextDestinoPorcentajeInicial.getText().toString()),
+                Double.parseDouble(editDestino2PF.getText().toString()),
+                -1
         );
-        despacho.setCantidadDespachada(Double.parseDouble(editTextCantidadDespachada.getText().toString()));
-        despacho.setContadorInicial(Double.parseDouble(editTextDestinoContadorInicial.getText().toString()));
-        despacho.setContadorFinal(Double.parseDouble(editTextDestinoPorcentajeInicial.getText().toString()));
-        despacho.setHoraInicio("17:39");
-        despacho.setHoraFin("18:39");
 
-        despacho.setpIT(Double.parseDouble(editDestino2CF.getText().toString()));
-        despacho.setpFT(Double.parseDouble(editDestino2PF.getText().toString()));
 
         despacho.save();
 
@@ -369,7 +378,8 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         double cantidadStock = almacenDistribuidor.getStockActual() - Double.parseDouble(editTextCantidadDespachada.getText().toString());
         almacenDistribuidor.setStockActual(cantidadStock);
         almacenDistribuidor.save();
-        new SyncEstado(0,Utils.separteUpperCase(Despacho.class.getSimpleName()),Integer.parseInt(despacho.getDespachoId()+""),Constants.EXPORTAR).save();
+        new SyncEstado(0, Utils.separteUpperCase(Despacho.class.getSimpleName()), Integer.parseInt(despacho.getId() + ""), Constants.S_CREADO).save();
+        new ExportTask(this,this).execute(Constants.TABLA_DESPACHO,Constants.S_CREADO);
         Session.saveDespacho(this, despacho);
         startActivity(new Intent(this, PrintDispatch.class));
         this.finish();
@@ -649,10 +659,39 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @Override
     public void manipulateInTransaction() {
         saveDespacho();
+
     }
 
     @Override
     public void errorInTransaction(String error) {
         Toast.makeText(DespachoActivity.this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setLatAndLong(Location latAndLong) {
+        this.latAndLong = latAndLong;
+    }
+
+    @Override
+    public Context getContextActivity() {
+        return DespachoActivity.this;
+    }
+
+
+
+
+    @Override
+    public void onLoadSuccess(String message) {
+       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadError(String message) {
+       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadErrorProcedure(String message) {
+       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
     }
 }

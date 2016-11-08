@@ -33,13 +33,13 @@ public class PlanPago extends SugarRecord {
 
     private String fechaAccion;
     @Ignore
-    private List<PlanPagoDetalle> items;
+    private List<PlanPagoDetalle> detalle;
 
 
     public PlanPago() {
     }
 
-    public PlanPago(long planPaId, long compId, String fechaPago, String serie, String numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion, List<PlanPagoDetalle> items) {
+    public PlanPago(long planPaId, long compId, String fechaPago, String serie, String numDoc, String glosa, boolean estado, double porcentajeInteresMes, int usuarioAccion, String fechaAccion, List<PlanPagoDetalle> detalle) {
         this.planPaId = planPaId;
         this.compId = compId;
         this.fechaPago = fechaPago;
@@ -50,16 +50,16 @@ public class PlanPago extends SugarRecord {
         this.porcentajeInteresMes = porcentajeInteresMes;
         this.usuarioAccion = usuarioAccion;
         this.fechaAccion = fechaAccion;
-        this.items = items;
+        this.detalle = detalle;
     }
 
 
-    public List<PlanPagoDetalle> getItems() {
-        return items;
+    public List<PlanPagoDetalle> getDetalle() {
+        return detalle;
     }
 
-    public void setItems(List<PlanPagoDetalle> items) {
-        this.items = items;
+    public void setDetalle(List<PlanPagoDetalle> detalle) {
+        this.detalle = detalle;
     }
 
     public long getPlanPaId() {
@@ -140,5 +140,19 @@ public class PlanPago extends SugarRecord {
 
     public void setFechaAccion(String fechaAccion) {
         this.fechaAccion = fechaAccion;
+    }
+
+    public static PlanPago getPlanPago(String compId) {
+
+        if (PlanPago.find(PlanPago.class, " comp_Id=? ", new String[]{compId}).size() > 0) {
+
+            PlanPago planPago = PlanPago.find(PlanPago.class, " comp_Id=? ", new String[]{compId}).get(0);
+            planPago.setDetalle(PlanPagoDetalle.getPlanPagoDetalles(planPago.getPlanPaId() + ""));
+            return planPago;
+        } else {
+
+            return null;
+        }
+
     }
 }

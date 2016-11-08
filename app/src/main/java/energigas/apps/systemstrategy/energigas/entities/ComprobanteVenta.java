@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
 import java.util.ArrayList;
@@ -62,13 +63,17 @@ public class ComprobanteVenta extends SugarRecord {
 
     private double porImpuesto;
 
-    //private static List<ComprobanteVenta> list;
-
+    @Ignore
+    private List<ComprobanteVentaDetalle> itemsDetalle;
+    @Ignore
+    private CajaMovimiento cajaMovimiento;
+    @Ignore
+    private PlanPago planPago;
 
     public ComprobanteVenta() {
     }
 
-    public ComprobanteVenta(long compId, String serie, String numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, double porImpuesto) {
+    public ComprobanteVenta(long compId, String serie, String numDoc, int formaPagoId, int estadoId, String fechaDoc, double baseImponible, double igv, double total, int tipoComprobanteId, int clienteId, int comIUsuarioId, boolean anulado, double saldo, long lqId, int tipoVentaId, int establecimientoId, boolean exportado, String docIdentidad, String valorResumen, String cliente, String direccionCliente, String fechaCreacion, String fechaActualizacion, double porImpuesto, List<ComprobanteVentaDetalle> itemsDetalle, CajaMovimiento cajaMovimiento, PlanPago planPago) {
         this.compId = compId;
         this.serie = serie;
         this.numDoc = numDoc;
@@ -94,6 +99,9 @@ public class ComprobanteVenta extends SugarRecord {
         this.fechaCreacion = fechaCreacion;
         this.fechaActualizacion = fechaActualizacion;
         this.porImpuesto = porImpuesto;
+        this.itemsDetalle = itemsDetalle;
+        this.cajaMovimiento = cajaMovimiento;
+        this.planPago = planPago;
     }
 
     public long getCompId() {
@@ -294,6 +302,47 @@ public class ComprobanteVenta extends SugarRecord {
 
     public void setPorImpuesto(double porImpuesto) {
         this.porImpuesto = porImpuesto;
+    }
+
+    public List<ComprobanteVentaDetalle> getItemsDetalle() {
+        return itemsDetalle;
+    }
+
+    public void setItemsDetalle(List<ComprobanteVentaDetalle> itemsDetalle) {
+        this.itemsDetalle = itemsDetalle;
+    }
+
+    public CajaMovimiento getCajaMovimiento() {
+        return cajaMovimiento;
+    }
+
+    public void setCajaMovimiento(CajaMovimiento cajaMovimiento) {
+        this.cajaMovimiento = cajaMovimiento;
+    }
+
+    public PlanPago getPlanPago() {
+        return planPago;
+    }
+
+    public void setPlanPago(PlanPago planPago) {
+        this.planPago = planPago;
+    }
+
+    public static List<ComprobanteVenta> getComprobanteVentas(List<ComprobanteVenta> comprobanteVentaList) {
+
+
+        List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
+
+        for (ComprobanteVenta comprobanteVenta : comprobanteVentaList){
+
+            comprobanteVenta.setItemsDetalle(ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId()+""));
+            comprobanteVenta.setPlanPago(PlanPago.getPlanPago(comprobanteVenta.getCompId()+""));
+            comprobanteVenta.setCajaMovimiento(CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId()+""));
+            comprobanteVentas.add(comprobanteVenta);
+        }
+
+
+        return comprobanteVentas;
     }
 
 

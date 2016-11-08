@@ -10,33 +10,33 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
-import com.orm.SugarApp;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import energigas.apps.systemstrategy.energigas.activities.BluetoothActivity;
-import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Steve on 21/07/2016.
@@ -45,7 +45,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 public class Utils {
 
 
-    public static String TAG = "EnergigasApp";
+    public static String TAG = "EnergigasApp:Exports";
 
     public static String capitalize(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
@@ -145,6 +145,17 @@ public class Utils {
         return s;
     }
 
+    public static String getJsonArResult(JSONObject jsonObject) {
+        String s = "";
+        try {
+            s = jsonObject.getJSONArray("Value").toString();
+            Log.d("JSON RESULT", "" + jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
+
     public static boolean isSuccessful(JSONObject jsonObject) {
         boolean s = false;
         try {
@@ -185,9 +196,9 @@ public class Utils {
 
     public static String getQueryForNumberDistPach() {
 
-        return " SELECT ID,USUARIO_CREACION, SERIE,PLACA,LONGITUD,LATITUD,HORA_INICIO,HORA_FIN,GUIA_REMISION,FECHA_DESPACHO,FECHA_CREACION,ESTADO_ID,CANTIDAD_DESPACHADA,DESPACHO_ID,CONTADOR_INICIAL,CONTADOR_FINAL," +
-                "PE_ID,P_IT,P_FT,case  when (select count(*) from despacho ) is 0 then (select count(*) from despacho) +1 else max(numero)+1 end as 'NUMERO',PD_ID,CLIENTE_ID,ESTABLECIMIENTO_ID,PRO_ID,ALMACEN_VEH_ID, UN_ID," +
-                "ALMACEN_EST_ID, USUARIO_ID,VEHICULO_ID from despacho  ";
+        String query = " select id, despacho_Id,pe_Id,pd_Id,cliente_Id,establecimiento_Id,almacen_Est_Id,usuario_Id,placa,contador_Inicial_Origen,contador_Final_Origen,cantidad_Despachada,hora_Inicio,hora_Fin,fecha_Despacho,pro_Id,un_Id,p_IT_Origen,p_FT_Origen,latitud,longitud,almacen_Veh_Id,serie,case  when (select count(*) from despacho ) is 0 then (select count(*) from despacho) +1 else max(numero)+1 end as 'NUMERO',fecha_Creacion,usuario_Creacion,estado_Id,ve_Id,guia_Remision,liq_Id,precio_Unitario_SIGV,precio_Unitario_CIGV,por_Impuesto,costo_Venta,importe,contador_Inicial_Destino,contador_Final_Destino,p_IT_Destino,p_FT_Destino,comp_Id from despacho; ";
+
+        return query;
     }
 
     public static String getQueryNumberSell() {
@@ -283,7 +294,7 @@ public class Utils {
         String android_id;
         android_id = get_android_id(context);
         if (TextUtils.isEmpty(android_id)) {
-            Log.d(TAG, "android_id is empty");
+            // Log.d(TAG, "android_id is empty");
             android_id = get_android_id(context);
         }
         return android_id;
@@ -330,24 +341,21 @@ public class Utils {
 
         }
 
-        String stringNombre = strings.substring(0,1);
-        if (stringNombre.equals("_")){
-            strings = strings.substring(1,strings.length());
+        String stringNombre = strings.substring(0, 1);
+        if (stringNombre.equals("_")) {
+            strings = strings.substring(1, strings.length());
         }
 
         return strings;
     }
 
 
-    public static <T> List<T> getListForExIn(Class<T> classType, boolean paraExportar) {
+    public static <T> List<T> getListForExIn(Class<T> classType, int paraExportar) {
 
         String nameTable = separteUpperCase(classType.getSimpleName());
-        int exportar = 0;
-        if (paraExportar){
-            exportar = 1;
-        }
 
-        List<SyncEstado> syncEstadoList = SyncEstado.findWithQuery(SyncEstado.class, "SELECT * FROM  SYNC_ESTADO WHERE nombre_Tabla = '" + nameTable + "' AND estado_Sync=" + exportar+ "; ", null);
+
+        List<SyncEstado> syncEstadoList = SyncEstado.findWithQuery(SyncEstado.class, "SELECT * FROM  SYNC_ESTADO WHERE nombre_Tabla = '" + nameTable + "' AND estado_Sync='" + paraExportar + "' ; ", null);
 
         String ids = "";
         for (int i = 0; i < syncEstadoList.size(); i++) {
@@ -360,8 +368,66 @@ public class Utils {
 
         }
 
-        return SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")",null);
+        return SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")", null);
     }
+
+    public static <T> List<T> getListForExInIn(Class<T> classType, int paraExportar) {
+
+        String nameTable = separteUpperCase(classType.getSimpleName());
+
+
+        List<SyncEstado> syncEstadoList = SyncEstado.findWithQuery(SyncEstado.class, "SELECT * FROM  SYNC_ESTADO WHERE nombre_Tabla = '" + nameTable + "' AND estado_Sync='" + paraExportar + "' ; ", null);
+
+        String ids = "";
+        for (int i = 0; i < syncEstadoList.size(); i++) {
+
+            if (i == (syncEstadoList.size() - 1)) {
+                ids = ids + syncEstadoList.get(i).getCampoId() + "";
+            } else {
+                ids = ids + syncEstadoList.get(i).getCampoId() + ",";
+            }
+
+        }
+
+
+        List<T> tList = SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")", null);
+
+        List<Class<?>> classesList = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
+
+        for (int i = 0; i < tList.size(); i++) {
+
+            Field[] fields = tList.get(i).getClass().getDeclaredFields();
+
+            for (Field field : fields) {
+
+                if (field.isAnnotationPresent(Ignore.class)) {
+
+                    Type type = field.getGenericType();
+
+                    if (type instanceof ParameterizedType) {
+
+                        ParameterizedType pType = (ParameterizedType) type;
+                        Type tp = pType.getActualTypeArguments()[0];
+                        Class<?> clzzLis = (Class<?>) tp;
+                        classesList.add(clzzLis);
+
+                    }else{
+
+                        Class<?> clz = field.getType();
+                        classes.add(clz);
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        return SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")", null);
+    }
+
 
     public static <T> String getIdFromTable(Class<T> tClass) {
 
@@ -372,28 +438,30 @@ public class Utils {
             if (field.isAnnotationPresent(Unique.class)) {
                 System.out.println("" + field.getName());
                 id = separteUpperCase(field.getName());
-                Log.e("ServiceExport",id);
+                Log.e("ServiceExport", id);
             }
         }
 
         return id;
     }
 
-    public static <T> String  getListStringFrom(T... objects) {
+    public static <T> String getListStringFrom(List<T> objects) {
 
         String listStrings = "";
 
-        for (int i = 0; i < objects.length; i++) {
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter sw = new StringWriter();
 
-            if (i == (objects.length - 1)) {
-                listStrings = listStrings + objects[i].toString() + "";
-            } else {
-                listStrings = listStrings + objects[i].toString()+ ",";
-            }
+        try {
+            mapper.writeValue(sw, objects);
+            listStrings = sw.toString();
+            return listStrings;
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
-        return listStrings;
 
     }
 

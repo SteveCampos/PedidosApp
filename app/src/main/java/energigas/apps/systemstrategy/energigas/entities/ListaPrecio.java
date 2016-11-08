@@ -135,4 +135,13 @@ public class ListaPrecio extends SugarRecord {
     public void setTipoId(int tipoId) {
         this.tipoId = tipoId;
     }
+
+    @Override
+    public String toString() {
+        return nombre+"-"+empresaId;
+    }
+
+    public static ListaPrecio getPrecioByProductoId(String productoId){
+        return ListaPrecio.find(ListaPrecio.class," pro_Id =? ",new String[]{productoId}).get(0);
+    }
 }

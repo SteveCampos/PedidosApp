@@ -29,6 +29,8 @@ public class SugarRecord {
 
     private Long id = null;
 
+
+
     public static <T> int deleteAll(Class<T> type) {
         return deleteAll(type, null);
     }

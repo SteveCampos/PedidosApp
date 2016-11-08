@@ -211,19 +211,12 @@ public class ManipuleData {
     }
 
     public List<Despacho> getDespachoResumen(Context context) {
-        String query = "SELECT ID,USUARIO_CREACION,SERIE,PLACA,NUMERO,LONGITUD,LATITUD,HORA_INICIO,HORA_FIN,GUIA_REMISION,FECHA_DESPACHO,FECHA_CREACION," +
-                " SUM(PRECIO_UNITARIO_SIGV)  AS  PRECIO_UNITARIO_SIGV," +
-                " SUM(PRECIO_U_NITARIO_CIGV) AS PRECIO_U_NITARIO_CIGV ," +
-                " DESPACHO_ID," +
-                " SUM(COSTO_VENTA) AS COSTO_VENTA," +
-                " CONTADOR_INICIAL," +
-                " SUM(IMPORTE) AS IMPORTE," +
-                " CONTADOR_FINAL,COMP_ID," +
-                " SUM(POR_IMPUESTO) AS POR_IMPUESTO," +
-                " P_FT,P_IT," +
-                " SUM(CANTIDAD_DESPACHADA) AS CANTIDAD_DESPACHADA," +
-                " PE_ID,PD_ID,CLIENTE_ID,ESTABLECIMIENTO_ID,ESTADO_ID,PRO_ID,ALMACEN_VEH_ID,UN_ID,ALMACEN_EST_ID,USUARIO_ID,VEHICULO_ID" +
-                " FROM  DESPACHO WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ") ;";
+
+
+
+        String query = " select id, despacho_Id,pe_Id,pd_Id,cliente_Id,establecimiento_Id,almacen_Est_Id,usuario_Id,placa,contador_Inicial_Origen,contador_Final_Origen,cantidad_Despachada,hora_Inicio,hora_Fin,fecha_Despacho,pro_Id,un_Id,p_IT_Origen,p_FT_Origen,latitud,longitud,almacen_Veh_Id,serie,numero,fecha_Creacion,usuario_Creacion,estado_Id,ve_Id,guia_Remision,liq_Id,SUM(PRECIO_UNITARIO_SIGV)  AS  PRECIO_UNITARIO_SIGV, SUM(precio_Unitario_CIGV)  AS  precio_Unitario_CIGV, SUM(por_Impuesto) as por_Impuesto ,SUM(costo_Venta) as costo_Venta ,SUM(importe) as importe,contador_Inicial_Destino,contador_Final_Destino,p_IT_Destino,p_FT_Destino,comp_Id from despacho  WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ")  ; ";
+
+
         return Despacho.findWithQuery(Despacho.class, query, null);
     }
 

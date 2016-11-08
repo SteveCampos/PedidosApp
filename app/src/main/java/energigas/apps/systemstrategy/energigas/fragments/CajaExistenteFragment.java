@@ -22,6 +22,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.asyntask.PreciosAsyntask;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
@@ -123,7 +124,7 @@ public class CajaExistenteFragment extends DialogFragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
+            new PreciosAsyntask(null).execute(57+"");
             dismiss();
         }
 

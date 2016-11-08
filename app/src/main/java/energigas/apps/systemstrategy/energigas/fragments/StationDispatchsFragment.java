@@ -4,12 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,18 +20,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
 import energigas.apps.systemstrategy.energigas.activities.SellActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
-import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 
@@ -84,8 +84,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        recyclerView= (RecyclerView) inflater.inflate(
-        R.layout.recycler_view, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
         initiViews();
         return recyclerView;
     }

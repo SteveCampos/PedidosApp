@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".Application"
@@ -15,28 +16,40 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".services.NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
-        <meta-data android:name="DATABASE" android:value="energigas.db" />
-        <meta-data android:name="VERSION" android:value="5" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="energigas.apps.systemstrategy.energigas.entities" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="energigas.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="6" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="energigas.apps.systemstrategy.energigas.entities" />
 
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activities.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
-            >
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.PrintFacturaActivity"
@@ -130,18 +143,24 @@
         <activity
             android:name=".activities.DefinirCuotasActivity"
             android:label="@string/title_activity_definir_cuotas"
-            android:theme="@style/AppTheme"></activity>
-
-
-        <activity android:name=".activities.DespachoActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.DespachoActivity"
             android:label="Despacho"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".services.ServiceExport"
             android:process=":Export" />
 
+        <activity
+            android:name=".activities.AgregarPedidoDespacho"
+            android:label="@string/title_activity_agregar_pedido_despacho"
+            android:theme="@style/AppTheme">
 
+
+
+        </activity>
     </application>
 
 </manifest>

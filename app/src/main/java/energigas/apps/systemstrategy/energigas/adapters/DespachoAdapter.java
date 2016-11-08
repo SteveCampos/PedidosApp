@@ -45,10 +45,10 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
         holder.quantity.setText(despacho.getCantidadDespachada()+"");
         holder.information.setText(
                 "Despachado: " + despacho.getCantidadDespachada() + "\n\n" +
-                "Inicial: "+ despacho.getContadorInicial()+ "\n" +
-                "Final: " + despacho.getContadorFinal()+ "\n" +
-                "% Inicial: " + despacho.getpIT() + "\n" +
-                "% Final: " + despacho.getpFT() +"\n"
+                "Inicial: "+ despacho.getContadorInicialOrigen()+ "\n" +
+                "Final: " + despacho.getContadorFinalOrigen()+ "\n" +
+                "% Inicial: " + despacho.getpITOrigen() + "\n" +
+                "% Final: " + despacho.getpFTOrigen()+"\n"
         );
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

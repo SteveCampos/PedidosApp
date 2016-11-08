@@ -2,6 +2,8 @@ package energigas.apps.systemstrategy.energigas.utils;
 
 import android.support.annotation.NonNull;
 
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
@@ -11,7 +13,9 @@ public class Constants {
 
     public static final int _CREADO = 2;
 
-    public static final int PEDIDO_CREADO = 9;
+    public static final int PEDIDO_CREADO = -1;
+
+    public static final int DESPACHO_CREADO = 38;
 
     /**Estados AsyntaskListener*/
     public static final int ERROR_PROCEDIMIENTO=-1;
@@ -79,6 +83,7 @@ public class Constants {
     public static final String CONCEPTO_CAJA_PAGO = "Caja Pago";
     public static final String CONCEPTO_CAJA_GASTO= "Caja Gastos";
     public static final String CONCEPTO_TIPO_GASTO = "Tipo Gasto";
+    public static final String CONCEPTO_CATEGORIA_TIPO_GASTO ="Categoria Tipo Gasto";
 
 
     /**Guardar los IDS de los despachos seleccionados**/
@@ -133,8 +138,9 @@ public class Constants {
 
 
     /**Para Exportar**/
-    public static final boolean EXPORTAR = true;
-    public static final boolean IMPORTARDO = false;
+    public static final int S_CREADO = 1;
+    public static final int S_IMPORTADO = 2;
+    public static final int S_ACTUALIZADO = 3;
 
 
     public static final String DEFINE_CUOTAS = "DEFINE_CUOTAS";
@@ -144,5 +150,20 @@ public class Constants {
     public static final String OBTENER_CUOTAS = "OBTENER_CUOTAS";
     public static final int CLICK_EDITAR = 100;
     public static final int CLICK_ELIMINAR = 101;
+
+    public static final int TABLA_DESPACHO = 1;
+    public static final int TABLA_COMPROBANTE= 2;
+    public static final int TABLA_GASTO= 3;
+
+    /**Tipo movimiento**/
+
+    public static final int TIPO_MOV_EGRESO = 117;
+    public static final int TIPO_MOV_INGRESO = 116;
+
+    /**Gastos**/
+    public static final int CATEGORIA_MOV_GASTO = 104;
+    public static final int GASTO_ESTADO_CREADO = 58;
+    public static final int GASTO_ESTADO_ELIMINADO= 59;
+    public static final int GASTO_EN_PLANTA = 101;
 
 }

@@ -441,4 +441,5 @@
     <string name="title_activity_configuration">Configuration</string>
     <string name="title_activity_sell">SellActivity</string>
     <string name="title_activity_definir_cuotas">DefinirCuotasActivity</string>
+    <string name="title_activity_agregar_pedido_despacho">AgregarPedidoDespacho</string>
 </resources>

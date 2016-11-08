@@ -80,4 +80,13 @@ public class CajaComprobante extends SugarRecord {
     public void setFechaActualizacion(String fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
+
+    public static CajaComprobante getCajaComprobante(String comp_Id){
+        if (CajaComprobante.find(CajaComprobante.class," comp_Id =?",new String[]{comp_Id}).size()>0){
+            return CajaComprobante.find(CajaComprobante.class," comp_Id =?",new String[]{comp_Id}).get(0);
+        }
+
+
+        return null;
+    }
 }

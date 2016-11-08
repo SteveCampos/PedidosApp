@@ -1,7 +1,13 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
+
+import java.util.List;
+
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -123,5 +129,12 @@ public class Producto extends SugarRecord {
 
     public void setFechaActualizacion(String fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public static List<Producto> getAllProducto(){
+       for (Producto producto : Producto.find(Producto.class,"",null)){
+           Log.d("AgregarPedidoDespacho",producto.getDescripcion()+"-"+producto.isEstado()+"-"+String.valueOf(Constants.ESTADO_TRUE));
+       }
+        return Producto.find(Producto.class," estado=?",new String[]{"1"});
     }
 }

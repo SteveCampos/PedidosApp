@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -57,5 +59,9 @@ public class Unidad extends SugarRecord{
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public static List<Unidad> getAllUnidad(){
+        return Unidad.find(Unidad.class,"estado = ?",new String[]{"1"});
     }
 }

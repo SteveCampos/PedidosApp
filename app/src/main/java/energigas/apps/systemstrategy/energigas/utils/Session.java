@@ -201,7 +201,7 @@ public class Session {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION, Context.MODE_PRIVATE).edit();
             editor.putInt(Constants.IDUSUARIO, usuario.getUsuIUsuarioId());
-            editor.putString(Constants.USUARIO, usuario.getUsuVUsuario());
+            editor.putString(Constants.USUARIO, usuario.getUsuVUsuario()+"");
             editor.putString(Constants.NOMBRE, usuario.getPersona().getPerVNombres());
             editor.putString(Constants.APELLIDO_PATERNO, usuario.getPersona().getPerVApellidoPaterno());
             editor.putString(Constants.APELLIDO_MATERNO, usuario.getPersona().getPerVApellidoMaterno());

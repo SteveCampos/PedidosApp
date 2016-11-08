@@ -265,4 +265,8 @@ public class Establecimiento extends SugarRecord {
         }
         return listEstablecimiento;
     }
+
+    public static Establecimiento getEstablecimientoById(String id){
+        return Establecimiento.find(Establecimiento.class," est_I_Establecimiento_Id = ? ",new String[]{id}).get(0);
+    }
 }

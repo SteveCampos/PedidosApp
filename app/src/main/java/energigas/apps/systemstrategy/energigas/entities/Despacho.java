@@ -26,9 +26,9 @@ public class Despacho extends SugarRecord {
 
     private String placa;
 
-    private double contadorInicial;
+    private double contadorInicialOrigen;
 
-    private double contadorFinal;
+    private double contadorFinalOrigen;
 
     private double cantidadDespachada;
 
@@ -42,9 +42,9 @@ public class Despacho extends SugarRecord {
 
     private int unId;
 
-    private double pIT;
+    private double pITOrigen;
 
-    private double pFT;
+    private double pFTOrigen;
 
     private String latitud;
 
@@ -58,29 +58,41 @@ public class Despacho extends SugarRecord {
 
     private String fechaCreacion;
 
-    private String usuarioCreacion;
+    private int usuarioCreacion;
 
     private int estadoId;
 
-    private int vehiculoId;
+    private int veId;
 
     private String guiaRemision;
 
+    private long liqId;
+
     private double precioUnitarioSIGV;
-    private double precioUNitarioCIGV;
+
+    private double precioUnitarioCIGV;
+
     private double porImpuesto;
+
     private double costoVenta;
+
     private double importe;
 
-    private long compId;
+    private double contadorInicialDestino;
 
-    private long liqId;
+    private double contadorFinalDestino;
+
+    private double pITDestino;
+
+    private double pFTDestino;
+
+    private long compId;
 
 
     public Despacho() {
     }
 
-    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicial, double contadorFinal, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pIT, double pFT, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, String usuarioCreacion, int estadoId, int vehiculoId, String guiaRemision, double precioUnitarioSIGV, double precioUNitarioCIGV, double porImpuesto, double costoVenta, double importe, long compId, long liqId) {
+    public Despacho(long despachoId, long peId, int pdId, int clienteId, int establecimientoId, int almacenEstId, int usuarioId, String placa, double contadorInicialOrigen, double contadorFinalOrigen, double cantidadDespachada, String horaInicio, String horaFin, String fechaDespacho, int proId, int unId, double pITOrigen, double pFTOrigen, String latitud, String longitud, int almacenVehId, String serie, String numero, String fechaCreacion, int usuarioCreacion, int estadoId, int veId, String guiaRemision, long liqId, double precioUnitarioSIGV, double precioUnitarioCIGV, double porImpuesto, double costoVenta, double importe, double contadorInicialDestino, double contadorFinalDestino, double pITDestino, double pFTDestino, long compId) {
         this.despachoId = despachoId;
         this.peId = peId;
         this.pdId = pdId;
@@ -89,16 +101,16 @@ public class Despacho extends SugarRecord {
         this.almacenEstId = almacenEstId;
         this.usuarioId = usuarioId;
         this.placa = placa;
-        this.contadorInicial = contadorInicial;
-        this.contadorFinal = contadorFinal;
+        this.contadorInicialOrigen = contadorInicialOrigen;
+        this.contadorFinalOrigen = contadorFinalOrigen;
         this.cantidadDespachada = cantidadDespachada;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.fechaDespacho = fechaDespacho;
         this.proId = proId;
         this.unId = unId;
-        this.pIT = pIT;
-        this.pFT = pFT;
+        this.pITOrigen = pITOrigen;
+        this.pFTOrigen = pFTOrigen;
         this.latitud = latitud;
         this.longitud = longitud;
         this.almacenVehId = almacenVehId;
@@ -107,15 +119,83 @@ public class Despacho extends SugarRecord {
         this.fechaCreacion = fechaCreacion;
         this.usuarioCreacion = usuarioCreacion;
         this.estadoId = estadoId;
-        this.vehiculoId = vehiculoId;
+        this.veId = veId;
         this.guiaRemision = guiaRemision;
+        this.liqId = liqId;
         this.precioUnitarioSIGV = precioUnitarioSIGV;
-        this.precioUNitarioCIGV = precioUNitarioCIGV;
+        this.precioUnitarioCIGV = precioUnitarioCIGV;
         this.porImpuesto = porImpuesto;
         this.costoVenta = costoVenta;
         this.importe = importe;
+        this.contadorInicialDestino = contadorInicialDestino;
+        this.contadorFinalDestino = contadorFinalDestino;
+        this.pITDestino = pITDestino;
+        this.pFTDestino = pFTDestino;
         this.compId = compId;
-        this.liqId = liqId;
+    }
+
+    public double getContadorInicialOrigen() {
+        return contadorInicialOrigen;
+    }
+
+    public void setContadorInicialOrigen(double contadorInicialOrigen) {
+        this.contadorInicialOrigen = contadorInicialOrigen;
+    }
+
+    public double getContadorFinalOrigen() {
+        return contadorFinalOrigen;
+    }
+
+    public void setContadorFinalOrigen(double contadorFinalOrigen) {
+        this.contadorFinalOrigen = contadorFinalOrigen;
+    }
+
+    public double getpITOrigen() {
+        return pITOrigen;
+    }
+
+    public void setpITOrigen(double pITOrigen) {
+        this.pITOrigen = pITOrigen;
+    }
+
+    public double getpFTOrigen() {
+        return pFTOrigen;
+    }
+
+    public void setpFTOrigen(double pFTOrigen) {
+        this.pFTOrigen = pFTOrigen;
+    }
+
+    public double getContadorInicialDestino() {
+        return contadorInicialDestino;
+    }
+
+    public void setContadorInicialDestino(double contadorInicialDestino) {
+        this.contadorInicialDestino = contadorInicialDestino;
+    }
+
+    public double getContadorFinalDestino() {
+        return contadorFinalDestino;
+    }
+
+    public void setContadorFinalDestino(double contadorFinalDestino) {
+        this.contadorFinalDestino = contadorFinalDestino;
+    }
+
+    public double getpITDestino() {
+        return pITDestino;
+    }
+
+    public void setpITDestino(double pITDestino) {
+        this.pITDestino = pITDestino;
+    }
+
+    public double getpFTDestino() {
+        return pFTDestino;
+    }
+
+    public void setpFTDestino(double pFTDestino) {
+        this.pFTDestino = pFTDestino;
     }
 
     public long getLiqId() {
@@ -134,12 +214,12 @@ public class Despacho extends SugarRecord {
         this.precioUnitarioSIGV = precioUnitarioSIGV;
     }
 
-    public double getPrecioUNitarioCIGV() {
-        return precioUNitarioCIGV;
+    public double getPrecioUnitarioCIGV() {
+        return precioUnitarioCIGV;
     }
 
-    public void setPrecioUNitarioCIGV(double precioUNitarioCIGV) {
-        this.precioUNitarioCIGV = precioUNitarioCIGV;
+    public void setPrecioUnitarioCIGV(double precioUnitarioCIGV) {
+        this.precioUnitarioCIGV = precioUnitarioCIGV;
     }
 
     public double getPorImpuesto() {
@@ -246,21 +326,6 @@ public class Despacho extends SugarRecord {
         this.placa = placa;
     }
 
-    public double getContadorInicial() {
-        return contadorInicial;
-    }
-
-    public void setContadorInicial(double contadorInicial) {
-        this.contadorInicial = contadorInicial;
-    }
-
-    public double getContadorFinal() {
-        return contadorFinal;
-    }
-
-    public void setContadorFinal(double contadorFinal) {
-        this.contadorFinal = contadorFinal;
-    }
 
     public double getCantidadDespachada() {
         return cantidadDespachada;
@@ -310,21 +375,6 @@ public class Despacho extends SugarRecord {
         this.unId = unId;
     }
 
-    public double getpIT() {
-        return pIT;
-    }
-
-    public void setpIT(double pIT) {
-        this.pIT = pIT;
-    }
-
-    public double getpFT() {
-        return pFT;
-    }
-
-    public void setpFT(double pFT) {
-        this.pFT = pFT;
-    }
 
     public String getLatitud() {
         return latitud;
@@ -374,11 +424,11 @@ public class Despacho extends SugarRecord {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getUsuarioCreacion() {
+    public int getUsuarioCreacion() {
         return usuarioCreacion;
     }
 
-    public void setUsuarioCreacion(String usuarioCreacion) {
+    public void setUsuarioCreacion(int usuarioCreacion) {
         this.usuarioCreacion = usuarioCreacion;
     }
 
@@ -390,13 +440,16 @@ public class Despacho extends SugarRecord {
         this.estadoId = estadoId;
     }
 
-    public int getVehiculoId() {
-        return vehiculoId;
+    public int getVeId() {
+        return veId;
     }
 
-    public void setVehiculoId(int vehiculoId) {
-        this.vehiculoId = vehiculoId;
+    public void setVeId(int veId) {
+        this.veId = veId;
     }
+
+
+
 
 
 }

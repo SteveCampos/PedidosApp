@@ -12,11 +12,11 @@ public class SyncEstado extends SugarRecord {
     private int syncIdRemoto;
     private String nombreTabla;
     private int campoId;
-    private boolean estadoSync;
+    private int estadoSync;
 
     public SyncEstado() {
     }
-    public SyncEstado(int syncIdRemoto, String nombreTabla, int campoId, boolean estadoSync) {
+    public SyncEstado(int syncIdRemoto, String nombreTabla, int campoId, int estadoSync) {
         this.syncIdRemoto = syncIdRemoto;
         this.nombreTabla = nombreTabla;
         this.campoId = campoId;
@@ -47,11 +47,11 @@ public class SyncEstado extends SugarRecord {
         this.campoId = campoId;
     }
 
-    public boolean isEstadoSync() {
+    public int isEstadoSync() {
         return estadoSync;
     }
 
-    public void setEstadoSync(boolean estadoSync) {
+    public void setEstadoSync(int estadoSync) {
         this.estadoSync = estadoSync;
     }
 }

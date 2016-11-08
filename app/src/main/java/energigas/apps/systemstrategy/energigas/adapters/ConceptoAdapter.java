@@ -22,6 +22,7 @@ public class ConceptoAdapter extends ArrayAdapter<Concepto> {
     private Context context;
     private List<Concepto> conceptos;
     public ConceptoAdapter(Context context, int resource, List<Concepto> objects) {
+
         super(context, resource, objects);
         this.context = context;
         this.conceptos = objects;

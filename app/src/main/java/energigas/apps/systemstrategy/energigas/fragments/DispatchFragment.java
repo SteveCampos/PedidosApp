@@ -13,10 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.orm.SugarRecord;
-
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,9 +29,6 @@ import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
-import energigas.apps.systemstrategy.energigas.entities.VehiculoDispositivo;
-import energigas.apps.systemstrategy.energigas.entities.VehiculoUsuario;
-import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -152,45 +145,6 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
         String numeroDespacho = Despacho.findWithQuery(Despacho.class, Utils.getQueryForNumberDistPach(), new String[]{}).get(Constants.CURRENT).getNumero();
 
 
-        despacho = new Despacho(
-                Integer.parseInt(numeroDespacho),
-                pedidoDetalle.getPeId(),
-                pedidoDetalle.getPdId(),
-                establecimiento.getEstIClienteId(),
-                establecimiento.getEstIEstablecimientoId(),
-                almacen.getAlmId(),
-                usuario.getUsuIUsuarioId(),
-                almacen.getPlaca(),
-                0.0,//modificar luego Listo
-                0.0, //modificar luego Listo
-                0.0,// modificar luego Listo
-                "", // modificar luego Listo
-                "",// modificar luego Listo
-                Utils.getDatePhone(),
-                pedidoDetalle.getProductoId(),
-                pedidoDetalle.getUnidadId(),
-                0.0,// modificar luego Listo
-                0.0,// modificar luego Listo
-                "",// modificar luego Listo
-                "",// modificar luego Listo
-                almacen.getAlmId(),
-                serie.getCompVSerie(), // Serie Listo.
-                Utils.completaZeros(numeroDespacho, serie.getParametro()),
-                Utils.getDatePhone(),
-                usuario.getUsuVUsuario(),
-                Constants.PEDIDO_CREADO,
-                almacen.getVehiculoId(),
-                pedido.getGuiaRemision(),
-                pedidoDetalle.getPrecio(),
-                pedidoDetalle.getPrecioUnitario(),
-                pedido.getPorImpuesto(),
-                pedidoDetalle.getCostoVenta(),
-                pedidoDetalle.getImporte(),
-                -1,
-                cajaLiquidacion.getLiqId()
-
-
-        );
     }
 
     @OnClick(R.id.btnDistpach)
@@ -222,13 +176,6 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
 
         /** Guardar los datos del cronometro**/
 
-        despacho.setContadorInicial(Double.parseDouble(inputQuantityInitial.getText().toString()));
-        despacho.setContadorFinal(Double.parseDouble(inputQuantityFinal.getText().toString()));
-        despacho.setHoraInicio("17:39");
-        despacho.setHoraFin("18:39");
-
-        despacho.setpIT(Double.parseDouble(input_tank_initial.getText().toString()));
-        despacho.setpFT(Double.parseDouble(input_tank_final.getText().toString()));
 
 
     }
@@ -264,7 +211,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
             despacho.setLatitud(latAndLong.getLatitude() + "");
             despacho.setLongitud(latAndLong.getLongitude() + "");
             /**Enviar Importe**/
-            despacho.setImporte(despacho.getPrecioUNitarioCIGV() * despacho.getCantidadDespachada());
+            despacho.setImporte(despacho.getPrecioUnitarioCIGV() * despacho.getCantidadDespachada());
             pedidoDetalle.setCantidadAtendida(despacho.getCantidadDespachada());
             Toast.makeText(getActivity(), "NEXT", Toast.LENGTH_SHORT).show();
             Long estad = despacho.save();

@@ -1,13 +1,17 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class CajaMovimiento extends SugarRecord{
+public class CajaMovimiento extends SugarRecord {
 
     @Unique
     private long cajMovId;
@@ -36,10 +40,17 @@ public class CajaMovimiento extends SugarRecord{
 
     private int tipoMovId;
 
+    @Ignore
+    private CajaPago pago;
+    @Ignore
+    private CajaComprobante comprobante;
+
+
+
     public CajaMovimiento() {
     }
 
-    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid,int tipoMovId) {
+    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid, int tipoMovId, CajaPago pago, CajaComprobante comprobante) {
         this.cajMovId = cajMovId;
         this.liqId = liqId;
         this.catMovId = catMovId;
@@ -53,6 +64,26 @@ public class CajaMovimiento extends SugarRecord{
         this.fechaAccion = fechaAccion;
         this.referenciaAndroid = referenciaAndroid;
         this.tipoMovId = tipoMovId;
+        this.pago = pago;
+        this.comprobante = comprobante;
+    }
+
+
+
+    public CajaPago getPago() {
+        return pago;
+    }
+
+    public void setPago(CajaPago pago) {
+        this.pago = pago;
+    }
+
+    public CajaComprobante getComprobante() {
+        return comprobante;
+    }
+
+    public void setComprobante(CajaComprobante comprobante) {
+        this.comprobante = comprobante;
     }
 
     public long getCajMovId() {
@@ -159,4 +190,28 @@ public class CajaMovimiento extends SugarRecord{
     public void setTipoMovId(int tipoMovId) {
         this.tipoMovId = tipoMovId;
     }
+
+    public static CajaMovimiento getCajaMovimiento(String comp_Id) {
+
+        CajaComprobante cajaComprobante = CajaComprobante.getCajaComprobante(comp_Id);
+
+        if (cajaComprobante == null) {
+            return null;
+        }
+        CajaMovimiento cajaMovimiento = CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{cajaComprobante.getCajMovId() + ""}).get(0);
+        CajaPago cajaPago = CajaPago.getCajaPago(cajaMovimiento.getCajMovId() + "");
+        cajaMovimiento.setComprobante(cajaComprobante);
+        cajaMovimiento.setPago(cajaPago);
+        return cajaMovimiento;
+    }
+
+    public static CajaMovimiento getCajaMovimientoById(String id) {
+        if (CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).size()>0){
+            return CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).get(0);
+        }
+
+        return null;
+    }
+
+
 }

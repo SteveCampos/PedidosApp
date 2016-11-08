@@ -7,6 +7,15 @@
     android:orientation="vertical">
 
     <Spinner
+        android:id="@+id/sp_tcGasto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:entries="@array/spinnerItemsExpeneses"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp" />
+
+    <Spinner
         android:id="@+id/sp_tiposgastos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

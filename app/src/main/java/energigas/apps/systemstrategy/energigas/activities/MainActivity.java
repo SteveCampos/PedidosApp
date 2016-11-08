@@ -28,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
@@ -36,7 +37,9 @@ import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.services.ServiceExport;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -44,7 +47,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        EstablecimientoFragment.OnEstablecimientoClickListener {
+        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener {
     //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -74,8 +77,7 @@ public class MainActivity extends AppCompatActivity
         hideFloatingButton();
         initViews();
 
-        Intent serviceExport = new Intent(this, ServiceExport.class);
-        startService(serviceExport);
+       new ExportTask(this,this).execute(Constants.TABLA_COMPROBANTE,Constants.S_CREADO);
     }
 
     @Override
@@ -324,6 +326,21 @@ public class MainActivity extends AppCompatActivity
         boolean success = Session.saveEstablecimiento(getApplicationContext(), establecimiento);
         if (success)
             startActivity(new Intent(MainActivity.this, MainStationActivity.class));
+    }
+
+    @Override
+    public void onLoadSuccess(String message) {
+        Log.d(TAG,message);
+    }
+
+    @Override
+    public void onLoadError(String message) {
+        Log.d(TAG,message);
+    }
+
+    @Override
+    public void onLoadErrorProcedure(String message) {
+        Log.d(TAG,message);
     }
 
     private static class Adapter extends FragmentPagerAdapter {
