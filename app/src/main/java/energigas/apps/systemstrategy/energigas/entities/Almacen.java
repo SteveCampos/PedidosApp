@@ -236,4 +236,9 @@ public class Almacen extends SugarRecord {
         list.add(new Almacen());
         return list;
     }
+
+    public static List<Almacen> getListTanque(String idEstablecimiento) {
+        List<Almacen> list = Almacen.find(Almacen.class," establecimiento_Id = ? ",new String[]{idEstablecimiento});
+        return list;
+    }
 }
