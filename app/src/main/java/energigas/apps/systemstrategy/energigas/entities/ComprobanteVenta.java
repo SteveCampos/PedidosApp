@@ -345,5 +345,9 @@ public class ComprobanteVenta extends SugarRecord {
         return comprobanteVentas;
     }
 
+    public static ComprobanteVenta getComprobanteVentaId(String comprobanteId){
+        return ComprobanteVenta.find(ComprobanteVenta.class,"comp_Id=?",new String[]{comprobanteId}).get(0);
+    }
+
 
 }

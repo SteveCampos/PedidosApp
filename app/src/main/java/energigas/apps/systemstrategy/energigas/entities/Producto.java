@@ -137,4 +137,7 @@ public class Producto extends SugarRecord {
        }
         return Producto.find(Producto.class," estado=?",new String[]{"1"});
     }
+    public static String getNameProducto(String productoId){
+        return Producto.find(Producto.class,"pro_Id=?",new String[]{productoId}).get(0).getNombre();
+    }
 }

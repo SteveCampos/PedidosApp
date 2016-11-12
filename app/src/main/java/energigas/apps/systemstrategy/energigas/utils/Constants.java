@@ -124,6 +124,9 @@ public class Constants {
     public static final int CONCEPTO_TIPO_MOV_INGRESO = 116;
 
 
+
+
+
     public static final boolean ESTADO_TRUE = true;
     public static final boolean ESTADO_FALSE = false;
 
@@ -165,5 +168,10 @@ public class Constants {
     public static final int GASTO_ESTADO_CREADO = 58;
     public static final int GASTO_ESTADO_ELIMINADO= 59;
     public static final int GASTO_EN_PLANTA = 101;
+
+
+    public static final String SESSION_COMPROBANTE_VENTA = "SESSION_COMPROBANTE_VENTA";
+    public static final String SESSION_COMPROBANTE_VENTA_ID = "SESSION_COMPROBANTE_VENTA_ID";
+
 
 }

@@ -14,6 +14,7 @@ import java.util.Set;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
@@ -249,5 +250,25 @@ public class Session {
         CajaLiquidacion cajaLiquidacion = new CajaLiquidacion();
         cajaLiquidacion.setLiqId(prefs.getLong(Constants.CAJA_LIQUIDACION_ID, 0));
         return cajaLiquidacion;
+    }
+
+    public static boolean saveComprobanteVenta(Context context,ComprobanteVenta comprobanteVenta){
+        try {
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE).edit();
+            editor.putLong(Constants.SESSION_COMPROBANTE_VENTA_ID,comprobanteVenta.getCompId());
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public static ComprobanteVenta getComprobanteVenta(Context context){
+
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE);
+        ComprobanteVenta comprobanteVenta = new ComprobanteVenta();
+        comprobanteVenta.setCompId(prefs.getLong(Constants.SESSION_COMPROBANTE_VENTA_ID, 0));
+        return comprobanteVenta;
     }
 }

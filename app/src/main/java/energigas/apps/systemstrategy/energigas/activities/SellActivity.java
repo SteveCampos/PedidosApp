@@ -196,7 +196,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         generarVenta();
         guardarVenta();
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        Session.saveComprobanteVenta(this,comprobanteVenta);
+        startActivity(new Intent(getApplicationContext(), SellPrintActivity.class));
         this.finish();
 
     }
@@ -309,7 +310,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case Constants.FORMA_PAGO_CONTADO:
-
+                cajaMovimiento.save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(cajaMovimiento.getId() + ""), Constants.S_CREADO).save();
                 Long cajaCom = cajaComprobante.save();
                 Long cajaPag = cajaPago.save();
@@ -661,9 +662,16 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnVender:
 
-                if(conceptoCredito.getAbreviatura().equals("0")){
-                    Toast.makeText(SellActivity.this,"No cuenta con modalidad de credito", Toast.LENGTH_SHORT).show();
-                    break;
+                if(conceptoCredito.getAbreviatura().equals("0")  ){
+
+                    if (!Session.getDefineCuotas(getApplicationContext())){
+                        dialogConfirmarVenta();
+                    }else{
+                        Toast.makeText(SellActivity.this,"No cuenta con modalidad de credito", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+
                 }
                 dialogConfirmarVenta();
                 break;

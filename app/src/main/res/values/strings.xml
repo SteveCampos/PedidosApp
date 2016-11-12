@@ -68,27 +68,26 @@
 
 
     <string name="print_factura_empresa">
-        "Energigas SAC\n"
-        "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502\n"
-        "San Isidro Lima\n"
-        "RUC: 20506151547\n"
-        "Telf: (511) 2033001\n\n"
-        "FACTURA ELECTRONICA"
+        " %1$s \n"
+        " %2$s \n"
+        " %3$s \n"
+        " %4$s \n"
+        " %5$s \n\n"
+        " FACTURA ELECTRONICA "
     </string>
 
     <string name="print_factura_header">
-        "NUMERO   :F246-00000024\n"
-        "FECHA    : %1$s\n"
-        "CLIENTE  : Agropacking Export S.A.\n"
-        "DNI/RUC  : 20525974635\n"
-        "DIRECCION: Car. Panamericana Norte Km. 1076 Piura - Piura - Tambo Grande."
+        "NUMERO   : %1$s \n"
+        "FECHA    : %2$s \n"
+        "CLIENTE  : %3$s \n"
+        "DNI/RUC  : %4$s \n"
+        "DIRECCION: %5$s "
     </string>
 
 
 
     <string name="print_factura_items">
-        "500.00\tGLP\n"
-        "300.00\tGNV\n\n"
+        " %1$s     %2$s \n"
         "OP. GRAVADA\t\t\t\tS/.\n"
         "OP. INAFECTA\t\t\tS/.\n"
         "OP. EXONERADA\t\tS/.\n"
@@ -98,7 +97,7 @@
         "PRECIO VENTA\t\t\tS/.\n"
     </string>
     <string name="print_factura_items_importe">
-        "5000.00\n"
+        " %1$s   \n"
         "3900.00\n\n"
         "7542.37\n"
         "0.00\n"

@@ -228,4 +228,11 @@ public class Cliente extends SugarRecord{
     public void setPersona(Persona persona) {
         this.persona = persona;
     }
+
+    public static  Cliente getCliente (String clienteId){
+        Cliente cliente = Cliente.find(Cliente.class,"cli_I_Cliente_Id = ? ",new String[]{clienteId}).get(0);
+        cliente.setPersona(Persona.find(Persona.class,"per_I_Persona_Id = ? ",new String[]{cliente.getCliIPersonaId()+""}).get(0));
+        cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class,"persona_Id=?",new String[]{cliente.getPersona().getPerIPersonaId()+""}).get(0));
+        return cliente;
+    }
 }
