@@ -43,12 +43,22 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
     @Override
     public void onBindViewHolder(ComprobanteVentaHolder holder, int position) {
         final ComprobanteVenta comprobanteVenta = mList.get(position);
-
+        Log.d(TAG,"COMPROBANTE OID :    "+comprobanteVenta.getCompId()+"");
         List<ComprobanteVentaDetalle> ventaDetalles = ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class," comp_Id = ? ",new String[]{comprobanteVenta.getCompId()+""});
         String detalleString="";
+        Log.d(TAG,"Detalle: "+ventaDetalles.size());
+
+        for (ComprobanteVentaDetalle detalle : ComprobanteVentaDetalle.listAll(ComprobanteVentaDetalle.class)){
+            Log.d(TAG,": "+detalle.getCompdId()+"-"+detalle.getCompId()+"-"+detalle.getCantidad());
+        }
+
+
+
         for (ComprobanteVentaDetalle detalle : ventaDetalles){
+
             Producto producto = Producto.find(Producto.class," pro_Id = ? ",new String[]{detalle.getProId()+""}).get(0);
             detalleString = detalleString+" "+ producto.getDescripcion()+" \n";
+            Log.d(TAG,"Detalle: "+detalleString);
         }
 
         holder.txt_factura.setText(comprobanteVenta.getSerie()+"-"+comprobanteVenta.getNumDoc());

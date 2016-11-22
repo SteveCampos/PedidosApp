@@ -67,6 +67,44 @@
     <string name="title_order">Prioridad Alta</string>
 
 
+
+    <string name="print_despacho_empresa">
+        " %1$s \n"
+        " %2$s \n"
+        " %3$s \n"
+        " %4$s \n"
+        " %5$s \n\n"
+    </string>
+
+      <string name="print_info_despacho">
+        "INSTALACION: %1$s \n"
+        "COORDENADAS: %2$s \n"
+        "PLACA: %3$s \n"
+        "AGENTE DE VENTA: %4$s \n "
+        "NUMERO DE COMPROBANTE: %5$s \n \n "
+        "******************      DEPACHO      **************** \n \n"
+        "FECHA: %6$s \n"
+        "HORA INICIO: %7$s \n"
+        "HORA FIN: %8$s \n"
+        "CONTADOR INICIAL: %9$s \n"
+        "CONTADOR FINAL: %10$s \n"
+        "CANTIDAD DESPACHADA: %11$s \n"
+        "\n "
+        "PORCENTAJE INICIAL TANQUE: %12$s \n"
+        "PORCENTAJE FINAL TANQUE: %13$s \n"
+        "SERIE TANQUE: %14$s \n"
+        "NUMERO DE TRANSPORTE: %15$s \n \n"
+        " -------------------------- \n"
+        "RECIBIDO POR:\n"
+        "NOMBRE: ________________________________ \n"
+        "DNI: __________________________________\n"
+        "FIRMA POR: _____________________________ \n"
+        "******************      Documento sin valor tributario      **************** \n"
+        "******************      Consulte este documento en       **************** \n \n"
+        "******************      %16$s       **************** \n \n"
+    </string>
+
+
     <string name="print_factura_empresa">
         " %1$s \n"
         " %2$s \n"
@@ -87,8 +125,8 @@
 
 
     <string name="print_factura_items">
-        " %1$s     %2$s \n"
-        "OP. GRAVADA\t\t\t\tS/.\n"
+        " %1$s \n"
+        "OP. GRAVADA\t\t\tS/.\n"
         "OP. INAFECTA\t\t\tS/.\n"
         "OP. EXONERADA\t\tS/.\n"
         "OP. GRATUITA\t\t\tS/.\n"
@@ -97,16 +135,15 @@
         "PRECIO VENTA\t\t\tS/.\n"
     </string>
     <string name="print_factura_items_importe">
-        " %1$s   \n"
-        "3900.00\n\n"
-        "7542.37\n"
-        "0.00\n"
-        "0.00\n"
-        "0.00\n"
-        "0.00\n"
-        "1357.63\n"
+        " %1$s\n"
+        " %2$s\n"
+        " %3$s\n"
+        " %4$s\n"
+        " %5$s\n"
+        " %6$s\n"
+        " %7$s\n"
         "----------\n"
-        "8900.00"
+        " %8$s"
     </string>
     <string name="print_factura_operaciones">
         "OP. GRAVADA     S/.\n"
@@ -127,17 +164,17 @@
         "_________\n"
         "8900.00"
     </string>
-    <string name="print_factura_footer">
-        "\n\nOCHO MIL NOVESCIENTOS CON 00/100 SOLES\n\n"
-        "VENTA AL CONTADO\n"
-        "AGENTE: Juan Casani Lazo\n\n"
-        "V. Resumen: MUOy4w/Q6VGqEBNiwQOhMYLCvm8\n\n"
+
+
+   <string name="print_factura_footer">
+        "\n\n %1$s \n\n"
+        " %2$s \n"
+        "AGENTE: %3$s \n\n"
+        "V. Resumen: %4$s  \n\n"
         "<b>REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA</b>\n"
         "Visualice este documento en:\n"
-        "<u>http://www.energigas.com.pe/</u>"
+        "<u> %5$s </u>"
     </string>
-
-
 
 
 

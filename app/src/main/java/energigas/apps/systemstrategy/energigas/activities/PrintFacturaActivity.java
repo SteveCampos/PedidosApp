@@ -28,8 +28,7 @@ public class PrintFacturaActivity extends AppCompatActivity{
     @BindView(R.id.textViewVentaCabecera)
     TextView venta_cabecera;
 
-    @BindView(R.id.textViewBottom)
-    TextView cabecera_footer;
+
 
     ComprobanteVenta comprobanteVenta;
 

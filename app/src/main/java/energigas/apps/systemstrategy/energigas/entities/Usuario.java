@@ -6,11 +6,13 @@ import com.orm.dsl.Unique;
 
 import java.util.List;
 
+import energigas.apps.systemstrategy.energigas.utils.Session;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Usuario extends SugarRecord{
+public class Usuario extends SugarRecord {
 
     @Unique
     private int usuIUsuarioId;
@@ -139,5 +141,12 @@ public class Usuario extends SugarRecord{
 
     public void setUsuDTFechaCreacion(String usuDTFechaCreacion) {
         this.usuDTFechaCreacion = usuDTFechaCreacion;
+    }
+
+    public static Usuario getUsuario(String usuario) {
+
+        Usuario usuario1 = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{usuario}).get(0);
+        usuario1.setPersona(Persona.getPersona(usuario1.getUsuIPersonaId() + ""));
+        return usuario1;
     }
 }

@@ -22,7 +22,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/layout_print_factura" />
+    <include layout="@layout/content_print_despacho" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabNext"

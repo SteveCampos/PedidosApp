@@ -268,7 +268,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Long pedidoId = pedido.save();
 
         Long comproVentaId = comprobanteVenta.save();
-        SugarRecord.saveInTx(comprobanteVentaDetalles);//
+        //SugarRecord.saveInTx(comprobanteVentaDetalles);//
 
 
         Log.d(TAG, " comprobanteVenta " + comproVentaId);
@@ -276,11 +276,15 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         /**Guardar para la exportacion**/
 
-        new SyncEstado(Integer.parseInt(pedido.getPeId() + ""),Utils.separteUpperCase(Pedido.class.getSimpleName()) , Integer.parseInt(pedido.getPeId() + ""), Constants.S_CREADO).save();
+        //new SyncEstado(Integer.parseInt(pedido.getId() + ""),Utils.separteUpperCase(Pedido.class.getSimpleName()) , Integer.parseInt(pedido.getPeId() + ""), Constants.S_ACTUALIZADO).save();
         new SyncEstado(0, Utils.separteUpperCase(ComprobanteVenta.class.getSimpleName()), Integer.parseInt(comprobanteVenta.getId() + ""), Constants.S_CREADO).save();
         for (ComprobanteVentaDetalle ventaDetalle : comprobanteVentaDetalles) {
-            Long id = new SyncEstado(0, Utils.separteUpperCase(ComprobanteVentaDetalle.class.getSimpleName()) ,Integer.parseInt(ventaDetalle.getId()+""), Constants.S_CREADO).save();
+            Long idVentaDetalle = ventaDetalle.save();
+            ventaDetalle.setCompdId(Integer.parseInt(idVentaDetalle+""));
+            ventaDetalle.save();
+            Long id = new SyncEstado(0, Utils.separteUpperCase(ComprobanteVentaDetalle.class.getSimpleName()) ,Integer.parseInt(idVentaDetalle+""), Constants.S_CREADO).save();
             Log.d(TAG, " SyncEstado VENTA DETALLE " + id);
+
         }
 
 
@@ -310,6 +314,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case Constants.FORMA_PAGO_CONTADO:
+                Long idMov = cajaMovimiento.save();
+                cajaMovimiento.setCajMovId(idMov);
                 cajaMovimiento.save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(cajaMovimiento.getId() + ""), Constants.S_CREADO).save();
                 Long cajaCom = cajaComprobante.save();
@@ -460,12 +466,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         List<ComprobanteVentaDetalle> comprobanteVentaDetalles = new ArrayList<>();
         List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
 
-        int comprobanteVentaId = ComprobanteVentaDetalle.findWithQuery(ComprobanteVentaDetalle.class, Utils.getQueryNumberComprobanteVentaDetalle(), null).get(Constants.CURRENT).getCompdId();
+      //  int comprobanteVentaId = Integer.parseInt(ComprobanteVentaDetalle.findWithQuery(ComprobanteVentaDetalle.class, Utils.getQueryNumberComprobanteVentaDetalle(), null).get(Constants.CURRENT).getId()+"");
 
         for (Despacho despacho : despachos) {
             ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, " pro_Id=? ", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
-            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(comprobanteVentaId, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), despacho.getDespachoId()));
-            comprobanteVentaId++;
+            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), despacho.getDespachoId()));
+           // comprobanteVentaId++;
         }
         return comprobanteVentaDetalles;
     }
@@ -766,7 +772,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
                     this.planPagoDetalles.get(i).setPlanPaId(planPago.getPlanPaId());
                     this.planPagoDetalles.get(i).setUsuarioAccion(usuario.getUsuIUsuarioId());
-                    this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
+                   // this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
                 }
 
                 Toast.makeText(this, "TAMAÑO" + this.planPagoDetalles.size(), Toast.LENGTH_SHORT).show();

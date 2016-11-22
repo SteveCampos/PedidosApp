@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
+import energigas.apps.systemstrategy.energigas.activities.SellPrintActivity;
 import energigas.apps.systemstrategy.energigas.adapters.ComprobanteVentaAdapter;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
@@ -70,7 +71,8 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
 
     @Override
     public void onComprobanteVentaClickListener(ComprobanteVenta comprobanteVenta, View view) {
-        startActivity(new Intent(getActivity(), PrintFacturaActivity.class));
+        Session.saveComprobanteVenta(getActivity(),comprobanteVenta);
+        startActivity(new Intent(getActivity(), SellPrintActivity.class));
     }
 
     /*

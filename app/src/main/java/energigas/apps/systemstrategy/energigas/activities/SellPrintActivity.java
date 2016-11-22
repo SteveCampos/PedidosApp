@@ -30,6 +30,7 @@ import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
@@ -45,6 +46,7 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -83,8 +85,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.textViewVentaCabecera)
     TextView venta_cabecera;
 
-    @BindView(R.id.textViewBottom)
-    TextView cabecera_footer;
+
 
     @BindView(R.id.textViewImprimirContenidoRight)
     TextView textViewImprimirContenidoRight;
@@ -92,9 +93,14 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.textViewImprimirContenidoLeft)
     TextView textViewImprimirContenidoLeft;
 
+
+    @BindView(R.id.textViewFooterComp)
+    TextView textViewFooterComp;
+
     private ComprobanteVenta comprobanteVenta;
     private List<ComprobanteVentaDetalle> comprobanteVentaDetalles;
     private Cliente cliente;
+    private Usuario usuario;
 
     private static final String TAG = "SellPrintActivity";
     /**
@@ -112,6 +118,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         res = getResources();
         comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(Session.getComprobanteVenta(this).getCompId() + "");
         comprobanteVentaDetalles = ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId()+"");
+        comprobanteVenta.setItemsDetalle(comprobanteVentaDetalles);
+        usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId()+"");
         cliente = Cliente.getCliente(comprobanteVenta.getClienteId()+"");
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -148,30 +156,37 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setTextItems(){
+        DecimalFormat df = new DecimalFormat("#.00");
         String costoUnidad = "";
-        String cantidadProducto = "";
-        String nombreProducto = "";
+        String cantidadNombre = "";
+        double importeTotal = 0.0;
         for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
-
+            importeTotal = importeTotal + comprobanteVentaDetalles.get(i).getImporte();
             if (i == (comprobanteVentaDetalles.size() - 1)) {
-                costoUnidad = costoUnidad + comprobanteVentaDetalles.get(i).getImporte() + "";
-                cantidadProducto = cantidadProducto+ comprobanteVentaDetalles.get(i).getCantidad();
-                nombreProducto = nombreProducto+ Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"");
+
+                costoUnidad = costoUnidad + df.format(comprobanteVentaDetalles.get(i).getImporte());
+                cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" ";
             } else {
-                costoUnidad = costoUnidad + comprobanteVentaDetalles.get(i).getImporte() + " \n";
-                cantidadProducto = cantidadProducto+ comprobanteVentaDetalles.get(i).getCantidad()+" \n";
-                nombreProducto = nombreProducto+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" \n";
+
+                costoUnidad = costoUnidad + df.format(comprobanteVentaDetalles.get(i).getImporte())+ " \n";
+                cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" \n";
             }
 
         }
 
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe),costoUnidad);
+        String textImporte = String.format(res.getString(R.string.print_factura_items_importe),costoUnidad,df.format(importeTotal),"12.12","13.13","14.14","15.15","16.16",df.format(importeTotal)+"");
         textViewImprimirContenidoRight.setText(textImporte);
 
-        String textCNombre = String.format(res.getString(R.string.print_factura_items),cantidadProducto,nombreProducto);
+        String textCNombre = String.format(res.getString(R.string.print_factura_items),cantidadNombre);
         textViewImprimirContenidoLeft.setText(textCNombre);
+        String textTipoVenta = "VENTA AL CONTADO";
+        if(comprobanteVenta.getPlanPago() !=null){
+            textTipoVenta = "VENTA AL CREDITO";
+        }
+        String codigoVenta = "MUOy4w/Q6VGqEBNiwQOhMYLCvm8";
 
-
+        String comproFooter = String.format(res.getString(R.string.print_factura_footer),comprobanteVenta.getValorResumen(),textTipoVenta,usuario.getPersona().getPerVNombres()+" "+usuario.getPersona().getPerVApellidoPaterno(),codigoVenta,"http://www.energigas.com.pe");
+        textViewFooterComp.setText(comproFooter);
 
 
 
@@ -252,8 +267,10 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                //printDispatch.printNow(mainDispatch,almacen,establecimiento,vehiculo,agente,cliente);
-
+                printDispatch.printNowComprobante(cliente,comprobanteVenta,usuario);
+                floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
+                floatingActionButton.startAnimation(rotate_backward);
+                floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SellPrintActivity.this, R.color.greem_background_item)));
                 break;
             case R.id.fabDisconec:
                 floatingPrint.startAnimation(fab_close);

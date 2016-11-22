@@ -194,6 +194,7 @@ public class RestAPI {
         o.put("method", "fins_SaveComprobanteVenta");
         p.put("vlst_ComprobanteVenta",mapObject(vlst_ComprobanteVenta));
         o.put("parameters", p);
+        Log.d("ServiceExport","SEND: " +o.toString());
         String s = o.toString();
         String r = load(s);
         result = new JSONObject(r);

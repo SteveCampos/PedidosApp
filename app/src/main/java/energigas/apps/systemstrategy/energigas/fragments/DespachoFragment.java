@@ -54,6 +54,7 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
 
     @Override
     public void onDespachoClickListener(Despacho despacho, View view) {
+        Session.saveDespacho(getActivity(),despacho);
         startActivity(new Intent(getActivity(), PrintDispatch.class));
     }
 }

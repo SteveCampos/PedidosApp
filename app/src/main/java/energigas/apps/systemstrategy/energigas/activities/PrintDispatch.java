@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -34,6 +36,7 @@ import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
@@ -41,6 +44,7 @@ import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 public class PrintDispatch extends AppCompatActivity implements View.OnClickListener {
+
     private Boolean isFabOpen = false;
     private BluetoothPort bp;
     private BluetoothAdapter mBluetoothAdapter;
@@ -71,43 +75,12 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     private Persona agente;
     private Cliente cliente;
 
+    @BindView(R.id.textViewImprimirCabecera)
+    TextView textCabecera;
+    @BindView(R.id.textViewInfoDespacho)
+    TextView textInfoDespacho;
 
-    //******* Widgets  to see preview print
-/*
-    @BindView(R.id.textNombre)
-    TextView textNombre;
-    @BindView(R.id.textDireccin)
-    TextView textDireccin;
-    @BindView(R.id.textInstalacion)
-    TextView textInstalacion;
-    @BindView(R.id.textCoordenadas)
-    TextView textCoordenadas;
-    @BindView(R.id.textPlaca)
-    TextView textPlaca;
-    @BindView(R.id.textChofer)
-    TextView textChofer;
-    @BindView(R.id.textNroComprobante)
-    TextView textNroComprobante;
-    @BindView(R.id.textFecha)
-    TextView textFecha;
-    @BindView(R.id.textHoraInicio)
-    TextView textHoraInicio;
-    @BindView(R.id.textHoraFin)
-    TextView textHoraFin;
-    @BindView(R.id.textContadorInicial)
-    TextView textContadorInicial;
-    @BindView(R.id.textContadorFinal)
-    TextView textContadorFinal;
-    @BindView(R.id.textCantidadDespachada)
-    TextView textCantidadDespachada;
-    @BindView(R.id.textPorInicial)
-    TextView textPorInicial;
-    @BindView(R.id.textPorFinal)
-    TextView textPorFinal;
-    @BindView(R.id.textSerieTanque)
-    TextView textSerieTanque;
-    @BindView(R.id.textNroTransporte)
-    TextView textNroTransporte;*/
+    private Resources resources;
 
 
     private static final String TAG = "PrintDispatch";
@@ -116,13 +89,15 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_dispatch);
-        mainDispatch = Despacho.find(Despacho.class," despacho_Id=? ",new String[]{Session.getDespacho(this).getDespachoId()+""}).get(Constants.CURRENT);
+        resources = getResources();
+        mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
-        almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
-        vehiculo = Vehiculo.findWithQuery(Vehiculo.class," SELECT V.* FROM VEHICULO_USUARIO VU, VEHICULO V WHERE VU.VE_ID = V.VE_ID AND VU.USUARIO_ID="+Session.getSession(this).getUsuIUsuarioId()+"; ",new String[]{}).get(Constants.CURRENT);
-        agente = Persona.findWithQuery(Persona.class,"SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = "+Session.getSession(this).getUsuIUsuarioId()+" ;",null).get(Constants.CURRENT);
-        cliente = Cliente.find(Cliente.class," CLI_I_CLIENTE_ID = ? ",new String[]{establecimiento.getEstIClienteId()+""}).get(Constants.CURRENT);
-        Persona persona = Persona.find(Persona.class," per_I_Persona_Id=? ",new String[]{cliente.getCliIPersonaId()+""}).get(Constants.CURRENT);
+        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class," ub_Id = ? ",new String[]{establecimiento.getUbId()+""}).get(0));
+        almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{mainDispatch.getAlmacenEstId() + ""}).get(Constants.CURRENT);
+        vehiculo = Vehiculo.findWithQuery(Vehiculo.class, " SELECT V.* FROM VEHICULO_USUARIO VU, VEHICULO V WHERE VU.VE_ID = V.VE_ID AND VU.USUARIO_ID=" + Session.getSession(this).getUsuIUsuarioId() + "; ", new String[]{}).get(Constants.CURRENT);
+        agente = Persona.findWithQuery(Persona.class, "SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = " + Session.getSession(this).getUsuIUsuarioId() + " ;", null).get(Constants.CURRENT);
+        cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
+        Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
         ButterKnife.bind(this);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
@@ -139,7 +114,22 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        viewTextCabecera();
+        viewTextInfoDespacho();
 
+    }
+
+    private void viewTextCabecera() {
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), "Energigas S.A.C", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
+        textCabecera.setText(tetextCabeceraxt);
+    }
+
+    private void viewTextInfoDespacho() {
+        String textInfo = String.format(resources.getString(R.string.print_info_despacho),almacen.getNombre(),mainDispatch.getLatitud()+", "+mainDispatch.getLongitud(),almacen.getPlaca()+"",
+                agente.getPerVNombres()+", "+agente.getPerVApellidoPaterno()+"",mainDispatch.getSerie()+"-"+mainDispatch.getNumero(),mainDispatch.getFechaDespacho(),mainDispatch.getHoraInicio(),
+                mainDispatch.getHoraFin(),mainDispatch.getContadorInicialDestino()+"",mainDispatch.getContadorFinalDestino()+"",mainDispatch.getCantidadDespachada()+"",mainDispatch.getpITDestino()+"",mainDispatch.getpFTDestino()+"",
+                mainDispatch.getSerie()+"",vehiculo.getPlaca()+"","www.energigas.com");
+        textInfoDespacho.setText(textInfo);
     }
 
 
@@ -214,7 +204,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(mainDispatch,almacen,establecimiento,vehiculo,agente,cliente);
+                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente);
 
                 break;
             case R.id.fabDisconec:

@@ -172,10 +172,11 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                                 for (ComprobanteVentaDetalle ventaDetalle : comprobanteVenta.getItemsDetalle()) { /**Comprobante Venta Detalle**/
 
                                     if (ventaDetalle.getId() == respuestaCpVentaDetalle.getCompdIdAndroid()) {
-                                        saveEstado(ventaDetalle.getId() + "", respuestaCpVentaDetalle.getCompdIdServer() + "", ComprobanteVentaDetalle.class);
+
                                         ventaDetalle.setCompId(beRespuestaCpVenta.getCompIdServer());
                                         ventaDetalle.setCompdId(respuestaCpVentaDetalle.getCompdIdServer());
                                         Long sD = ventaDetalle.save();
+                                        saveEstado(ventaDetalle.getId() + "", respuestaCpVentaDetalle.getCompdIdServer() + "", ComprobanteVentaDetalle.class);
                                         Log.d(TAG, "ComprobanteVentaDetalle " + sD);
                                     }
                                 }

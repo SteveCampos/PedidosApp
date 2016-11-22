@@ -338,7 +338,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
 
         despacho = new Despacho(
-                Long.parseLong(getNumeroDespacho()),
+                0,
                 pedido.getPeId(),
                 pedidoDetalle.getPdId(),
                 pedido.getClienteId(),
@@ -371,7 +371,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 pedidoDetalle.getPrecioUnitario(),
                 pedido.getPorImpuesto(),
                 pedidoDetalle.getCostoVenta(),
-                pedidoDetalle.getImporte(),
+                Double.parseDouble(editTextCantidadDespachada.getText().toString())*pedidoDetalle.getPrecio(),
                 Double.parseDouble(editTextDestinoContadorInicial.getText().toString()),
                 Double.parseDouble(editTextPorcentajeInicial.getText().toString()),
                 Double.parseDouble(editTextDestinoPorcentajeInicial.getText().toString()),
@@ -380,6 +380,8 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         );
 
 
+        Long despachoId = despacho.save();
+        despacho.setDespachoId(despachoId);
         despacho.save();
 
 

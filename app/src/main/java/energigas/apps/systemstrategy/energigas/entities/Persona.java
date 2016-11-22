@@ -193,4 +193,8 @@ public class Persona extends SugarRecord {
     public void setPerVEmail(String perVEmail) {
         this.perVEmail = perVEmail;
     }
+
+    public static Persona getPersona (String personaId){
+        return Persona.find(Persona.class," per_I_Persona_Id = ? ",new String[]{personaId}).get(0);
+    }
 }
