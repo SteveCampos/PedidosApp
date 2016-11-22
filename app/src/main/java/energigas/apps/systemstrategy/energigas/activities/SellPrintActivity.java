@@ -113,7 +113,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_print_dispatch);
+        setContentView(R.layout.activity_comprobante_print);
         ButterKnife.bind(this);
         res = getResources();
         comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(Session.getComprobanteVenta(this).getCompId() + "");
