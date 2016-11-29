@@ -1,18 +1,28 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.CajaPago;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
+import energigas.apps.systemstrategy.energigas.entities.PlanPago;
+import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.holders.CajaPagoHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -23,19 +33,23 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
 
     // Store a member variable for the contacts
-    private List<CajaPago> mCajaPagoList;
+    private List<PlanPagoDetalle> mPlanPagDetalle;
     // Store the context for easy access
     private Context mContext;
-
-    public interface OnCajaPagoClickListener {
-        void onCajaPagoClickListener(CajaPago cajaPago, View view);
-    }
 
     public OnCajaPagoClickListener listener;
 
 
-    public CajaPagoAdapter(List<CajaPago> mCajaPagoList,Context mContext,OnCajaPagoClickListener listener) {
-        this.mCajaPagoList = mCajaPagoList;
+
+    public interface OnCajaPagoClickListener {
+        void onCajaPagoClickListener(TextView mEstado, TextView mtotal,PlanPago planpago, ComprobanteVenta venta ,PlanPagoDetalle planPagoDetalle, View view);
+        void onCajaPagoListener(int action,PlanPagoDetalle pagoDetalle,TextView mEstado, TextView mtotal);
+    }
+
+
+
+    public CajaPagoAdapter(List<PlanPagoDetalle> mPlanPagoDetalles,Context mContext,OnCajaPagoClickListener listener) {
+        this.mPlanPagDetalle = mPlanPagoDetalles;
         this.listener = listener;
         this.mContext = mContext;
     }
@@ -52,11 +66,82 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     }
 
     @Override
-    public void onBindViewHolder(CajaPagoHolder holder, int position) {
+    public void onBindViewHolder(final CajaPagoHolder holder, int position) {
         // Get the data model based on position
 
-        final CajaPago cajaPago = mCajaPagoList.get(position);
+        final PlanPagoDetalle planPagoDetalle = mPlanPagDetalle.get(position);
+        final PlanPago planpago = PlanPago.find(PlanPago.class, "plan_Pa_Id = ?",new String[]{planPagoDetalle.getPlanPaId()+""}).get(Constants.CURRENT);
+        final ComprobanteVenta comprobanteVenta= ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id= ? ",new String[]{planpago.getCompId()+""}).get(Constants.CURRENT);
+//        final Estado mEstado = Estado.find(Estado.class, "id_Estado = ? ",new String[]{comprobanteVenta.getEstadoId()+""}).get(Constants.CURRENT);
 
+        holder.mdate.setText(planPagoDetalle.getFechaCobro());
+        holder.mtotal.setText("S./ " + Utils.formatDouble(planPagoDetalle.getMontoAPagar()));
+        holder.mcomprobante.setText(comprobanteVenta.getSerie()+"-"+comprobanteVenta.getNumDoc());
+
+        //comprobanteVenta.getSerie()+"-"+comprobanteVenta.getNumDoc()
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] items = {"Pago Total", "Pago Porroga"};
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        mContext);
+                alertDialogBuilder.setTitle("Seleccione tipo de Pago");
+                alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+
+
+                        if (items[which].equals("Pago Total")) {
+                            listener.onCajaPagoListener(Constants.CLICK_ELIMINAR_CAJA_GASTO, planPagoDetalle, holder.mEstado,holder.mtotal);
+                        } else if (items[which].equals("Pago Porroga")) {
+                            listener.onCajaPagoListener(Constants.CLICK_EDITAR_CAJA_GASTO, planPagoDetalle,holder.mEstado,holder.mtotal);
+                        } else if (items[which].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialogBuilder.show();
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //final CajaMovimiento cajaMovimiento = CajaMovimiento.find(CajaMovimiento.class,"caj_Mov_Id = ?",new String[]{planPagoDetalle.getCajMovId()+""}).get(Constants.CURRENT);
+
+                listener.onCajaPagoClickListener(holder.mEstado,holder.mtotal,planpago,comprobanteVenta,planPagoDetalle, holder.itemView);
+                return false;
+            }
+        });
+      //  holder.mEstado.setText(mEstado.getIdEstado());
+
+/*
+        int color = R.color.dark_grey;
+        String estado= String.valueOf(mEstado.getIdEstado());
+        switch (estado) {
+            case "60":
+                estado = "Pendiente";
+                color = R.color.md_red_500;
+                break;
+            case "61":
+                estado = "COBRADO";
+                color = R.color.md_green_up;
+                break;
+            case "62":
+                estado = "ANULADO";
+                color = R.color.md_yellow_800;
+            case "63":
+                estado ="parciales";
+                color = R.color.colorAccent;
+
+        }
+        holder.mEstado.setText(estado);
+        holder.mEstado.setTextColor(ContextCompat.getColor(mContext,color));
+*/
         //holder.mcomprobante.setText("");
         //holder.mdate.setText("");
         //Cholder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));
@@ -103,7 +188,7 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     @Override
     public int getItemCount() {
         Log.d(Utils.TAG, "getItemCount");
-        return mCajaPagoList.size();
+        return mPlanPagDetalle.size();
     }
 
 

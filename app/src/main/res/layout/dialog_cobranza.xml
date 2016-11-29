@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp">
+
+        <EditText
+            android:id="@+id/dialog_id_pago"
+            style="@style/ExpenseTrackerEditText"
+            android:layout_width="match_parent"
+            android:inputType="numberDecimal"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:hint="@string/dialog_cobranza_Monto_Pago"
+            android:maxLines="2" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<android.support.design.widget.TextInputLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/dialog_id_porroga"-->
+            <!--style="@style/ExpenseTrackerEditText"-->
+            <!--android:inputType="none"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="@dimen/dimen_20dp"-->
+            <!--android:layout_marginRight="@dimen/dimen_20dp"-->
+            <!--android:layout_marginTop="@dimen/dimen_20dp"-->
+            <!--android:hint="@string/dialog_cobranza_Monto_Porroga"-->
+            <!--android:maxLines="2" />-->
+
+    <!--</android.support.design.widget.TextInputLayout>-->
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp">
+
+        <EditText
+            android:editable="false"
+            android:id="@+id/fecha_pago"
+            style="@style/ExpenseTrackerEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:hint="Fecha Pago"
+            android:maxLines="2" />
+
+    </android.support.design.widget.TextInputLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:background="@color/grey_300"-->
+        <!--android:gravity="center">-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/action_abous_us"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/fecha_porroga"/>-->
+    <!--</LinearLayout>-->
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_si"
+            android:layout_width="@dimen/dimen_12_10dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:text="@string/dialog_cobranza_Aceptar" />
+
+        <Button
+            android:id="@+id/btn_no"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="@dimen/dimen_12_10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:gravity="center"
+            android:text="@string/dialog_cobranza_Cancelar" />
+
+    </LinearLayout>
+
+</LinearLayout>

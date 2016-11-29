@@ -173,5 +173,10 @@ public class Constants {
     public static final String SESSION_COMPROBANTE_VENTA = "SESSION_COMPROBANTE_VENTA";
     public static final String SESSION_COMPROBANTE_VENTA_ID = "SESSION_COMPROBANTE_VENTA_ID";
 
+    /*Cobranza Estados*/
 
+    public static final int COBRANZA_PENDIENTE= 60;
+    public static final int COBRANZA_COBRADO= 61;
+    public static final int COBRANZA_ANULADO=62;
+    public static final int COBRANZA_PARCIAL=63;
 }

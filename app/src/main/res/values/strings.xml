@@ -478,4 +478,13 @@
     <string name="title_activity_sell">SellActivity</string>
     <string name="title_activity_definir_cuotas">DefinirCuotasActivity</string>
     <string name="title_activity_agregar_pedido_despacho">AgregarPedidoDespacho</string>
+
+    <!--Cobranza-->
+    <string name="dialog_cobranza_Monto_Pago">Monto Pago</string>
+    <string name="dialog_cobranza_No">No</string>
+    <string name="dialog_cobranza_Si">Si</string>
+    <string name="dialog_cobranza_Cancelar">CANCELAR</string>
+    <string name="dialog_cobranza_Aceptar">ACEPTAR</string>
+
+    <!--Fin Cobranza-->
 </resources>
