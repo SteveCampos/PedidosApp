@@ -204,4 +204,13 @@ public class PedidoDetalle extends SugarRecord {
         list.add(new PedidoDetalle());
         return list;
     }
+
+
+    public static List<PedidoDetalle> getPedidoDetalleByPedido(String pedidoId){
+        List<PedidoDetalle>  pedidoDetalles = PedidoDetalle.find(PedidoDetalle.class,"pe_Id=?",new String[]{pedidoId});
+        if (pedidoDetalles.size()>0){
+            return  pedidoDetalles;
+        }
+        return null;
+    }
 }

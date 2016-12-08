@@ -8,18 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CajaPagoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.CajaPago;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.PlanPago;
+import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
 
 /**
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapter.OnCajaPagoClickListener{
+public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapter.OnCajaPagoClickListener {
 
 
     public CajaPagoFragment.OnCajaPagoClickListener listener;
@@ -40,7 +44,7 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_charges);
 
-        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this, this);
+        adapter = new CajaPagoAdapter(null,this, this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -71,10 +75,19 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
-    public void onCajaPagoClickListener(CajaPago cajaPago, View view) {
-        Snackbar.make(view,cajaPago.getFechaAccion(),Snackbar.LENGTH_LONG).show();
+    public void onCajaPagoClickListener(TextView mEstado, TextView mtotal, PlanPago planpago, ComprobanteVenta venta, PlanPagoDetalle planPagoDetalle, View view) {
+
     }
+
+    @Override
+    public void onCajaPagoListener(int action, PlanPagoDetalle pagoDetalle, TextView mEstado, TextView mtotal) {
+
+    }
+
+
     public interface OnCajaPagoClickListener{
         void onCharfesClickListener(CajaPago charges, View view);
     }

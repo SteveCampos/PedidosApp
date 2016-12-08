@@ -39,6 +39,7 @@ public class ManipuleData {
     public void saveLiquidacion(CajaLiquidacion cajaLiquidacion) {
 
         Long insert = cajaLiquidacion.save();
+        SugarRecord.saveInTx(cajaLiquidacion.getItemsLiquidacion());
         boolean estadoB = true;
         if (insert > 0) {
             PlanDistribucion planDistribucion = cajaLiquidacion.getPlanDistribucionD();

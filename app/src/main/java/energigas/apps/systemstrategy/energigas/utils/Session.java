@@ -2,12 +2,14 @@ package energigas.apps.systemstrategy.energigas.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,9 +17,11 @@ import java.util.Set;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
@@ -27,6 +31,14 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
  */
 
 public class Session {
+
+    public static Concepto getConceptoIGV() {
+        List<Concepto> conceptos = Concepto.find(Concepto.class, "id_Concepto=?", new String[]{Constants.CONCEPTO_IGV_ID});
+        if (conceptos.size() > 0) {
+            return conceptos.get(0);
+        }
+        return null;
+    }
 
     public static boolean saveIdsDespachos(List<String> despachos, Context context) {
 
@@ -52,17 +64,20 @@ public class Session {
         return set.toArray(new String[set.size()]);
     }
 
-    public static boolean saveDespacho(Context context, Despacho despacho) {
+    public static void saveDespacho(Context context, Despacho despacho) {
 
+
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter sw = new StringWriter();
         try {
-
+            mapper.writeValue(sw, despacho);
+            String listObject = sw.toString();
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_DESPACHO, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.IDDESPACHO, despacho.getDespachoId());
-            editor.commit();
-            return true;
-
-        } catch (Exception e) {
-            return false;
+            editor.putString(Constants.IDDESPACHO, listObject);
+            editor.apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("ServiceExport", "error: " + e.getMessage());
         }
 
 
@@ -71,10 +86,16 @@ public class Session {
 
     public static Despacho getDespacho(Context context) {
 
-        Despacho despacho = new Despacho();
         SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_DESPACHO, Context.MODE_PRIVATE);
-        despacho.setDespachoId(prefs.getLong(Constants.IDDESPACHO, 0));
-        return despacho;
+        String json = prefs.getString(Constants.IDDESPACHO, null);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Despacho myObjects = mapper.readValue(json, Despacho.class);
+            return myObjects;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
@@ -106,17 +127,18 @@ public class Session {
     }
 
 
-    public static boolean savePedido(Context context, Pedido pedido) {
+    public static void savePedido(Context context, Pedido pedido) {
 
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter sw = new StringWriter();
         try {
-
+            mapper.writeValue(sw, pedido);
+            String listObject = sw.toString();
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.IDPEDIDO, pedido.getPeId());
+            editor.putString(Constants.IDPEDIDO, listObject);
             editor.commit();
-            return true;
-
-        } catch (Exception e) {
-            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
@@ -125,10 +147,47 @@ public class Session {
 
     public static Pedido getPedido(Context context) {
 
-        Pedido pedido = new Pedido();
         SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_PEDIDO, Context.MODE_PRIVATE);
-        pedido.setPeId(prefs.getLong(Constants.IDPEDIDO, 0));
-        return pedido;
+        String json = prefs.getString(Constants.IDPEDIDO, null);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Pedido myObjects = mapper.readValue(json, Pedido.class);
+            return myObjects;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static void savePedidoDetalle(Context context, PedidoDetalle pedidoDetalle) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter sw = new StringWriter();
+        try {
+            mapper.writeValue(sw, pedidoDetalle);
+            String listObject = sw.toString();
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO_DETALLE, Context.MODE_PRIVATE).edit();
+            editor.putString(Constants.IDPEDIDODETALLE, listObject);
+            editor.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static PedidoDetalle getPedidoDetalle(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_PEDIDO_DETALLE, Context.MODE_PRIVATE);
+        String json = prefs.getString(Constants.IDPEDIDODETALLE, null);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            PedidoDetalle myObjects = mapper.readValue(json, PedidoDetalle.class);
+            return myObjects;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
@@ -142,6 +201,22 @@ public class Session {
 
 
     }
+
+    public static boolean getTipoDespachoSN(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_TIPO_DESPACHO_SN, Context.MODE_PRIVATE);
+        return prefs.getBoolean(Constants.DEFINE_TIPO_DESPACHO_SN_ESTADO, false);
+    }
+
+
+    public static void saveTipoDespachoSN(Context context, boolean estado) {
+
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.DEFINE_TIPO_DESPACHO_SN, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.DEFINE_TIPO_DESPACHO_SN_ESTADO, estado);
+        editor.commit();
+
+    }
+
 
     public static boolean getDefineCuotas(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE);
@@ -202,7 +277,7 @@ public class Session {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION, Context.MODE_PRIVATE).edit();
             editor.putInt(Constants.IDUSUARIO, usuario.getUsuIUsuarioId());
-            editor.putString(Constants.USUARIO, usuario.getUsuVUsuario()+"");
+            editor.putString(Constants.USUARIO, usuario.getUsuVUsuario() + "");
             editor.putString(Constants.NOMBRE, usuario.getPersona().getPerVNombres());
             editor.putString(Constants.APELLIDO_PATERNO, usuario.getPersona().getPerVApellidoPaterno());
             editor.putString(Constants.APELLIDO_MATERNO, usuario.getPersona().getPerVApellidoMaterno());
@@ -235,7 +310,7 @@ public class Session {
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.CAJA_LIQUIDACION_ID,cajaLiquidacion.getLiqId());
+            editor.putLong(Constants.CAJA_LIQUIDACION_ID, cajaLiquidacion.getLiqId());
             editor.commit();
             return true;
 
@@ -252,11 +327,11 @@ public class Session {
         return cajaLiquidacion;
     }
 
-    public static boolean saveComprobanteVenta(Context context,ComprobanteVenta comprobanteVenta){
+    public static boolean saveComprobanteVenta(Context context, ComprobanteVenta comprobanteVenta) {
         try {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE).edit();
-            editor.putLong(Constants.SESSION_COMPROBANTE_VENTA_ID,comprobanteVenta.getCompId());
+            editor.putLong(Constants.SESSION_COMPROBANTE_VENTA_ID, comprobanteVenta.getCompId());
             editor.commit();
             return true;
 
@@ -264,7 +339,8 @@ public class Session {
             return false;
         }
     }
-    public static ComprobanteVenta getComprobanteVenta(Context context){
+
+    public static ComprobanteVenta getComprobanteVenta(Context context) {
 
         SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE);
         ComprobanteVenta comprobanteVenta = new ComprobanteVenta();

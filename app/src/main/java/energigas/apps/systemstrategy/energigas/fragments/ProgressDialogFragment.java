@@ -108,7 +108,10 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     }
 
-    private void setMessage(String message){
+    private void setMessage( String message){
+
+
+
         Toast.makeText(context, "" + message, Toast.LENGTH_SHORT).show();
     }
 

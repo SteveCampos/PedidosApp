@@ -29,10 +29,7 @@ public class InformeGasto extends SugarRecord {
 
     private int estadoId;
 
-    @Ignore
-    private CajaGasto cajaGasto;
-    @Ignore
-    private CajaMovimiento cajaMovimiento;
+
 
 
     public InformeGasto() {
@@ -46,7 +43,7 @@ public class InformeGasto extends SugarRecord {
         this.estadoId = estadoId;
     }
 
-    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId, int estadoId, CajaGasto cajaGasto, CajaMovimiento cajaMovimiento) {
+    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId, int estadoId) {
         this.infGasId = infGasId;
         this.tipoGastoId = tipoGastoId;
         this.cajGasId = cajGasId;
@@ -55,25 +52,9 @@ public class InformeGasto extends SugarRecord {
         this.referencia = referencia;
         this.catTipoGastoId = catTipoGastoId;
         this.estadoId = estadoId;
-        this.cajaGasto = cajaGasto;
-        this.cajaMovimiento = cajaMovimiento;
     }
 
-    public CajaGasto getCajaGasto() {
-        return cajaGasto;
-    }
 
-    public void setCajaGasto(CajaGasto cajaGasto) {
-        this.cajaGasto = cajaGasto;
-    }
-
-    public CajaMovimiento getCajaMovimiento() {
-        return cajaMovimiento;
-    }
-
-    public void setCajaMovimiento(CajaMovimiento cajaMovimiento) {
-        this.cajaMovimiento = cajaMovimiento;
-    }
 
     public long getInfGasId() {
         return infGasId;
@@ -140,16 +121,14 @@ public class InformeGasto extends SugarRecord {
         return null;
     }
 
-    public static List<InformeGasto> getInformeGasto(List<InformeGasto> informeGastos) {
-        List<InformeGasto> informeGastoList = new ArrayList<>();
-        for (InformeGasto informeGasto : informeGastos) {
-            CajaGasto cajaGasto = CajaGasto.getCajaGasto(informeGasto.getCajGasId() + "");
-            if (cajaGasto != null) {
-                informeGasto.setCajaGasto(CajaGasto.getCajaGasto(informeGasto.getCajGasId() + ""));
-                informeGasto.setCajaMovimiento(CajaMovimiento.getCajaMovimientoById(cajaGasto.getCajMoId()+""));
-            }
 
+    public static InformeGasto getInformeGastoByCajGasto(String cajaGastoid) {
+
+        if (InformeGasto.find(InformeGasto.class, "caj_Gas_Id=?", new String[]{cajaGastoid}).size() > 0) {
+            return InformeGasto.find(InformeGasto.class, "caj_Gas_Id=?", new String[]{cajaGastoid}).get(0);
         }
-        return informeGastoList;
+        return null;
     }
+
+
 }

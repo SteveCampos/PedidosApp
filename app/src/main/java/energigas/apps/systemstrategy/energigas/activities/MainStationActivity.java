@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,25 +22,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
+import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AgregarDespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.ComprobanteVentaFragment;
+import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.FragmentStationInformation;
 import energigas.apps.systemstrategy.energigas.fragments.OrderedProductFragment;
+import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationDispatchsFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
@@ -45,9 +61,9 @@ public class MainStationActivity extends AppCompatActivity
         implements
         OrderedProductFragment.OnOrderedProductClickListener,
         OrderedProductFragment.OnDispatchClickListener,
-        StationOrderFragment.OnStationOrderClickListener, TabLayout.OnTabSelectedListener {
+        StationOrderFragment.OnStationOrderClickListener, TabLayout.OnTabSelectedListener, ExportObjectsListener, IntentListenerAccess {
 
-private static final String TAG = "MainStationActivity";
+    private static final String TAG = "MainStationActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewpager)
@@ -62,22 +78,61 @@ private static final String TAG = "MainStationActivity";
 
     private ActionMode actionMode;
 
-    private CustomTabsAdapter tabsAdapter;
 
     private Establecimiento establecimiento;
 
+    private CajaLiquidacionDetalle liquidacionDetalle;
+    private Usuario usuario;
+    private HashMap<String, Boolean> booleanHashMap;
+    private List<AccessFragment> accessFragmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_station);
-        establecimiento = Establecimiento.find(Establecimiento.class," est_I_Establecimiento_Id = ? ",new String[]{  Session.getSessionEstablecimiento(this).getEstIEstablecimientoId()+"" }).get(Constants.CURRENT);
+
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
+        liquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablec(establecimiento.getEstIEstablecimientoId() + "");
         ButterKnife.bind(this);
+        usuario = Session.getSession(this);
+        new AccessPrivilegesManager(getClass())
+                .setViews(fab)
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                .setClassIntent(StationOrderActivity.class)
+                .isIntentEnable()
+                .setFragment(
+                        new AccessFragment(getString(R.string.title_activity_main_station),
+                                new FragmentStationInformation(), 0, 1),
+                        new AccessFragment(getString(R.string.order_title_name),
+                                new StationOrderFragment(), 0, 2),
+                        new AccessFragment(getString(R.string.title_activity_dispatch),
+                                new StationDispatchsFragment(), 0, 3),
+                        new AccessFragment(getString(R.string.activity_charges_account),
+                                new CajaPagoFragment(), 0, 4),
+                        new AccessFragment(getString(R.string.activity_charges_fac),
+                                new ComprobanteVentaFragment(), 0, 5))
+                .isFragmentEnable();
+
+
+    }
+
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        this.booleanHashMap = booleanHashMap;
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+        this.accessFragmentList = accessFragmentList;
         initViews();
     }
+
+
     @OnClick(R.id.fab)
-    public void agregarDespacho(View view){
-        new AgregarDespachoFragment().show(getSupportFragmentManager(),"");
+    public void agregarDespacho(View view) {
+        new AgregarDespachoFragment().show(getSupportFragmentManager(), "");
     }
 
     private void initViews() {
@@ -85,7 +140,6 @@ private static final String TAG = "MainStationActivity";
         setTabsAdapterFragment();
         viewpager.setCurrentItem(1);
 
-        fab.setVisibility(View.GONE);
         textViewDescripcion.setText(establecimiento.getEstVDescripcion());
     }
 
@@ -98,17 +152,22 @@ private static final String TAG = "MainStationActivity";
     }
 
     private void setTabsAdapterFragment() {
-        tabsAdapter = new CustomTabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(new FragmentStationInformation(), getString(R.string.title_activity_main_station));
-        tabsAdapter.addFragment(new StationOrderFragment(), getString(R.string.order_title_name));
-       // tabsAdapter.addFragment(new StationProductsFragment(), getString(R.string.ordered_product_title_name));
-        tabsAdapter.addFragment(new StationDispatchsFragment(), getString(R.string.title_activity_dispatch));
-        tabsAdapter.addFragment(new CajaPagoFragment(), getString(R.string.activity_charges_account));
-        tabsAdapter.addFragment(new ComprobanteVentaFragment(), getString(R.string.activity_charges_fac));
-        viewpager.setAdapter(tabsAdapter);
+
+        MainStationActivity.Adapter adapter = new MainStationActivity.Adapter(getSupportFragmentManager());
+
+
         tabLayout.setupWithViewPager(viewpager);
 
+        for (int i = 0; i < accessFragmentList.size(); i++) {
+            int count = i+1;
+            for (AccessFragment fragment2 : accessFragmentList) {
+                if (count == fragment2.getOrden()) {
+                    adapter.addFragment(fragment2.getFragment(), fragment2.getId());
+                }
+            }
 
+        }
+        viewpager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(this);
     }
 
@@ -177,7 +236,7 @@ private static final String TAG = "MainStationActivity";
 
     @Override
     public void onStationOrderClickListener(Pedido pedido) {
-        Session.savePedido(getApplicationContext(),pedido);
+        Session.savePedido(getApplicationContext(), pedido);
         startActivity(new Intent(MainStationActivity.this, StationOrderActivity.class));
     }
 
@@ -192,13 +251,20 @@ private static final String TAG = "MainStationActivity";
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        Log.d(TAG,tab.getPosition()+"");
+        Log.d(TAG, tab.getPosition() + "");
 
-        if (tab.getPosition()==2){
+        if (tab.getPosition() == 2) {
             fab.setVisibility(View.VISIBLE);
-        }else{
+            fab.setVisibility(View.GONE);
+        } else {
             fab.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
     }
 
     @Override
@@ -210,4 +276,54 @@ private static final String TAG = "MainStationActivity";
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
+    @Override
+    public void onLoadSuccess(String message) {
+
+    }
+
+    @Override
+    public void onLoadError(String message) {
+
+    }
+
+    @Override
+    public void onLoadErrorProcedure(String message) {
+
+    }
+
+
+    private static class Adapter extends FragmentPagerAdapter {
+        private static final String TAG = "FragmentPagerAdapter";
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        void addFragment(Fragment fragment, String title) {
+            Log.d(TAG, "addFragment" + title);
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+
+
+    }
+
 }

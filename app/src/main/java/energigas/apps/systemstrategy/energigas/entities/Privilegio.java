@@ -3,11 +3,14 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class Privilegio  extends SugarRecord{
+public class Privilegio extends SugarRecord {
     @Unique
     private int idPrivilegio;
 
@@ -27,10 +30,12 @@ public class Privilegio  extends SugarRecord{
 
     private int usuarioActualizacion;
 
+    private String viewAndroidId;
+
     public Privilegio() {
     }
 
-    public Privilegio(int idPrivilegio, int accesoId, String nombre, String descripcion, boolean estado, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion) {
+    public Privilegio(int idPrivilegio, int accesoId, String nombre, String descripcion, boolean estado, String fechaCreacion, String fechaActualizacion, int usuarioCreacion, int usuarioActualizacion, String viewAndroidId) {
         this.idPrivilegio = idPrivilegio;
         this.accesoId = accesoId;
         this.nombre = nombre;
@@ -40,6 +45,15 @@ public class Privilegio  extends SugarRecord{
         this.fechaActualizacion = fechaActualizacion;
         this.usuarioCreacion = usuarioCreacion;
         this.usuarioActualizacion = usuarioActualizacion;
+        this.viewAndroidId = viewAndroidId;
+    }
+
+    public String getViewAndroidId() {
+        return viewAndroidId;
+    }
+
+    public void setViewAndroidId(String viewAndroidId) {
+        this.viewAndroidId = viewAndroidId;
     }
 
     public int getIdPrivilegio() {
@@ -112,5 +126,48 @@ public class Privilegio  extends SugarRecord{
 
     public void setUsuarioActualizacion(int usuarioActualizacion) {
         this.usuarioActualizacion = usuarioActualizacion;
+    }
+
+    public static Privilegio getPrivilegiosId(String privilegioId) {
+
+
+
+        List<Privilegio> privilegios = Privilegio.find(Privilegio.class, "id_Privilegio=? ", new String[]{privilegioId});
+        if (privilegios.size()>0) {
+            return privilegios.get(0);
+        }
+        return null;
+    }
+
+    public static List<Privilegio> getPrivilegios(String accesoId) {
+
+        List<Privilegio> privilegios = Privilegio.find(Privilegio.class, "acceso_Id=?", new String[]{accesoId});
+        if (privilegios != null) {
+            return privilegios;
+        }
+        return null;
+    }
+
+
+    public static List<Privilegio> getPrivilegiosByRol(String rolId) {
+
+        List<RolPrivilegio> rolPrivilegioList = RolPrivilegio.getRolPrivilegioRol(rolId);
+        List<Privilegio> privilegioList = new ArrayList<>();
+        for (RolPrivilegio privilegio : rolPrivilegioList){
+            privilegioList.add(Privilegio.getPrivilegiosId(privilegio.getPrivilegioId()+""));
+        }
+
+        return privilegioList;
+    }
+
+
+
+    public static List<Privilegio> getPrivilegiosByNameActivity
+            (String accesoId, String nombreActivity) {
+        List<Privilegio> privilegios = Privilegio.find(Privilegio.class, "acceso_Id=? and nombre=? ", new String[]{accesoId, nombreActivity});
+        if (privilegios != null) {
+            return privilegios;
+        }
+        return null;
     }
 }

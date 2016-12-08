@@ -37,6 +37,7 @@
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_map"
+            android:tag="btn_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/tile_padding"

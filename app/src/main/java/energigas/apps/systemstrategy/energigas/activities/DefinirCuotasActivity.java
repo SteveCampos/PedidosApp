@@ -153,7 +153,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
 
 
             String fechaPago = Utils.getStringDate(Utils.sumarFechasDias(fecha, diasCredito));
-            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId,fechaPago, importePorCuota, Constants.ESTADO_TRUE, 0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhone(), 0));
+            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId,fechaPago, importePorCuota, Constants.ESTADO_TRUE, 0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhoneWithTime(), 0));
             fecha = Utils.sumarFechasDias(fecha, diasCredito);
             planPagoDetalleId++;
         }

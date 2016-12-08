@@ -43,6 +43,12 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener {
 
+
+    public interface OnCajaPagoClickListener {
+        void onCajaPagoClickListener(TextView mEstado, TextView mtotal,PlanPago planpago, ComprobanteVenta venta ,PlanPagoDetalle planPagoDetalle, View view);
+        void onCajaPagoListener(int action,PlanPagoDetalle pagoDetalle,TextView mEstado, TextView mtotal);
+    }
+
     private static final String TAG = CajaPagoFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
@@ -357,7 +363,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                         "Referencia_Android",
                         117,//TipoMovId=117
                         mCajaPago,
-                        mCajaComprobante
+                        mCajaComprobante,null,null
                 );
                 mCajaMovimiento.save();
                 /*Table Caja_Comprobante */
@@ -610,7 +616,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                         "",
                         117,//guardando tipmoV117
                         mCajaPago,
-                        mCajaComprobante
+                        mCajaComprobante,null,null
                 );
             }
 
@@ -655,7 +661,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                         "",
                         117,//guardando tipmoV117
                         null,
-                        null
+                        null,null,null
                 );
                 mCajaMovimiento.save();
                 Log.d(TAG, "mCajaMovimiento Insert: "+ mCajaMovimiento.getImporte());

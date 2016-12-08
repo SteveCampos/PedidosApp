@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaEgreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaIngreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVenta;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaDespacho;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaPlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
+import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.CajaPago;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
@@ -31,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NetworkUtil;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -46,6 +49,7 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
     private ObjectMapper mapper;
     private ExportObjectsListener exportObjectsListener;
     private Context context;
+    private int mainEstado=0;
 
     public ExportTask(ExportObjectsListener exportObjectsListener, Context context) {
         this.context = context;
@@ -117,24 +121,33 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                                     syncEstado.save();
                                     despacho.setDespachoId(respuestaDespacho.getDespachoIdServer());
                                     despacho.save();
+                                    Log.d(TAG,""+despacho.getId()+"---"+Session.getDespacho(context).getId());
+                                    boolean es = despacho.getId().equals(Session.getDespacho(context).getId());
+                                    if (es){
+                                        Session.saveDespacho(context, despacho);
+                                        mainEstado = 1;
+                                    }
+
                                 }
 
                             }
 
                             if (new ArrayList<Object>(Utils.getListForExIn(Despacho.class, estado)).size() == 0) {
-                                exportObjectsListener.onLoadSuccess("Exportado Exitosamente");
+                               // exportObjectsListener.onLoadSuccess("Exportado Exitosamente");
                             }
 
                         }
                     } else {
-                        exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
+                       // exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
                     }
+                    mainEstado = 1;
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e(TAG, "ERROR: " + e.getMessage());
-                    exportObjectsListener.onLoadError(e.getMessage());
+                    mainEstado = -1;
+                 //   exportObjectsListener.onLoadError(e.getMessage());
                 }
             }
         }
@@ -266,8 +279,48 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
 
     private void exportCreatedGasto(int estado) {
-       List<InformeGasto> informeGastoList = InformeGasto.getInformeGasto(new ArrayList<InformeGasto>(Utils.getListForExIn(InformeGasto.class,estado)));
+        jsonObjectResponse = null;
+        List<CajaMovimiento> informeGastoList = CajaMovimiento.getListCajaMovimiento(new ArrayList<CajaMovimiento>(Utils.getListForExIn(CajaMovimiento.class, estado)));
+        if (informeGastoList.size()>0){
+            Log.d(TAG, "cantidad gasto: " + informeGastoList.get(0).getInfGasto().getInfGasId() + "-" + informeGastoList.get(0).getGasto().getCajGasId());
+        }
+        if (informeGastoList.size()>0) {
+            try {
+                jsonObjectResponse = restAPI.fins_SaveGasto(new ArrayList<Object>(informeGastoList));
+                Log.d(TAG, "JSON RESPONSE: " + jsonObjectResponse.toString());
+                if (Utils.isSuccessful(jsonObjectResponse)) {
+                    List<BERespuestaCajaEgreso> beRespuestaCpVentas = mapper.readValue(Utils.getJsonArResult(jsonObjectResponse), TypeFactory.defaultInstance().constructCollectionType(List.class,
+                            BERespuestaCajaEgreso.class));
+                    for (BERespuestaCajaEgreso respuestaCajaEgreso : beRespuestaCpVentas) {
+                        for (CajaMovimiento cajaMovimiento : informeGastoList) {
+                            if (respuestaCajaEgreso.getCajMovIdAndroid() == cajaMovimiento.getGasto().getCajMoId()) {
+                                CajaMovimiento movimiento = cajaMovimiento;
+                                CajaGasto cajaGasto = cajaMovimiento.getGasto();
+                                InformeGasto informeGasto = cajaMovimiento.getInfGasto();
+                                movimiento.setCajMovId(respuestaCajaEgreso.getCajMovIdServer());
+                                cajaGasto.setCajGasId(respuestaCajaEgreso.getCajGasIdServer());
+                                cajaGasto.setCajMoId(respuestaCajaEgreso.getCajMovIdServer());
+                                informeGasto.setInfGasId(respuestaCajaEgreso.getInfGasIdServer());
+                                informeGasto.setCajGasId(respuestaCajaEgreso.getCajGasIdServer());
 
+                                Long lMov = movimiento.save();
+                                Long lCaj = cajaGasto.save();
+                                Long lInfGas = informeGasto.save();
+
+                                Log.d(TAG, "lMov: " + lMov + " lCaj: " + lCaj + " lInfGas: " + lInfGas);
+
+                            }
+
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, "ERROR: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void saveEstado(String idAndroid, String idRemoto, Class aClass) {
@@ -278,4 +331,20 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
     }
 
 
+    @Override
+    protected void onPostExecute(String s) {
+
+        Log.d(TAG,"ESTADO: "+mainEstado);
+      switch (mainEstado){
+          case 0:
+              exportObjectsListener.onLoadErrorProcedure("error");
+              break;
+          case -1:
+              exportObjectsListener.onLoadErrorProcedure("error");
+              break;
+          case 1:
+              exportObjectsListener.onLoadSuccess("Exito");
+              break;
+      }
+    }
 }

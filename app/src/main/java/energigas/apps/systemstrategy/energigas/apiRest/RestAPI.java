@@ -215,6 +215,21 @@ public class RestAPI {
         return result;
     }
 
+    public JSONObject fins_SaveGasto(ArrayList<Object> vlst_Gasto) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fins_SaveGasto");
+        p.put("vlst_Gasto",mapObject(vlst_Gasto));
+        o.put("parameters", p);
+        String s = o.toString();
+        Log.d("ServiceExport","SEND: " +o.toString());
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
     public JSONObject fins_GuardarCobro(String vstr_CajaMov,String vstr_CajaComp,String vstr_CajaPago) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();

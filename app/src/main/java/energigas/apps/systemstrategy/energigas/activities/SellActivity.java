@@ -29,7 +29,7 @@ import com.orm.SugarTransactionHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +41,7 @@ import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.CajaPago;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
@@ -139,7 +140,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
         Toast.makeText(this, "" + Session.getCajaLiquidacion(this).getLiqId() + "", Toast.LENGTH_SHORT).show();
-        pedido = Pedido.find(Pedido.class, "pe_Id=?", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
+        if (!Session.getTipoDespachoSN(this)) {
+            pedido = Pedido.find(Pedido.class, "pe_Id=?", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
+        } else {
+            pedido = Session.getPedido(this);
+        }
+
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, "ub_Id = ?", new String[]{establecimiento.getUbId() + ""}).get(Constants.CURRENT));
@@ -164,7 +170,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSavePressed() {
 
-                if(Session.getDefineCuotas(getApplicationContext())){
+                if (Session.getDefineCuotas(getApplicationContext())) {
 
                     if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
 
@@ -174,11 +180,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(SellActivity.this, "No Cuenta con credito", Toast.LENGTH_SHORT).show();
                     }
 
-                }else{
+                } else {
                     SugarTransactionHelper.doInTransaction(SellActivity.this);
                 }
-
-
 
 
             }
@@ -196,7 +200,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         generarVenta();
         guardarVenta();
-        Session.saveComprobanteVenta(this,comprobanteVenta);
+        Session.saveComprobanteVenta(this, comprobanteVenta);
         startActivity(new Intent(getApplicationContext(), SellPrintActivity.class));
         this.finish();
 
@@ -215,7 +219,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         comprobanteVenta.setSerie(serie.getCompVSerie());
         comprobanteVenta.setNumDoc(Utils.completaZeros(numero, serie.getParametro()));
         comprobanteVenta.setFormaPagoId(getFormaPago().getIdConcepto());
-        comprobanteVenta.setEstadoId(Constants.COMPROBANTE_CREADO);
+        comprobanteVenta.setEstadoId(Constants.COMPROBANTE_CREADO_PENDIENTE);
         comprobanteVenta.setBaseImponible(obtenerCalculos()[Constants.VENTA_BASE_IMPONIBLE]); //sin igv de todos los detalles sin igv
         comprobanteVenta.setIgv(obtenerCalculos()[Constants.VENTA_IMPORTE_IGV]); // importe del  sum
         comprobanteVenta.setTotal(obtenerCalculos()[Constants.VENTA_TOTAL]); // suma
@@ -232,11 +236,11 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         comprobanteVenta.setValorResumen(NumberToLetterConverter.convertNumberToLetter(obtenerCalculos()[Constants.VENTA_TOTAL]));
         comprobanteVenta.setCliente(cliente.getPersona().getPerVDocIdentidad());
         comprobanteVenta.setDireccionCliente(cliente.getPersona().getUbicacion().getDescripcion());
-        comprobanteVenta.setFechaCreacion(Utils.getDatePhone());
+        comprobanteVenta.setFechaCreacion(Utils.getDatePhoneWithTime());
         comprobanteVenta.setPorImpuesto(obtenerCalculos()[Constants.VENTA_POR_IMPUESTO]);
         /**Comprobante de venta detalle**/
-        comprobanteVenta.setFechaDoc(Utils.getDatePhone());
-        comprobanteVenta.setFechaActualizacion(Utils.getDatePhone());
+        comprobanteVenta.setFechaDoc(Utils.getDatePhoneWithTime());
+        comprobanteVenta.setFechaActualizacion(Utils.getDatePhoneWithTime());
         comprobanteVentaDetalles = getComprobanteVentaDetalleList(comprobanteVenta);
 
 
@@ -265,14 +269,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     public void guardarVenta() {
 
-        Long pedidoId = pedido.save();
+        if (!Session.getTipoDespachoSN(this)) {
+            Long pedidoId = pedido.save();
+        } else {
+        }
+
 
         Long comproVentaId = comprobanteVenta.save();
         //SugarRecord.saveInTx(comprobanteVentaDetalles);//
 
 
         Log.d(TAG, " comprobanteVenta " + comproVentaId);
-        Log.d(TAG, " pedidoId " + pedidoId);
+        //  Log.d(TAG, " pedidoId " + pedidoId);
 
         /**Guardar para la exportacion**/
 
@@ -280,9 +288,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         new SyncEstado(0, Utils.separteUpperCase(ComprobanteVenta.class.getSimpleName()), Integer.parseInt(comprobanteVenta.getId() + ""), Constants.S_CREADO).save();
         for (ComprobanteVentaDetalle ventaDetalle : comprobanteVentaDetalles) {
             Long idVentaDetalle = ventaDetalle.save();
-            ventaDetalle.setCompdId(Integer.parseInt(idVentaDetalle+""));
+            ventaDetalle.setCompdId(Integer.parseInt(idVentaDetalle + ""));
             ventaDetalle.save();
-            Long id = new SyncEstado(0, Utils.separteUpperCase(ComprobanteVentaDetalle.class.getSimpleName()) ,Integer.parseInt(idVentaDetalle+""), Constants.S_CREADO).save();
+            Long id = new SyncEstado(0, Utils.separteUpperCase(ComprobanteVentaDetalle.class.getSimpleName()), Integer.parseInt(idVentaDetalle + ""), Constants.S_CREADO).save();
             Log.d(TAG, " SyncEstado VENTA DETALLE " + id);
 
         }
@@ -297,18 +305,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (!Session.getDefineCuotas(SellActivity.this)) {
                     int diasCredito = Integer.parseInt(conceptoCredito.getAbreviatura());
-                    String fechaPago = Utils.getStringDate(Utils.sumarFechasDias( Calendar.getInstance().getTime(), diasCredito));
+                    String fechaPago = Utils.getStringDate(Utils.sumarFechasDias(Calendar.getInstance().getTime(), diasCredito));
                     int idPlanPagoDetalle = PlanPagoDetalle.findWithQuery(PlanPagoDetalle.class, Utils.getQueryNumberPlanPagoDetalle(), null).get(Constants.CURRENT).getPlanPaDeId();
                     this.planPagoDetalles = new ArrayList<>();
-                    this.planPagoDetalles.add(new PlanPagoDetalle(planPago.getPlanPaId(), idPlanPagoDetalle, Utils.getDatePhone(), obtenerCalculos()[Constants.VENTA_TOTAL], Constants.ESTADO_TRUE, obtenerCalculos()[Constants.VENTA_BASE_IMPONIBLE], Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), obtenerCalculos()[Constants.VENTA_TOTAL], fechaPago, usuario.getUsuIUsuarioId(), Utils.getDatePhone(),0));
+                    this.planPagoDetalles.add(new PlanPagoDetalle(planPago.getPlanPaId(), idPlanPagoDetalle, Utils.getDatePhoneWithTime(), obtenerCalculos()[Constants.VENTA_TOTAL], Constants.ESTADO_TRUE, obtenerCalculos()[Constants.VENTA_BASE_IMPONIBLE], Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), obtenerCalculos()[Constants.VENTA_TOTAL], fechaPago, usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), 0));
                 }
 
 
                 SugarRecord.saveInTx(this.planPagoDetalles);
 
-                new SyncEstado(0,Utils.separteUpperCase(PlanPago.class.getSimpleName()), Integer.parseInt(planPago.getId() + ""), Constants.S_CREADO).save();
+                new SyncEstado(0, Utils.separteUpperCase(PlanPago.class.getSimpleName()), Integer.parseInt(planPago.getId() + ""), Constants.S_CREADO).save();
                 for (PlanPagoDetalle pagoDetalle : this.planPagoDetalles) {
-                    new SyncEstado(0,Utils.separteUpperCase(PlanPagoDetalle.class.getSimpleName()), Integer.parseInt(pagoDetalle.getId() + ""), Constants.S_CREADO).save();
+                    new SyncEstado(0, Utils.separteUpperCase(PlanPagoDetalle.class.getSimpleName()), Integer.parseInt(pagoDetalle.getId() + ""), Constants.S_CREADO).save();
                 }
 
                 break;
@@ -323,7 +331,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, " CajaComprobante " + cajaCom);
                 Log.d(TAG, " CajaPago " + cajaPag);
                 new SyncEstado(0, Utils.separteUpperCase(CajaComprobante.class.getSimpleName()), Integer.parseInt(cajaComprobante.getId() + ""), Constants.S_CREADO).save();
-                new SyncEstado(0,Utils.separteUpperCase(CajaPago.class.getSimpleName()), Integer.parseInt(cajaPago.getId() + ""), Constants.S_CREADO).save();
+                new SyncEstado(0, Utils.separteUpperCase(CajaPago.class.getSimpleName()), Integer.parseInt(cajaPago.getId() + ""), Constants.S_CREADO).save();
 
 
                 break;
@@ -338,7 +346,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "Actualizo despacho para agregar el comprobante: " + despachoId);
         }
 
-        new ExportTask(this,this).execute(Constants.TABLA_COMPROBANTE,Constants.S_CREADO);
+
 
 
     }
@@ -404,6 +412,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             double baseImponibleDespacho = despacho.getPrecioUnitarioSIGV() * despacho.getCantidadDespachada();
             double importeIgvDespacho = baseImponibleDespacho * despacho.getPorImpuesto();
 
+
             baseImponible = baseImponible + baseImponibleDespacho;
             importeIgv = importeIgv + importeIgvDespacho;
             porImpuesto = despacho.getPorImpuesto();
@@ -444,35 +453,41 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     private void generarVentaCredito() {
 
         Long planPagoId = PlanPago.findWithQuery(PlanPago.class, Utils.getQueryNumberPlanPago(), null).get(Constants.CURRENT).getPlanPaId();
-        planPago = new PlanPago(planPagoId, comprobanteVenta.getCompId(), "", comprobanteVenta.getSerie(), comprobanteVenta.getNumDoc(), getGlosa(), Constants.ESTADO_TRUE, Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), null);
+        planPago = new PlanPago(planPagoId, comprobanteVenta.getCompId(), "", comprobanteVenta.getSerie(), comprobanteVenta.getNumDoc(), getGlosa(), Constants.ESTADO_TRUE, Double.parseDouble(getPorcentajeInteresMes().getDescripcion()), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), null);
 
     }
 
     private void generarVentaContado() {
 
         Long cajaMovId = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
-        cajaMovimiento = new CajaMovimiento(cajaMovId, cajaLiquidacion.getLiqId(), getCatMov().getIdConcepto(), "SOLES", comprobanteVenta.getBaseImponible(), true, Utils.getDatePhone(), "", "", usuario.getUsuIUsuarioId(), Utils.getDatePhone(), "", Constants.CONCEPTO_TIPO_MOV_INGRESO,null,null);
+        cajaMovimiento = new CajaMovimiento(cajaMovId, cajaLiquidacion.getLiqId(), getCatMov().getIdConcepto(), "SOLES", comprobanteVenta.getBaseImponible(), true, Utils.getDatePhoneWithTime(), "", "", usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), "", Constants.CONCEPTO_TIPO_MOV_INGRESO, null, null, null, null);
 
 
         Long cajaComprobanteId = CajaComprobante.findWithQuery(CajaComprobante.class, Utils.getQueryNumberCajaComprobante(), null).get(Constants.CURRENT).getCajCompId();
         Long cajaPagoId = CajaPago.findWithQuery(CajaPago.class, Utils.getQueryNumberCajaPago(), null).get(Constants.CURRENT).getCajPagId();
-        cajaComprobante = new CajaComprobante(cajaComprobanteId, cajaMovimiento.getCajMovId(), comprobanteVenta.getCompId(), comprobanteVenta.getBaseImponible(), usuario.getUsuIUsuarioId(), Utils.getDatePhone());
-        cajaPago = new CajaPago(cajaPagoId, comprobanteVenta.getBaseImponible(), cajaMovimiento.getCajMovId(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), Constants.NO_EXPORTADO, getTipoPago().getIdConcepto(), Constants.ESTADO_FALSE);
+        cajaComprobante = new CajaComprobante(cajaComprobanteId, cajaMovimiento.getCajMovId(), comprobanteVenta.getCompId(), comprobanteVenta.getBaseImponible(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime());
+        cajaPago = new CajaPago(cajaPagoId, comprobanteVenta.getBaseImponible(), cajaMovimiento.getCajMovId(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), Constants.NO_EXPORTADO, getTipoPago().getIdConcepto(), Constants.ESTADO_FALSE);
 
     }
 
+    private List<Despacho> getDespachos() {
+        List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+        return despachos;
+    }
 
     private List<ComprobanteVentaDetalle> getComprobanteVentaDetalleList(ComprobanteVenta comprobanteVenta) {
         List<ComprobanteVentaDetalle> comprobanteVentaDetalles = new ArrayList<>();
-        List<Despacho> despachos = new ManipuleData().getDespachosToFactura(this);
+        List<Despacho> despachos = getDespachos();
 
-      //  int comprobanteVentaId = Integer.parseInt(ComprobanteVentaDetalle.findWithQuery(ComprobanteVentaDetalle.class, Utils.getQueryNumberComprobanteVentaDetalle(), null).get(Constants.CURRENT).getId()+"");
+        //  int comprobanteVentaId = Integer.parseInt(ComprobanteVentaDetalle.findWithQuery(ComprobanteVentaDetalle.class, Utils.getQueryNumberComprobanteVentaDetalle(), null).get(Constants.CURRENT).getId()+"");
 
         for (Despacho despacho : despachos) {
             ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, " pro_Id=? ", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
-            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhone(), despacho.getDespachoId()));
-           // comprobanteVentaId++;
+            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), despacho.getDespachoId()));
+            // comprobanteVentaId++;
         }
+
+
         return comprobanteVentaDetalles;
     }
 
@@ -668,12 +683,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnVender:
 
-                if(conceptoCredito.getAbreviatura().equals("0")  ){
+                if (conceptoCredito.getAbreviatura().equals("0")) {
 
-                    if (!Session.getDefineCuotas(getApplicationContext())){
+                    if (!Session.getDefineCuotas(getApplicationContext())) {
                         dialogConfirmarVenta();
-                    }else{
-                        Toast.makeText(SellActivity.this,"No cuenta con modalidad de credito", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SellActivity.this, "No cuenta con modalidad de credito", Toast.LENGTH_SHORT).show();
                         break;
                     }
 
@@ -772,7 +787,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
                     this.planPagoDetalles.get(i).setPlanPaId(planPago.getPlanPaId());
                     this.planPagoDetalles.get(i).setUsuarioAccion(usuario.getUsuIUsuarioId());
-                   // this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
+                    // this.planPagoDetalles.get(i).setCajMovId(cajaMovimiento.getCajMovId());
                 }
 
                 Toast.makeText(this, "TAMAÑO" + this.planPagoDetalles.size(), Toast.LENGTH_SHORT).show();
@@ -785,6 +800,40 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void manipulateInTransaction() {
         saveVenta();
+        HashMap<Long, Long> integerList = new HashMap<>();
+        for (Despacho despacho : getDespachos()) {
+            integerList.put(despacho.getPeId(), despacho.getPeId());
+        }
+        HashMap<Long, List<Despacho>> despachoHashMap = new HashMap<>();
+        List<Long> longList = new ArrayList<>(integerList.values());
+        List<Despacho> despachos = new ArrayList<>();
+        for (Long aLong : longList) {
+            List<Despacho> despachoList = Despacho.getListDespachoByPedidoNoCompId(aLong + "");
+            CajaLiquidacionDetalle cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", aLong + "");
+            double sumTotal =0.0;
+            double sumAgrupado =0.0;
+            for (Despacho despacho : despachoList) {
+
+                if (aLong.equals(despacho.getPeId())) {
+                    sumAgrupado = sumAgrupado +despacho.getCantidadDespachada();
+                    despachos.add(despacho);
+                    despachoHashMap.put(aLong, despachos);
+                    if (despacho.getCompId() != -1) {
+                        sumTotal = sumTotal + despacho.getCantidadDespachada();
+                    }
+                }
+            }
+            double totalFac = sumTotal/sumAgrupado;
+            int estadoFac = Constants.FACTURADO;
+            if (sumAgrupado==sumTotal){
+                estadoFac = Constants.FACTURADO_TOTAL;
+            }
+
+            cajaLiquidacionDetalle.setPorFacturado(totalFac);
+            cajaLiquidacionDetalle.setEstadoFactId(estadoFac);
+            cajaLiquidacionDetalle.save();
+            despachos = new ArrayList<>();
+        }
     }
 
     @Override
@@ -794,16 +843,16 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onLoadSuccess(String message) {
-       // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
+        // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onLoadError(String message) {
-       // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
+        // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onLoadErrorProcedure(String message) {
-       // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
+        // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

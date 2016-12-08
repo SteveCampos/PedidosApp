@@ -124,7 +124,8 @@ public class CajaExistenteFragment extends DialogFragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            new PreciosAsyntask(null).execute(57+"");
+            Log.d(TAG, "LIQ: "+cajaLiquidacion.getLiqId()+"");
+            new PreciosAsyntask(null).execute(cajaLiquidacion.getLiqId()+"");
             dismiss();
         }
 

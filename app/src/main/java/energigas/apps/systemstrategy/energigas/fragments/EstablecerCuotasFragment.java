@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,7 +106,7 @@ public class EstablecerCuotasFragment extends DialogFragment implements View.OnC
 
 
             String fechaPago = Utils.getStringDate(Utils.sumarFechasDias(fecha, diasCredito));
-            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId, Utils.getDatePhone(), importePorCuota,Constants.ESTADO_TRUE,0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhone(), 0));
+            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId, Utils.getDatePhoneWithTime(), importePorCuota,Constants.ESTADO_TRUE,0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhoneWithTime(), 0));
             fecha = Utils.sumarFechasDias(fecha, diasCredito);
             planPagoDetalleId++;
         }
