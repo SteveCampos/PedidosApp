@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
@@ -60,6 +62,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
     private CajaLiquidacion mCajaLiquidacion;
     private Establecimiento mEstablecimiento;
     private Cliente mCliente;
+    private Estado mEstad;
     /*Finz*/
     //private CajaLiquidacion mCajaLiquidacion;
 
@@ -83,10 +86,12 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         mCajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, "liq_Id = ?", new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId() + ""}).get(Constants.CURRENT);
         mEstablecimiento = Establecimiento.find(Establecimiento.class, "est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         mCliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{mEstablecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
-
-
+        /*mComprobanteVenta =ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id = ?",new String[]{Session.getComprobanteVenta(getActivity()).getCompId()+""}).get(Constants.CURRENT);
+        mComprobanteVenta.setEstadoId(60);
+        mComprobanteVenta.save();*/
+        //mEstad=Estado.find(Estado.class,"id_Estado = ?",new String[]{mComprobanteVenta.getEstadoId()+""}).get(Constants.CURRENT);
          /*FinEntity*/
-        insertables(mPlanPagoDetalle);
+        //insertables(mPlanPagoDetalle);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
         adapter = new CajaPagoAdapter(getPlanPagoDetalleList(), getActivity(), this);
         recyclerView.setAdapter(adapter);
@@ -96,7 +101,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
     }
 
     @Override
-    public void onCajaPagoClickListener(final TextView mEstado, final TextView mtotal, final PlanPago mPlanPago, final ComprobanteVenta mComprobanteVenta, final PlanPagoDetalle ppdetalle, final View view) {
+    public void onCajaPagoClickListener(final TextView mEstado, final TextView mtotal, final PlanPago mPlanPago, final ComprobanteVenta mComp, final PlanPagoDetalle ppdetalle, final View view) {
 
        /*Dialog onClikListener*/
 //        view.setOnClickListener(new View.OnClickListener() {
@@ -166,9 +171,30 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                 cjmovimiento.setReferencia(mPlanPago.getSerie());
                                 cjmovimiento.save();*/
                                 //El Saldo queda 0 y cambia de EstadoID=23
-                                mComprobanteVenta.setSaldo(0);
+
+                                mCajaMovimiento = new CajaMovimiento(idCajaMovimiento,
+                                        mCajaLiquidacion.getLiqId(),
+                                        12,//CatMovId
+                                        "String Moneda",
+                                        ppdetalle.getImporte(),
+                                        true,
+                                        "String Fecha",
+                                        "Anulación Cobros",
+                                        "Referencia",
+                                        mUsuario.getUsuIUsuarioId(),
+                                        "String FechaAccion",
+                                        "String Referencia Android",
+                                        10,// TipoMovId
+                                        null,
+                                        null);
+                                mCajaMovimiento.save();
+                                mEstado.setText("Pendiente-An");
+                                mEstado.setTextColor(Color.RED);
+                             /*   mComprobanteVenta.setSaldo(0);
                                 mComprobanteVenta.setEstadoId(23);
-                                mComprobanteVenta.save();
+                                mComprobanteVenta.save();*/
+                                ppdetalle.setEstado(true);
+                                ppdetalle.save();
                                 //Referencia va el numero comprobante que se esta anulando
                                 // Log.d(TAG,"CajaMovimiento:"+cjmovimiento.getReferencia());
 
@@ -271,14 +297,16 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
     }
 
     @Override
-    public void onCajaPagoListener(int action, PlanPagoDetalle pagoDetalle, TextView mEstado, TextView mtotal) {
+    public void onCajaPagoListener(int action, PlanPagoDetalle pagoDetalle, ComprobanteVenta  mComp, TextView mtotal,TextView mestadoo) {
 
         switch (action) {
             case Constants.CLICK_EDITAR_CAJA_GASTO:
                 pagoporroga(pagoDetalle, mtotal);
                 break;
             case Constants.CLICK_ELIMINAR_CAJA_GASTO:
-                pagototal(pagoDetalle, mEstado, mtotal);
+                pagototal(pagoDetalle,mComp, mtotal,mestadoo);
+               /* mComp.setEstadoId(24);
+                mComp.save();*/
             default:
                 break;
         }
@@ -467,7 +495,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
 
     }
 
-    private void pagototal(final PlanPagoDetalle detallepago, final TextView mestado, final TextView mtotal) {
+    private void pagototal(final PlanPagoDetalle detallepago, final ComprobanteVenta mComp,final TextView mtotal,final TextView mestado) {
         final View layout_dialog_cobranzas = View.inflate(getActivity(), R.layout.dialog_cobranza_onclic, null);
         final Button buttonacept = (Button) layout_dialog_cobranzas.findViewById(R.id.btn_sid);
         final Button buttondene = (Button) layout_dialog_cobranzas.findViewById(R.id.btn_nod);
@@ -477,6 +505,8 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         builder.setTitle("PAGO TOTAL : S./ " + Math.abs(detallepago.getMontoAPagar()));
         editTextmont.setText(Math.abs(detallepago.getMontoAPagar()) + "");
         // mCajaMovimiento = CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id = ?", new String[]{detallepago.getCajMovId() + ""}).get(Constants.CURRENT);
+        // final Estado mEstado = Estado.find(Estado.class, "id_Estado = ? ",new String[]{mComp.getEstadoId()+""}).get(Constants.CURRENT);
+
         // set dialog message
         builder
                 .setView(layout_dialog_cobranzas)
@@ -486,14 +516,20 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
             public void onClick(View v) {
                 double rest = detallepago.getMontoAPagar() - detallepago.getMontoAPagar();
                 //  editTextmont.setText(comprobanteVenta.getTotal()+"");//dialog_id_pagod
+                detallepago.setEstado(false);
                 mtotal.setText("S./ " + Math.abs(rest) + "");
-                /*mestado.setText("COBRADO");
-                mestado.setTextColor(Color.GREEN);*/
-                detallepago.setMontoAPagar(rest);
-                mCajaMovimiento.setEstado(false);
+                mestado.setText("COBRADO");
+                mestado.setTextColor(Color.GREEN);
 
+                //mComp.setEstadoId(23);
+
+                detallepago.setMontoAPagar(rest);
+//                mCajaMovimiento.setEstado(false);
+                /*mestado.setText("Cobrado");
+                mestado.setTextColor(Color.GREEN);*/
+//                mComp.save();
                 detallepago.save();
-                mCajaMovimiento.save();
+  //              mCajaMovimiento.save();
                 alertDialog.dismiss();
 
 
@@ -566,7 +602,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                 idCajaMovimiento
                         );
                         mPlanPagoDetalle.save();
-                        saveMultipleTables(resultado, idCajaMovimiento);
+                      //  saveMultipleTables(resultado, idCajaMovimiento);
 
                         alertDialog.dismiss();
 

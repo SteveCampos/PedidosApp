@@ -31,7 +31,6 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
-
     // Store a member variable for the contacts
     private List<PlanPagoDetalle> mPlanPagDetalle;
     // Store the context for easy access
@@ -39,13 +38,10 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
     public OnCajaPagoClickListener listener;
 
-
-
     public interface OnCajaPagoClickListener {
         void onCajaPagoClickListener(TextView mEstado, TextView mtotal,PlanPago planpago, ComprobanteVenta venta ,PlanPagoDetalle planPagoDetalle, View view);
-        void onCajaPagoListener(int action,PlanPagoDetalle pagoDetalle,TextView mEstado, TextView mtotal);
+        void onCajaPagoListener(int action,PlanPagoDetalle pagoDetalle,ComprobanteVenta mComp, TextView mtotal,TextView mestadoo);
     }
-
 
 
     public CajaPagoAdapter(List<PlanPagoDetalle> mPlanPagoDetalles,Context mContext,OnCajaPagoClickListener listener) {
@@ -72,9 +68,7 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
         final PlanPagoDetalle planPagoDetalle = mPlanPagDetalle.get(position);
         final PlanPago planpago = PlanPago.find(PlanPago.class, "plan_Pa_Id = ?",new String[]{planPagoDetalle.getPlanPaId()+""}).get(Constants.CURRENT);
         final ComprobanteVenta comprobanteVenta= ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id= ? ",new String[]{planpago.getCompId()+""}).get(Constants.CURRENT);
-//        final Estado mEstado = Estado.find(Estado.class, "id_Estado = ? ",new String[]{comprobanteVenta.getEstadoId()+""}).get(Constants.CURRENT);
-
-        holder.mdate.setText(planPagoDetalle.getFechaCobro());
+           holder.mdate.setText(planPagoDetalle.getFechaCobro());
         holder.mtotal.setText("S./ " + Utils.formatDouble(planPagoDetalle.getMontoAPagar()));
         holder.mcomprobante.setText(comprobanteVenta.getSerie()+"-"+comprobanteVenta.getNumDoc());
 
@@ -94,9 +88,9 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
 
                         if (items[which].equals("Pago Total")) {
-                            listener.onCajaPagoListener(Constants.CLICK_ELIMINAR_CAJA_GASTO, planPagoDetalle, holder.mEstado,holder.mtotal);
+                            listener.onCajaPagoListener(Constants.CLICK_ELIMINAR_CAJA_GASTO, planPagoDetalle, comprobanteVenta,holder.mtotal,holder.mEstado);
                         } else if (items[which].equals("Pago Porroga")) {
-                            listener.onCajaPagoListener(Constants.CLICK_EDITAR_CAJA_GASTO, planPagoDetalle,holder.mEstado,holder.mtotal);
+                            listener.onCajaPagoListener(Constants.CLICK_EDITAR_CAJA_GASTO, planPagoDetalle,comprobanteVenta,holder.mtotal,holder.mEstado);
                         } else if (items[which].equals("Cancel")) {
                             dialog.dismiss();
                         }
@@ -111,37 +105,28 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //final CajaMovimiento cajaMovimiento = CajaMovimiento.find(CajaMovimiento.class,"caj_Mov_Id = ?",new String[]{planPagoDetalle.getCajMovId()+""}).get(Constants.CURRENT);
-
                 listener.onCajaPagoClickListener(holder.mEstado,holder.mtotal,planpago,comprobanteVenta,planPagoDetalle, holder.itemView);
                 return false;
             }
         });
       //  holder.mEstado.setText(mEstado.getIdEstado());
-
-/*
         int color = R.color.dark_grey;
-        String estado= String.valueOf(mEstado.getIdEstado());
+        String estado= String.valueOf(planPagoDetalle.isEstado());
         switch (estado) {
-            case "60":
+            //true=Pendiente; false=Cobrado
+            case "true":
                 estado = "Pendiente";
                 color = R.color.md_red_500;
                 break;
-            case "61":
-                estado = "COBRADO";
+            case "false":
+                estado = "Cobrado";
                 color = R.color.md_green_up;
                 break;
-            case "62":
-                estado = "ANULADO";
-                color = R.color.md_yellow_800;
-            case "63":
-                estado ="parciales";
-                color = R.color.colorAccent;
 
         }
         holder.mEstado.setText(estado);
         holder.mEstado.setTextColor(ContextCompat.getColor(mContext,color));
-*/
+
         //holder.mcomprobante.setText("");
         //holder.mdate.setText("");
         //Cholder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));

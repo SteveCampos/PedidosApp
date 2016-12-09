@@ -19,10 +19,10 @@ import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapter.OnCajaPagoClickListener{
+public class ChargesActivity extends AppCompatActivity{
 
 
-    public CajaPagoFragment.OnCajaPagoClickListener listener;
+   // public CajaPagoFragment.OnCajaPagoClickListener listener;
 
 
     private RecyclerView recyclerView;
@@ -40,7 +40,7 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_charges);
 
-        adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this, this);
+        //adapter = new CajaPagoAdapter(CajaPago.getListCajaPago(),this, this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -71,11 +71,5 @@ public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapte
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCajaPagoClickListener(CajaPago cajaPago, View view) {
-        Snackbar.make(view,cajaPago.getFechaAccion(),Snackbar.LENGTH_LONG).show();
-    }
-    public interface OnCajaPagoClickListener{
-        void onCharfesClickListener(CajaPago charges, View view);
-    }
+
 }
