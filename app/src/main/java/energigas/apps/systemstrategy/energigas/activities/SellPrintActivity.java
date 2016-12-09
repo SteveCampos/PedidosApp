@@ -38,18 +38,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
-import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Despacho;
-import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
-import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
-import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -143,6 +137,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+
+
     private void setTextCabecera() {
 
         String compVar = comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc();
@@ -151,7 +147,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         String text = String.format(res.getString(R.string.print_factura_empresa),"Energigas S.A.C", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502","San Isidro Lima","RUC: 20506151547","Telf: (511) 2033001");
         cabecera_empresa.setText(text);
 
-        String textVC = String.format(res.getString(R.string.print_factura_header),compVar,Utils.getDatePhone(),clienteVar,cliente.getPersona().getPerVDocIdentidad(),cliente.getPersona().getUbicacion().getDescripcion());
+        String textVC = String.format(res.getString(R.string.print_factura_header),compVar,Utils.getDatePhoneWithTime(),clienteVar,cliente.getPersona().getPerVDocIdentidad(),cliente.getPersona().getUbicacion().getDescripcion());
         venta_cabecera.setText(textVC);
     }
 

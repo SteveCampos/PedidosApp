@@ -7,35 +7,44 @@ import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.ConectarDispositivoAsyn;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
+import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
+import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,12 +57,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.orm.SugarTransactionHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class DespachoActivity extends AppCompatActivity implements BluetoothConnectionListener, SugarTransactionHelper.Callback, OnLocationListener, ExportObjectsListener {
+public class DespachoActivity extends AppCompatActivity implements BluetoothConnectionListener, SugarTransactionHelper.Callback, OnLocationListener, ExportObjectsListener, IntentListenerAccess {
 
     private Boolean isConnected = false;
     private Boolean isFabOpen = false;
@@ -81,6 +93,8 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     @BindView(R.id.imgIniciarDespacho)
     ImageView imageViewInicarDespacho;
+    @BindView(R.id.imgconnect)
+    ImageView imageViewConnect;
 
 
     @BindView(R.id.progressdespacho)
@@ -157,11 +171,17 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     private Pedido pedido;
     private Serie serie;
     private CajaLiquidacion cajaLiquidacion;
+    private CajaLiquidacionDetalle cajaLiquidacionDetalle;
     private Almacen almacenDistribuidor;
 
 
     @BindView(R.id.btnGuardar)
     Button buttonGuardar;
+    private DatabaseReference mDatabase;
+    private DatabaseReference myRef;
+
+
+    private ProgressDialog progressDialog;
 
     /**
      * Animation
@@ -170,32 +190,124 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     private LocationVehiculeListener locationVehiculeListener;
     private Location latAndLong;
 
+
+    private Concepto conceptoIGV;
+
+
+    private static final String TAG = "DespachoActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_despacho);
         ButterKnife.bind(this);
+        usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        conceptoIGV = Session.getConceptoIGV();
+
+        new AccessPrivilegesManager(getClass())
+                .setViews(
+                        actionButtonTanqueOrigen,
+                        actionButtonOrigenManual,
+                        actionButtonOrigenRemoto,
+                        actionButtonOrigenDesconectar,
+                        actionButtonTanqueDestino,
+                        actionButtonDestinoManual,
+                        actionButtonDestinoRemoto,
+                        actionButtonDestinoDesconectar,
+                        actionButtonTanqueOrigen2,
+                        fabOrigenManual2,
+                        fabOrigenRemoto2,
+                        fabOrigenDesconectar2,
+                        fabTanqueDestino2,
+                        fabDestinoManual2,
+                        fabDestinoRemoto2,
+                        fabDestinoDesconectar2,
+                        editTextCantidadDespachada,
+                        buttonGuardar,
+                        imageViewInicarDespacho,
+                        imageViewConnect)
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
+
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Cargando...");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_NOTIFICACIONES).child(Constants.FIREBASE_CHILD_ATENCION_PEDIDO);
         locationVehiculeListener = new LocationVehiculeListener(this);
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
+
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
-        usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+
         serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, Constants.TIPO_ID_COMPROBANTE_DESPACHO), null).get(Constants.CURRENT);
-        almacenDistribuidor = Almacen.findWithQuery(Almacen.class, Utils.getQuerDespachoVehiculo(usuario.getUsuIUsuarioId()),null).get(Constants.CURRENT);
-        if (true){
+        almacenDistribuidor = Almacen.findWithQuery(Almacen.class, Utils.getQuerDespachoVehiculo(usuario.getUsuIUsuarioId()), null).get(Constants.CURRENT);
+        almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
+        if (!Session.getTipoDespachoSN(this)) {
 
             pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
             pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
-            almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
-        }else{
-            pedido = new Pedido();
-            pedidoDetalle = new PedidoDetalle();
-            almacen = new Almacen();
-        }
+            cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", pedido.getPeId() + "");
 
+        } else {
+            pedido = Session.getPedido(this);
+            pedidoDetalle = Session.getPedidoDetalle(this);
+            cajaLiquidacionDetalle = new CajaLiquidacionDetalle();
+        }
+        Log.d(TAG, "POR IMPUESTO: " + conceptoIGV.getDescripcion());
         intanceAnimation();
         toolbar();
         setTextField();
 
+    }
+
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+
+    }
+
+    private void notificarAtencionPedido() {
+        String id = myRef.push().getKey();
+        Log.d(TAG, "ID: " + id);
+        myRef.child(id).setValue(new FBRegistroPedido(cajaLiquidacion.getLiqId(), cajaLiquidacionDetalle.getLidId(), pedido.getPeId(), Long.parseLong(establecimiento.getEstIEstablecimientoId() + ""), Long.parseLong("45"), Long.parseLong("" + usuario.getUsuIUsuarioId())));
+
+    }
+
+    private void updatLiqDetalle() {
+        List<Despacho> despachoList = Despacho.getListDespachoByPedido(pedido.getPeId() + "");
+        double sumDespachado = 0.0;
+        for (Despacho despacho : despachoList) {
+            sumDespachado = sumDespachado + despacho.getCantidadDespachada();
+        }
+        if (pedidoDetalle.getAlmId() == 0) {
+            double porEntrega = sumDespachado / pedidoDetalle.getCantidad();
+            cajaLiquidacionDetalle.setPorDespacho(100);
+            cajaLiquidacionDetalle.setPorEntrega(porEntrega);
+            cajaLiquidacionDetalle.setEstadoFactId(Constants.NO_FACTURADO);
+            cajaLiquidacionDetalle.setPorFacturado(0.0);
+        } else {
+
+            List<PedidoDetalle> pedidoDetalles = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "");
+            double sumCanPedDetalle = 0.0;
+            for (PedidoDetalle pedidoDetalle : pedidoDetalles) {
+                sumCanPedDetalle = sumCanPedDetalle + pedidoDetalle.getCantidad();
+            }
+
+            double porDespacho = despachoList.size() / pedidoDetalles.size();
+            double porEntrega = sumDespachado / sumCanPedDetalle;
+            cajaLiquidacionDetalle.setPorDespacho(porDespacho);
+            cajaLiquidacionDetalle.setPorEntrega(porEntrega);
+            cajaLiquidacionDetalle.setEstadoFactId(Constants.NO_FACTURADO);
+            cajaLiquidacionDetalle.setPorFacturado(0.0);
+            cajaLiquidacionDetalle.save();
+        }
     }
 
     private void toolbar() {
@@ -290,6 +402,8 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             public void onSavePressed() {
                 if (validateField()) {
                     SugarTransactionHelper.doInTransaction(DespachoActivity.this);
+                    progressDialog.show();
+                    new ExportTask(DespachoActivity.this, DespachoActivity.this).execute(Constants.TABLA_DESPACHO, Constants.S_CREADO);
                 } else {
                     Toast.makeText(DespachoActivity.this, "Datos vacios", Toast.LENGTH_SHORT).show();
                 }
@@ -361,7 +475,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 almacenDistribuidor.getAlmId(),
                 serie.getCompVSerie(),
                 Utils.completaZeros(getNumeroDespacho(), serie.getParametro()),
-                Utils.getDatePhone(),
+                Utils.getDatePhoneWithTime(),
                 usuario.getUsuIUsuarioId(),
                 Constants.DESPACHO_CREADO,
                 almacenDistribuidor.getVehiculoId(),
@@ -369,9 +483,9 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 cajaLiquidacion.getLiqId(),
                 pedidoDetalle.getPrecio(),
                 pedidoDetalle.getPrecioUnitario(),
-                pedido.getPorImpuesto(),
+                Double.parseDouble(conceptoIGV.getDescripcion()),
                 pedidoDetalle.getCostoVenta(),
-                Double.parseDouble(editTextCantidadDespachada.getText().toString())*pedidoDetalle.getPrecio(),
+                Double.parseDouble(editTextCantidadDespachada.getText().toString()) * pedidoDetalle.getPrecio(),
                 Double.parseDouble(editTextDestinoContadorInicial.getText().toString()),
                 Double.parseDouble(editTextPorcentajeInicial.getText().toString()),
                 Double.parseDouble(editTextDestinoPorcentajeInicial.getText().toString()),
@@ -388,11 +502,11 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         double cantidadStock = almacenDistribuidor.getStockActual() - Double.parseDouble(editTextCantidadDespachada.getText().toString());
         almacenDistribuidor.setStockActual(cantidadStock);
         almacenDistribuidor.save();
-        new SyncEstado(0, Utils.separteUpperCase(Despacho.class.getSimpleName()), Integer.parseInt(despacho.getId() + ""), Constants.S_CREADO).save();
-        new ExportTask(this,this).execute(Constants.TABLA_DESPACHO,Constants.S_CREADO);
+        updatLiqDetalle();
+        notificarAtencionPedido();
         Session.saveDespacho(this, despacho);
-        startActivity(new Intent(this, PrintDispatch.class));
-        this.finish();
+        new SyncEstado(0, Utils.separteUpperCase(Despacho.class.getSimpleName()), Integer.parseInt(despacho.getId() + ""), Constants.S_CREADO).save();
+
 
     }
 
@@ -670,7 +784,9 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     public void manipulateInTransaction() {
         saveDespacho();
 
+
     }
+
 
     @Override
     public void errorInTransaction(String error) {
@@ -688,20 +804,23 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     }
 
 
-
-
     @Override
     public void onLoadSuccess(String message) {
-       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+        // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
+        startActivity(new Intent(this, PrintDispatch.class));
+        this.finish();
     }
 
     @Override
     public void onLoadError(String message) {
-       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+        // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLoadErrorProcedure(String message) {
-       // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
+        // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
     }
+
+
 }

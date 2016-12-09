@@ -19,10 +19,10 @@ import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
  * Created by Kike on 1/08/2016.
  */
 
-public class ChargesActivity extends AppCompatActivity{
+public class ChargesActivity extends AppCompatActivity implements CajaPagoAdapter.OnCajaPagoClickListener{
 
 
-   // public CajaPagoFragment.OnCajaPagoClickListener listener;
+    public CajaPagoFragment.OnCajaPagoClickListener listener;
 
 
     private RecyclerView recyclerView;

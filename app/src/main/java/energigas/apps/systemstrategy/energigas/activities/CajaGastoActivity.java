@@ -1,7 +1,5 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
-import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,16 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.common.base.Converter;
-import com.orm.SugarRecord;
 import com.orm.SugarTransactionHelper;
 
 import java.text.DateFormat;
@@ -45,13 +38,10 @@ import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
-import energigas.apps.systemstrategy.energigas.entities.Expenses;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
-import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
-import energigas.apps.systemstrategy.energigas.fragments.InventarioFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -90,6 +80,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     int idCajagasto = 0;
     Concepto conceptoTipoGasto;
     Concepto conceptoTipoCateGasto;
+    Concepto conceptoIgv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +89,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
         usuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        conceptoIgv = Concepto.getConceptoById(Constants.CONCEPTO_IGV_ID);
         btndialog.setOnClickListener(this);
         setTabsAdapterFragment();
         setToolbar();
@@ -201,7 +193,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 this);
 
         // set title
-        alertDialogBuilder.setTitle("New Expenses");
+        alertDialogBuilder.setTitle("Nuevo Gasto");
 
         // set dialog message
         final AlertDialog.Builder builder = alertDialogBuilder
@@ -217,7 +209,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         sp_tiposgastos.setAdapter(conceptoArrayAdapter);
 
         conceptoTipoCatList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_CATEGORIA_TIPO_GASTO, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
-        sp_catTGasto.setAdapter(new ConceptoAdapter(this, 0, conceptoList));
+        sp_catTGasto.setAdapter(new ConceptoAdapter(this, 0, conceptoTipoCatList));
 
 
         btnsave.setOnClickListener(new View.OnClickListener() {
@@ -240,19 +232,21 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 if (txtttotal.getText().toString().equals("")) {
                     txtttotal.setError("Ingrese Total");
                 } else {
-
+                    double impporte = Double.valueOf(txtttotal.getText().toString());
+                    double igv = impporte/0.18;
+                    double valor = impporte-igv;
 
                     idCajagasto = idCajagasto + 1;
                     expenses = new CajaGasto(idCajagasto,
                             idCajagasto,
-                            10,
-                            20,
-                            Double.valueOf(txtttotal.getText().toString()),
-                            10,
-                            10,
-                            20,
-                            dateFormat.format(date),
-                            "20/12/20"
+                            igv,
+                            valor,
+                            impporte,
+                            conceptoTipoGasto.getIdConcepto(),
+                            usuario.getUsuIUsuarioId(),
+                            usuario.getUsuIUsuarioId(),
+                            Utils.getDatePhoneWithTime(),
+                            Utils.getDatePhoneWithTime()
                     );
                     Log.d(TAG, "CountID: " + idCajagasto);
 //                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
@@ -279,76 +273,63 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+
     private void save(final CajaGasto mcajaGasto, final String mDescription) {
 
 
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
             @Override
             public void manipulateInTransaction() {
-                //SAVE HERE!
-                if (Constants.GASTO_EN_PLANTA == conceptoTipoCateGasto.getIdConcepto()) {
 
-                    long idInformeg = InformeGasto.findWithQuery(InformeGasto.class, Utils.getQueryNumberInform(), null).get(Constants.CURRENT).getInfGasId();
-                    InformeGasto informeGasto = new InformeGasto(idInformeg,
-                            conceptoTipoGasto.getIdConcepto(),
-                            mcajaGasto.getCajGasId(),
-                            usuario.getUsuIUsuarioId(),
-                            Utils.getDatePhone(),
-                            mDescription,
-                            conceptoTipoCateGasto.getIdConcepto(),
-                            Constants.GASTO_ESTADO_CREADO,null,null);
-                    long idInformeGasto = informeGasto.save();
-
-                    new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
-                    new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
-
-                } else {
+                /** Caja Gasto **/
+                Long idCajaGasto = mcajaGasto.save();
+                mcajaGasto.setCajGasId(idCajaGasto);
+                mcajaGasto.save();
 
 
-                    long idMovimiento = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
+                /**Informe de gasto**/
 
-                    CajaMovimiento cajaMovimiento = new CajaMovimiento(idMovimiento,
-                            cajaLiquidacion.getLiqId(),
-                            Constants.CATEGORIA_MOV_GASTO,
-                            "Soles",
-                            expenses.getImporte(),
-                            Constants.ESTADO_TRUE,
-                            Utils.getDatePhoneTime(),
-                            "",
-                            mDescription,
-                            usuario.getUsuIUsuarioId(),
-                            Utils.getDatePhone(),
-                            "Android",
-                            Constants.TIPO_MOV_EGRESO,
-                            null,
-                            null);
+                InformeGasto informeGasto = new InformeGasto(0,
+                        conceptoTipoGasto.getIdConcepto(),
+                        mcajaGasto.getCajGasId(),
+                        usuario.getUsuIUsuarioId(),
+                        Utils.getDatePhoneWithTime(),
+                        mDescription,
+                        conceptoTipoCateGasto.getIdConcepto(),
+                        Constants.GASTO_ESTADO_CREADO);
+                long idInformeGasto = informeGasto.save();
+                informeGasto.setInfGasId(idInformeGasto);
+                informeGasto.save();
+
+                /**Caja Movimiento**/
+
+                CajaMovimiento cajaMovimiento = new CajaMovimiento(-1,
+                        cajaLiquidacion.getLiqId(),
+                        Constants.CATEGORIA_MOV_GASTO,
+                        "Soles",
+                        expenses.getImporte(),
+                        Constants.ESTADO_TRUE,
+                        Utils.getDatePhoneTime(),
+                        "",
+                        mDescription,
+                        usuario.getUsuIUsuarioId(),
+                        Utils.getDatePhoneWithTime(),
+                        "Android",
+                        Constants.TIPO_MOV_EGRESO,null,null,null,null);
+                Long idCajaMovimiento = cajaMovimiento.save();
+                cajaMovimiento.setCajMovId(idCajaMovimiento);
+                cajaMovimiento.save();
 
 
-                    Log.d(TAG, "SSAVED CAJAMOVIEMTO : " + mcajaGasto.toString() + cajaMovimiento);
-                    Log.d(TAG, "Description : " + mDescription);
-                    //cajaMovimiento.save();
 
-                    long idInformeg = InformeGasto.findWithQuery(InformeGasto.class, Utils.getQueryNumberInform(), null).get(Constants.CURRENT).getInfGasId();
-                    InformeGasto informeGasto = new InformeGasto(idInformeg,
-                            conceptoTipoGasto.getIdConcepto(),
-                            mcajaGasto.getCajGasId(),
-                            usuario.getUsuIUsuarioId(),
-                            Utils.getDatePhone(),
-                            mDescription,
-                            conceptoTipoCateGasto.getIdConcepto(),
-                            Constants.GASTO_ESTADO_CREADO,null,null);
 
-                    Log.d(TAG, "INFORMEGASSTOS: " + informeGasto);
+                new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
+                new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(idCajaMovimiento + ""), Constants.S_CREADO).save();
+                new SyncEstado(0, Utils.separteUpperCase(CajaGasto.class.getSimpleName()), Integer.parseInt(idCajaGasto + ""), Constants.S_CREADO).save();
+                new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
-                    long idInformeGasto = informeGasto.save();
-                    long idCajaMovimiento = cajaMovimiento.save();
-                    long idCajaGasto = mcajaGasto.save();
 
-                    new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
-                    new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(idCajaMovimiento + ""), Constants.S_CREADO).save();
-                    new SyncEstado(0, Utils.separteUpperCase(CajaGasto.class.getSimpleName()), Integer.parseInt(idCajaGasto + ""), Constants.S_CREADO).save();
 
-                }
 
 
             }

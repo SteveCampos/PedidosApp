@@ -3,7 +3,9 @@ package energigas.apps.systemstrategy.energigas.asyntask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,17 +22,8 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.Acceso;
-import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
-import energigas.apps.systemstrategy.energigas.entities.Cliente;
-import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
-import energigas.apps.systemstrategy.energigas.entities.Pedido;
-import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Persona;
-import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
-import energigas.apps.systemstrategy.energigas.entities.PlanDistribucionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Privilegio;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
 import energigas.apps.systemstrategy.energigas.entities.RolAcceso;
@@ -39,6 +32,8 @@ import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.NetworkUtil;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -59,7 +54,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     private Usuario objUsuario;
     private BEGeneral objGeneral;
     private CajaLiquidacion cajaLiquidacion;
-    ManipuleData manipuleData;
+    private ManipuleData manipuleData;
 
     public LoginTask(OnLoginAsyntaskListener loginAsyntaskListener) {
 
@@ -69,8 +64,18 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
 
     }
 
+
     @Override
     protected String doInBackground(String... strings) {
+        Log.d(TAG,"PING "+ NetworkUtil.hasActiveInternetConnection(context));
+
+        if (!NetworkUtil.hasActiveInternetConnection(context)) {
+            Log.d(TAG, "Error pin ");
+            result = 2;
+
+            return null;
+        }
+
         RestAPI restAPI = new RestAPI();
         String usuario = strings[0];
         String clave = strings[1];
@@ -141,17 +146,17 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         int count = 0;
         for (Rol rol : rols) {
             List<Acceso> accesos = rol.getItemsAccesos();
-            RolUsuario rolUsuario = new RolUsuario(objUsuario.getUsuIUsuarioId(), rol.getIdRol());
+            RolUsuario rolUsuario = new RolUsuario(objUsuario.getUsuIUsuarioId() + "_" + rol.getIdRol(), rol.getIdRol(), objUsuario.getUsuIUsuarioId());
             rolUsuario.save();
             SugarRecord.saveInTx(accesos);
             for (Acceso acceso : accesos) {
 
-                RolAcceso rolAcceso = new RolAcceso(rol.getIdRol(), acceso.getIdAcceso(), true);
+                RolAcceso rolAcceso = new RolAcceso(rol.getIdRol() + "_" + acceso.getIdAcceso(), rol.getIdRol(), acceso.getIdAcceso(), true);
                 rolAcceso.save();
                 SugarRecord.saveInTx(acceso.getItemsPrivielgios());
 
                 for (Privilegio privilegio : acceso.getItemsPrivielgios()) {
-                    RolPrivilegio rolPrivilegio = new RolPrivilegio(rol.getIdRol(), privilegio.getAccesoId());
+                    RolPrivilegio rolPrivilegio = new RolPrivilegio(rol.getIdRol() + "_" + privilegio.getAccesoId(), rol.getIdRol(), privilegio.getAccesoId());
                     rolPrivilegio.save();
                     count++;
                 }

@@ -44,6 +44,7 @@ public class PreciosAsyntask extends AsyncTask<String, String, String> implement
         Long liquidacionId = Long.parseLong(params[0]);
         try {
             jsonObjectResponse = restAPI.flist_ListaPrecios(liquidacionId);
+            Log.d(TAG," LIQUIDACION "+liquidacionId+"");
             listaPrecios = mapper.readValue(Utils.getJsonArResult(jsonObjectResponse), TypeFactory.defaultInstance().constructCollectionType(List.class,
                     ListaPrecio.class));
             Log.d(TAG,"JSON PRECIO: "+jsonObjectResponse);

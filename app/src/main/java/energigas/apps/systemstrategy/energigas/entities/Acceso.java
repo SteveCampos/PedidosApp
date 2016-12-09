@@ -1,10 +1,13 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,13 +44,15 @@ public class Acceso extends SugarRecord {
 
     private boolean movil;
 
+
     @Ignore
     private List<Privilegio> itemsPrivielgios;
+
 
     public Acceso() {
     }
 
-    public Acceso(int idAcceso, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil, List<Privilegio> itemsPrivielgios) {
+    public Acceso(int idAcceso, int parentId, String abreviacion, String descripcion, int item, int nivel, String uRL, boolean estado, String fechaCreacion, String usuario, String icono, String fechaActualizacion, String usuarioActualizacion, boolean movil, List<Privilegio> itemsPrivielgios, int viewAndroidId) {
         this.idAcceso = idAcceso;
         this.parentId = parentId;
         this.abreviacion = abreviacion;
@@ -183,5 +188,49 @@ public class Acceso extends SugarRecord {
 
     public void setItemsPrivielgios(List<Privilegio> itemsPrivielgios) {
         this.itemsPrivielgios = itemsPrivielgios;
+    }
+
+    public static List<Acceso> getAccesos(String rolId) {
+        List<RolAcceso> rolAccesos = RolAcceso.getRolAcceso(rolId);
+        List<Acceso> accesos = new ArrayList<>();
+
+        for (RolAcceso rolAcceso : rolAccesos) {
+            accesos.add(Acceso.getAccesoById(rolAcceso.getAccesoId() + ""));
+        }
+        return accesos;
+    }
+
+    public static List<Acceso> getAccesosFor(String rolId, String nombreActivity) {
+
+        List<RolAcceso> rolAccesos = RolAcceso.getRolAcceso(rolId);
+        List<Acceso> accesoList = new ArrayList<>();
+        for (RolAcceso rolAcceso : rolAccesos) {
+            Acceso acceso = Acceso.getAccesoByIdANameActivity(rolAcceso.getAccesoId() + "", nombreActivity);
+            if (acceso !=null){
+                accesoList.add(acceso);
+            }
+
+        }
+        return accesoList;
+    }
+
+    public static Acceso getAccesoByIdANameActivity(String id, String nombre) {
+        List<Acceso> accesoList = Acceso.find(Acceso.class, "id_Acceso=? and u_RL=?", new String[]{id, nombre});
+
+        Log.d("MainActivity", "ACCESO: " +accesoList.size());
+        if (accesoList.size() > 0) {
+            return accesoList.get(0);
+        }
+        return null;
+    }
+
+    public static Acceso getAccesoById(String id) {
+
+        List<Acceso> accesoList = Acceso.find(Acceso.class, "id_Acceso=? and abreviacion=?", new String[]{id});
+        if (accesoList.size() > 0) {
+            return accesoList.get(0);
+
+        }
+        return null;
     }
 }

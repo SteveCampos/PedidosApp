@@ -26,6 +26,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabNext"
+        android:tag="fabNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/print_margin_bottom_fab_4"
@@ -39,6 +40,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabDisconec"
+        android:tag="fabDisconec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/print_margin_bottom_fab_3"
@@ -52,6 +54,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabPrint"
+        android:tag="fabPrint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/print_margin_bottom_fab_2"
@@ -66,6 +69,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
+        android:tag="fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

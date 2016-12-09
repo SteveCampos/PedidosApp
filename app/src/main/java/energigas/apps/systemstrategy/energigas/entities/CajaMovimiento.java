@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
@@ -46,11 +47,18 @@ public class CajaMovimiento extends SugarRecord {
     private CajaComprobante comprobante;
 
 
+    @Ignore
+    @JsonIgnore
+    private InformeGasto infGasto;
+    @Ignore
+    @JsonIgnore
+    private CajaGasto gasto;
+
 
     public CajaMovimiento() {
     }
 
-    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid, int tipoMovId, CajaPago pago, CajaComprobante comprobante) {
+    public CajaMovimiento(long cajMovId, long liqId, int catMovId, String moneda, double importe, boolean estado, String fechaHora, String motivoAnulado, String referencia, int usuarioId, String fechaAccion, String referenciaAndroid, int tipoMovId, CajaPago pago, CajaComprobante comprobante, InformeGasto infGasto, CajaGasto gasto) {
         this.cajMovId = cajMovId;
         this.liqId = liqId;
         this.catMovId = catMovId;
@@ -66,9 +74,25 @@ public class CajaMovimiento extends SugarRecord {
         this.tipoMovId = tipoMovId;
         this.pago = pago;
         this.comprobante = comprobante;
+        this.infGasto = infGasto;
+        this.gasto = gasto;
     }
 
+    public InformeGasto getInfGasto() {
+        return infGasto;
+    }
 
+    public void setInfGasto(InformeGasto infGasto) {
+        this.infGasto = infGasto;
+    }
+
+    public CajaGasto getGasto() {
+        return gasto;
+    }
+
+    public void setGasto(CajaGasto gasto) {
+        this.gasto = gasto;
+    }
 
     public CajaPago getPago() {
         return pago;
@@ -206,7 +230,7 @@ public class CajaMovimiento extends SugarRecord {
     }
 
     public static CajaMovimiento getCajaMovimientoById(String id) {
-        if (CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).size()>0){
+        if (CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).size() > 0) {
             return CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).get(0);
         }
 
@@ -214,4 +238,15 @@ public class CajaMovimiento extends SugarRecord {
     }
 
 
+    public static List<CajaMovimiento> getListCajaMovimiento(ArrayList<CajaMovimiento> cajaMovimientos) {
+        List<CajaMovimiento> cajaMovimientoList = new ArrayList<>();
+        for (CajaMovimiento cajaMovimiento : cajaMovimientos) {
+            CajaGasto cajaGasto = CajaGasto.getCajaGastobyCajMov(cajaMovimiento.getCajMovId()+"");
+            InformeGasto informeGasto = InformeGasto.getInformeGastoByCajGasto(cajaGasto.getCajGasId()+"");
+            cajaMovimiento.setInfGasto(informeGasto);
+            cajaMovimiento.setGasto(cajaGasto);
+            cajaMovimientoList.add(cajaMovimiento);
+        }
+        return cajaMovimientoList;
+    }
 }

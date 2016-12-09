@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,20 +19,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DespachoActivity;
 import energigas.apps.systemstrategy.energigas.adapters.ProductoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.TanqueAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.UnidadAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
-import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.ListaPrecio;
 import energigas.apps.systemstrategy.energigas.entities.ListaPrecioDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.ValuesCost;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 02/11/2016.
@@ -49,7 +56,7 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
     Spinner spinnerUnidad;
 
     @BindView(R.id.textCantidad)
-    TextView textViewCantidad;
+    EditText editCantidad;
 
     @BindView(R.id.textPrecioUnitario)
     TextView textViewPrecioUnitario;
@@ -68,6 +75,9 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
     private Establecimiento establecimiento;
     private ListaPrecio listaPrecio;
     private ListaPrecioDetalle listaPrecioDetalle;
+    private Cliente cliente;
+    private ValuesCost mainValuesCost;
+    private Usuario usuario;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -75,12 +85,16 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         setCancelable(true);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
         establecimiento = Establecimiento.getEstablecimientoById(Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "");
+        establecimiento.setUbicacion(GeoUbicacion.getGeoUbicacion(establecimiento.getUbId()+""));
+        cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
+        usuario = Usuario.getUsuario(Session.getSession(getActivity()).getUsuIUsuarioId() + "");
         return dialog;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_agregar_pedido_despacho, container, false);
+
         ButterKnife.bind(this, rootView);
         initWidgets();
         return rootView;
@@ -94,9 +108,9 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         initTexCantidad();
     }
 
-    private void initTanque(){
-        List<Almacen> almacenList =  Almacen.getListTanque(establecimiento.getEstIEstablecimientoId()+"");
-        spinnerTanque.setAdapter(new TanqueAdapter(getActivity(),0,almacenList));
+    private void initTanque() {
+        List<Almacen> almacenList = Almacen.getListTanque(establecimiento.getEstIEstablecimientoId() + "");
+        spinnerTanque.setAdapter(new TanqueAdapter(getActivity(), 0, almacenList));
     }
 
     private void initProductos() {
@@ -120,7 +134,7 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
     }
 
     private void initTexCantidad() {
-        textViewCantidad.addTextChangedListener(this);
+        editCantidad.addTextChangedListener(this);
     }
 
     private Producto getProducto() {
@@ -131,7 +145,7 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         return (Unidad) spinnerUnidad.getSelectedItem();
     }
 
-    private Almacen getTanque(){
+    private Almacen getTanque() {
         return (Almacen) spinnerTanque.getSelectedItem();
     }
 
@@ -144,8 +158,8 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         Log.d(TAG, s.toString());
         String cantidadString = s.toString();
         if (cantidadString.length() >= 1) {
-            if (cantidadString.length() == 1 && cantidadString.equals("0")  && !cantidadString.equals("") && !cantidadString.equals(".")) {
-                textViewCantidad.setText("");
+            if (cantidadString.length() == 1 && cantidadString.equals("0") && !cantidadString.equals("") && !cantidadString.equals(".")) {
+                editCantidad.setText("");
                 return;
             }
 
@@ -153,14 +167,14 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
                 double cantidad = Double.parseDouble(cantidadString);
                 setValuesTextViews(valuesCost(cantidad));
 
-            }catch (NumberFormatException e){
-                textViewCantidad.setText("");
+            } catch (NumberFormatException e) {
+                editCantidad.setText("");
             }
 
 
         } else {
 
-            setValuesTextViews(new ValuesCost(0.0,0.0,0.0,0.0));
+            setValuesTextViews(new ValuesCost(0.0, 0.0, 0.0, 0.0));
         }
     }
 
@@ -172,7 +186,11 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
 
         listaPrecio = ListaPrecio.getPrecioByProductoId(getProducto().getProId() + "");
 
-        Log.d(TAG,establecimiento.getEstIEstablecimientoId() + "-"+ getUnidad().getUnId() + "-"+ getProducto().getProId() + "-"+ listaPrecio.getLpId() + "");
+        if (listaPrecio == null) {
+            return null;
+        }
+
+        Log.d(TAG, establecimiento.getEstIEstablecimientoId() + "-" + getUnidad().getUnId() + "-" + getProducto().getProId() + "-" + listaPrecio.getLpId() + "");
 
         listaPrecioDetalle = ListaPrecioDetalle.getPrecioDetalle(establecimiento.getEstIEstablecimientoId() + "", getUnidad().getUnId() + "", getProducto().getProId() + "", listaPrecio.getLpId() + "");
 
@@ -182,23 +200,38 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
             double subTotal = listaPrecioDetalle.getPrecio() * cantidad;
             double total = listaPrecioDetalle.getPrecioImp() * cantidad;
             double igv = total * listaPrecioDetalle.getPorImpuesto();
-            return new ValuesCost(listaPrecioDetalle.getPrecio(), subTotal, igv, total);
+            mainValuesCost = new ValuesCost(listaPrecioDetalle.getPrecio(), subTotal, igv, total);
+            return mainValuesCost;
         }
         Toast.makeText(getActivity(), "No cuenta con precios configurados para el establecimiento", Toast.LENGTH_SHORT).show();
         return new ValuesCost(0.0, 0.0, 0.0, 0.0);
     }
 
-    private void guardarPedido(){
-
-
+    private void guardarPedido() {
+        Session.saveTipoDespachoSN(getActivity(), true);
+        Session.saveAlmacen(getActivity(), getTanque());
+        Session.savePedido(getActivity(), new Pedido(-1, "", 0, 0, 0, cliente.getCliIClienteId(), Utils.getDatePhoneWithTime(), Utils.getDatePhoneWithTime(), "", 0, mainValuesCost.getTotal(), false, usuario.getUsuIUsuarioId(),
+                Utils.getDatePhoneWithTime(), establecimiento.getEstIEstablecimientoId(), establecimiento.getUbicacion().getDescripcion(), Utils.getDatePhoneWithTime(), usuario.getUsuIUsuarioId(),
+                Utils.getDatePhoneWithTime(), 0, mainValuesCost.getTotal(), mainValuesCost.getIgv(), 0, 0, "", "", "", "", false, 0, "", "", "", 0, "", "", false, "", "", "", 0, false, -1, -1, 0.0, null));
+        Session.savePedidoDetalle(getActivity(), new PedidoDetalle("", 0, 0, getProducto().getProId(), Double.parseDouble(editCantidad.getText().toString()), Double.parseDouble(editCantidad.getText().toString()),
+                mainValuesCost.getTotal(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), mainValuesCost.getPrecioUnitario(), mainValuesCost.getPrecioUnitario(), getUnidad().getUnId(), 0, mainValuesCost.getPrecioUnitario(), "", 0));
         iniciarDespacho();
 
     }
 
-    private void iniciarDespacho(){
+    private void iniciarDespacho() {
         startActivity(new Intent(getActivity(), DespachoActivity.class));
-        getActivity().finish();
+        //  getActivity().finish();
     }
 
+    @OnClick(R.id.btn_cancel)
+    public void btnCancelar(View view) {
+        dismiss();
+    }
+
+    @OnClick(R.id.btn_ok)
+    public void btnGuardar(View view) {
+        guardarPedido();
+    }
 
 }

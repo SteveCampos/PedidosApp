@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
@@ -30,10 +32,20 @@ public class CajaLiquidacionDetalle extends SugarRecord {
 
     private long peId;
 
+    private double porDespacho;
+
+    private double porEntrega;
+
+    private int estadoFactId;
+
+    private double porFacturado;
+
+
+
     public CajaLiquidacionDetalle() {
     }
 
-    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion,long peId) {
+    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion, long peId, double porDespacho, double porEntrega, int estadoFactId, double porFacturado) {
         this.lidId = lidId;
         this.liId = liId;
         this.establecimientoId = establecimientoId;
@@ -44,6 +56,42 @@ public class CajaLiquidacionDetalle extends SugarRecord {
         this.orden = orden;
         this.fechaAtencion = fechaAtencion;
         this.peId = peId;
+        this.porDespacho = porDespacho;
+        this.porEntrega = porEntrega;
+        this.estadoFactId = estadoFactId;
+        this.porFacturado = porFacturado;
+    }
+
+    public double getPorDespacho() {
+        return porDespacho;
+    }
+
+    public void setPorDespacho(double porDespacho) {
+        this.porDespacho = porDespacho;
+    }
+
+    public double getPorEntrega() {
+        return porEntrega;
+    }
+
+    public void setPorEntrega(double porEntrega) {
+        this.porEntrega = porEntrega;
+    }
+
+    public int getEstadoFactId() {
+        return estadoFactId;
+    }
+
+    public void setEstadoFactId(int estadoFactId) {
+        this.estadoFactId = estadoFactId;
+    }
+
+    public double getPorFacturado() {
+        return porFacturado;
+    }
+
+    public void setPorFacturado(double porFacturado) {
+        this.porFacturado = porFacturado;
     }
 
     public long getLidId() {
@@ -124,5 +172,23 @@ public class CajaLiquidacionDetalle extends SugarRecord {
 
     public void setPeId(long peId) {
         this.peId = peId;
+    }
+
+    public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablec(String establecimiento) {
+        Log.d("ESTABLECIMIENTOID",establecimiento);
+        if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=?", new String[]{establecimiento}).size() > 0) {
+            return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=?", new String[]{establecimiento}).get(0);
+        }
+        return null;
+
+    }
+
+    public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablecAndPedido(String establecimiento,String pedidoId) {
+        Log.d("ESTABLECIMIENTOID",establecimiento);
+        if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ? ", new String[]{establecimiento,pedidoId}).size() > 0) {
+            return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ?", new String[]{establecimiento,pedidoId}).get(0);
+        }
+        return null;
+
     }
 }

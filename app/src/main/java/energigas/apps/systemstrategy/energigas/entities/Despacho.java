@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -449,7 +451,24 @@ public class Despacho extends SugarRecord {
     }
 
 
+    public static List<Despacho> getListDespachoByPedido(String pedidoId) {
 
+        List<Despacho> despachoList = Despacho.find(Despacho.class,"pe_Id=?", new String[]{pedidoId});
+        if (despachoList.size() > 0) {
+            return despachoList;
+        }
+        return null;
+    }
+
+
+    public static List<Despacho> getListDespachoByPedidoNoCompId(String pedidoId) {
+
+        List<Despacho> despachoList = Despacho.find(Despacho.class,"pe_Id=? ", new String[]{pedidoId});
+        if (despachoList.size() > 0) {
+            return despachoList;
+        }
+        return null;
+    }
 
 
 }

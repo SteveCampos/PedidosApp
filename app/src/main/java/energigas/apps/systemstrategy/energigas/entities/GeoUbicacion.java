@@ -7,7 +7,7 @@ import com.orm.dsl.Unique;
  * Created by kelvi on 10/08/2016.
  */
 
-public class GeoUbicacion extends SugarRecord{
+public class GeoUbicacion extends SugarRecord {
 
     @Unique
     private int ubId;
@@ -168,5 +168,13 @@ public class GeoUbicacion extends SugarRecord{
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public static GeoUbicacion getGeoUbicacion(String geoUbicacionId) {
+        if (GeoUbicacion.find(GeoUbicacion.class, "ub_Id=?", new String[]{geoUbicacionId}).size() > 0) {
+            return GeoUbicacion.find(GeoUbicacion.class, "ub_Id=?", new String[]{geoUbicacionId}).get(0);
+        }
+        return null;
+
     }
 }

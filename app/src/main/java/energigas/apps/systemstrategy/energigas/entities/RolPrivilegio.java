@@ -3,22 +3,35 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 09/08/2016.
  */
 
-public class RolPrivilegio extends SugarRecord{
+public class RolPrivilegio extends SugarRecord {
     @Unique
+    private String idRolPrivilegio;
+
     private int rolId;
-    @Unique
+
     private int privilegioId;
 
     public RolPrivilegio() {
     }
 
-    public RolPrivilegio(int rolId, int privilegioId) {
+    public RolPrivilegio(String idRolPrivilegio, int rolId, int privilegioId) {
+        this.idRolPrivilegio = idRolPrivilegio;
         this.rolId = rolId;
         this.privilegioId = privilegioId;
+    }
+
+    public String getIdRolPrivilegio() {
+        return idRolPrivilegio;
+    }
+
+    public void setIdRolPrivilegio(String idRolPrivilegio) {
+        this.idRolPrivilegio = idRolPrivilegio;
     }
 
     public int getRolId() {
@@ -35,5 +48,13 @@ public class RolPrivilegio extends SugarRecord{
 
     public void setPrivilegioId(int privilegioId) {
         this.privilegioId = privilegioId;
+    }
+
+    public static List<RolPrivilegio> getRolPrivilegioRol(String rolId) {
+        List<RolPrivilegio> rolPrivilegioList = RolPrivilegio.find(RolPrivilegio.class, "rol_Id=?", new String[]{rolId});
+        if (rolPrivilegioList != null) {
+            return rolPrivilegioList;
+        }
+        return null;
     }
 }

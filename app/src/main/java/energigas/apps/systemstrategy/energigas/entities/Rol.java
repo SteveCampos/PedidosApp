@@ -4,6 +4,7 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,5 +117,30 @@ public class Rol extends SugarRecord {
 
     public void setItemsAccesos(List<Acceso> itemsAccesos) {
         this.itemsAccesos = itemsAccesos;
+    }
+
+
+    public static List<Rol> getRol(String usuarioId) {
+
+        List<RolUsuario> rolUsuarioList = RolUsuario.getRolUsuario(usuarioId + "");
+
+        List<Rol> rolList = new ArrayList<>();
+
+        for (RolUsuario rolUsuario : rolUsuarioList) {
+
+            rolList.add(Rol.getRolById(rolUsuario.getRolId()+""));
+
+        }
+
+        return rolList;
+
+    }
+
+    public static Rol getRolById(String rolId) {
+        List<Rol> rolList = Rol.find(Rol.class, "id_Rol=?", new String[]{rolId});
+        if (rolList.size() > 0) {
+            return rolList.get(0);
+        }
+        return null;
     }
 }

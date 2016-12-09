@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,18 +31,25 @@ import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
 import energigas.apps.systemstrategy.energigas.activities.SellActivity;
+import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 
-public class StationDispatchsFragment extends Fragment implements ActionMode.Callback, StationDispatchsAdapter.OnStationDispatchClickListener {
+public class StationDispatchsFragment extends Fragment implements ActionMode.Callback, StationDispatchsAdapter.OnStationDispatchClickListener, IntentListenerAccess {
 
     private static final String TAG = StationDispatchsFragment.class.getSimpleName();
     private List<Despacho> dispatchList = new ArrayList<>();
     private RecyclerView recyclerView;
     private StationDispatchsAdapter adapter;
     private ActionMode mActionMode;
+    private Usuario usuario;
+    private HashMap<String, Boolean> booleanHashMap;
 
     /*
     // TODO: Rename parameter arguments, choose names that match
@@ -85,13 +93,30 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        usuario = Session.getSession(getActivity());
+        new AccessPrivilegesManager(getClass())
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                .setClassIntent(StationOrderActivity.class)
+                .isIntentEnable();
         initiViews();
         return recyclerView;
     }
 
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        this.booleanHashMap = booleanHashMap;
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+
+    }
+
     private void initiViews() {
         dispatchList = Despacho.find(Despacho.class," establecimiento_Id = ? ",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
-        Log.d(TAG,"Dispatch : "+ Session.getDespacho(getActivity()).getDespachoId() + "");
+
         adapter = new StationDispatchsAdapter(dispatchList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
@@ -243,6 +268,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         Session.saveIdsDespachos(strings,getActivity());
         startActivity(new Intent(getActivity(), SellActivity.class));
     }
+
 
 
     /*

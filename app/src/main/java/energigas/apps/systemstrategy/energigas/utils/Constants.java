@@ -11,6 +11,11 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
 public class Constants {
     public static final String _CLMEXPORT="CLMEXPORT";
 
+    public static final String URL_FOR_PING = "www.google.com";
+
+    public static final String FIREBASE_CHILD_NOTIFICACIONES="NOTIFICACIONES";
+    public static final String FIREBASE_CHILD_ATENCION_PEDIDO="ATENCION_PEDIDO";
+
     public static final int _CREADO = 2;
 
     public static final int PEDIDO_CREADO = -1;
@@ -51,6 +56,11 @@ public class Constants {
 
     public static final String SESSION_PEDIDO="SESSION_PEDIDO";
     public static final String IDPEDIDO="IDPEDIDO";
+
+    /**Pedido detalle**/
+
+    public static final String SESSION_PEDIDO_DETALLE="SESSION_PEDIDO_DETALLE";
+    public static final String IDPEDIDODETALLE="IDPEDIDODETALLE";
 
     /**Nombres de Almacen**/
 
@@ -96,7 +106,7 @@ public class Constants {
     public static final String FORMA_PAGO_CREDITO = "Crédito";
 
 
-    public static final int COMPROBANTE_CREADO = 20;
+    public static final int COMPROBANTE_CREADO_PENDIENTE = 23;
 
     public static final boolean COMPROBANTE_NO_ANULADO = false;
     public static final boolean COMPROBANTE_ANULADO = true;
@@ -147,6 +157,8 @@ public class Constants {
 
 
     public static final String DEFINE_CUOTAS = "DEFINE_CUOTAS";
+    public static final String DEFINE_TIPO_DESPACHO_SN = "DEFINE_TIPO_DESPACHO_SN";
+    public static final String DEFINE_TIPO_DESPACHO_SN_ESTADO = "DEFINE_TIPO_DESPACHO_SN_ESTADO";
     public static final String DEFINE_CUOTAS_ESTADO = "DEFINE_CUOTAS_ESTADO";
     public static final String OBJECTS_LIST_DETALLE_CUOTAS = "OBJECTS_LIST_DETALLE_CUOTAS";
 
@@ -175,8 +187,20 @@ public class Constants {
 
     /*Cobranza Estados*/
 
+    public static final String CONCEPTO_IGV_ID = "93";
+
+
     public static final int COBRANZA_PENDIENTE= 60;
     public static final int COBRANZA_COBRADO= 61;
     public static final int COBRANZA_ANULADO=62;
     public static final int COBRANZA_PARCIAL=63;
+
+
+
+
+    /**ESTADO FACTURADO**/
+    public static final int NO_FACTURADO=64;
+    public static final int FACTURADO=65;
+    public static final int FACTURADO_TOTAL=66;
+
 }

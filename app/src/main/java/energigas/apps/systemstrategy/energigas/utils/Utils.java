@@ -76,6 +76,13 @@ public class Utils {
         return nowAsString;
     }
 
+    public static String getDatePhoneWithTime() {
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
+        String nowAsString = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss").format(now);
+        return nowAsString;
+    }
+
     public static String getQueryListComproVenta(String establecimientoId, String estadoId) {
 
         return "SELECT * FROM COMPROBANTE_VENTA WHERE establecimiento_Id=" + establecimientoId + ";";
@@ -84,7 +91,7 @@ public class Utils {
     public static String getDatePhoneTime() {
         Date now = new Date();
         Date alsoNow = Calendar.getInstance().getTime();
-        String nowAsString = new SimpleDateFormat("dd/MM/yyyy :hh:").format(now);
+        String nowAsString = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss").format(now);
         return nowAsString;
     }
 

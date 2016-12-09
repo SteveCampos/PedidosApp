@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,22 +24,27 @@ import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
+import energigas.apps.systemstrategy.energigas.entities.Rol;
+import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
-import energigas.apps.systemstrategy.energigas.services.ServiceExport;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -47,7 +53,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener {
+        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener, IntentListenerAccess {
     //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -66,6 +72,9 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     Agent agent;
     private Usuario usuario;
+    private HashMap<String, Boolean> booleanHashMap;
+    private List<AccessFragment> accessFragments;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,55 +83,45 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
+        new AccessPrivilegesManager(getClass())
+                .setViews(fab)
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                .setClassIntent(MainStationActivity.class)
+                .isIntentEnable()
+                .setFragment(
+                        new AccessFragment(getString(R.string.estb_title_name),
+                                new EstablecimientoFragment(), R.drawable.ic_gas_station, 1),
+                        new AccessFragment(getString(R.string.plan_title_name),
+                                new PlanFragment(), R.drawable.ic_calendar, 2))
+                .isFragmentEnable();
+
+
         hideFloatingButton();
+
+        new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+
+
+    }
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        Log.d(TAG, "TAMAÑO HASH: " + booleanHashMap.size());
+        this.booleanHashMap = booleanHashMap;
+
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+        this.accessFragments = accessFragmentList;
+        Log.d(TAG, "TAMAÑO FRAG: " + accessFragments.size());
         initViews();
-
-       new ExportTask(this,this).execute(Constants.TABLA_COMPROBANTE,Constants.S_CREADO);
     }
-
-    @Override
-    protected void onStart() {
-        Log.d(TAG, "onStart");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume");
-        super.onResume();
-    }
-
-    //ACTIVIT IS RUNNING
-
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        Log.d(TAG, "onRestart");
-        super.onRestart();
-    }
-
 
     private void hideFloatingButton() {
 
-        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class, " fecha_Inicio=? ", new String[]{Utils.getDatePhone()});
+        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class, " fecha_Inicio=? ", new String[]{Utils.getDatePhoneWithTime()});
         if (planDistribucion.size() > 0) {
             fab.hide();
         } else {
@@ -169,20 +168,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupTabIcons(TabLayout tabLayout) {
-        TabLayout.Tab tabStations = tabLayout.getTabAt(0);
-        //TabLayout.Tab tabOrders = tabLayout.getTabAt(1);
+      /*  TabLayout.Tab tabStations = tabLayout.getTabAt(0);
         TabLayout.Tab tabPlan = tabLayout.getTabAt(1);
 
         if (tabStations != null) {
+
             tabStations.setIcon(R.drawable.ic_gas_station);
         }
-        /*
-        if (tabOrders != null) {
-            tabOrders.setIcon(R.drawable.ic_gas_filter);
-        }
-        */
+
         if (tabPlan != null) {
             tabPlan.setIcon(R.drawable.ic_calendar);
+        }
+*/
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            int count = i + 1;
+            for (AccessFragment accessFragment : accessFragments) {
+                if (count == accessFragment.getOrden()) {
+                    tabLayout.getTabAt(i).setIcon(accessFragments.get(i).getDrawable());
+                }
+            }
         }
 
     }
@@ -199,9 +203,22 @@ public class MainActivity extends AppCompatActivity
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
-        //  adapter.addFragment(new PedidoFragment(), getString(R.string.order_title_name));
-        adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
+
+        for (int i = 0; i < accessFragments.size(); i++) {
+            int count = i + 1;
+            for (AccessFragment fragment : accessFragments) {
+
+                if (count == fragment.getOrden()) {
+                    adapter.addFragment(fragment.getFragment(), fragment.getId());
+                }
+            }
+
+
+        }
+
+
+        //adapter.addFragment(new EstablecimientoFragment(), getString(R.string.estb_title_name));
+        //adapter.addFragment(new PlanFragment(), getString(R.string.plan_title_name));
         viewPager.setAdapter(adapter);
     }
 
@@ -323,25 +340,36 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
         Snackbar.make(fab, establecimiento.getEstVDescripcion(), Snackbar.LENGTH_LONG).show();
-        boolean success = Session.saveEstablecimiento(getApplicationContext(), establecimiento);
-        if (success)
-            startActivity(new Intent(MainActivity.this, MainStationActivity.class));
+        Session.saveEstablecimiento(getApplicationContext(), establecimiento);
+
+        if (booleanHashMap != null) {
+            Log.d(TAG, "Not  null");
+
+            if (booleanHashMap.get(MainStationActivity.class.getSimpleName())) {
+
+                startActivity(new Intent(MainActivity.this, MainStationActivity.class));
+            }
+        }
+
+
     }
+
 
     @Override
     public void onLoadSuccess(String message) {
-        Log.d(TAG,message);
+        Log.d(TAG, message);
     }
 
     @Override
     public void onLoadError(String message) {
-        Log.d(TAG,message);
+        Log.d(TAG, message);
     }
 
     @Override
     public void onLoadErrorProcedure(String message) {
-        Log.d(TAG,message);
+        Log.d(TAG, message);
     }
+
 
     private static class Adapter extends FragmentPagerAdapter {
         private static final String TAG = "FragmentPagerAdapter";

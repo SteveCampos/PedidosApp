@@ -38,8 +38,10 @@ import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
@@ -81,7 +83,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     TextView textInfoDespacho;
 
     private Resources resources;
-
+    private Usuario usuario;
 
     private static final String TAG = "PrintDispatch";
 
@@ -92,14 +94,22 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         resources = getResources();
         mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
-        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class," ub_Id = ? ",new String[]{establecimiento.getUbId()+""}).get(0));
+        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " ub_Id = ? ", new String[]{establecimiento.getUbId() + ""}).get(0));
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{mainDispatch.getAlmacenEstId() + ""}).get(Constants.CURRENT);
         vehiculo = Vehiculo.findWithQuery(Vehiculo.class, " SELECT V.* FROM VEHICULO_USUARIO VU, VEHICULO V WHERE VU.VE_ID = V.VE_ID AND VU.USUARIO_ID=" + Session.getSession(this).getUsuIUsuarioId() + "; ", new String[]{}).get(Constants.CURRENT);
         agente = Persona.findWithQuery(Persona.class, "SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = " + Session.getSession(this).getUsuIUsuarioId() + " ;", null).get(Constants.CURRENT);
         cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
         Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
+        usuario = Session.getSession(this);
         ButterKnife.bind(this);
+
+
+        new AccessPrivilegesManager(getClass())
+                .setViews(floatingDisconect, floatingPrint, floatingActionButton, floatingNext)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
+
+
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
@@ -125,10 +135,10 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     }
 
     private void viewTextInfoDespacho() {
-        String textInfo = String.format(resources.getString(R.string.print_info_despacho),almacen.getNombre(),mainDispatch.getLatitud()+", "+mainDispatch.getLongitud(),almacen.getPlaca()+"",
-                agente.getPerVNombres()+", "+agente.getPerVApellidoPaterno()+"",mainDispatch.getSerie()+"-"+mainDispatch.getNumero(),mainDispatch.getFechaDespacho(),mainDispatch.getHoraInicio(),
-                mainDispatch.getHoraFin(),mainDispatch.getContadorInicialDestino()+"",mainDispatch.getContadorFinalDestino()+"",mainDispatch.getCantidadDespachada()+"",mainDispatch.getpITDestino()+"",mainDispatch.getpFTDestino()+"",
-                mainDispatch.getSerie()+"",vehiculo.getPlaca()+"","www.energigas.com");
+        String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+                agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", mainDispatch.getSerie() + "-" + mainDispatch.getNumero(), mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio(),
+                mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino() + "", mainDispatch.getpFTDestino() + "",
+                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com");
         textInfoDespacho.setText(textInfo);
     }
 

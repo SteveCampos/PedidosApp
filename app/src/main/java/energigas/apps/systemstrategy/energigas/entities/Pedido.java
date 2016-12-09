@@ -541,4 +541,6 @@ public class Pedido extends SugarRecord {
     public void setItems(List<PedidoDetalle> items) {
         this.items = items;
     }
+
+
 }

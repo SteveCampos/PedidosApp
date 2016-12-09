@@ -147,5 +147,13 @@ public class CajaGasto extends SugarRecord {
         return null;
     }
 
+    public static CajaGasto getCajaGastobyCajMov (String cajaMovId){
+
+        if (CajaGasto.find(CajaGasto.class," caj_Mo_Id = ? ",new String[]{cajaMovId}).size()>0){
+            return CajaGasto.find(CajaGasto.class," caj_Mo_Id=? ",new String[]{cajaMovId}).get(0);
+        }
+        return null;
+    }
+
 
 }

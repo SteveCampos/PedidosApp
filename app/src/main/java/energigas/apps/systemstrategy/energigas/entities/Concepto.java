@@ -114,4 +114,8 @@ public class Concepto extends SugarRecord {
     public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
     }
+
+    public static Concepto getConceptoById(String  id){
+        return Concepto.find(Concepto.class," id_Concepto=?  ",new String[]{id}).get(0);
+    }
 }

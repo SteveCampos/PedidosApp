@@ -140,10 +140,15 @@ public class ListaPrecio extends SugarRecord {
 
     @Override
     public String toString() {
-        return nombre+"-"+empresaId;
+        return nombre + "-" + empresaId;
     }
 
-    public static ListaPrecio getPrecioByProductoId(String productoId){
-        return ListaPrecio.find(ListaPrecio.class," pro_Id =? and fecha_Caducidad = ?",new String[]{productoId, Utils.getDatePhone()}).get(0);
+    public static ListaPrecio getPrecioByProductoId(String productoId) {
+
+        if (ListaPrecio.find(ListaPrecio.class, " pro_Id =? and fecha_Caducidad = ?", new String[]{productoId, Utils.getDatePhoneWithTime()}).size() > 0) {
+            return ListaPrecio.find(ListaPrecio.class, " pro_Id =? and fecha_Caducidad = ?", new String[]{productoId, Utils.getDatePhoneWithTime()}).get(0);
+        }
+
+        return null;
     }
 }
