@@ -7,26 +7,35 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.activities.CajaGastoActivity;
 import energigas.apps.systemstrategy.energigas.adapters.CajaGastoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * Created by kikerojas on 30/07/2016.
  */
 
 
-public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCajaGastoClickListener{
+public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCajaGastoClickListener,IntentListenerAccess{
 
 
+    private static final String  TAG = "CajaGastoFragment";
     public OnCajaGastoClickListener listener;
 
    // private OnAddnewCajaGasto listenerAdd;
@@ -40,7 +49,9 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
     CajaGastoAdapter adapter;
 
     List<CajaGasto> cajaGastoList = new ArrayList<>();
+    private Usuario mUsuario;
 
+    private HashMap<String, Boolean> booleanHashMap;
 
 
     @Nullable
@@ -50,9 +61,18 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
         ButterKnife.bind(this,rootView);
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.rv_expenses);
+        mUsuario= Session.getSession(getActivity());
+        new AccessPrivilegesManager(getClass())
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(mUsuario.getUsuIUsuarioId() + "")
+                .setClassDialog("CajaGastoAdapter")
+                .isDialogEnable();
 
         cajaGastoList=getCajaGastoList();
-        adapter = new CajaGastoAdapter(cajaGastoList, getActivity(),this);
+        if(booleanHashMap!=null) {
+            Log.d(TAG,"booleanHashMap"+booleanHashMap.get("CajaGastoAdapter")+"");
+            adapter = new CajaGastoAdapter(cajaGastoList, getActivity(), this,booleanHashMap.get("CajaGastoAdapter"));
+        }
         //adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
@@ -69,7 +89,18 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
 
     @Override
     public void onAddnewCajaGasto(String date, Double total) {
-        listener.onAddnewCajaGasto(date,total);
+      listener.onAddnewCajaGasto(date,total);
+    }
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        this.booleanHashMap = booleanHashMap;
+        Log.d(TAG, "TAMAÑO HASH onCajaGastoFragment: " + booleanHashMap.size());
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+
     }
 
 

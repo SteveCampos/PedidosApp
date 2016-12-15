@@ -36,6 +36,8 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     // Store the context for easy access
     private Context mContext;
 
+    private boolean mestado;
+
     public OnCajaPagoClickListener listener;
 
     public interface OnCajaPagoClickListener {
@@ -44,10 +46,11 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
     }
 
 
-    public CajaPagoAdapter(List<PlanPagoDetalle> mPlanPagoDetalles,Context mContext,OnCajaPagoClickListener listener) {
+    public CajaPagoAdapter(List<PlanPagoDetalle> mPlanPagoDetalles,Context mContext,OnCajaPagoClickListener listener,boolean mestado) {
         this.mPlanPagDetalle = mPlanPagoDetalles;
         this.listener = listener;
         this.mContext = mContext;
+        this.mestado = mestado;
     }
 
     @Override
@@ -76,6 +79,11 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!mestado){
+                    return;
+                }
+
+
                 final CharSequence[] items = {"Pago Total", "Pago Porroga"};
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(

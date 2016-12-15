@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,18 +21,23 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.PrintFacturaActivity;
 import energigas.apps.systemstrategy.energigas.activities.SellPrintActivity;
+import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
 import energigas.apps.systemstrategy.energigas.adapters.ComprobanteVentaAdapter;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ComprobanteVentaFragment extends Fragment implements OnComprobanteVentaClickListener {
+public class ComprobanteVentaFragment extends Fragment implements OnComprobanteVentaClickListener,IntentListenerAccess {
 
     private RecyclerView recyclerView;
 
@@ -39,8 +46,13 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
     private ComprobanteVentaAdapter adapter;
     private Establecimiento establecimiento;
 
-    public ComprobanteVentaFragment() {
+    private Usuario mUsuario;
+    private HashMap<String, Boolean> booleanHashMap;
+    private static final String TAG = "StationOrderFragment";
+    private OnComprobanteVentaClickListener listener;
+    public interface OnComprobanteVentaClickListener {
         // Required empty public constructor
+        void nComprobanteVentaClickListener(ComprobanteVenta Comprobante);
     }
 
     @Override
@@ -55,6 +67,12 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
 //        adapter = new ComprobanteVentaAdapter(comprobanteVentas, getActivity(), this);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        recyclerView.setAdapter(adapter);
+        mUsuario = Session.getSession(getActivity());
+        new AccessPrivilegesManager(getClass())
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(mUsuario.getUsuIUsuarioId() + "")
+                .setClassIntent(StationOrderActivity.class)
+                .isIntentEnable();
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(0);
         comprobanteVentas = ComprobanteVenta.findWithQuery(ComprobanteVenta.class, Utils.getQueryListComproVenta(establecimiento.getEstIEstablecimientoId() + "", ""), null);
         adapter = new ComprobanteVentaAdapter(comprobanteVentas, getActivity(), this);
@@ -72,7 +90,29 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
     @Override
     public void onComprobanteVentaClickListener(ComprobanteVenta comprobanteVenta, View view) {
         Session.saveComprobanteVenta(getActivity(),comprobanteVenta);
-        startActivity(new Intent(getActivity(), SellPrintActivity.class));
+        //  startActivity(new Intent(getActivity(), SellPrintActivity.class));
+        if (listener != null) {
+
+            if (booleanHashMap !=null){
+
+                if (booleanHashMap.get(StationOrderActivity.class.getSimpleName())) {
+                   // listener.onStationOrderClickListener(pedido);
+                    startActivity(new Intent(getActivity(), SellPrintActivity.class));
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        this.booleanHashMap = booleanHashMap;
+        Log.d(TAG, "TAMAÑO HASH: " + booleanHashMap.size());
+    }
+
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+
     }
 
     /*

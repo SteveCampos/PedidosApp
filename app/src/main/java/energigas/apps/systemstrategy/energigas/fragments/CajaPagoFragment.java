@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.fragments;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -18,11 +19,14 @@ import android.widget.TextView;
 
 import com.orm.SugarTransactionHelper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
 import energigas.apps.systemstrategy.energigas.adapters.CajaPagoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
@@ -35,6 +39,8 @@ import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -43,8 +49,23 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by Kike on 1/08/2016.
  */
 
-public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener {
+public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener, IntentListenerAccess {
 
+    private HashMap<String, Boolean> booleanHashMap;
+
+    //verificar los intents
+    @Override
+    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
+        this.booleanHashMap = booleanHashMap;
+        System.out.println("ObjetoHash");
+        System.out.print(booleanHashMap);
+        Log.d(TAG, "TAMAÑO HASH: " + booleanHashMap.size());
+    }
+    //verificar los fragmentos
+    @Override
+    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
+
+    }
 
     public interface OnCajaPagoClickListener {
         void onCajaPagoClickListener(TextView mEstado, TextView mtotal,PlanPago planpago, ComprobanteVenta venta ,PlanPagoDetalle planPagoDetalle, View view);
@@ -89,17 +110,21 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         //addInsertCobranza();
        /*Entity*/
         mUsuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(getActivity()).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        new AccessPrivilegesManager(getClass())
+                .setListenerIntent(this)
+                .setPrivilegesIsEnable(mUsuario.getUsuIUsuarioId() + "")
+                .setClassDialog("pagoporroga","pagototal","CajaPagoAdapter")
+                .isDialogEnable();
+
         mCajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, "liq_Id = ?", new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId() + ""}).get(Constants.CURRENT);
         mEstablecimiento = Establecimiento.find(Establecimiento.class, "est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         mCliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{mEstablecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
-        /*mComprobanteVenta =ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id = ?",new String[]{Session.getComprobanteVenta(getActivity()).getCompId()+""}).get(Constants.CURRENT);
-        mComprobanteVenta.setEstadoId(60);
-        mComprobanteVenta.save();*/
-        //mEstad=Estado.find(Estado.class,"id_Estado = ?",new String[]{mComprobanteVenta.getEstadoId()+""}).get(Constants.CURRENT);
-         /*FinEntity*/
-        //insertables(mPlanPagoDetalle);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
-        adapter = new CajaPagoAdapter(getPlanPagoDetalleList(), getActivity(), this);
+        if(booleanHashMap!=null){
+            adapter = new CajaPagoAdapter(getPlanPagoDetalleList(), getActivity(), this,booleanHashMap.get("CajaPagoAdapter"));
+        }
+
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -191,6 +216,8 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                         "String FechaAccion",
                                         "String Referencia Android",
                                         10,// TipoMovId
+                                        null,
+                                        null,
                                         null,
                                         null);
                                 mCajaMovimiento.save();
@@ -305,14 +332,26 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
     @Override
     public void onCajaPagoListener(int action, PlanPagoDetalle pagoDetalle, ComprobanteVenta  mComp, TextView mtotal,TextView mestadoo) {
 
+
+
+            if (booleanHashMap !=null){
+
+
+
+        }
         switch (action) {
             case Constants.CLICK_EDITAR_CAJA_GASTO:
-                pagoporroga(pagoDetalle, mtotal);
+                Log.d("CLICK_EDITAR_CAJA_GASTO",String.valueOf(booleanHashMap.get("pagoporroga")));
+                //busca permisos
+                if (booleanHashMap.get("pagoporroga")) {
+                    pagoporroga(pagoDetalle, mtotal);
+
+                }
                 break;
             case Constants.CLICK_ELIMINAR_CAJA_GASTO:
-                pagototal(pagoDetalle,mComp, mtotal,mestadoo);
-               /* mComp.setEstadoId(24);
-                mComp.save();*/
+                if (booleanHashMap.get("pagototal")){
+                    pagototal(pagoDetalle,mComp, mtotal,mestadoo);
+                }
             default:
                 break;
         }

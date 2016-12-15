@@ -39,6 +39,7 @@ import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.DespachoFacturaAdapter;
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
@@ -62,6 +63,8 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -135,6 +138,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     Concepto conceptoCredito;
 
+
+
+    /*Accesos*/
+
+    private HashMap<String, Boolean> booleanHashMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,21 +155,27 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             pedido = Session.getPedido(this);
         }
 
-        usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, "ub_Id = ?", new String[]{establecimiento.getUbId() + ""}).get(Constants.CURRENT));
         cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
         Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
         cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " persona_Id=? ", new String[]{persona.getPerIPersonaId() + ""}).get(Constants.CURRENT));
-
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
         Session.setDefineCuotas(this, Constants.ESTADO_FALSE, "");
         ButterKnife.bind(this);
         initViews();
+        usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        new AccessPrivilegesManager(getClass())
+                .setViews(buttonVender,buttonCuotas)
+                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
+
         fab.setOnClickListener(this);
         buttonVender.setOnClickListener(this);
         hideLinear(getFormaPago());
+
+
+
 
     }
 
@@ -233,7 +248,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         comprobanteVenta.setEstablecimientoId(establecimiento.getEstIEstablecimientoId());
         comprobanteVenta.setExportado(Constants.NO_EXPORTADO);
         comprobanteVenta.setDocIdentidad(cliente.getPersona().getPerVDocIdentidad());
-        comprobanteVenta.setValorResumen(NumberToLetterConverter.convertNumberToLetter(obtenerCalculos()[Constants.VENTA_TOTAL]));
+        comprobanteVenta.setValorResumen(String.valueOf(obtenerCalculos()[Constants.VENTA_TOTAL]));
         comprobanteVenta.setCliente(cliente.getPersona().getPerVDocIdentidad());
         comprobanteVenta.setDireccionCliente(cliente.getPersona().getUbicacion().getDescripcion());
         comprobanteVenta.setFechaCreacion(Utils.getDatePhoneWithTime());
@@ -855,4 +870,6 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     public void onLoadErrorProcedure(String message) {
         // Toast.makeText(SellActivity.this, message, Toast.LENGTH_LONG).show();
     }
+
+
 }

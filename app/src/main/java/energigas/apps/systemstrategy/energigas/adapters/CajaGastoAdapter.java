@@ -44,6 +44,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
     }
 
     public OnCajaGastoClickListener listener;
+    private boolean mestado;
 
 
 //    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener, OnAddnewCajaGasto listenerAdd) {
@@ -54,10 +55,11 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
 //        notifyDataSetChanged();
 //    }
 
-    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener) {
+    public CajaGastoAdapter(List<CajaGasto> mListCajaGasto, Activity mactivity, OnCajaGastoClickListener listener,boolean mestado) {
         this.mListCajaGasto = mListCajaGasto;
         this.mactivity = mactivity;
         this.listener = listener;
+        this.mestado = mestado;
         notifyDataSetChanged();
     }
 
@@ -115,7 +117,9 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
+                if(!mestado){
+                    return false;
+                }
 
               //  CharSequence items[] = new CharSequence[] {"Editar", "Eliminar"};
                 final CharSequence[] items = {"Editar", "Eliminar"};

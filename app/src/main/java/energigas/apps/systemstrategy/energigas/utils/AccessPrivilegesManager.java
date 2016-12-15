@@ -26,6 +26,7 @@ public class AccessPrivilegesManager {
     private String usuarioId;
     private List<Class> classes;
     private List<AccessFragment> fragmentList;
+    private List<String> stringList;
 
 
     public AccessPrivilegesManager(Class aClass) {
@@ -96,6 +97,14 @@ public class AccessPrivilegesManager {
         return this;
     }
 
+    public AccessPrivilegesManager setClassDialog(String... classIntent) {
+        stringList = new ArrayList<>();
+        for (String aClass : classIntent) {
+            stringList.add(aClass);
+        }
+        return this;
+    }
+
     public AccessPrivilegesManager setListenerIntent(IntentListenerAccess listenerAccess) {
         this.listenerAccess = listenerAccess;
         return this;
@@ -130,6 +139,47 @@ public class AccessPrivilegesManager {
             if (classes != null) {
                 for (Class aClass : classes) {
                     privilegioHashMap.put(aClass.getSimpleName(), false);
+                }
+            }
+
+
+        }
+
+
+        listenerAccess.onIntentListenerAcces(privilegioHashMap);
+
+        return this;
+    }
+
+    public AccessPrivilegesManager isDialogEnable() {
+
+        HashMap<String, String> booleanHashMap = new HashMap<>();
+        HashMap<String, String> booleanHashMap2 = new HashMap<>();
+        for (Privilegio privilegio : getPrivilegios(usuarioId)) {
+            for (String aClass : stringList) {
+                if (privilegio.getDescripcion().equals(aClass)) {
+                    booleanHashMap.put(aClass, aClass);
+                } else {
+                    booleanHashMap2.put(aClass, aClass);
+                }
+            }
+        }
+
+        HashMap<String, Boolean> privilegioHashMap = new HashMap<>();
+
+        for (String privilegio : new ArrayList<>(booleanHashMap2.values())) {
+            privilegioHashMap.put(privilegio, false);
+        }
+
+        for (String privilegio : new ArrayList<>(booleanHashMap.values())) {
+            privilegioHashMap.put(privilegio, true);
+        }
+
+        if (getPrivilegios(usuarioId).size() == 0) {
+
+            if (stringList != null) {
+                for (String aClass : stringList) {
+                    privilegioHashMap.put(aClass, false);
                 }
             }
 

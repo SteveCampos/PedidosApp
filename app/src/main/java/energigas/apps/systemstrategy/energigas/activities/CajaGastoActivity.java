@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,6 +35,7 @@ import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
@@ -43,6 +45,8 @@ import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -82,6 +86,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     Concepto conceptoTipoCateGasto;
     Concepto conceptoIgv;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +94,12 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
         usuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+
         conceptoIgv = Concepto.getConceptoById(Constants.CONCEPTO_IGV_ID);
         btndialog.setOnClickListener(this);
         setTabsAdapterFragment();
         setToolbar();
         setupCollapsingToolbar();
-
 
     }
 
@@ -233,8 +238,8 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                     txtttotal.setError("Ingrese Total");
                 } else {
                     double impporte = Double.valueOf(txtttotal.getText().toString());
-                    double igv = impporte/0.18;
-                    double valor = impporte-igv;
+                    double igv = impporte / 0.18;
+                    double valor = impporte - igv;
 
                     idCajagasto = idCajagasto + 1;
                     expenses = new CajaGasto(idCajagasto,
@@ -315,21 +320,16 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         usuario.getUsuIUsuarioId(),
                         Utils.getDatePhoneWithTime(),
                         "Android",
-                        Constants.TIPO_MOV_EGRESO,null,null,null,null);
+                        Constants.TIPO_MOV_EGRESO, null, null, null, null);
                 Long idCajaMovimiento = cajaMovimiento.save();
                 cajaMovimiento.setCajMovId(idCajaMovimiento);
                 cajaMovimiento.save();
-
-
 
 
                 new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(idCajaMovimiento + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaGasto.class.getSimpleName()), Integer.parseInt(idCajaGasto + ""), Constants.S_CREADO).save();
                 new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
-
-
-
 
 
             }
@@ -383,34 +383,32 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onCajaGastoClickListener(int action, CajaGasto expenses, View view) {
-        switch (action) {
-            case Constants.CLICK_EDITAR_CAJA_GASTO:
-                update_dialog(expenses, view);
-                break;
-            case Constants.CLICK_ELIMINAR_CAJA_GASTO:
 
-                Fragment expensesFragment = getFragment(0);
-
-
-                if (expensesFragment != null) {
-                    boolean success = expenses.delete();
-                    Snackbar.make(toolbar, "expensesFragment != null, expenses.delete(): " + success, Snackbar.LENGTH_LONG).show();
-                    if (success) {
-                        ((CajaGastoFragment) expensesFragment).removeExpense(expenses, view);
-                        deleteItem(expenses);
-
+                    switch (action) {
+                        case Constants.CLICK_EDITAR_CAJA_GASTO:
+                                update_dialog(expenses, view);
+                            break;
+                        case Constants.CLICK_ELIMINAR_CAJA_GASTO:
+                            Fragment expensesFragment = getFragment(0);
+                            if (expensesFragment != null) {
+                                boolean success = expenses.delete();
+                                Snackbar.make(toolbar, "expensesFragment != null, expenses.delete(): " + success, Snackbar.LENGTH_LONG).show();
+                                if (success) {
+                                    ((CajaGastoFragment) expensesFragment).removeExpense(expenses, view);
+                                            deleteItem(expenses);
+                                }//obtenemos la instancia del fragmento
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    //obtenemos la instancia del fragmento
-                }
-                break;
-            default:
-                break;
-        }
+
     }
+
 
     public void update_dialog(final CajaGasto cajaGasto, final View viewCaja) {
 
-        final View layout_dialog_expenses = View.inflate(this, R.layout.fragment_dialog_new_expense, null);
+        final View layout_dialog_expenses = View.inflate(this, R.layout.dialog_expenses_update, null);
 
         final Button btnsave = (Button) layout_dialog_expenses.findViewById(R.id.btn_save);
         final Button btn_cancel = (Button) layout_dialog_expenses.findViewById(R.id.btn_cancel);
@@ -490,4 +488,6 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     public void onLoadErrorProcedure(String message) {
 
     }
+
+
 }

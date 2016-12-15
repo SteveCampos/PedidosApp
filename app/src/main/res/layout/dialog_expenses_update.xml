@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_description"
+            style="@style/ExpenseTrackerEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:hint="@string/optional_description"
+            android:maxLines="2" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="@dimen/dimen_10_10dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_10dp">
+
+        <EditText
+            android:id="@+id/et_total"
+            style="@style/ExpenseTrackerEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/total"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="@dimen/dimen_12_10dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="@dimen/dimen_12_10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:gravity="center"
+            android:text="@string/save" />
+
+    </LinearLayout>
+
+</LinearLayout>

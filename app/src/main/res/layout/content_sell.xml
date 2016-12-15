@@ -233,8 +233,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:minHeight="48dp" />
+
                 <Button
                     android:id="@+id/btnDefinirCuotas"
+                    android:tag="btnDefinirCuotas"
                     android:textColor="@color/white"
                     android:layout_weight="1"
                     android:text="Cuotas"
@@ -252,6 +254,7 @@
 
                 <Button
                     android:id="@+id/btnVender"
+                    android:tag="btnVender"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:text="VENDER"
