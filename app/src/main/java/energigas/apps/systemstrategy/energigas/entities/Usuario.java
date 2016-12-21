@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
@@ -144,6 +146,10 @@ public class Usuario extends SugarRecord {
     }
 
     public static Usuario getUsuario(String usuario) {
+        Log.d("MainActivity", "USUARIO SIZE: " + Usuario.listAll(Usuario.class).size());
+        for (Usuario usuario1 : Usuario.listAll(Usuario.class)) {
+            Log.d("MainActivity", "USUARIO: " + usuario1.getUsuIUsuarioId());
+        }
 
         Usuario usuario1 = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{usuario}).get(0);
         usuario1.setPersona(Persona.getPersona(usuario1.getUsuIPersonaId() + ""));

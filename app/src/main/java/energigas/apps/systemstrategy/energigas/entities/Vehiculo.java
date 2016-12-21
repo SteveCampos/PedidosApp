@@ -8,7 +8,7 @@ import com.orm.dsl.Unique;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Vehiculo extends SugarRecord{
+public class Vehiculo extends SugarRecord {
     @Unique
     private int veId;
 
@@ -235,5 +235,11 @@ public class Vehiculo extends SugarRecord{
 
     public void setEstadoId(int estadoId) {
         this.estadoId = estadoId;
+    }
+
+    public static Vehiculo getVehiculo(String usuarioId) {
+        VehiculoUsuario vehiculoUsuario = VehiculoUsuario.find(VehiculoUsuario.class, "usuario_Id=?", new String[]{usuarioId}).get(0);
+        Vehiculo vehiculo = Vehiculo.find(Vehiculo.class, "ve_Id=?", new String[]{vehiculoUsuario.getVeId() + ""}).get(0);
+        return vehiculo;
     }
 }

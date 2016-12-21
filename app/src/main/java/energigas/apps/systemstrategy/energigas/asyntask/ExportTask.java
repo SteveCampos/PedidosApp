@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
+import energigas.apps.systemstrategy.energigas.apiRest.RestFEAPI;
+import energigas.apps.systemstrategy.energigas.entities.BERespFacturaM;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaEgreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaIngreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVenta;
@@ -30,6 +32,7 @@ import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
+import energigas.apps.systemstrategy.energigas.entities.de.BEDocElectronico;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NetworkUtil;
@@ -45,25 +48,28 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
     private static final String TAG = "ServiceExport";
     private RestAPI restAPI;
+    private RestFEAPI restFEAPI;
     private JSONObject jsonObjectResponse;
     private ObjectMapper mapper;
     private ExportObjectsListener exportObjectsListener;
     private Context context;
-    private int mainEstado=0;
+    private int mainEstado = 0;
 
     public ExportTask(ExportObjectsListener exportObjectsListener, Context context) {
         this.context = context;
         this.exportObjectsListener = exportObjectsListener;
         this.restAPI = new RestAPI();
+        this.restFEAPI = new RestFEAPI();
         this.mapper = new ObjectMapper();
 
     }
 
     @Override
     protected String doInBackground(Integer... params) {
-
         if (!NetworkUtil.hasActiveInternetConnection(context)) {
-            exportObjectsListener.onLoadError("Error de conexion");
+            Log.d(TAG, "Error pin ");
+            mainEstado = -1;
+
             return null;
         }
 
@@ -121,9 +127,9 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                                     syncEstado.save();
                                     despacho.setDespachoId(respuestaDespacho.getDespachoIdServer());
                                     despacho.save();
-                                    Log.d(TAG,""+despacho.getId()+"---"+Session.getDespacho(context).getId());
+                                    Log.d(TAG, "" + despacho.getId() + "---" + Session.getDespacho(context).getId());
                                     boolean es = despacho.getId().equals(Session.getDespacho(context).getId());
-                                    if (es){
+                                    if (es) {
                                         Session.saveDespacho(context, despacho);
                                         mainEstado = 1;
                                     }
@@ -133,12 +139,12 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                             }
 
                             if (new ArrayList<Object>(Utils.getListForExIn(Despacho.class, estado)).size() == 0) {
-                               // exportObjectsListener.onLoadSuccess("Exportado Exitosamente");
+                                // exportObjectsListener.onLoadSuccess("Exportado Exitosamente");
                             }
 
                         }
                     } else {
-                       // exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
+                        // exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
                     }
                     mainEstado = 1;
 
@@ -147,7 +153,7 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                     e.printStackTrace();
                     Log.e(TAG, "ERROR: " + e.getMessage());
                     mainEstado = -1;
-                 //   exportObjectsListener.onLoadError(e.getMessage());
+                    //   exportObjectsListener.onLoadError(e.getMessage());
                 }
             }
         }
@@ -173,7 +179,14 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
                         for (ComprobanteVenta comprobanteVenta : inAComprobanteVenta) { /**Comprobante de Venta**/
 
+
                             if (comprobanteVenta.getId() == beRespuestaCpVenta.getCompIdAndroid()) {
+
+                                BEDocElectronico beDocElectronico = BEDocElectronico.getBeDocElectronico(comprobanteVenta.getCompId() + "");
+                                beDocElectronico.setComprobanteVentaId(beRespuestaCpVenta.getCompIdServer());
+                                beDocElectronico.save();
+
+
                                 saveEstado(comprobanteVenta.getId() + "", beRespuestaCpVenta.getCompIdServer() + "", ComprobanteVenta.class);
                                 comprobanteVenta.setCompId(beRespuestaCpVenta.getCompIdServer());
                                 Long es = comprobanteVenta.save();
@@ -266,7 +279,7 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                     exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
                 }
 
-
+                // exportDocumentoElectronico();
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, "ERROR: " + e.getMessage());
@@ -277,31 +290,82 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
     }
 
+    private void exportDocumentoElectronico(int estado) {
+        jsonObjectResponse = null;
+        List<BEDocElectronico> beDocElectronicos = BEDocElectronico.beDocElectronicoList(new ArrayList<BEDocElectronico>(Utils.getListForExIn(BEDocElectronico.class, estado)));
+        if (beDocElectronicos.size() > 0) {
+            Log.d(TAG, "cantidad gasto: " + beDocElectronicos.get(0).getDocElectronicoId());
+        }
+
+        if (beDocElectronicos.size() > 0) {
+            try {
+                jsonObjectResponse = restFEAPI.flst_IniciarFacturasMovil(new ArrayList<Object>(beDocElectronicos));
+
+                Log.d(TAG, "JSON DOCUMENTO ELECTRONICO: " + jsonObjectResponse.toString());
+
+                if (Utils.isSuccessful(jsonObjectResponse)) {
+                    List<BERespFacturaM> beRespFacturaMList = mapper.readValue(Utils.getJsonArResult(jsonObjectResponse), TypeFactory.defaultInstance().constructCollectionType(List.class,
+                            BERespFacturaM.class));
+
+                    for (BERespFacturaM beRespFacturaM : beRespFacturaMList) {
+
+                        for (BEDocElectronico docElectronico : beDocElectronicos) {
+
+                            if (beRespFacturaM.getIdAndroid() == docElectronico.getComprobanteVentaId()) {
+                                docElectronico.setDocElectronicoId(beRespFacturaM.getIdServer());
+                                docElectronico.save();
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void exportCreatedGasto(int estado) {
         jsonObjectResponse = null;
         List<CajaMovimiento> informeGastoList = CajaMovimiento.getListCajaMovimiento(new ArrayList<CajaMovimiento>(Utils.getListForExIn(CajaMovimiento.class, estado)));
-        if (informeGastoList.size()>0){
+        if (informeGastoList.size() > 0) {
             Log.d(TAG, "cantidad gasto: " + informeGastoList.get(0).getInfGasto().getInfGasId() + "-" + informeGastoList.get(0).getGasto().getCajGasId());
         }
-        if (informeGastoList.size()>0) {
+        if (informeGastoList.size() > 0) {
+
             try {
                 jsonObjectResponse = restAPI.fins_SaveGasto(new ArrayList<Object>(informeGastoList));
+
                 Log.d(TAG, "JSON RESPONSE: " + jsonObjectResponse.toString());
+
                 if (Utils.isSuccessful(jsonObjectResponse)) {
+
                     List<BERespuestaCajaEgreso> beRespuestaCpVentas = mapper.readValue(Utils.getJsonArResult(jsonObjectResponse), TypeFactory.defaultInstance().constructCollectionType(List.class,
                             BERespuestaCajaEgreso.class));
+
                     for (BERespuestaCajaEgreso respuestaCajaEgreso : beRespuestaCpVentas) {
+
                         for (CajaMovimiento cajaMovimiento : informeGastoList) {
-                            if (respuestaCajaEgreso.getCajMovIdAndroid() == cajaMovimiento.getGasto().getCajMoId()) {
+
+                            if (respuestaCajaEgreso.getCajMovIdAndroid() == cajaMovimiento.getCajMovId()) {
+
+
                                 CajaMovimiento movimiento = cajaMovimiento;
                                 CajaGasto cajaGasto = cajaMovimiento.getGasto();
                                 InformeGasto informeGasto = cajaMovimiento.getInfGasto();
+
+
                                 movimiento.setCajMovId(respuestaCajaEgreso.getCajMovIdServer());
                                 cajaGasto.setCajGasId(respuestaCajaEgreso.getCajGasIdServer());
                                 cajaGasto.setCajMoId(respuestaCajaEgreso.getCajMovIdServer());
                                 informeGasto.setInfGasId(respuestaCajaEgreso.getInfGasIdServer());
                                 informeGasto.setCajGasId(respuestaCajaEgreso.getCajGasIdServer());
+
+
+                                saveEstado(movimiento.getId() + "", respuestaCajaEgreso.getCajMovIdServer() + "", CajaMovimiento.class);
+                                saveEstado(cajaGasto.getId() + "", respuestaCajaEgreso.getCajGasIdServer() + "", CajaGasto.class);
+                                saveEstado(informeGasto.getId() + "", respuestaCajaEgreso.getInfGasIdServer() + "", InformeGasto.class);
 
                                 Long lMov = movimiento.save();
                                 Long lCaj = cajaGasto.save();
@@ -334,17 +398,17 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
     @Override
     protected void onPostExecute(String s) {
 
-        Log.d(TAG,"ESTADO: "+mainEstado);
-      switch (mainEstado){
-          case 0:
-              exportObjectsListener.onLoadErrorProcedure("error");
-              break;
-          case -1:
-              exportObjectsListener.onLoadErrorProcedure("error");
-              break;
-          case 1:
-              exportObjectsListener.onLoadSuccess("Exito");
-              break;
-      }
+        Log.d(TAG, "ESTADO: " + mainEstado);
+        switch (mainEstado) {
+            case 0:
+                exportObjectsListener.onLoadErrorProcedure("error");
+                break;
+            case -1:
+                exportObjectsListener.onLoadErrorProcedure("error");
+                break;
+            case 1:
+                exportObjectsListener.onLoadSuccess("Exito");
+                break;
+        }
     }
 }

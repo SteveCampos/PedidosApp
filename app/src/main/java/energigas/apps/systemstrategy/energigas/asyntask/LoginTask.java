@@ -67,7 +67,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
 
     @Override
     protected String doInBackground(String... strings) {
-        Log.d(TAG,"PING "+ NetworkUtil.hasActiveInternetConnection(context));
+        Log.d(TAG, "PING " + NetworkUtil.hasActiveInternetConnection(context));
 
         if (!NetworkUtil.hasActiveInternetConnection(context)) {
             Log.d(TAG, "Error pin ");
@@ -139,6 +139,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     public void manipulateInTransaction() {
 
         objUsuario.save();
+
         objUsuario.getPersona().save();
         objUsuario.getPersona().getUbicacion().save();
         List<Rol> rols = objUsuario.getItemsRoles();
@@ -162,7 +163,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
                 }
             }
         }
-        Log.d(TAG, " DATOS INSERTADOS : " + count);
+
         /**DATOS GENERALES**/
 
         SugarRecord.saveInTx(objGeneral.getItemsConceptos());
@@ -171,25 +172,20 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         SugarRecord.saveInTx(objGeneral.getItemsProductos());
         SugarRecord.saveInTx(objGeneral.getItemsUnidades());
         SugarRecord.saveInTx(objGeneral.getItemsProductoUnidad());
+        SugarRecord.saveInTx(objGeneral.getItemsTipos());
 
-        List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
-
-        for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias) {
-            Log.d(TAG, " : " + georeferencia.getDescripcion());
-        }
-        Utils.saveStateLogin(context, true);
 
         if (cajaLiquidacion != null) {
             if (cajaLiquidacion.getLiqId() > 0) {
                 if (cajaLiquidacion.getPlanDistribucionD() != null) {
                     manipuleData.saveLiquidacion(cajaLiquidacion);
                 }
-
-
             }
 
         }
 
+        Usuario usuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id=?", new String[]{objUsuario.getUsuIUsuarioId() + ""}).get(0);
+        Session.saveSession(context, usuario);
 
         result = 5;
     }
@@ -198,5 +194,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     @Override
     public void errorInTransaction(String error) {
         result = 3;
+        Log.d(TAG, "ERROR: " + error);
     }
 }

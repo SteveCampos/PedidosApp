@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardCostos"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_margin"
     android:layout_marginLeft="@dimen/card_margin"
     android:layout_marginRight="@dimen/card_margin"
-    android:layout_marginBottom="@dimen/card_margin">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -36,95 +38,12 @@
 
 
             <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tableLayout1"
+                android:id="@+id/tablayoutGastos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_rigth"
                 android:shrinkColumns="*"
                 android:stretchColumns="*">
-
-
-
-                <TableRow
-                    android:id="@+id/tableRow1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/a1"
-                        android:text=""/>
-
-
-
-                    <TextView
-                        android:id="@+id/TextView01"
-                        android:text="Ruta"
-                        android:layout_marginRight="@dimen/margin_rigth"
-                        android:textSize="@dimen/size_text_item"
-                        android:gravity="right"
-                        android:textStyle="bold"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/a2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/a3"
-                        android:text="Boletas cobradas"
-                        android:gravity="left"
-                        android:layout_marginLeft="@dimen/margin_rigth"
-                        android:textSize="@dimen/size_text_item"
-                        android:textStyle="bold"/>
-
-
-
-
-
-                    <TextView
-                        android:id="@+id/a7"
-                        android:textSize="@dimen/size_text_item"
-                        android:gravity="right"
-                        android:layout_marginRight="@dimen/size_title_summary"
-                        android:text="5"/>
-
-
-                </TableRow>
-
-
-
-                <TableRow
-                    android:id="@+id/abc2"
-                    android:background="@color/background_color"
-                    android:layout_marginTop="@dimen/margin_rigth"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <TextView
-                        android:id="@+id/abc3"
-                        android:text="Total"
-                        android:textColor="@color/black"
-                        android:gravity="left"
-                        android:layout_marginLeft="@dimen/margin_rigth"
-                        android:textSize="@dimen/size_text_item"
-                        android:textStyle="bold"/>
-
-
-
-
-
-                    <TextView
-                        android:id="@+id/abc7"
-                        android:textSize="@dimen/size_text_item"
-                        android:gravity="right"
-                        android:layout_marginRight="@dimen/size_title_summary"
-                        android:textColor="@color/black"
-                        android:text="5"/>
-
-
-                </TableRow>
 
             </TableLayout>
 

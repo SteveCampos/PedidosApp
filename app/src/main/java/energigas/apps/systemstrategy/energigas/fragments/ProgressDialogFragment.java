@@ -23,6 +23,7 @@ import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLoginAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -34,6 +35,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     private boolean allowStateLoss = false;
     private boolean shouldDismiss = false;
     private Context context;
+
     public static ProgressDialogFragment newIntance(@NonNull String usuario, @NonNull String clave) {
 
         ProgressDialogFragment fragment = new ProgressDialogFragment();
@@ -59,11 +61,11 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
         Log.d(TAG, "COUNT : " + ss.size());
         if (ss.size() > 0) {
             List<Usuario> dbUsuarioa = Usuario.find(Usuario.class, " usu_V_Usuario = ?  and usu_V_Password = ? ", new String[]{usuario, clave});
-           // Log.d(TAG, "LOGIN : " + dbUsuarioa.get(0).getUsuVUsuario());
+            // Log.d(TAG, "LOGIN : " + dbUsuarioa.get(0).getUsuVUsuario());
             if (dbUsuarioa.size() > 0) {
                 Persona persona = Persona.findById(Persona.class, dbUsuarioa.get(0).getUsuIPersonaId());
                 dbUsuarioa.get(0).setPersona(persona);
-                Usuario objUsuario  = dbUsuarioa.get(0);
+                Usuario objUsuario = dbUsuarioa.get(0);
                 /**Guardar la sesion**/
                 Session.saveSession(getActivity(), objUsuario);
                 initMain();
@@ -77,7 +79,6 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
         return dialog;
     }
-
 
 
     @Override
@@ -97,7 +98,8 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     @Override
     public void onSuccess(CajaLiquidacion cajaLiquidacion) {
-        Session.saveCajaLiquidacion(getActivity(),cajaLiquidacion);
+        Utils.saveStateLogin(context, true);
+        Session.saveCajaLiquidacion(getActivity(), cajaLiquidacion);
         initMain();
     }
 
@@ -108,8 +110,7 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
 
     }
 
-    private void setMessage( String message){
-
+    private void setMessage(String message) {
 
 
         Toast.makeText(context, "" + message, Toast.LENGTH_SHORT).show();
@@ -127,8 +128,9 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
     }
 
     private void initMain() {
+
         startActivity(new Intent(getActivity(), MainActivity.class));
-       // getActivity().finish();
+        // getActivity().finish();
     }
 
     //keeping dialog after rotation

@@ -163,14 +163,22 @@ public class Session {
     public static void savePedidoDetalle(Context context, PedidoDetalle pedidoDetalle) {
 
         ObjectMapper mapper = new ObjectMapper();
+
         StringWriter sw = new StringWriter();
         try {
+
             mapper.writeValue(sw, pedidoDetalle);
+
             String listObject = sw.toString();
+
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO_DETALLE, Context.MODE_PRIVATE).edit();
+
             editor.putString(Constants.IDPEDIDODETALLE, listObject);
+
             editor.commit();
+
         } catch (IOException e) {
+
             e.printStackTrace();
         }
 
@@ -178,13 +186,20 @@ public class Session {
     }
 
     public static PedidoDetalle getPedidoDetalle(Context context) {
+
         SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_PEDIDO_DETALLE, Context.MODE_PRIVATE);
+
         String json = prefs.getString(Constants.IDPEDIDODETALLE, null);
+
         ObjectMapper mapper = new ObjectMapper();
         try {
+
             PedidoDetalle myObjects = mapper.readValue(json, PedidoDetalle.class);
+
             return myObjects;
+
         } catch (IOException e) {
+
             e.printStackTrace();
             return null;
         }
@@ -224,9 +239,13 @@ public class Session {
     }
 
     public static List<PlanPagoDetalle> getListCuotas(Context context) {
+
+
         SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE);
         String json = prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null);
-        if (!prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null).equals("0")) {
+
+        if (!prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null).equals("0"))
+        {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 List<PlanPagoDetalle> myObjects = mapper.readValue(json, new TypeReference<List<PlanPagoDetalle>>() {
@@ -281,7 +300,7 @@ public class Session {
             editor.putString(Constants.NOMBRE, usuario.getPersona().getPerVNombres());
             editor.putString(Constants.APELLIDO_PATERNO, usuario.getPersona().getPerVApellidoPaterno());
             editor.putString(Constants.APELLIDO_MATERNO, usuario.getPersona().getPerVApellidoMaterno());
-            editor.commit();
+            editor.apply();
             return true;
 
         } catch (Exception e) {

@@ -17,6 +17,7 @@ import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
@@ -41,6 +42,7 @@ import android.content.res.ColorStateList;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -60,6 +62,8 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.orm.SugarTransactionHelper;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,6 +164,15 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @BindView(R.id.text_despacho_serie_numero)
     TextView textViewSerieNumero;
 
+    @BindView(R.id.textViewTanque)
+    TextView textViewTanque;
+
+    @BindView(R.id.textViewProducto)
+    TextView textViewProducto;
+
+    @BindView(R.id.text_despacho_estacion)
+    TextView textDespachoEstacion;
+
 
     private int typeWidgets = 1;
 
@@ -188,7 +201,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
      **/
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
     private LocationVehiculeListener locationVehiculeListener;
-    private Location latAndLong;
+    private Location latAndLong = null;
 
 
     private Concepto conceptoIGV;
@@ -344,7 +357,11 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     private void setTextField() {
 
         textViewOrdenSugerencia.setText(": " + getCapacidadSugerencia() + "");
+
         textViewSerieNumero.setText(": " + serie.getCompVSerie() + "-" + Utils.completaZeros(getNumeroDespacho(), serie.getParametro()));
+        textViewTanque.setText(almacen.getPlaca());
+        textViewProducto.setText(Producto.getNameProducto(almacen.getProductoId() + ""));
+        textDespachoEstacion.setText(establecimiento.getEstVDescripcion());
 
     }
 
@@ -383,13 +400,14 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
         new DialogGeneral(DespachoActivity.this).setCancelable(false).setMessages("Retroceder", "¿Seguro de retroceder?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
             @Override
-            public void onSavePressed() {
+            public void onSavePressed(AlertDialog alertDialog) {
                 DespachoActivity.super.onBackPressed();
+                alertDialog.dismiss();
             }
 
             @Override
-            public void onCancelPressed() {
-
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
             }
         });
     }
@@ -399,26 +417,35 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
         new DialogGeneral(DespachoActivity.this).setTextButtons("GUARDAR", "CANCELAR").setMessages("Atencion", "¿Seguro de guardar?").setCancelable(true).showDialog(new DialogGeneralListener() {
             @Override
-            public void onSavePressed() {
+            public void onSavePressed(AlertDialog alertDialog) {
                 if (validateField()) {
                     SugarTransactionHelper.doInTransaction(DespachoActivity.this);
-                    progressDialog.show();
+                    // progressDialog.show();
                     new ExportTask(DespachoActivity.this, DespachoActivity.this).execute(Constants.TABLA_DESPACHO, Constants.S_CREADO);
                 } else {
                     Toast.makeText(DespachoActivity.this, "Datos vacios", Toast.LENGTH_SHORT).show();
                 }
+                alertDialog.dismiss();
 
             }
 
             @Override
-            public void onCancelPressed() {
-
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
             }
         });
 
     }
 
     private boolean validateField() {
+
+        if (editTextCantidadDespachada.getText().toString().length() < 0) {
+            return false;
+        }
+
+        if (latAndLong == null) {
+            return false;
+        }
 
         if (editTextCantidadDespachada.getText().toString().length() < 0 ||
                 editTextContadorInicial.getText().toString().length() < 0 ||
@@ -807,7 +834,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @Override
     public void onLoadSuccess(String message) {
         // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
-        progressDialog.dismiss();
+        // progressDialog.dismiss();
         startActivity(new Intent(this, PrintDispatch.class));
         this.finish();
     }

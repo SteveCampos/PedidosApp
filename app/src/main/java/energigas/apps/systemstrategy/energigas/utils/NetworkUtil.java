@@ -76,24 +76,32 @@ public class NetworkUtil {
             Log.d(TAG, "No network available!");
         }
         return false;*/
-        return  getNetworkConnected(context);
+        return getNetworkConnected(context);
     }
 
     public static boolean getNetworkConnected(Context context) {
 
 
-        if (getConnectivityStatusString(context)==0){
+        try {
+
+
+            if (getConnectivityStatusString(context) == 0) {
+                return false;
+            }
+            String[] stringsAll = ping(Constants.URL_FOR_PING).split(",");
+
+            String[] stringsPart = stringsAll[1].split(" ");
+
+            int received = Integer.parseInt(stringsPart[1]);
+            if (received > 0) {
+                return true;
+            }
+            return false;
+
+        } catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
-        String[] stringsAll = ping(Constants.URL_FOR_PING).split(",");
 
-        String[] stringsPart = stringsAll[1].split(" ");
-
-        int received = Integer.parseInt(stringsPart[1]);
-        if (received>0){
-            return true;
-        }
-        return false;
     }
 
     public static String ping(String url) {

@@ -125,5 +125,10 @@
     </style>
 
 
+    <style name="myDialogActivity" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
 
 </resources>

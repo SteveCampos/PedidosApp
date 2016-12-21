@@ -23,9 +23,9 @@ public class ConectarDispositivoAsyn extends AsyncTask<String,String,String>{
     @Override
     protected String doInBackground(String... params) {
 
-        estado = Math.random() < 0.5;
+        estado =true;
         try {
-            Thread.sleep(5600);
+            Thread.sleep(560);
 
         } catch (Exception e) {
         }

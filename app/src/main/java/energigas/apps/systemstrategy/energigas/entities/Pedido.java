@@ -111,16 +111,9 @@ public class Pedido extends SugarRecord {
     @Ignore
     private List<PedidoDetalle> items;
 
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
 
     @Ignore
-    Estado estado;
+    private Estado estado;
 
     public Pedido() {
     }
@@ -173,6 +166,15 @@ public class Pedido extends SugarRecord {
         this.porImpuesto = porImpuesto;
         this.items = items;
     }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
 
     public long getPeId() {
         return peId;

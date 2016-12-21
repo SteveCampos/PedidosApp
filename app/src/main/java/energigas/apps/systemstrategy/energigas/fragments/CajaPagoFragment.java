@@ -24,9 +24,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
-import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
 import energigas.apps.systemstrategy.energigas.adapters.CajaPagoAdapter;
-import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
@@ -39,8 +37,6 @@ import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
-import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
-import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -49,23 +45,8 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by Kike on 1/08/2016.
  */
 
-public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener, IntentListenerAccess {
+public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCajaPagoClickListener {
 
-    private HashMap<String, Boolean> booleanHashMap;
-
-    //verificar los intents
-    @Override
-    public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
-        this.booleanHashMap = booleanHashMap;
-        System.out.println("ObjetoHash");
-        System.out.print(booleanHashMap);
-        Log.d(TAG, "TAMAÑO HASH: " + booleanHashMap.size());
-    }
-    //verificar los fragmentos
-    @Override
-    public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
-
-    }
 
     public interface OnCajaPagoClickListener {
         void onCajaPagoClickListener(TextView mEstado, TextView mtotal,PlanPago planpago, ComprobanteVenta venta ,PlanPagoDetalle planPagoDetalle, View view);
@@ -110,21 +91,17 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         //addInsertCobranza();
        /*Entity*/
         mUsuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(getActivity()).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
-        new AccessPrivilegesManager(getClass())
-                .setListenerIntent(this)
-                .setPrivilegesIsEnable(mUsuario.getUsuIUsuarioId() + "")
-                .setClassDialog("pagoporroga","pagototal","CajaPagoAdapter")
-                .isDialogEnable();
-
         mCajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, "liq_Id = ?", new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId() + ""}).get(Constants.CURRENT);
         mEstablecimiento = Establecimiento.find(Establecimiento.class, "est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         mCliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{mEstablecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
-
+        /*mComprobanteVenta =ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id = ?",new String[]{Session.getComprobanteVenta(getActivity()).getCompId()+""}).get(Constants.CURRENT);
+        mComprobanteVenta.setEstadoId(60);
+        mComprobanteVenta.save();*/
+        //mEstad=Estado.find(Estado.class,"id_Estado = ?",new String[]{mComprobanteVenta.getEstadoId()+""}).get(Constants.CURRENT);
+         /*FinEntity*/
+        //insertables(mPlanPagoDetalle);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_charges);
-        if(booleanHashMap!=null){
-            adapter = new CajaPagoAdapter(getPlanPagoDetalleList(), getActivity(), this,booleanHashMap.get("CajaPagoAdapter"));
-        }
-
+        adapter = new CajaPagoAdapter(getPlanPagoDetalleList(), getActivity(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -202,13 +179,12 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                 cjmovimiento.setReferencia(mPlanPago.getSerie());
                                 cjmovimiento.save();*/
                                 //El Saldo queda 0 y cambia de EstadoID=23
-                                long idComprobante=mComp.getCompId();
-                                double importe= ppdetalle.getImporte();
+
                                 mCajaMovimiento = new CajaMovimiento(idCajaMovimiento,
                                         mCajaLiquidacion.getLiqId(),
                                         12,//CatMovId
                                         "String Moneda",
-                                        importe,
+                                        ppdetalle.getImporte(),
                                         true,
                                         "String Fecha",
                                         "Anulación Cobros",
@@ -218,10 +194,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                         "String Referencia Android",
                                         10,// TipoMovId
                                         null,
-                                        null,
-                                        null,
-                                        null);
-                                insertmultiplesanular(idCajaMovimiento,importe,idComprobante);
+                                        null,null,null);
                                 mCajaMovimiento.save();
                                 mEstado.setText("Pendiente-An");
                                 mEstado.setTextColor(Color.RED);
@@ -230,6 +203,8 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
                                 mComprobanteVenta.save();*/
                                 ppdetalle.setEstado(true);
                                 ppdetalle.save();
+                                //Referencia va el numero comprobante que se esta anulando
+                                // Log.d(TAG,"CajaMovimiento:"+cjmovimiento.getReferencia());
 
                             }
                         })
@@ -247,6 +222,83 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
 
                 // show it
                 alertDialog.show();
+
+
+//                final View layout_dialog_expenses = View.inflate(getActivity(), R.layout.dialog_cobranza, null);
+//                final Button btnsave = (Button) layout_dialog_expenses.findViewById(R.id.btn_si);
+//                final Button btn_cancel = (Button) layout_dialog_expenses.findViewById(R.id.btn_no);
+//                final EditText txtpago = (EditText) layout_dialog_expenses.findViewById(R.id.dialog_id_pago);
+//                final EditText txtfechapago = (EditText) layout_dialog_expenses.findViewById(R.id.fecha_pago);
+//                txtfechapago.setText(planPagoDetalle.getFechaCobro());
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                        getActivity());
+//                final long idCajaMovimiento = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
+//                //final long idPlanPagoDetalle= PlanPagoDetalle.findWithQuery(PlanPagoDetalle.class,Utils.getQueryNumberPlanPagoDetalle(),null).get(Constants.CURRENT).getPlanPaDeId();
+//                final int idPlanPagoD = PlanPagoDetalle.findWithQuery(PlanPagoDetalle.class, Utils.getQueryNumberPlanPagoDetalle(), null).get(Constants.CURRENT).getPlanPaDeId();
+//
+//                // set title
+//                alertDialogBuilder.setTitle("Deduda Porroga : S./ " + Math.abs(planPagoDetalle.getMontoAPagar()));
+//
+//                // set dialog message
+//                alertDialogBuilder
+//                        .setView(layout_dialog_expenses)
+//                        .setCancelable(true);
+//                btnsave.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //     double mPagoPorroga = Double.parseDouble(String.valueOf(txtpago.getText().toString().trim()));
+//                        if (txtpago.getText().toString().equals("")) {
+//                            txtpago.setError("Llene los campos necesarios");
+//                        } else {
+//                            double mPagoPorroga = Double.parseDouble(String.valueOf(txtpago.getText().toString().trim()));
+//                            if (txtpago.getText().toString().trim().length() <= 0) {
+//                                txtpago.setError("Llene los campos necesarios");
+//                            } else if (mPagoPorroga > planPagoDetalle.getMontoAPagar()) {
+//                                txtpago.setError("Ingrese datos Correctos");
+//                            } else if (mPagoPorroga == planPagoDetalle.getMontoAPagar()) {
+//                                txtpago.setError("Ingrese datos Correctos");
+//                            } else {
+//                                double resultado = mPagoPorroga - planPagoDetalle.getMontoAPagar();
+//
+//                                planPagoDetalle.setMontoAPagar(resultado);
+//                                planPagoDetalle.save();
+//                                mtotal.setText("S./ " + Math.abs(resultado));
+//                                mPlanPagoDetalle = new PlanPagoDetalle(12,
+//                                        idPlanPagoD,
+//                                        "FEcha",
+//                                        resultado,
+//                                        true,
+//                                        10.2,
+//                                        7.4,
+//                                        40.0,
+//                                        "Jueves,10 de Noviembre",
+//                                        12,
+//                                        "Fecha_Accion",
+//                                        idCajaMovimiento
+//                                );
+//                                mPlanPagoDetalle.save();
+//                                saveMultipleTables(resultado, idCajaMovimiento);
+//
+//                                alertDialog.dismiss();
+//
+//                            }
+//                        }
+//                    }
+//                });
+//                btn_cancel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//
+//                // create alert dialog
+//                alertDialog = alertDialogBuilder.create();
+//                // show it
+//                alertDialog.show();
+
+
                 return false;
             }
         });
@@ -255,26 +307,14 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
     @Override
     public void onCajaPagoListener(int action, PlanPagoDetalle pagoDetalle, ComprobanteVenta  mComp, TextView mtotal,TextView mestadoo) {
 
-
-
-            if (booleanHashMap !=null){
-
-
-
-        }
         switch (action) {
             case Constants.CLICK_EDITAR_CAJA_GASTO:
-                Log.d("CLICK_EDITAR_CAJA_GASTO",String.valueOf(booleanHashMap.get("pagoporroga")));
-                //busca permisos
-                if (booleanHashMap.get("pagoporroga")) {
-                    pagoporroga(pagoDetalle, mtotal);
-
-                }
+                pagoporroga(pagoDetalle, mtotal);
                 break;
             case Constants.CLICK_ELIMINAR_CAJA_GASTO:
-                if (booleanHashMap.get("pagototal")){
-                    pagototal(pagoDetalle,mComp, mtotal,mestadoo);
-                }
+                pagototal(pagoDetalle,mComp, mtotal,mestadoo);
+               /* mComp.setEstadoId(24);
+                mComp.save();*/
             default:
                 break;
         }
@@ -292,7 +332,7 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         return mPlanPagoDetalles;
     }
 
-
+/*--------------*/
     private void saveMultipleTables(final Double mImporte, final long idCajaMovimiento) {
 //        idComprobante_venta=ComprobanteVenta.findWithQuery(ComprobanteVenta.class,Utils.getQueryNumber(),null).get(Constants.CURRENT).getCompId();
 
@@ -300,6 +340,43 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
             @Override
             public void manipulateInTransaction() {
                 //save here!! multple tables
+                     /*Table Comprobante_Venta*/
+/*
+                String serie ="";
+                     mComprobanteVenta = new ComprobanteVenta(idComprobante_venta,
+                        serie,
+                        "numDoc",
+                        12,
+                        12,//Aqui es es el EstadoId
+                        Utils.getDatePhone(),
+                        12.2,
+                        12.2,
+                        20.2,
+                        12,
+                        12,//ClienteID
+                        12,
+                        true,
+                        20.2,
+                        12,//LiquidacionId
+                        12,//TipoVentaId
+                        12,//Establecimiento ID
+                        false,
+                        "String docIdentidad",
+                        "Valor de Resumen",
+                        "Juanito",
+                        "Direccion Cliente",
+                        Utils.getDatePhone(),
+                        "Fecha de Actualizacion",
+                        20.2,
+                        comprobanteVentaDetalleList,
+                        mCajaMovimiento,
+                        mPlanPago
+                );
+                mComprobanteVenta.save();
+                Log.d(TAG,"COUNT COMPROBANTE_VENTA"+mComprobanteVenta);
+
+
+*/
 
                 /*Table Caja_Movimiento*/
                 mCajaMovimiento = new CajaMovimiento(idCajaMovimiento,
@@ -381,6 +458,49 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
 
             }
         });
+    }
+
+    /*Insertacion mediante metodo*/
+    public void addInsertCobranza() {
+
+        long idComprobante_venta = ComprobanteVenta.findWithQuery(ComprobanteVenta.class, Utils.getQueryNumber(), null).get(Constants.CURRENT).getCompId();
+
+
+        String serie = "F001-000216";
+          /*Table Plan_Pago*/
+        final long idPlanPago = PlanPago.findWithQuery(PlanPago.class, Utils.getQueryNumberPlanPago(), null).get(Constants.CURRENT).getPlanPaId();
+        mPlanPago = new PlanPago(idPlanPago,
+                idComprobante_venta,
+                Utils.getDatePhone(),
+                serie,
+                "String NumDoc",
+                "String Glosa",
+                true,
+                20.1,
+                12,
+                "String Fecha Accion",
+                planPagoDetalleList);
+        mPlanPago.save();
+        /*Table PLan_Pago_Detalle*/
+        final int idPlanPagoD = PlanPagoDetalle.findWithQuery(PlanPagoDetalle.class, Utils.getQueryNumberPlanPagoDetalle(), null).get(Constants.CURRENT).getPlanPaDeId();
+        final long idCajaMovimiento = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
+        double resultado = 23.1 - 10.2;
+        mPlanPagoDetalle = new PlanPagoDetalle(idPlanPago,
+                idPlanPagoD,
+                "FEcha",
+                20.2,
+                true,
+                10.2,
+                7.4,
+                40.0,
+                "Jueves,10 de Noviembre",
+                12,
+                "Fecha_Accion",
+                idCajaMovimiento
+        );
+        mPlanPagoDetalle.save();
+        saveMultipleTables(resultado, idCajaMovimiento);
+
     }
 
     private void pagototal(final PlanPagoDetalle detallepago, final ComprobanteVenta mComp,final TextView mtotal,final TextView mestado) {
@@ -513,6 +633,50 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
 
     }
 
+
+    private void anularcobros(final CajaMovimiento movimiento, final PlanPago pago) {
+        SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
+            @Override
+            public void manipulateInTransaction() {
+                movimiento.setReferencia(pago.getSerie());
+                final long idCajaMovimiento = CajaMovimiento.findWithQuery(CajaMovimiento.class, Utils.getQueryNumberCajaMov(), null).get(Constants.CURRENT).getCajMovId();
+                mCajaMovimiento = new CajaMovimiento(idCajaMovimiento,
+                        12,
+                        12,
+                        "Soles",
+                        0.0,
+                        true,
+                        "",
+                        "",
+                        pago.getSerie(),//Se registra pero con el numero de Serie
+                        12,
+                        "",
+                        "",
+                        117,//guardando tipmoV117
+                        mCajaPago,
+                        mCajaComprobante,null,null
+                );
+            }
+
+            @Override
+            public void errorInTransaction(String error) {
+            }
+        });
+        /*Anulando Cobros actulizando el TipoMovId=117*/
+        mCajaMovimiento.setTipoMovId(117);
+        mCajaMovimiento.setReferencia(mPlanPago.getSerie());
+        mCajaMovimiento.save();
+        /*El Saldo queda 0 y cambia de EstadoID=23*/
+        mComprobanteVenta.setSaldo(0);
+        mComprobanteVenta.setEstadoId(23);
+        mComprobanteVenta.save();
+        /*Referencia va el numero comprobante que se esta anulando*/
+
+        Log.d(TAG, "mCajaMovimiento:" + mCajaMovimiento + "mComprobanteVenta" + mComprobanteVenta);
+
+    }
+/*------------------*/
+
     private void insertables(final PlanPagoDetalle detallepago) {
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
             @Override
@@ -595,39 +759,5 @@ public class CajaPagoFragment extends Fragment implements CajaPagoAdapter.OnCaja
         });
     }
 
-
-    public void insertmultiplesanular(final long idCajaMovimiento, final double Import,final long idComprobante){
-        SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
-            @Override
-            public void manipulateInTransaction() {
-                //save here!  Caja_Comprobante // Caja_Pago
-                final long idCajaPago = CajaPago.findWithQuery(CajaPago.class, Utils.getQueryNumberCajaPago(), null).get(Constants.CURRENT).getCajPagId();
-                mCajaPago = new CajaPago(idCajaPago,
-                        Import,
-                        idCajaMovimiento,
-                        mUsuario.getUsuIUsuarioId(),
-                        "Fecha_Accion",
-                        true,
-                        0,
-                        true
-                        );
-                mCajaPago.save();
-                //Caja_Comprobante
-                final long idCajaComprobante = CajaComprobante.findWithQuery(CajaComprobante.class, Utils.getQueryNumberCajaComprobante(), null).get(Constants.CURRENT).getCajCompId();
-                mCajaComprobante = new CajaComprobante(idCajaComprobante,
-                        idCajaMovimiento,
-                        idComprobante,
-                        Import,
-                        12,
-                        "FEchaActualizacion");
-                mCajaComprobante.save();
-                Log.d(TAG,"SaveCAjaPAgo:"+mCajaPago+"SaveCajaComprobante:"+mCajaComprobante);
-            }
-            @Override
-            public void errorInTransaction(String error) {
-
-            }
-        });
-    }
 
 }

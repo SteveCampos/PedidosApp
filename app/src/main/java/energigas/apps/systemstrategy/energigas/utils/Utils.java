@@ -1,8 +1,10 @@
 package energigas.apps.systemstrategy.energigas.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -56,13 +58,20 @@ public class Utils {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ROOT);
         otherSymbols.setDecimalSeparator('.');
         //otherSymbols.setGroupingSeparator('.');
-        DecimalFormat df = new DecimalFormat("#.0000", otherSymbols);
+        DecimalFormat df = new DecimalFormat("#.00", otherSymbols);
         return Double.parseDouble(df.format(number));
     }
 
     public static String formatDouble(Double d) {
         return String.format(Locale.ENGLISH, "%.2f", d);
     }
+
+    public static Double formatDoubleNumber(Double d) {
+
+        Double aDouble = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", d));
+        return aDouble;
+    }
+
 
     public static String getNameOfDay(Date date) {
         SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
@@ -91,8 +100,27 @@ public class Utils {
     public static String getDatePhoneTime() {
         Date now = new Date();
         Date alsoNow = Calendar.getInstance().getTime();
-        String nowAsString = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss").format(now);
+        String nowAsString = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(now);
         return nowAsString;
+    }
+
+    public static String getDatePhoneTimeSQLSERVER() {
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(alsoNow);
+
+
+        String nowAsString = new SimpleDateFormat("dd-MM-yy hh:mm:ss").format(now);
+        String dateTime = "";
+        if (cal.get(Calendar.AM_PM) == Calendar.PM) {
+            dateTime = nowAsString + " PM";
+        } else {
+            dateTime = nowAsString + " AM";
+        }
+
+        return dateTime;
     }
 
     public static java.util.Date getDateFromDatePicker(DatePicker datePicker) {
@@ -139,6 +167,14 @@ public class Utils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static String getDateToDocument(String fecha) {
+
+        Date date = new Date(getDateMills(fecha));
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-mm-dd");
+        String dateText = df2.format(date);
+        return dateText;
     }
 
     public static String getJsonObResult(JSONObject jsonObject) {
@@ -429,7 +465,7 @@ public class Utils {
                         Class<?> clzzLis = (Class<?>) tp;
                         classesList.add(clzzLis);
 
-                    }else{
+                    } else {
 
                         Class<?> clz = field.getType();
                         classes.add(clz);
@@ -480,6 +516,30 @@ public class Utils {
         }
 
 
+    }
+
+    public static void setIntentLocationSetting(Activity context) {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
+    }
+
+    public static boolean getGpsEnable(Context context) {
+        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        return gps_enabled;
     }
 
 

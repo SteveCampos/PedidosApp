@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
@@ -333,11 +335,11 @@ public class ComprobanteVenta extends SugarRecord {
 
         List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
 
-        for (ComprobanteVenta comprobanteVenta : comprobanteVentaList){
+        for (ComprobanteVenta comprobanteVenta : comprobanteVentaList) {
 
-            comprobanteVenta.setItemsDetalle(ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId()+""));
-            comprobanteVenta.setPlanPago(PlanPago.getPlanPago(comprobanteVenta.getCompId()+""));
-            comprobanteVenta.setCajaMovimiento(CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId()+""));
+            comprobanteVenta.setItemsDetalle(ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId() + ""));
+            comprobanteVenta.setPlanPago(PlanPago.getPlanPago(comprobanteVenta.getCompId() + ""));
+            comprobanteVenta.setCajaMovimiento(CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId() + ""));
             comprobanteVentas.add(comprobanteVenta);
         }
 
@@ -345,8 +347,25 @@ public class ComprobanteVenta extends SugarRecord {
         return comprobanteVentas;
     }
 
-    public static ComprobanteVenta getComprobanteVentaId(String comprobanteId){
-        return ComprobanteVenta.find(ComprobanteVenta.class,"comp_Id=?",new String[]{comprobanteId}).get(0);
+    public static ComprobanteVenta getComprobanteVentaId(String comprobanteId) {
+        return ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id=?", new String[]{comprobanteId}).get(0);
+    }
+
+    public static List<ComprobanteVenta> getComprobanteByLiquidacion(String liquidacion) {
+
+        List<ComprobanteVenta> ventaList = new ArrayList<>();
+        ventaList = ComprobanteVenta.find(ComprobanteVenta.class, " lq_Id=? ", new String[]{liquidacion});
+        return ventaList;
+
+    }
+
+    public static List<ComprobanteVenta> getComprobanteVentasDatos(String usuario, String fecha) {
+
+        List<ComprobanteVenta> ventaList = new ArrayList<>();
+
+        ventaList = ComprobanteVenta.find(ComprobanteVenta.class, " com_I_Usuario_Id=?  and fecha_Creacion=?", new String[]{usuario, fecha});
+        return ventaList;
+
     }
 
 

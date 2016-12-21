@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow android:id="@+id/tablayoutItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/textDescripcion"
+        android:text="Boletas cobradas"
+        android:gravity="center"
+        android:textSize="@dimen/size_text_item"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textCantidad"
+        android:textSize="@dimen/size_text_item"
+        android:gravity="center_horizontal"
+        android:text="0.00"/>
+
+    <TextView
+        android:id="@+id/totalEmitidos"
+        android:textSize="@dimen/size_text_item"
+        android:gravity="center_horizontal"
+        android:text="5"/>
+
+    <TextView
+        android:id="@+id/totalPagados"
+        android:textSize="@dimen/size_text_item"
+        android:gravity="center_horizontal"
+        android:text="5"/>
+
+    <TextView
+        android:id="@+id/totalCobrados"
+        android:textSize="@dimen/size_text_item"
+        android:gravity="center_horizontal"
+        android:text="5"/>
+
+
+</TableRow>

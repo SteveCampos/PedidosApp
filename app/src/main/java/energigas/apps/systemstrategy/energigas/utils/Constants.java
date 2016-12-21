@@ -148,6 +148,7 @@ public class Constants {
 
 
     public static final int CREDITO_ID=106;
+    public static final int CONTADO_ID=105;
 
 
     /**Para Exportar**/
@@ -163,6 +164,7 @@ public class Constants {
     public static final String OBJECTS_LIST_DETALLE_CUOTAS = "OBJECTS_LIST_DETALLE_CUOTAS";
 
     public static final String OBTENER_CUOTAS = "OBTENER_CUOTAS";
+
     public static final int CLICK_EDITAR = 100;
     public static final int CLICK_ELIMINAR = 101;
 
@@ -202,5 +204,30 @@ public class Constants {
     public static final int NO_FACTURADO=64;
     public static final int FACTURADO=65;
     public static final int FACTURADO_TOTAL=66;
+
+
+    public static final int TIPO_DOCUMENTO_RUC = 43;
+    public static final int TIPO_DOCUMENTO_DNI = 42;
+
+    public static final int TIPO_DOCUMENTO_BOLETA = 52;
+    public static final int TIPO_DOCUMENTO_FACTURA = 51;
+
+
+    public static final String TIPO_DOCUMENTO_ELECTRONICO_RUC = "3";
+    public static final String TIPO_DOCUMENTO_ELECTRONICO_DNI = "4";
+
+    public static final String TIPO_DOCUMENTO_ELECTRONICO_BOLETA = "55";
+    public static final String TIPO_DOCUMENTO_ELECTRONICO_FACTURA = "54";
+
+
+    public static final String DOCUMENTO_ELECTRONICO_NIU = "38";
+
+
+    public static final String DOCUMENTO_ELECTRONICO_TIPO_PRECIO = "01";
+
+    public static final String DOCUMENTO_ELECTRONICO_PEN = "PEN";
+
+
+    public static final int DOCUMENTO_ELECTRONICO_OPERACION_ONEROSA=8;
 
 }

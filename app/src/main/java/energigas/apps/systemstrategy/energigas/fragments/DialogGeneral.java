@@ -71,16 +71,14 @@ public class DialogGeneral {
         btnOk.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                dialogGeneralListener.onSavePressed();
-                alertD.dismiss();
+                dialogGeneralListener.onSavePressed(alertD);
 
             }
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                dialogGeneralListener.onCancelPressed();
-                alertD.dismiss();
+                dialogGeneralListener.onCancelPressed(alertD);
 
             }
         });

@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -131,26 +132,48 @@ public class CajaGasto extends SugarRecord {
         this.fechaActualizacion = fechaActualizacion;
     }
 
-    public static List<CajaGasto> getListCajaGastos(){
+    public static List<CajaGasto> getListCajaGastos() {
         List<CajaGasto> cajaGastos = new ArrayList<>();
-        cajaGastos.add(new CajaGasto(10,20,30,40,120,50,70,80,"28/07/2016", "Cambio de Aceite"));
-        cajaGastos.add(new CajaGasto(10,20,30,40,50,50,70,80,"28/07/2016","Peajes"));
-        cajaGastos.add(new CajaGasto(10,20,30,40,140,50,70,80,"28/07/2016","Almuerzo Semanal"));
+        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 120, 50, 70, 80, "28/07/2016", "Cambio de Aceite"));
+        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 50, 50, 70, 80, "28/07/2016", "Peajes"));
+        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 140, 50, 70, 80, "28/07/2016", "Almuerzo Semanal"));
         return cajaGastos;
     }
 
-    public static CajaGasto getCajaGasto (String cajaGasto){
+    public static List<CajaGasto> getListCajaGastosLiquidacion(String liquidacion) {
 
-        if (CajaGasto.find(CajaGasto.class," caj_Gas_Id = ? ",new String[]{cajaGasto}).size()>0){
-            return CajaGasto.find(CajaGasto.class," caj_Gas_Id=? ",new String[]{cajaGasto}).get(0);
+
+        List<CajaMovimiento> cajaMovimientos = CajaMovimiento.getCajaMovimientos(liquidacion);
+
+        List<CajaGasto> cajaGastos = new ArrayList<>();
+
+
+        for (CajaMovimiento cajaMovimiento : cajaMovimientos) {
+
+            Log.d("ResumentFragment", "CAJ MOV ID : " + cajaMovimiento.getCajMovId() + "");
+            CajaGasto cajaGasto = CajaGasto.getCajaGastobyCajMov(cajaMovimiento.getCajMovId() + "");
+            if (cajaGasto != null) {
+                cajaGastos.add(cajaGasto);
+            }
+
+        }
+
+        Log.d("ResumentFragment", "TM: " + cajaGastos.size() + "");
+        return cajaGastos;
+    }
+
+    public static CajaGasto getCajaGasto(String cajaGasto) {
+
+        if (CajaGasto.find(CajaGasto.class, " caj_Gas_Id = ? ", new String[]{cajaGasto}).size() > 0) {
+            return CajaGasto.find(CajaGasto.class, " caj_Gas_Id=? ", new String[]{cajaGasto}).get(0);
         }
         return null;
     }
 
-    public static CajaGasto getCajaGastobyCajMov (String cajaMovId){
+    public static CajaGasto getCajaGastobyCajMov(String cajaMovId) {
 
-        if (CajaGasto.find(CajaGasto.class," caj_Mo_Id = ? ",new String[]{cajaMovId}).size()>0){
-            return CajaGasto.find(CajaGasto.class," caj_Mo_Id=? ",new String[]{cajaMovId}).get(0);
+        if (CajaGasto.find(CajaGasto.class, " caj_Mo_Id = ? ", new String[]{cajaMovId}).size() > 0) {
+            return CajaGasto.find(CajaGasto.class, " caj_Mo_Id=? ", new String[]{cajaMovId}).get(0);
         }
         return null;
     }

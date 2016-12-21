@@ -26,8 +26,10 @@ import energigas.apps.systemstrategy.energigas.entities.Product;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.VehiculoDispositivo;
+import energigas.apps.systemstrategy.energigas.entities.fe.CertificadoDigital;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 05/09/2016.
@@ -38,7 +40,17 @@ public class ManipuleData {
 
     public void saveLiquidacion(CajaLiquidacion cajaLiquidacion) {
 
+
+        Long insEntidad = cajaLiquidacion.getEntidad().save();
+        Long insCertiDigi = cajaLiquidacion.getEntidad().getCertificado().save();
+        CertificadoDigital certificadoDigital = CertificadoDigital.findById(CertificadoDigital.class, insCertiDigi);
+        certificadoDigital.setEntidadId(cajaLiquidacion.getEntidad().getEntidadId());
+        certificadoDigital.save();
+        Log.d(TAG, "ENTIDAD: " + insEntidad);
+        Log.d(TAG, "CERTIFICADO: " + insCertiDigi);
+        cajaLiquidacion.setEntidadId(cajaLiquidacion.getEntidad().getEntidadId());
         Long insert = cajaLiquidacion.save();
+        Log.d(TAG, "LIQUIDACION: " + insert);
         SugarRecord.saveInTx(cajaLiquidacion.getItemsLiquidacion());
         boolean estadoB = true;
         if (insert > 0) {
@@ -61,20 +73,26 @@ public class ManipuleData {
             estadoB = true;
             boolean estadoAl = true;
             boolean estadoEst = true;
+            boolean estadoPer = true;
+            boolean estadoGeo = true;
             List<Cliente> clientes = cajaLiquidacion.getItemsClientes();
 
             for (Cliente cliente : clientes) {
                 Long cli = cliente.save();
-                if (cli < 0) {
+                Long per = cliente.getPersona().save();
+                if (cli < 0 || per < 0) {
                     estadoB = false;
+                    estadoPer = false;
                 }
                 Log.d(TAG, " INSERTO CLIENTE " + cli);
                 /**Insertar Establecimientos**/
 
                 for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
                     Long est = establecimiento.save();
-                    if (est < 0) {
+                    Long estGeo = establecimiento.getUbicacion().save();
+                    if (est < 0 || estGeo < 0) {
                         estadoEst = false;
+                        estadoGeo = false;
                     }
                     Log.d(TAG, " INSERTO ESTABLECIMIENTO " + est);
 
@@ -96,28 +114,13 @@ public class ManipuleData {
 
             }
 
-            Log.d(TAG, " INSERTO CLIENTE " + estadoB);
-            Log.d(TAG, " INSERTO ESTABLECIMIENTO " + estadoEst);
-            Log.d(TAG, " INSERTO ALMACEN " + estadoAl);
-
-            for (Cliente cliente : cajaLiquidacion.getItemsClientes()) {
-
-
-                List<Establecimiento> establecimientos = cliente.getItemsEstablecimientos();
-                SugarRecord.saveInTx(establecimientos);
+            Log.d(TAG, " INSERTO CLIENTE: " + estadoB);
+            Log.d(TAG, " INSERTO ESTABLECIMIENTO: " + estadoEst);
+            Log.d(TAG, " INSERTO ALMACEN: " + estadoAl);
+            Log.d(TAG, " INSERTO PERSONA: " + estadoPer);
+            Log.d(TAG, " INSERTO GEOUBICACION: " + estadoGeo);
 
 
-                for (Establecimiento establecimiento : establecimientos) {
-
-                    List<Almacen> almacens = establecimiento.getItemsAlmacen();
-                    SugarRecord.saveInTx(almacens);
-                    GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
-                    geoUbicacion.save();
-                }
-
-                Persona persona = cliente.getPersona();
-                persona.save();
-            }
             boolean estaPed = true;
             boolean estPedDet = true;
             int count = 0;
@@ -214,11 +217,28 @@ public class ManipuleData {
     public List<Despacho> getDespachoResumen(Context context) {
 
 
-
-        String query = " select id, despacho_Id,pe_Id,pd_Id,cliente_Id,establecimiento_Id,almacen_Est_Id,usuario_Id,placa,contador_Inicial_Origen,contador_Final_Origen,cantidad_Despachada,hora_Inicio,hora_Fin,fecha_Despacho,pro_Id,un_Id,p_IT_Origen,p_FT_Origen,latitud,longitud,almacen_Veh_Id,serie,numero,fecha_Creacion,usuario_Creacion,estado_Id,ve_Id,guia_Remision,liq_Id,SUM(PRECIO_UNITARIO_SIGV)  AS  PRECIO_UNITARIO_SIGV, SUM(precio_Unitario_CIGV)  AS  precio_Unitario_CIGV, SUM(por_Impuesto) as por_Impuesto ,SUM(costo_Venta) as costo_Venta ,SUM(importe) as importe,contador_Inicial_Destino,contador_Final_Destino,p_IT_Destino,p_FT_Destino,comp_Id from despacho  WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ")  ; ";
-
-
-        return Despacho.findWithQuery(Despacho.class, query, null);
+        String numero = "";
+        String serie = "";
+        List<Despacho> despachoList = getDespachosToFactura(context);
+        double cantidad = 0.00;
+        for (int i = 0; i < despachoList.size(); i++) {
+            cantidad = cantidad + despachoList.get(i).getCantidadDespachada();
+            if ((i + 1) == despachoList.size()) {
+                serie = serie + despachoList.get(i).getSerie() + "";
+                numero = numero + despachoList.get(i).getNumero() + "";
+            } else {
+                serie = serie + despachoList.get(i).getSerie() + ", ";
+                numero = numero + despachoList.get(i).getNumero() + ", ";
+            }
+        }
+        String query = " select id, despacho_Id,pe_Id,pd_Id,cliente_Id,establecimiento_Id,almacen_Est_Id,usuario_Id,placa,contador_Inicial_Origen,contador_Final_Origen,sum(cantidad_Despachada) as cantidad_Despachada ,hora_Inicio,hora_Fin,fecha_Despacho,pro_Id,un_Id,p_IT_Origen,p_FT_Origen,latitud,longitud,almacen_Veh_Id, 'Despacho' as serie,'Compuesto' as numero ,fecha_Creacion,usuario_Creacion,estado_Id,ve_Id,guia_Remision,liq_Id,SUM(PRECIO_UNITARIO_SIGV)  AS  PRECIO_UNITARIO_SIGV, SUM(precio_Unitario_CIGV)  AS  precio_Unitario_CIGV, SUM(por_Impuesto) as por_Impuesto ,SUM(costo_Venta) as costo_Venta ,SUM(importe) as importe,contador_Inicial_Destino,contador_Final_Destino,p_IT_Destino,p_FT_Destino,comp_Id from despacho  WHERE  DESPACHO_ID IN (" + getQueryDespacho(context) + ")  ; ";
+        Despacho despachoReturn = Despacho.findWithQuery(Despacho.class, query, null).get(0);
+        despachoReturn.setSerie(serie);
+        despachoReturn.setNumero(numero);
+        despachoReturn.setCantidadDespachada(Utils.formatDoubleNumber(cantidad));
+        List<Despacho> despachos = new ArrayList<>();
+        despachos.add(despachoReturn);
+        return despachos;
     }
 
 

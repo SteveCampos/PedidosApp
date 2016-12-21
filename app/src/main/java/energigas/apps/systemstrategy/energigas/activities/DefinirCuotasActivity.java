@@ -60,7 +60,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
     Concepto conceptoCredito;
     double[] params;
 
-    private List<PlanPagoDetalle> listDetalle ;
+    private List<PlanPagoDetalle> listDetalle;
 
     private static final String TAG = "DefinirCuotasActivity";
 
@@ -88,7 +88,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         cliente = Cliente.find(Cliente.class, " CLI_I_CLIENTE_ID = ? ", new String[]{establecimiento.getEstIClienteId() + ""}).get(Constants.CURRENT);
         conceptoCredito = Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{cliente.getCliIModalidadCreditoId() + ""}).get(Constants.CURRENT);
-        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class," ub_Id = ?",new String[]{establecimiento.getUbId()+""}).get(Constants.CURRENT));
+        establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " ub_Id = ?", new String[]{establecimiento.getUbId() + ""}).get(Constants.CURRENT));
         btnOk.setOnClickListener(this);
         toolbar();
         initViewsDisable();
@@ -105,11 +105,13 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
-    private void setTextTextViews(){
+
+    private void setTextTextViews() {
         textViewNombre.setText(establecimiento.getEstVDescripcion());
         textViewDireccion.setText(establecimiento.getUbicacion().getDescripcion());
     }
-    private void initViewsDisable(){
+
+    private void initViewsDisable() {
         textViewPoints.setVisibility(View.INVISIBLE);
         textViewUbicacion.setVisibility(View.GONE);
         textViewAtencion.setVisibility(View.GONE);
@@ -153,7 +155,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
 
 
             String fechaPago = Utils.getStringDate(Utils.sumarFechasDias(fecha, diasCredito));
-            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId,fechaPago, importePorCuota, Constants.ESTADO_TRUE, 0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhoneWithTime(), 0));
+            detalles.add(new PlanPagoDetalle(-1, planPagoDetalleId, fechaPago, importePorCuota, Constants.ESTADO_TRUE, 0, 0, importePorCuota, fechaPago, 0, Utils.getDatePhoneWithTime(), 0));
             fecha = Utils.sumarFechasDias(fecha, diasCredito);
             planPagoDetalleId++;
         }
@@ -178,10 +180,10 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
                 ObjectMapper mapper = new ObjectMapper();
                 StringWriter sw = new StringWriter();
                 try {
-                    mapper.writeValue(sw,listDetalle);
+                    mapper.writeValue(sw, listDetalle);
                     String listObject = sw.toString();
                     Session.setDefineCuotas(this, Constants.ESTADO_TRUE, listObject);
-                    Toast.makeText(this, ""+listObject, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "" + listObject, Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -210,7 +212,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
 
         datePickerFecha.init(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), null);
         // datePickerFecha.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
-        datePickerFecha.setMinDate(Utils.restarFechasDias(Utils.getDateFromString(planPagoDetalles.get(position).getFecha()),diasCredito).getTime());
+        datePickerFecha.setMinDate(Utils.restarFechasDias(Utils.getDateFromString(planPagoDetalles.get(position).getFecha()), diasCredito).getTime());
         datePickerFecha.setMaxDate(Utils.getDateFromString(planPagoDetalles.get(position).getFecha()).getTime());
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -222,22 +224,21 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
                 if (Utils.getDateFromDatePickerMills(datePickerFecha) > datePickerFecha.getMaxDate()) {
                     Toast.makeText(DefinirCuotasActivity.this, "La Fecha no puede ser mayor", Toast.LENGTH_SHORT).show();
                     datePickerFecha.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
-                    dialogChangeDate(planPagoDetalles,position);
+                    dialogChangeDate(planPagoDetalles, position);
                     return;
 
                 }
                 if (Utils.getDateFromDatePickerMills(datePickerFecha) < datePickerFecha.getMinDate()) {
                     Toast.makeText(DefinirCuotasActivity.this, "La Fecha no puede ser menor", Toast.LENGTH_SHORT).show();
                     datePickerFecha.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
-                    dialogChangeDate(planPagoDetalles,position);
+                    dialogChangeDate(planPagoDetalles, position);
                     return;
                 }
-                if ((Utils.getDateFromDatePickerMills(datePickerFecha) <= datePickerFecha.getMaxDate()) && (Utils.getDateFromDatePickerMills(datePickerFecha) >= datePickerFecha.getMinDate())){
+                if ((Utils.getDateFromDatePickerMills(datePickerFecha) <= datePickerFecha.getMaxDate()) && (Utils.getDateFromDatePickerMills(datePickerFecha) >= datePickerFecha.getMinDate())) {
                     String date = Utils.getStringDate(Utils.getDateFromDatePicker(datePickerFecha));
                     planPagoDetalles.get(position).setFechaCobro(date);
                     initMostrarDetalle(planPagoDetalles);
                 }
-
 
 
             }
@@ -281,13 +282,14 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
 
         new DialogGeneral(DefinirCuotasActivity.this).setCancelable(false).setMessages("Retroceder", "¿Seguro de retroceder?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
             @Override
-            public void onSavePressed() {
+            public void onSavePressed(AlertDialog alertDialog) {
                 DefinirCuotasActivity.super.onBackPressed();
+                alertDialog.dismiss();
             }
 
             @Override
-            public void onCancelPressed() {
-
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
             }
         });
     }

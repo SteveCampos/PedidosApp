@@ -26,6 +26,8 @@
     <dimen name="card_margin">16dp</dimen>
     <dimen name="height_collapsing">300dp</dimen>
 
+    <dimen name="height_collapsing_min">250dp</dimen>
+
     <!--LAYOUT_ITEM_ALL_SUMMARY-->
     <dimen name="height_summary_title">70dp</dimen>
     <dimen name="size_title_summary">18dp</dimen>

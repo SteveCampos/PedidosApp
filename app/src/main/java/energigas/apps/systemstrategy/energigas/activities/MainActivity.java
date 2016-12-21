@@ -33,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
@@ -78,11 +79,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "Usuario: " + Session.getSession(this).getUsuIUsuarioId() + "");
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
+        if (!Utils.getGpsEnable(this)) {
+            Intent intent = new Intent(this, ModalActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
         new AccessPrivilegesManager(getClass())
                 .setViews(fab)
                 .setListenerIntent(this)
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 
         hideFloatingButton();
 
-        new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        //  new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
         new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
 
@@ -115,6 +122,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentAccess(List<AccessFragment> accessFragmentList) {
         this.accessFragments = accessFragmentList;
+
         Log.d(TAG, "TAMAÑO FRAG: " + accessFragments.size());
         initViews();
     }

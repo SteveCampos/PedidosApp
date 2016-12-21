@@ -137,7 +137,7 @@ public class CajaPagoAdapter extends RecyclerView.Adapter<CajaPagoHolder> {
 
         //holder.mcomprobante.setText("");
         //holder.mdate.setText("");
-        //Cholder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getImporte()));
+        //Cholder.mtotal.setText("S./ " + Utils.formatDouble(cajaPago.getEnRuta()));
 /*
 
         int resto = position % 3;

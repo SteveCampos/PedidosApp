@@ -26,7 +26,7 @@ public class InventarioFragment extends Fragment {
     Inventory inventory;
 
 
-    public static InventarioFragment newIntance (){
+    public static InventarioFragment newIntance() {
         InventarioFragment inventarioFragment = new InventarioFragment();
         return inventarioFragment;
     }
@@ -35,13 +35,14 @@ public class InventarioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_fragment_inventory, container, false);
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
         inventory = new Inventory();
         inventory.instanceListInventory();
-        InventoryAdapter adapter = new InventoryAdapter(inventory.getInventoryList(), getActivity());
+        InventoryAdapter adapter = new InventoryAdapter(inventory.getInventoryList(getActivity()), getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
+
 }

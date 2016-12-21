@@ -6,11 +6,15 @@ import com.orm.dsl.Unique;
 
 import java.util.List;
 
+import energigas.apps.systemstrategy.energigas.entities.fe.CertificadoDigital;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class CajaLiquidacion extends SugarRecord{
+public class CajaLiquidacion extends SugarRecord {
 
     @Unique
     private long liqId;
@@ -71,33 +75,36 @@ public class CajaLiquidacion extends SugarRecord{
 
     private double saldoFinal;
 
+    private int entidadId;
 
     @Ignore
-    private PlanDistribucion planDistribucionD;
+    private PlanDistribucion planDistribucionD; //
     @Ignore
-    private List<Cliente> itemsClientes;
+    private List<Cliente> itemsClientes; //
     @Ignore
     private List<CajaLiquidacionDetalle> itemsLiquidacion;
     @Ignore
-    private List<Serie> itemsSeries;
+    private List<Serie> itemsSeries; //
     @Ignore
-    private  List<Pedido> itemsPedidos;
+    private List<Pedido> itemsPedidos; //
     @Ignore
-    private List<Dispositivo> itemsDispositivos ;
+    private List<Dispositivo> itemsDispositivos; //
     @Ignore
-    private Vehiculo vehiculo;
+    private Vehiculo vehiculo; //
     @Ignore
-    private List<VehiculoDispositivo> itemsVehiculoDispositivo ;
+    private List<VehiculoDispositivo> itemsVehiculoDispositivo; //
     @Ignore
-    private VehiculoUsuario vehiculoUsuario ;
+    private VehiculoUsuario vehiculoUsuario; //
     @Ignore
-    private List<DispositivoSerie> itemsDispositivoSeries;
+    private List<DispositivoSerie> itemsDispositivoSeries; //
+    @Ignore
+    private DEEntidad entidad; //
 
 
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos, List<Dispositivo> itemsDispositivos, Vehiculo vehiculo, List<VehiculoDispositivo> itemsVehiculoDispositivo, VehiculoUsuario vehiculoUsuario, List<DispositivoSerie> itemsDispositivoSeries) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, int entidadId, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos, List<Dispositivo> itemsDispositivos, Vehiculo vehiculo, List<VehiculoDispositivo> itemsVehiculoDispositivo, VehiculoUsuario vehiculoUsuario, List<DispositivoSerie> itemsDispositivoSeries, DEEntidad entidad) {
         this.liqId = liqId;
         this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
@@ -127,6 +134,7 @@ public class CajaLiquidacion extends SugarRecord{
         this.pdfId = pdfId;
         this.saldoInicial = saldoInicial;
         this.saldoFinal = saldoFinal;
+        this.entidadId = entidadId;
         this.planDistribucionD = planDistribucionD;
         this.itemsClientes = itemsClientes;
         this.itemsLiquidacion = itemsLiquidacion;
@@ -137,6 +145,23 @@ public class CajaLiquidacion extends SugarRecord{
         this.itemsVehiculoDispositivo = itemsVehiculoDispositivo;
         this.vehiculoUsuario = vehiculoUsuario;
         this.itemsDispositivoSeries = itemsDispositivoSeries;
+        this.entidad = entidad;
+    }
+
+    public int getEntidadId() {
+        return entidadId;
+    }
+
+    public void setEntidadId(int entidadId) {
+        this.entidadId = entidadId;
+    }
+
+    public DEEntidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(DEEntidad entidad) {
+        this.entidad = entidad;
     }
 
     public long getLiqId() {
@@ -450,4 +475,13 @@ public class CajaLiquidacion extends SugarRecord{
     public void setItemsDispositivoSeries(List<DispositivoSerie> itemsDispositivoSeries) {
         this.itemsDispositivoSeries = itemsDispositivoSeries;
     }
+
+    public static CajaLiquidacion getCajaLiquidacion(String liquidacionId) {
+        CajaLiquidacion cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).get(Constants.CURRENT);
+        DEEntidad deEntidad = DEEntidad.getEntidadById(cajaLiquidacion.getEntidadId() + "");
+        deEntidad.setCertificado(CertificadoDigital.find(CertificadoDigital.class, "entidad_Id=?", new String[]{deEntidad.getEntidadId() + ""}).get(0));
+        cajaLiquidacion.setEntidad(deEntidad);
+        return cajaLiquidacion;
+    }
+
 }

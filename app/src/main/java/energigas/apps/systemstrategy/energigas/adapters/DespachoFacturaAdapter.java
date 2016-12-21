@@ -11,6 +11,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.holders.DespachoFacturaHolder;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 12/09/2016.
@@ -37,9 +38,12 @@ public class DespachoFacturaAdapter extends RecyclerView.Adapter<DespachoFactura
     @Override
     public void onBindViewHolder(DespachoFacturaHolder holder, int position) {
         final Despacho despacho = despachos.get(position);
-        holder.textDespachoNro.setText("Despacho Nro: "+despacho.getNumero());
-        holder.textSerieNumero.setText(""+despacho.getSerie()+"-"+despacho.getNumero());
-        holder.textCantidad.setText(""+despacho.getCantidadDespachada());
+
+        holder.textDespachoNro.setText("Despacho Nro: " + despacho.getNumero());
+        holder.textSerieNumero.setText("" + despacho.getSerie() + " - " + despacho.getNumero());
+
+
+        holder.textCantidad.setText(Utils.formatDouble(despacho.getCantidadDespachada()));
     }
 
     @Override

@@ -30,8 +30,6 @@ public class InformeGasto extends SugarRecord {
     private int estadoId;
 
 
-
-
     public InformeGasto() {
     }
 
@@ -53,7 +51,6 @@ public class InformeGasto extends SugarRecord {
         this.catTipoGastoId = catTipoGastoId;
         this.estadoId = estadoId;
     }
-
 
 
     public long getInfGasId() {
@@ -113,10 +110,10 @@ public class InformeGasto extends SugarRecord {
     }
 
 
-    public static InformeGasto getInformeGasto(String id) {
+    public static InformeGasto getInformeGasto(String cajGasId) {
 
-        if (InformeGasto.find(InformeGasto.class, "", new String[]{id}).size() > 0) {
-            return InformeGasto.find(InformeGasto.class, "", new String[]{id}).get(0);
+        if (InformeGasto.find(InformeGasto.class, "caj_Gas_Id=?", new String[]{cajGasId}).size() > 0) {
+            return InformeGasto.find(InformeGasto.class, "caj_Gas_Id=?", new String[]{cajGasId}).get(0);
         }
         return null;
     }

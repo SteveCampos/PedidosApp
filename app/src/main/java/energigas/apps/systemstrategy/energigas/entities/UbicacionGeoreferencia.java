@@ -1,7 +1,11 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
+
+import java.util.List;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -68,5 +72,22 @@ public class UbicacionGeoreferencia extends SugarRecord {
 
     public void setTipoId(int tipoId) {
         this.tipoId = tipoId;
+    }
+
+    public static UbicacionGeoreferencia getUbicacionGeoreferencia(String ubicacionGeoreferenciadaId) {
+        List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.find(UbicacionGeoreferencia.class, "id_Ubicacion_Geo_Ref=?", new String[]{ubicacionGeoreferenciadaId});
+        ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
+
+        for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias) {
+            Log.d("UbicacionGeoreferencia", "" + georeferencia.getDescripcion() + "-" + georeferencia.getCodigo());
+            if (ubicacionGeoreferenciadaId.equals(georeferencia.getIdUbicacionGeoRef())) {
+                Log.d("UbicacionGeoreferencia", "ENCONTRADA: " + georeferencia.getDescripcion() + "-" + georeferencia.getCodigo());
+            }
+        }
+
+        if (ubicacionGeoreferencias.size() > 0) {
+            return ubicacionGeoreferencias.get(0);
+        }
+        return null;
     }
 }

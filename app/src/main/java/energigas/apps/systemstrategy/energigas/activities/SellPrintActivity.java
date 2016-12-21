@@ -152,7 +152,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setTextItems(){
-        DecimalFormat df = new DecimalFormat("#.00");
+
         String costoUnidad = "";
         String cantidadNombre = "";
         double importeTotal = 0.0;
@@ -160,17 +160,17 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
             importeTotal = importeTotal + comprobanteVentaDetalles.get(i).getImporte();
             if (i == (comprobanteVentaDetalles.size() - 1)) {
 
-                costoUnidad = costoUnidad + df.format(comprobanteVentaDetalles.get(i).getImporte());
+                costoUnidad = costoUnidad +comprobanteVentaDetalles.get(i).getImporte();
                 cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" ";
             } else {
 
-                costoUnidad = costoUnidad + df.format(comprobanteVentaDetalles.get(i).getImporte())+ " \n";
+                costoUnidad = costoUnidad + comprobanteVentaDetalles.get(i).getImporte()+ " \n";
                 cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" \n";
             }
 
         }
 
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe),costoUnidad,df.format(importeTotal),"12.12","13.13","14.14","15.15","16.16",df.format(importeTotal)+"");
+        String textImporte = String.format(res.getString(R.string.print_factura_items_importe),costoUnidad,importeTotal+"","12.12","13.13","14.14","15.15","16.16",importeTotal+"");
         textViewImprimirContenidoRight.setText(textImporte);
 
         String textCNombre = String.format(res.getString(R.string.print_factura_items),cantidadNombre);

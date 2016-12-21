@@ -159,7 +159,7 @@ public class MainStationActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(viewpager);
 
         for (int i = 0; i < accessFragmentList.size(); i++) {
-            int count = i+1;
+            int count = i + 1;
             for (AccessFragment fragment2 : accessFragmentList) {
                 if (count == fragment2.getOrden()) {
                     adapter.addFragment(fragment2.getFragment(), fragment2.getId());
@@ -265,6 +265,7 @@ public class MainStationActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
     }
 
     @Override

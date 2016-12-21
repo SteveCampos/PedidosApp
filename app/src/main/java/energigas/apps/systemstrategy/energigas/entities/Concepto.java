@@ -118,4 +118,8 @@ public class Concepto extends SugarRecord {
     public static Concepto getConceptoById(String  id){
         return Concepto.find(Concepto.class," id_Concepto=?  ",new String[]{id}).get(0);
     }
+
+    public static Concepto getConcepto(String  codigo){
+        return Concepto.find(Concepto.class," id_Concepto=?  ",new String[]{codigo}).get(0);
+    }
 }

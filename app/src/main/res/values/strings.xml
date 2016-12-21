@@ -122,6 +122,10 @@
         "DIRECCION: %5$s "
     </string>
 
+     <string name="text_detalle_ingresos">
+         "%1$-10s"
+    </string>
+
 
 
     <string name="print_factura_items">

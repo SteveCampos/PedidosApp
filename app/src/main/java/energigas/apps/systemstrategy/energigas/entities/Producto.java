@@ -131,13 +131,11 @@ public class Producto extends SugarRecord {
         this.fechaActualizacion = fechaActualizacion;
     }
 
-    public static List<Producto> getAllProducto(){
-       for (Producto producto : Producto.find(Producto.class,"",null)){
-           Log.d("AgregarPedidoDespacho",producto.getDescripcion()+"-"+producto.isEstado()+"-"+String.valueOf(Constants.ESTADO_TRUE));
-       }
-        return Producto.find(Producto.class," estado=?",new String[]{"1"});
+    public static List<Producto> getAllProducto() {
+        return Producto.listAll(Producto.class);
     }
-    public static String getNameProducto(String productoId){
-        return Producto.find(Producto.class,"pro_Id=?",new String[]{productoId}).get(0).getNombre();
+
+    public static String getNameProducto(String productoId) {
+        return Producto.find(Producto.class, "pro_Id=?", new String[]{productoId}).get(0).getNombre();
     }
 }

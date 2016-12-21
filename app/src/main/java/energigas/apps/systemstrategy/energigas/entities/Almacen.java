@@ -238,7 +238,19 @@ public class Almacen extends SugarRecord {
     }
 
     public static List<Almacen> getListTanque(String idEstablecimiento) {
-        List<Almacen> list = Almacen.find(Almacen.class," establecimiento_Id = ? ",new String[]{idEstablecimiento});
+        List<Almacen> list = Almacen.find(Almacen.class, " establecimiento_Id = ? ", new String[]{idEstablecimiento});
         return list;
     }
+
+    public static Almacen getAlmacenByUser(String usuarioId) {
+        VehiculoUsuario vehiculoUsuario = VehiculoUsuario.getVehiculoUsuario(usuarioId);
+        Almacen almacen = null;
+        if (vehiculoUsuario != null) {
+            almacen = Almacen.find(Almacen.class, "vehiculo_Id=?", new String[]{vehiculoUsuario.getVeId() + ""}).get(0);
+            return almacen;
+        }
+        return null;
+    }
+
+
 }

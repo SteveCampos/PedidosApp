@@ -3,11 +3,13 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
 
-public class VehiculoUsuario extends SugarRecord{
+public class VehiculoUsuario extends SugarRecord {
 
     @Unique
     private String vehiculoUsuarioId;
@@ -58,5 +60,10 @@ public class VehiculoUsuario extends SugarRecord{
 
     public void setResponsable(boolean responsable) {
         this.responsable = responsable;
+    }
+
+    public static VehiculoUsuario getVehiculoUsuario(String usuarioId) {
+        List<VehiculoUsuario> vehiculoUsuarioList = VehiculoUsuario.find(VehiculoUsuario.class, "usuario_Id=?", new String[]{usuarioId});
+        return vehiculoUsuarioList.get(0);
     }
 }

@@ -36,6 +36,7 @@ import energigas.apps.systemstrategy.energigas.adapters.StationDispatchsAdapter;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -70,7 +71,6 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
      */
     /*
     // TODO: Rename and change types and number of parameters
@@ -82,7 +82,6 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         fragment.setArguments(args);
         return fragment;
     }*/
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +114,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
     private void initiViews() {
-        dispatchList = Despacho.find(Despacho.class," establecimiento_Id = ? ",new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId()+""});
+        dispatchList = Despacho.find(Despacho.class, " establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""});
 
         adapter = new StationDispatchsAdapter(dispatchList, getActivity(), this);
         recyclerView.setAdapter(adapter);
@@ -129,16 +128,16 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         //If ActionMode not null select item
 
         int position = recyclerView.getChildAdapterPosition(view);
-        switch (type){
+        switch (type) {
             case 0:
                 if (mActionMode != null)
-                    onListItemSelect(position,orderDispatch);
+                    onListItemSelect(position, orderDispatch);
                 else
                     Log.d(TAG, "ON CLICK LISTENER");
-                    //startActivity(new Intent(getActivity(), DispatchActivity.class));
+                //startActivity(new Intent(getActivity(), DispatchActivity.class));
                 break;
             case 1:
-                onListItemSelect(position,orderDispatch);
+                onListItemSelect(position, orderDispatch);
                 break;
         }
     }
@@ -163,8 +162,8 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }*/
 
     //List item select method
-    private void onListItemSelect(int position,Despacho despacho) {
-        adapter.toggleSelection(position,despacho);//Toggle the selection
+    private void onListItemSelect(int position, Despacho despacho) {
+        adapter.toggleSelection(position, despacho);//Toggle the selection
         setActionMode(adapter.getSelectedCount());
     }
 
@@ -226,6 +225,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
                 return false;
         }
     }
+
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         adapter.removeSelection(adapter.getSelectedIds());
@@ -234,12 +234,24 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     }
 
 
-    private void print() {
-        Snackbar.make(recyclerView, adapter.getSelectedCount() + " Despachos Seleccionados", Snackbar.LENGTH_LONG).show();
-        startActivity(new Intent(getActivity(), PrintFacturaActivity.class));
+    private void createAndShowAlertDialog() {
+        new DialogGeneral(getActivity()).setMessages("Generar comprobante", "¿Esta seguro de realizar la venta para " + adapter.getStationDispatchesSelected().size() + " despachos?").setTextButtons("SI", "NO").setCancelable(false).showDialog(new DialogGeneralListener() {
+            @Override
+            public void onSavePressed(AlertDialog alertDialog) {
+                List<String> strings = adapter.getIdsDispatchesSelected();
+                iniciarVenta(strings);
+                onDestroyActionMode(mActionMode);
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
+            }
+        });
     }
 
-    private void createAndShowAlertDialog() {
+    private void createAndShowaaAlertDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Generar Vista Previa Factura");
@@ -252,7 +264,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
                 dialog.dismiss();
                 iniciarVenta(strings);
                 onDestroyActionMode(mActionMode);
-               // print();
+                // print();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -264,8 +276,9 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void iniciarVenta(List<String> strings ){
-        Session.saveIdsDespachos(strings,getActivity());
+
+    private void iniciarVenta(List<String> strings) {
+        Session.saveIdsDespachos(strings, getActivity());
         startActivity(new Intent(getActivity(), SellActivity.class));
     }
 
@@ -307,9 +320,9 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+     public interface OnFragmentInteractionListener {
+     // TODO: Update argument type and name
+     void onFragmentInteraction(Uri uri);
+     }
      */
 }

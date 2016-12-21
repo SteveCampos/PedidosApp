@@ -118,4 +118,6 @@ public class CajaPago extends SugarRecord{
     public static CajaPago getCajaPago(String cajaMov ){
         return CajaPago.find(CajaPago.class,"caj_Mov_Id=?",new String[]{cajaMov}).get(0);
     }
+
+
 }

@@ -198,7 +198,7 @@ public class AccessPrivilegesManager {
         List<Privilegio> privilegioList = new ArrayList<>();
 
         for (Rol rol : Rol.getRol(usuarioId)) {
-
+            Log.d("MainActivity",rol.getNombre());
             List<Acceso> accesosFor = Acceso.getAccesosFor(rol.getIdRol() + "", aClass.getSimpleName());
 
             for (Acceso acceso : accesosFor) {

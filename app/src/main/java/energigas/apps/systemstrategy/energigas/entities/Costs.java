@@ -5,15 +5,25 @@ package energigas.apps.systemstrategy.energigas.entities;
  */
 
 public class Costs {
+    private String enRuta;
     private String descripcion;
     private double total;
 
     public Costs() {
     }
 
-    public Costs(String descripcion, double total) {
+    public Costs(String enRuta, String descripcion, double total) {
+        this.enRuta = enRuta;
         this.descripcion = descripcion;
         this.total = total;
+    }
+
+    public String getEnRuta() {
+        return enRuta;
+    }
+
+    public void setEnRuta(String enRuta) {
+        this.enRuta = enRuta;
     }
 
     public String getDescripcion() {
@@ -31,6 +41,4 @@ public class Costs {
     public void setTotal(double total) {
         this.total = total;
     }
-
-
 }

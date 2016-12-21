@@ -1,7 +1,12 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * Created by kelvi on 20/07/2016.
@@ -56,17 +61,32 @@ public class Inventory {
         this.cantidadFinal = cantidadFinal;
     }
 
-    public List<Inventory> instanceListInventory(){
+    public List<Inventory> instanceListInventory() {
         inventoriesList = new ArrayList<Inventory>();
         return inventoriesList;
 
     }
 
-    public   List<Inventory> getInventoryList() {
+    public List<Inventory> getInventoryList(Context context) {
 
-        inventoriesList.add(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
-        inventoriesList.add(new Inventory("Gas natural vehicular", 2000, 500, 1500));
+        CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(context).getLiqId() + "");
+        List<Producto> productoList = Producto.getAllProducto();
+        Log.d("InventarioFragment", productoList.size() + "");
+        Almacen almacen = Almacen.getAlmacenByUser(cajaLiquidacion.getUsuarioId() + "");
+        List<Inventory> inventoryList = new ArrayList<>();
 
-        return inventoriesList;
+        for (Producto producto : productoList) {
+            Log.d("InventarioFragment", producto.getProId() + "-" + almacen.getProductoId());
+            if (producto.getProId() == almacen.getProductoId()) {
+                Inventory inventory = new Inventory(producto.getNombre(), almacen.getStockPermanente(), almacen.getStockPermanente(), almacen.getStockActual());
+                inventoryList.add(inventory);
+            }
+        }
+
+
+     /*   inventoriesList.add(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
+        inventoriesList.add(new Inventory("Gas natural vehicular", 2000, 500, 1500));*/
+
+        return inventoryList;
     }
 }

@@ -89,4 +89,14 @@ public class CajaComprobante extends SugarRecord {
 
         return null;
     }
+
+
+    public static CajaComprobante getCajaComprobanteByMov(String cajMovId){
+        if (CajaComprobante.find(CajaComprobante.class," caj_Mov_Id =?",new String[]{cajMovId}).size()>0){
+            return CajaComprobante.find(CajaComprobante.class," caj_Mov_Id =?",new String[]{cajMovId}).get(0);
+        }
+
+
+        return null;
+    }
 }

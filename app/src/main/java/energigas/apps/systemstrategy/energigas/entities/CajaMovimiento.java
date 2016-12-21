@@ -229,9 +229,9 @@ public class CajaMovimiento extends SugarRecord {
         return cajaMovimiento;
     }
 
-    public static CajaMovimiento getCajaMovimientoById(String id) {
-        if (CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).size() > 0) {
-            return CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{id}).get(0);
+    public static CajaMovimiento getCajaMovimientoById(String cajaMovId) {
+        if (CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{cajaMovId}).size() > 0) {
+            return CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{cajaMovId}).get(0);
         }
 
         return null;
@@ -239,14 +239,32 @@ public class CajaMovimiento extends SugarRecord {
 
 
     public static List<CajaMovimiento> getListCajaMovimiento(ArrayList<CajaMovimiento> cajaMovimientos) {
+
         List<CajaMovimiento> cajaMovimientoList = new ArrayList<>();
+        boolean b = true;
         for (CajaMovimiento cajaMovimiento : cajaMovimientos) {
-            CajaGasto cajaGasto = CajaGasto.getCajaGastobyCajMov(cajaMovimiento.getCajMovId()+"");
-            InformeGasto informeGasto = InformeGasto.getInformeGastoByCajGasto(cajaGasto.getCajGasId()+"");
-            cajaMovimiento.setInfGasto(informeGasto);
-            cajaMovimiento.setGasto(cajaGasto);
-            cajaMovimientoList.add(cajaMovimiento);
+            CajaGasto cajaGasto = CajaGasto.getCajaGastobyCajMov(cajaMovimiento.getCajMovId() + "");
+
+            if (cajaGasto == null) {
+                b = false;
+            } else {
+                InformeGasto informeGasto = InformeGasto.getInformeGastoByCajGasto(cajaGasto.getCajGasId() + "");
+                cajaMovimiento.setInfGasto(informeGasto);
+                cajaMovimiento.setGasto(cajaGasto);
+                cajaMovimientoList.add(cajaMovimiento);
+
+            }
+
+
+        }
+
+        if (!b) {
+            cajaMovimientoList = new ArrayList<>();
         }
         return cajaMovimientoList;
+    }
+
+    public static List<CajaMovimiento> getCajaMovimientos(String liquidacion) {
+        return CajaMovimiento.find(CajaMovimiento.class, "liq_Id=?", new String[]{liquidacion});
     }
 }
