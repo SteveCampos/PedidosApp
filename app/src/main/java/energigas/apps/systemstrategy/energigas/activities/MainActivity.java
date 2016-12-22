@@ -30,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         //  new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
         new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
-
+        new AtencionesAsyntask().execute();
 
     }
 
