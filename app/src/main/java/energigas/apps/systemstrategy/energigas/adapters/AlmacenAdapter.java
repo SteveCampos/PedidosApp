@@ -7,18 +7,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.holders.AlmacenHolder;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
  * Created by Steve on 10/08/2016.
  */
 
-public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
+public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder> {
 
     private static final String TAG = AlmacenAdapter.class.getSimpleName();
     // Store a member variable for the list;
@@ -27,11 +31,13 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     private Context mContext;
 
     private OnAlmacenClickListener listener;
+    private CajaLiquidacion cajaLiquidacion;
 
-    public  AlmacenAdapter(List<Almacen> almacenList, Context mContext, OnAlmacenClickListener listener) {
+    public AlmacenAdapter(List<Almacen> almacenList, Context mContext, OnAlmacenClickListener listener) {
         this.almacenList = almacenList;
         this.mContext = mContext;
         this.listener = listener;
+        this.cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(mContext).getLiqId() + "");
     }
 
     @Override
@@ -46,11 +52,11 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
     @Override
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
-        holder.title.setText("Tanque " +  (++position));
+        holder.title.setText("Tanque " + (++position));
 
-        holder.capacity.setText(almacen.getStockMinimo()+" - "+almacen.getCapacidadNeta());
-        holder.politica.setText(almacen.getPolitica()+" - "+almacen.getCapacidadReal());
-        holder.capacidadNeta.setText(almacen.getCapacidadNeta()+"");
+        holder.capacity.setText(almacen.getStockMinimo() + " - " + almacen.getCapacidadNeta());
+        holder.politica.setText(almacen.getPolitica() + " - " + almacen.getCapacidadReal());
+        holder.capacidadNeta.setText(almacen.getCapacidadNeta() + "");
         holder.programado.setText(almacen.getNombre());
 
         int color = R.color.dark_grey;
@@ -79,25 +85,37 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
         }
         */
 
-       // holder.programado.setText(programado);
+        // holder.programado.setText(programado);
         holder.estado.setText("");
         holder.estado.setTextColor(ContextCompat.getColor(mContext, color));
-        holder.capacidadNeta.setText(almacen.getCapacidadNeta()+" GAL");
+        holder.capacidadNeta.setText(almacen.getCapacidadNeta() + " GAL");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean b = true;
                 Log.d(TAG, "CLICKED: " + view);
-                listener.onAlmacenClickListener(almacen, view, 0);
+                for (Despacho despacho : Despacho.find(Despacho.class, "liq_Id=?", new String[]{cajaLiquidacion.getLiqId() + ""})) {
+                    if (despacho.getAlmacenEstId() == almacen.getAlmId()) {
+                        b = false;
+                    }
+                }
+
+                if (b) {
+                    listener.onAlmacenClickListener(almacen, view, 0);
+                } else {
+                    Toast.makeText(mContext, "Despacho ya realizado para este almacen", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+       /* holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 listener.onAlmacenClickListener(almacen, view, 1);
                 return true;
             }
-        });
+        });*/
     }
 
     @Override
@@ -105,7 +123,7 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder>{
         return almacenList.size();
     }
 
-    public interface OnAlmacenClickListener{
+    public interface OnAlmacenClickListener {
         void onAlmacenClickListener(Almacen almacen, View view, int typeClick);
     }
 }

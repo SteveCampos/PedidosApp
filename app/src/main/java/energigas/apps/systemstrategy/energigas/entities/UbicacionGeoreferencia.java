@@ -76,7 +76,7 @@ public class UbicacionGeoreferencia extends SugarRecord {
 
     public static UbicacionGeoreferencia getUbicacionGeoreferencia(String ubicacionGeoreferenciadaId) {
         List<UbicacionGeoreferencia> ubicacionGeoreferencias = UbicacionGeoreferencia.find(UbicacionGeoreferencia.class, "id_Ubicacion_Geo_Ref=?", new String[]{ubicacionGeoreferenciadaId});
-        ubicacionGeoreferencias = UbicacionGeoreferencia.listAll(UbicacionGeoreferencia.class);
+
 
         for (UbicacionGeoreferencia georeferencia : ubicacionGeoreferencias) {
             Log.d("UbicacionGeoreferencia", "" + georeferencia.getDescripcion() + "-" + georeferencia.getCodigo());

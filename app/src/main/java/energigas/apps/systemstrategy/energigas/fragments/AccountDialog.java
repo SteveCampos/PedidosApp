@@ -29,6 +29,7 @@ import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
@@ -73,7 +74,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         setCancelable(false);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
-        locationVehiculeListener = new LocationVehiculeListener(this);
+        locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         return dialog;
     }
 
@@ -134,7 +135,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
 
     private void showSendTask() {
 
-        String usuarioId = usuario.getUsuIUsuarioId()+"";
+        String usuarioId = usuario.getUsuIUsuarioId() + "";
         String kmInicial = editTextKI.getText().toString();
         String pesoInicial = editTextWI.getText().toString();
         String porcentajeInicial = editTextPI.getText().toString();
@@ -155,7 +156,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         dismiss();
         locationVehiculeListener.stopLocationUpdates();
         setMessage(message);
-        Session.saveCajaLiquidacion(getActivity(),cajaLiquidacion);
+        Session.saveCajaLiquidacion(getActivity(), cajaLiquidacion);
         fab.hide();
     }
 

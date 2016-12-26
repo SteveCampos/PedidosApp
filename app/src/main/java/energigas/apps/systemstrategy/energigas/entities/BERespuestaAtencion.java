@@ -5,40 +5,40 @@ package energigas.apps.systemstrategy.energigas.entities;
  */
 
 public class BERespuestaAtencion {
-    private long IdLiq;
-    private long IdLiqDetalle;
-    private int Respuesta;
+    private long idLiq;
+    private long idLiqDetalle;
+    private int respuesta;
 
     public BERespuestaAtencion() {
     }
 
     public BERespuestaAtencion(long idLiq, long idLiqDetalle, int respuesta) {
-        IdLiq = idLiq;
-        IdLiqDetalle = idLiqDetalle;
-        Respuesta = respuesta;
+        this.idLiq = idLiq;
+        this.idLiqDetalle = idLiqDetalle;
+        this.respuesta = respuesta;
     }
 
     public long getIdLiq() {
-        return IdLiq;
+        return idLiq;
     }
 
     public void setIdLiq(long idLiq) {
-        IdLiq = idLiq;
+        this.idLiq = idLiq;
     }
 
     public long getIdLiqDetalle() {
-        return IdLiqDetalle;
+        return idLiqDetalle;
     }
 
     public void setIdLiqDetalle(long idLiqDetalle) {
-        IdLiqDetalle = idLiqDetalle;
+        this.idLiqDetalle = idLiqDetalle;
     }
 
     public int getRespuesta() {
-        return Respuesta;
+        return respuesta;
     }
 
     public void setRespuesta(int respuesta) {
-        Respuesta = respuesta;
+        this.respuesta = respuesta;
     }
 }

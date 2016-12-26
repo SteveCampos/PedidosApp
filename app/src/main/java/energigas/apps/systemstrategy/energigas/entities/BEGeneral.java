@@ -18,12 +18,13 @@ public class BEGeneral extends SugarRecord {
     private List<Unidad> itemsUnidades;
     private List<ProductoUnidad> itemsProductoUnidad;
     private List<DETipo> itemsTipos;
+    private List<Proveedor> proveedoresList;
 
 
     public BEGeneral() {
     }
 
-    public BEGeneral(List<Concepto> itemsConceptos, List<Estado> itemsEstados, List<UbicacionGeoreferencia> itemUbigeos, List<Producto> itemsProductos, List<Unidad> itemsUnidades, List<ProductoUnidad> itemsProductoUnidad, List<DETipo> itemsTipos) {
+    public BEGeneral(List<Concepto> itemsConceptos, List<Estado> itemsEstados, List<UbicacionGeoreferencia> itemUbigeos, List<Producto> itemsProductos, List<Unidad> itemsUnidades, List<ProductoUnidad> itemsProductoUnidad, List<DETipo> itemsTipos, List<Proveedor> proveedoresList) {
         this.itemsConceptos = itemsConceptos;
         this.itemsEstados = itemsEstados;
         this.itemUbigeos = itemUbigeos;
@@ -31,6 +32,15 @@ public class BEGeneral extends SugarRecord {
         this.itemsUnidades = itemsUnidades;
         this.itemsProductoUnidad = itemsProductoUnidad;
         this.itemsTipos = itemsTipos;
+        this.proveedoresList = proveedoresList;
+    }
+
+    public List<Proveedor> getProveedoresList() {
+        return proveedoresList;
+    }
+
+    public void setProveedoresList(List<Proveedor> proveedoresList) {
+        this.proveedoresList = proveedoresList;
     }
 
     public List<DETipo> getItemsTipos() {

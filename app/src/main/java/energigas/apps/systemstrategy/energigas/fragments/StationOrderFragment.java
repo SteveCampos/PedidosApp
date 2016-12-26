@@ -91,6 +91,7 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
             if (booleanHashMap !=null){
 
                 if (booleanHashMap.get(StationOrderActivity.class.getSimpleName())) {
+                    //if (pedido.getEstado().getId())
                     listener.onStationOrderClickListener(pedido);
                 }
             }

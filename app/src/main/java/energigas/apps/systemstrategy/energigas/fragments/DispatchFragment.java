@@ -127,7 +127,7 @@ public class DispatchFragment extends Fragment implements DispatchActivity.onNex
         View view = inflater.inflate(
                 R.layout.layout_dispatch, container, false);
         unbinder = ButterKnife.bind(this, view);
-        locationVehiculeListener = new LocationVehiculeListener(this);
+        locationVehiculeListener =new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class," liq_Id = ? ",new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId()+""}).get(Constants.CURRENT);
         pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);
         pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(getActivity()).getPeId() + ""}).get(Constants.CURRENT);

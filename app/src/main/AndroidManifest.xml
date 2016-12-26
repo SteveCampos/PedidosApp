@@ -34,7 +34,7 @@
             android:value="energigas.db" />
         <meta-data
             android:name="VERSION"
-            android:value="6" />
+            android:value="8" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -99,6 +99,12 @@
             android:name=".activities.PrintDispatch"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.ResumenPrintActivity"
+            android:label="@string/title_activity_print_dispatch"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.CajaGastoActivity"
             android:label="@string/activity_expenses_account"
@@ -155,17 +161,25 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".services.ServiceExport"
-            android:process=":Export" />
+            android:name=".services.ServiceSync"
+            android:process=":ServiceSync" />
+
+        <service
+            android:name=".services.ServiceFirebase"
+            android:process=":ServiceFirebase" />
+
+        <service
+            android:name=".services.ServiceExportMyLocation"
+            android:process=":ExportLocation" />
 
         <activity
             android:name=".activities.AgregarPedidoDespacho"
             android:label="@string/title_activity_agregar_pedido_despacho"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SellPrintActivity"
             android:label="Imprimir Comprobante"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -176,9 +190,11 @@
 
         <activity
             android:name=".activities.ModalActivity"
-            android:theme="@style/myDialogActivity">
-
-        </activity>
+            android:theme="@style/myDialogActivity"></activity>
+        <activity
+            android:name=".activities.MainConfiguraciones"
+            android:label="@string/title_activity_main_configuraciones"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

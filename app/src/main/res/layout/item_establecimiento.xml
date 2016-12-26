@@ -69,10 +69,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_marker"
                     android:textAppearance="@style/TextViewSmall"
-                    android:drawableStart="@drawable/ic_marker"
                     android:drawablePadding="8dp"
                     android:gravity="center"
-                    android:drawableLeft="@drawable/ic_marker" />
+                    android:drawableLeft="@drawable/ic_reloj" />
 
 
                 <TextView

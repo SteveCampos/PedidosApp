@@ -28,12 +28,12 @@
             app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-         <!--   <LinearLayout
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:layout_height="match_parent" />-->
+            <!--   <LinearLayout
+                   android:background="@color/white"
+                   android:layout_width="match_parent"
+                   android:fitsSystemWindows="true"
+                   app:layout_collapseMode="parallax"
+                   android:layout_height="match_parent" />-->
 
 
             <!--<ImageView
@@ -58,7 +58,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
 
 
                     <TextView
@@ -92,15 +91,13 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:gravity="center"
                         android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
                         android:shadowColor="@color/greem_background_item"
                         android:text="@string/information_summary"
                         android:textColor="@color/white"
                         android:textSize="@dimen/article_titles"
                         android:textStyle="bold" />
-
-
 
 
                 </LinearLayout>
@@ -139,5 +136,16 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabImprimirResumen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="@dimen/md_keylines"
+        android:layout_marginRight="@dimen/md_keylines"
+        android:src="@drawable/ic_printer_sync_ok"
+        android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

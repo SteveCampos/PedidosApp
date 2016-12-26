@@ -22,16 +22,19 @@ public class LocationVehiculeListener implements LocationListener {
 
     private static final String TAG = "LocationVehiculeListener";
     private OnLocationListener onLocationListener;
-    private static final long MIN_TIME_BW_UPDATES = 1 * 1000;
+
     private Context context;
     protected LocationManager locationManager;
     int i = 0;
+    Long minTime;
+    Long minDistance;
 
-    public LocationVehiculeListener(OnLocationListener onLocationListener) {
+    public LocationVehiculeListener(OnLocationListener onLocationListener, Long minTime, Long minDistance) {
         this.onLocationListener = onLocationListener;
         context = onLocationListener.getContextActivity();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
+        this.minTime = minTime;
+        this.minDistance = minDistance;
 
         // TODO check is network/gps is enabled and display the system settings
         // see
@@ -42,7 +45,7 @@ public class LocationVehiculeListener implements LocationListener {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                MIN_TIME_BW_UPDATES, 1, this);
+                minTime, minDistance, this);
 
 
         Log.d("GPS Enabled", "GPS Enabled");

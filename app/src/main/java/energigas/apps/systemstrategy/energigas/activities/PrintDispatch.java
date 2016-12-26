@@ -32,7 +32,9 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
+import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
@@ -65,8 +67,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     FloatingActionButton floatingPrint;
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
-    @BindView(R.id.fabNext)
-    FloatingActionButton floatingNext;
+
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -84,6 +85,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     private Resources resources;
     private Usuario usuario;
+
+    private CajaLiquidacion CajaLiquidacion;
 
     private static final String TAG = "PrintDispatch";
 
@@ -104,9 +107,11 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
 
+        CajaLiquidacion = energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+
 
         new AccessPrivilegesManager(getClass())
-                .setViews(floatingDisconect, floatingPrint, floatingActionButton, floatingNext)
+                .setViews(floatingDisconect, floatingPrint, floatingActionButton)
                 .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
 
 
@@ -119,7 +124,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         floatingActionButton.setOnClickListener(this);
         floatingPrint.setOnClickListener(this);
         floatingDisconect.setOnClickListener(this);
-        floatingNext.setOnClickListener(this);
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -130,7 +135,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     }
 
     private void viewTextCabecera() {
-        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), "Energigas S.A.C", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
+        DEEntidad deEntidad = CajaLiquidacion.getEntidad();
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa),deEntidad.getRazonSocial(), "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
         textCabecera.setText(tetextCabeceraxt);
     }
 
@@ -220,18 +226,13 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
             case R.id.fabDisconec:
                 floatingPrint.startAnimation(fab_close);
                 floatingDisconect.startAnimation(fab_close);
-                floatingNext.startAnimation(fab_close);
 
-                floatingNext.setClickable(false);
                 floatingPrint.setClickable(false);
                 floatingDisconect.setClickable(false);
                 isFabOpen = false;
                 btDisconn();
                 break;
-            case R.id.fabNext:
-                //ORDER
-                startActivity(new Intent(PrintDispatch.this, PrintFacturaActivity.class));
-                break;
+
         }
     }
 
@@ -240,7 +241,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
         CoordinatorLayout.LayoutParams pDes = (CoordinatorLayout.LayoutParams) floatingDisconect.getLayoutParams();
         CoordinatorLayout.LayoutParams pPrint = (CoordinatorLayout.LayoutParams) floatingPrint.getLayoutParams();
-        CoordinatorLayout.LayoutParams pNext = (CoordinatorLayout.LayoutParams) floatingNext.getLayoutParams();
+
 
 
         if (!connected) {
@@ -262,34 +263,31 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
                 pPrint.setBehavior(null);
                 pDes.setBehavior(null);
-                pNext.setBehavior(null);
+
                 floatingPrint.setLayoutParams(pPrint);
                 floatingDisconect.setLayoutParams(pDes);
-                floatingNext.setLayoutParams(pNext);
+
 
                 floatingPrint.startAnimation(fab_close);
                 floatingDisconect.startAnimation(fab_close);
-                floatingNext.startAnimation(fab_close);
 
                 floatingPrint.setClickable(false);
                 floatingDisconect.setClickable(false);
-                floatingNext.setClickable(false);
+
                 isFabOpen = false;
             } else {
 
                 pPrint.setBehavior(new FABScrollBehavior(this, null));
                 pDes.setBehavior(new FABScrollBehavior(this, null));
-                pNext.setBehavior(new FABScrollBehavior(this, null));
+
 
                 floatingPrint.setLayoutParams(pPrint);
                 floatingDisconect.setLayoutParams(pDes);
-                floatingNext.setLayoutParams(pNext);
 
-                floatingNext.startAnimation(fab_open);
                 floatingPrint.startAnimation(fab_open);
                 floatingDisconect.startAnimation(fab_open);
 
-                floatingNext.setClickable(true);
+
                 floatingPrint.setClickable(true);
                 floatingDisconect.setClickable(true);
                 isFabOpen = true;

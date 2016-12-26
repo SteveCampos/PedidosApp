@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.orm.SugarRecord;
 import com.orm.SugarTransactionHelper;
 
@@ -46,6 +49,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.DespachoFacturaAdapter;
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
+import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
@@ -61,8 +65,10 @@ import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.DETipo;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
@@ -73,8 +79,8 @@ import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
-import energigas.apps.systemstrategy.energigas.entities.de.BEDocElectronico;
-import energigas.apps.systemstrategy.energigas.entities.de.BEDocElectronicoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
+import energigas.apps.systemstrategy.energigas.entities.BeDocElectronicoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.fe.CertificadoDigital;
 import energigas.apps.systemstrategy.energigas.entities.fe.Contribuyente;
 import energigas.apps.systemstrategy.energigas.entities.fe.DetalleDocumento;
@@ -83,7 +89,6 @@ import energigas.apps.systemstrategy.energigas.entities.fe.FirmadoResponse;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
-import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
@@ -159,15 +164,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     private Almacen almacenDistribuidor;
     private Vehiculo vehiculo;
     private String placaDocElectronico;
+    private String nombreDatosCliente;
+    private CajaLiquidacionDetalle cajaLiquidacionDetalle;
 
     /**
      * Obtener Objectos
      **/
-    private BEDocElectronico beDocElectronico;
+    private BeDocElectronico beDocElectronico;
     Concepto conceptoCredito;
 
-
-
+    private ProgressDialog progressDialog;
+    private DatabaseReference mDatabase;
+    private DatabaseReference myRef;
     /*Accesos*/
 
     private HashMap<String, Boolean> booleanHashMap;
@@ -176,6 +184,10 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Cargando...");
+
         Toast.makeText(this, "" + Session.getCajaLiquidacion(this).getLiqId() + "", Toast.LENGTH_SHORT).show();
         if (!Session.getTipoDespachoSN(this)) {
             pedido = Pedido.find(Pedido.class, "pe_Id=?", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
@@ -183,7 +195,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             pedido = Session.getPedido(this);
         }
 
-        beDocElectronico = new BEDocElectronico();
+        beDocElectronico = new BeDocElectronico();
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
 
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
@@ -192,32 +204,85 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Persona persona = Persona.find(Persona.class, " per_I_Persona_Id=? ", new String[]{cliente.getCliIPersonaId() + ""}).get(Constants.CURRENT);
         cliente.setPersona(persona);
         cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " persona_Id=? ", new String[]{persona.getPerIPersonaId() + ""}).get(Constants.CURRENT));
+        if (cliente.getPersona().getPerITipoPersonaId() == 42)//
+        {
+            nombreDatosCliente = cliente.getPersona().getPerVNombres() + ", " + cliente.getPersona().getPerVApellidoPaterno() + " " + cliente.getPersona().getPerVApellidoMaterno();
+
+        } else {
+            nombreDatosCliente = cliente.getPersona().getPerVRazonSocial();
+
+        }
 
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
+        cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", pedido.getPeId() + "");
 
         almacenDistribuidor = Almacen.findWithQuery(Almacen.class, Utils.getQuerDespachoVehiculo(usuario.getUsuIUsuarioId()), null).get(Constants.CURRENT);
         vehiculo = Vehiculo.getVehiculo(usuario.getUsuIUsuarioId() + "");
+
+        if (vehiculo.getClaseId() == 55) {
+            placaDocElectronico = vehiculo.getPlaca();
+        } else {
+            placaDocElectronico = almacenDistribuidor.getPlaca();
+        }
+
+
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
 
         Session.setDefineCuotas(this, Constants.ESTADO_FALSE, "");
         ButterKnife.bind(this);
 
-
+        setTitle("Generar comprobante");
         initViews();
 
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
         new AccessPrivilegesManager(getClass())
-                .setViews(buttonVender,buttonCuotas)
+                .setViews(buttonVender, buttonCuotas)
                 .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
 
 
         fab.setOnClickListener(this);
         buttonVender.setOnClickListener(this);
         hideLinear(getFormaPago());
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_NOTIFICACIONES).child(Constants.FIREBASE_CHILD_ATENCION_PEDIDO);
+
+    }
 
 
+    private void notificarAtencionPedido() {
 
 
+        String id = myRef.push().getKey();
+        Log.d(TAG, "ID: " + id);
+        myRef.child(id).setValue(new FBRegistroPedido(cajaLiquidacion.getLiqId(), cajaLiquidacionDetalle.getLidId(), pedido.getPeId(), Long.parseLong(establecimiento.getEstIEstablecimientoId() + ""), Long.parseLong("45"), Long.parseLong("" + usuario.getUsuIUsuarioId())));
+
+        new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
+
+
+        new AtencionesAsyntask().execute();
+    }
+
+
+    private void updatLiqDetalle() {
+        List<Despacho> despachoList = Despacho.getListDespachoByPedidoNoCompIdEstablec(establecimiento.getEstIEstablecimientoId() + "");
+        List<Despacho> despachoListFacturado = Despacho.getListDespachoByPedidoNoCompIdFacturado(establecimiento.getEstIEstablecimientoId() + "");
+        Log.d(TAG, "TAG :  " + despachoList.size() + "-" + despachoListFacturado.size());
+
+        if (comprobanteVentaDetalles.size() > 0) {
+            int estadoFacturado = Constants.FACTURADO;
+            Double porcentaje = new Double(despachoList.size() / despachoListFacturado.size()) * 100;
+            if (porcentaje == 100.00) {
+                estadoFacturado = Constants.FACTURADO_TOTAL;
+            }
+
+            cajaLiquidacionDetalle.setEstadoFacId(estadoFacturado);
+            cajaLiquidacionDetalle.setPorFacturado(porcentaje);
+
+
+            cajaLiquidacionDetalle.save();
+        }
+
+        notificarAtencionPedido();
     }
 
 
@@ -226,13 +291,15 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         new DialogGeneral(SellActivity.this).setTextButtons("GUARDAR", "CANCELAR").setMessages("Atencion", "¿Esta seguro de guardar?").setCancelable(true).showDialog(new DialogGeneralListener() {
             @Override
             public void onSavePressed(AlertDialog alertDialog) {
-
+                alertDialog.dismiss();
                 if (Session.getDefineCuotas(getApplicationContext())) {
 
                     if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
 
                         SugarTransactionHelper.doInTransaction(SellActivity.this);
+                        progressDialog.show();
                         documentoElectronico = getDocumentoEletronico();
+
                         Log.d(TAG, "OBJECTO COMPROBANTE: " + documentoElectronico.getMoneda());
                         //intentPrint();
                         generarDocumentoElectronico();
@@ -243,6 +310,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else {
                     SugarTransactionHelper.doInTransaction(SellActivity.this);
+                    progressDialog.show();
                     documentoElectronico = getDocumentoEletronico();
                     System.out.println("OBJECTO COMPROBANTE");
                     System.out.print(documentoElectronico);
@@ -250,7 +318,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                     generarDocumentoElectronico();
                 }
 
-                alertDialog.dismiss();
+
             }
 
             @Override
@@ -322,11 +390,16 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onPause() {
+        progressDialog.dismiss();
+        super.onPause();
+    }
+
     private void saveVenta() {
 
         generarVenta();
         guardarVenta();
-        Session.saveComprobanteVenta(this, comprobanteVenta);
 
 
     }
@@ -367,9 +440,11 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         comprobanteVenta.setCliente(cliente.getPersona().getPerVDocIdentidad());
         comprobanteVenta.setDireccionCliente(cliente.getPersona().getUbicacion().getDescripcion());
         comprobanteVenta.setFechaCreacion(Utils.getDatePhoneWithTime());
+
         comprobanteVenta.setPorImpuesto(obtenerCalculos()[Constants.VENTA_POR_IMPUESTO]);
         /**Comprobante de venta detalle**/
         comprobanteVenta.setFechaDoc(Utils.getDatePhoneWithTime());
+
         comprobanteVenta.setFechaActualizacion(Utils.getDatePhoneWithTime());
         comprobanteVentaDetalles = getComprobanteVentaDetalleList(comprobanteVenta);
 
@@ -445,6 +520,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 for (PlanPagoDetalle pagoDetalle : planPagoDetalles) {
                     Long idPlanPagoDetalle = pagoDetalle.save();
                     pagoDetalle.setPlanPaDeId(Integer.parseInt("" + idPlanPagoDetalle));
+                    pagoDetalle.setPlanPaId(insplanPago);
                     pagoDetalle.save();
                 }
 
@@ -464,12 +540,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 cajaMovimiento.save();
                 cajaComprobante.setCajMovId(idMov);
                 cajaComprobante.setCajCompId(comproVentaId);
-                Long cajaCom = cajaComprobante.save();
+                cajaComprobante.save();
                 cajaPago.setCajMovId(idMov);
                 Long idcajaPag = cajaPago.save();
                 cajaPago.setCajPagId(idcajaPag);
                 cajaPago.save();
-                Log.d(TAG, " CajaComprobante " + cajaCom);
+                Log.d(TAG, " CajaComprobante " + comproVentaId);
                 Log.d(TAG, " CajaPago " + idcajaPag);
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(cajaMovimiento.getId() + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaComprobante.class.getSimpleName()), Integer.parseInt(cajaComprobante.getId() + ""), Constants.S_CREADO).save();
@@ -501,7 +577,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         DocumentoElectronico doc = new DocumentoElectronico();
 
         doc.setIdDocumento(comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc());
-        doc.setFechaEmision(Utils.getDateToDocument(comprobanteVenta.getFechaDoc()));
+        doc.setFechaEmision(Utils.getDatePhoneFE());
         Log.e("ERRORMAIN", "" + comprobanteVenta.getTipoComprobanteId());
         doc.setTipoDocumento(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getCodigo());
         doc.setMoneda(Constants.DOCUMENTO_ELECTRONICO_PEN);
@@ -510,7 +586,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         doc.setInafectas(new BigDecimal(0.00));
         doc.setExoneradas(new BigDecimal(0.00));
         doc.setGratuitas(new BigDecimal(0.00));
-        doc.setPlacaVehiculo(vehiculo.getPlaca());
+
+        doc.setPlacaVehiculo(placaDocElectronico);
 
 
         /** EMISOR **/
@@ -536,8 +613,17 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         Contribuyente receptor = new Contribuyente();
         receptor.setTipoDocumento(getTipoDocumentoFE(cliente.getPersona().getPerITipoDocIdentidadId()).getCodigo());
         receptor.setNroDocumento(cliente.getPersona().getPerVDocIdentidad());
-        receptor.setNombreComercial(cliente.getPersona().getPerVRazonSocial());
+        receptor.setNombreComercial(nombreDatosCliente);
         receptor.setNombreLegal(cliente.getPersona().getPerVRazonSocial());
+
+        georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(cliente.getPersona().getUbicacion().getUgId() + "");
+        georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
+        georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
+
+
+        receptor.setDistrito(georeferencia.getDescripcion());
+        receptor.setProvincia(georeferenciaProvincia.getDescripcion());
+        receptor.setDepartamento(georeferenciaDepartamento.getDescripcion());
         /**--------------------------------------------**/
 
         doc.setTotalVenta(new BigDecimal(comprobanteVenta.getTotal()));
@@ -559,10 +645,14 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             item1.setImpuesto(new BigDecimal(Utils.formatDouble(comprobanteVenta.getPorImpuesto())));
             item1.setTipoImpuesto(getTipoDocumentoFE(Constants.DOCUMENTO_ELECTRONICO_OPERACION_ONEROSA).getCodigo());
             item1.setImpuestoSelectivo(BigDecimal.ZERO);//ISC
+            item1.setSuma(new BigDecimal(ventaDetalle.getImporte()));
+            item1.setOtroImpuesto(new BigDecimal(0.00));
+            item1.setPrecioReferencial(new BigDecimal(0.00));
+            item1.setDescuento(new BigDecimal(0.00));
             items.add(item1);
 
         }
-
+        doc.setMontoAnticipo(new BigDecimal(0.0));
         doc.setReceptor(receptor);
         doc.setEmisor(emisor);
         doc.setItems(items);
@@ -583,12 +673,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                         FirmadoResponse response;
                         ObjectMapper mapper = new ObjectMapper();
                         try {
-
+                            Log.d(TAG, "RESPONSE: " + data.getStringExtra("response"));
                             response = mapper.readValue(data.getStringExtra("response"), FirmadoResponse.class);
                             Log.e(TAG, "Error:" + response.getTramaXmlFirmado());
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Log.e(TAG, "Error:" + e.getMessage());
+                            Log.d(TAG, "DAT:" + e.getMessage());
                             return;
                         }
 
@@ -597,6 +687,24 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                             //en la variable tramaXmlFirmado está el xml en un String base64
                             Toast.makeText(getApplicationContext(), "SHA1: " + response.getResumenFirma(), Toast.LENGTH_SHORT).show();
                             beDocElectronico.setDatosXml(response.getTramaXmlFirmado());
+                            beDocElectronico.setResumenFirma(response.getResumenFirma());
+
+                            BeDocElectronico beDocElectronico = generarDocumentoElectronicoFE();
+
+                            Long idDocEletr = beDocElectronico.save();
+                            beDocElectronico.setDocElectronicoId(idDocEletr);
+                            beDocElectronico.save();
+                            for (BeDocElectronicoDetalle beDocElectronicoDetalle : beDocElectronico.getDetalle()) {
+                                beDocElectronicoDetalle.setDocElectronicoId(Integer.parseInt(idDocEletr + ""));
+                                beDocElectronicoDetalle.save();
+                            }
+
+
+                            updatLiqDetalle();
+
+                            new SyncEstado(0, Utils.separteUpperCase(BeDocElectronico.class.getSimpleName()), Integer.parseInt(beDocElectronico.getId() + ""), Constants.S_CREADO).save();
+                            Session.saveComprobanteVenta(this, comprobanteVenta);
+                            intentPrint();
 
                         } else {
                             //Ha habido algún error, en la variable mensajeError de FirmadoResponse estará el error.
@@ -612,10 +720,10 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void generarDocumentoElectronicoFE() {
+    private BeDocElectronico generarDocumentoElectronicoFE() {
 
 
-        List<BEDocElectronicoDetalle> beDocElectronicoDetalles = new ArrayList<>();
+        List<BeDocElectronicoDetalle> beDocElectronicoDetalles = new ArrayList<>();
 
         for (int i = 0; i < documentoElectronico.getItems().size(); i++) {
 
@@ -623,12 +731,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
             ComprobanteVentaDetalle ventaDetalle = comprobanteVentaDetalles.get(i);
 
-            BEDocElectronicoDetalle electronicoDetalle = new BEDocElectronicoDetalle();
-
+            BeDocElectronicoDetalle electronicoDetalle = new BeDocElectronicoDetalle();
+            Log.d(TAG, "DOC ELECTRO DE : " + detalleDocumento.getCantidad().doubleValue());
             electronicoDetalle.setDocElectronicoId(Integer.parseInt(comprobanteVenta.getCompId() + ""));
             electronicoDetalle.setDocdetalleId(detalleDocumento.getId());
             electronicoDetalle.setCantidad(detalleDocumento.getCantidad().doubleValue());
-            electronicoDetalle.setUnidadMedidaId(Integer.parseInt(detalleDocumento.getUnidadMedida()));
+            electronicoDetalle.setUnidadMedidaId(Integer.parseInt(getUnidadTipo(Constants.DOCUMENTO_ELECTRONICO_NIU).getTipoId() + ""));
             electronicoDetalle.setSuma(detalleDocumento.getSuma().doubleValue());
             electronicoDetalle.setTotalVenta(detalleDocumento.getTotalVenta().doubleValue());
             electronicoDetalle.setPrecioUnitario(detalleDocumento.getPrecioUnitario().doubleValue());
@@ -637,6 +745,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             electronicoDetalle.setImpuesto(detalleDocumento.getImpuesto().doubleValue());
             electronicoDetalle.setImpuestoSelectivo(detalleDocumento.getImpuestoSelectivo().doubleValue());
             electronicoDetalle.setOtroImpuesto(detalleDocumento.getOtroImpuesto().doubleValue());
+
             electronicoDetalle.setProductoId(ventaDetalle.getProId());
             electronicoDetalle.setDescripcion(detalleDocumento.getDescripcion());
             electronicoDetalle.setCodigoItem(detalleDocumento.getCodigoItem());
@@ -646,11 +755,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             beDocElectronicoDetalles.add(electronicoDetalle);
         }
 
+        beDocElectronico.setTipoDocCodigo(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getCodigo());
         beDocElectronico.setDocElectronicoId(comprobanteVenta.getCompId());
-        beDocElectronico.setTipoDocumentoId(Integer.parseInt(documentoElectronico.getTipoDocumento()));
-        beDocElectronico.setNumeroDoc(documentoElectronico.getReceptor().getNroDocumento());
+        beDocElectronico.setTipoDocumentoId(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getTipoId());
+        beDocElectronico.setNumeroDoc(comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc());
         beDocElectronico.setFechaEmision(documentoElectronico.getFechaEmision());
-        beDocElectronico.setMonedaId(Integer.parseInt(documentoElectronico.getMoneda()));
+        beDocElectronico.setMonedaId(getTipoMoneda(documentoElectronico.getMoneda()));
         beDocElectronico.setGravadas(comprobanteVenta.getTotal());
         beDocElectronico.setGratuitas(0.00);
         beDocElectronico.setInafectas(0.00);
@@ -661,19 +771,19 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         beDocElectronico.setTotalIsc(0.00);
         beDocElectronico.setTotalOtrosTributos(0.00);
         beDocElectronico.setMontoEnLetras(documentoElectronico.getMontoEnLetras());
-        beDocElectronico.setTipoOperacionId(Integer.parseInt(documentoElectronico.getTipoOperacion()));
+        beDocElectronico.setTipoOperacionId(40); //Buscar consultar a Sully
         beDocElectronico.setCalculoIgv(documentoElectronico.getCalculoIgv().doubleValue());
         beDocElectronico.setCalculoIsc(0.00);
         beDocElectronico.setCalculoDetraccion(0.00);
         beDocElectronico.setMontoPercepcion(0.00);
         beDocElectronico.setMontoDetraccion(0.00);
-        beDocElectronico.setTipoDocAnticipoId(Integer.parseInt(documentoElectronico.getTipoDocAnticipo()));
+        beDocElectronico.setTipoDocAnticipoId(0);//Buscar consultar a Sully
         beDocElectronico.setDocAnticipo(documentoElectronico.getDocAnticipo());
-        beDocElectronico.setMonedaAnticipoId(Integer.parseInt(documentoElectronico.getMonedaAnticipo()));
+        beDocElectronico.setMonedaAnticipoId(0);
         beDocElectronico.setMontoAnticipo(documentoElectronico.getMontoAnticipo().doubleValue());
         beDocElectronico.setClienteId(cliente.getCliIClienteId());
-        beDocElectronico.setNombreFacturacion(comprobanteVenta.getNumDoc());
-        beDocElectronico.setDireccionFacturacion(comprobanteVenta.getDireccionCliente());
+        beDocElectronico.setNombreFacturacion(nombreDatosCliente);
+        beDocElectronico.setDireccionFacturacion(comprobanteVenta.getDireccionCliente() + ", " + documentoElectronico.getReceptor().getDistrito() + ", " + documentoElectronico.getReceptor().getProvincia() + ", " + documentoElectronico.getReceptor().getDepartamento());
         beDocElectronico.setCorporacionId(cajaLiquidacion.getEntidad().getCorporacionId());
         beDocElectronico.setEntidadId(cajaLiquidacion.getEntidadId());
         beDocElectronico.setUnidadNegocioId(cajaLiquidacion.getEntidadId());
@@ -684,18 +794,30 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         beDocElectronico.setEstadoTrackId(1);
         beDocElectronico.setEstadoId(1);
         beDocElectronico.setSistemaId(2);
-        beDocElectronico.setTotalDescuentos("0.00");
+        beDocElectronico.setTotalDescuentos(0.00);
         beDocElectronico.setCorrelativo(comprobanteVenta.getClienteId());
         beDocElectronico.setSerie(comprobanteVenta.getSerie());
-        beDocElectronico.setResumenFirma(comprobanteVenta.getValorResumen());
+        //beDocElectronico.setResumenFirma(comprobanteVenta.getValorResumen());
         beDocElectronico.setScop(pedido.getScop());
-        beDocElectronico.setPlacaVehiculo(vehiculo.getPlaca());
+        beDocElectronico.setPlacaVehiculo(placaDocElectronico);
         beDocElectronico.setDetalle(beDocElectronicoDetalles);
-        beDocElectronico.setDatosXml("");
-        beDocElectronico.setRucEntidad(Integer.parseInt(documentoElectronico.getEmisor().getNroDocumento()));
+        //beDocElectronico.setDatosXml("");
+        beDocElectronico.setRucEntidad(documentoElectronico.getEmisor().getNroDocumento());
         beDocElectronico.setComprobanteVentaId(comprobanteVenta.getCompId());
 
+        return beDocElectronico;
 
+
+    }
+
+    private int getTipoMoneda(String codigo) {
+        if (codigo.equals("PEN")) {
+            return Constants.TIPO_MONEDA_SOLES;
+        }
+        if (codigo.equals("USD")) {
+            return Constants.TIPO_MONEDA_DOLARES;
+        }
+        return Constants.TIPO_MONEDA_SOLES;
     }
 
     private CertificadoDigital getCertificadoDigital() {
@@ -726,6 +848,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case Constants.DOCUMENTO_ELECTRONICO_OPERACION_ONEROSA:
                 deTipo = DETipo.getDeTipo(Constants.DOCUMENTO_ELECTRONICO_OPERACION_ONEROSA + "");
+                break;
+            case Constants._CREADO:
                 break;
         }
 
@@ -867,7 +991,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         for (Despacho despacho : despachos) {
             ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, " pro_Id=? ", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
-            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), despacho.getCostoVenta(), despacho.getImporte(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), despacho.getDespachoId()));
+            comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), productoUnidad.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), Utils.formatDoubleNumber(despacho.getCostoVenta()), Utils.formatDoubleNumber(despacho.getImporte()), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), despacho.getDespachoId()));
             // comprobanteVentaId++;
         }
 
@@ -932,6 +1056,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             enableButtonCredito(false);
         } else {
             conceptoCredito = Concepto.find(Concepto.class, " ID_CONCEPTO = ? ", new String[]{cliente.getCliIModalidadCreditoId() + ""}).get(Constants.CURRENT);
+            Log.d(TAG, "ABREVIATURA: MODALIDAD: " + conceptoCredito.getAbreviatura() + "-" + cliente.getCliIModalidadCreditoId());
             descorasc = "1";
 
         }
@@ -1036,13 +1161,13 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     private void initFormaPago() {
 
         List<Concepto> conceptoList = null;
-        if (!descorasc.equals("0")) {
-            conceptoList = Concepto.findWithQuery(Concepto.class, " SELECT * FROM CONCEPTO WHERE CONCEPTO = ? AND  OBJETO = ?  ORDER BY id_Concepto desc ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
+        // if (!descorasc.equals("0")) {
+        conceptoList = Concepto.findWithQuery(Concepto.class, " SELECT * FROM CONCEPTO WHERE CONCEPTO = ? AND  OBJETO = ?  ORDER BY id_Concepto desc ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
 
-        } else {
+        /*} else {
             conceptoList = Concepto.findWithQuery(Concepto.class, " SELECT * FROM CONCEPTO WHERE CONCEPTO = ? AND  OBJETO = ? ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
 
-        }
+        }*/
         // List<Concepto> conceptoList = Concepto.find(Concepto.class, " CONCEPTO = ? AND  OBJETO = ? ", new String[]{Constants.CONCEPTO_FORMA_PAGO, Constants.CONCEPTO_FORMA_PAGO_COMPROBANTE_VENTA});
 
         Log.d(TAG, "SIZE: " + conceptoList.size());
@@ -1095,23 +1220,36 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 if (getFormaPago().getIdConcepto() == Constants.CREDITO_ID) {
+
+                    Log.d(TAG, "IF: " + 1);
+
                     if (conceptoCredito.getAbreviatura().equals("0")) {
-
+                        Log.d(TAG, "IF: " + 2);
                         if (!Session.getDefineCuotas(getApplicationContext())) {
-
+                            Log.d(TAG, "IF: " + 3);
                             if (cliente.getCliDOCreditoDisponible() >= obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                                Log.d(TAG, "IF: " + 4);
                                 dialogConfirmarVenta();
                             } else {
+                                Log.d(TAG, "IF: " + 5);
                                 Toast.makeText(SellActivity.this, "No cuenta con credito suficiente", Toast.LENGTH_SHORT).show();
                                 break;
                             }
-
+                            Log.d(TAG, "IF: " + 6);
 
                         } else {
+                            Log.d(TAG, "IF: " + 7);
                             Toast.makeText(SellActivity.this, "No cuenta con modalidad de credito", Toast.LENGTH_SHORT).show();
                             break;
                         }
 
+                    }
+
+                    if (cliente.getCliDOCreditoDisponible() < obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                        Toast.makeText(this, "No cuenta con credito disponible para realizar la venta", Toast.LENGTH_SHORT).show();
+                    }
+                    if (cliente.getCliDOCreditoDisponible() >= obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                        dialogConfirmarVenta();
                     }
                     break;
                 }
@@ -1157,10 +1295,10 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         hideLinear(concepto);
         if (concepto.getIdConcepto() == Constants.CREDITO_ID) {
             buttonCuotas.setVisibility(View.VISIBLE);
-
+            Log.d(TAG, "CREDITO DISPONIBLE: " + cliente.getCliDOCreditoDisponible());
             if (cliente.getCliDOCreditoDisponible() < obtenerCalculos()[Constants.VENTA_TOTAL]) {
 
-                new DialogGeneral(SellActivity.this).setTextButtons("SI", "NO").setMessages("Atencion", "¿Esta seguro de solicitar credito?").setCancelable(true).showDialog(new DialogGeneralListener() {
+                /*new DialogGeneral(SellActivity.this).setTextButtons("SI", "NO").setMessages("Atencion", "¿Esta seguro de solicitar credito?").setCancelable(true).showDialog(new DialogGeneralListener() {
                     @Override
                     public void onSavePressed(AlertDialog alertDialog) {
                         cliente.setCliDOCreditoDisponible(10000.00);
@@ -1171,7 +1309,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                     public void onCancelPressed(AlertDialog alertDialog) {
                         alertDialog.dismiss();
                     }
-                });
+                });*/
+
+                Toast.makeText(SellActivity.this, "No cuenta con credito suficiente", Toast.LENGTH_SHORT).show();
 
             }
         } else {
@@ -1230,7 +1370,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         List<Long> longList = new ArrayList<>(integerList.values());
         List<Despacho> despachos = new ArrayList<>();
         for (Long aLong : longList) {
-            List<Despacho> despachoList = Despacho.getListDespachoByPedidoNoCompId(aLong + "");
+            List<Despacho> despachoList = Despacho.getListDespachoByPedido(aLong + "");
             CajaLiquidacionDetalle cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", aLong + "");
             double sumTotal = 0.0;
             double sumAgrupado = 0.0;
@@ -1256,11 +1396,14 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             cajaLiquidacionDetalle.save();
             despachos = new ArrayList<>();
         }
+
+
     }
 
     @Override
     public void errorInTransaction(String error) {
         Toast.makeText(SellActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+        progressDialog.dismiss();
     }
 
     @Override

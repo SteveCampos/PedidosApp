@@ -72,6 +72,22 @@ public class Utils {
         return aDouble;
     }
 
+    public static String getDateDescription(String fecha) {
+        Date date = null;
+        String str = "";
+        try {
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);
+            str = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.getDefault()).format(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            str = fecha;
+        }
+        String strini = str;
+        String cap = strini.substring(0, 1).toUpperCase() + strini.substring(1);
+        return cap;
+    }
+
 
     public static String getNameOfDay(Date date) {
         SimpleDateFormat parseFormat = new SimpleDateFormat("EEEE dd", Locale.getDefault());
@@ -88,7 +104,22 @@ public class Utils {
     public static String getDatePhoneWithTime() {
         Date now = new Date();
         Date alsoNow = Calendar.getInstance().getTime();
+        String nowAsString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
+        return nowAsString;
+    }
+
+    public static String getDatePhoneWithTimeFE() {
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
         String nowAsString = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss").format(now);
+        return nowAsString;
+    }
+
+
+    public static String getDatePhoneFE() {
+        Date now = new Date();
+        Date alsoNow = Calendar.getInstance().getTime();
+        String nowAsString = new SimpleDateFormat("yyyy-MM-dd").format(now);
         return nowAsString;
     }
 
@@ -176,6 +207,7 @@ public class Utils {
         String dateText = df2.format(date);
         return dateText;
     }
+
 
     public static String getJsonObResult(JSONObject jsonObject) {
         String s = "";
@@ -422,6 +454,27 @@ public class Utils {
         }
 
         return SugarRecord.findWithQuery(classType, "SELECT * FROM " + nameTable + " WHERE " + getIdFromTable(classType) + " in (" + ids + ")", null);
+    }
+
+    public static <T> List<T> getListForExInFE(Class<T> classType, int paraExportar) {
+
+        String nameTable = separteUpperCase(classType.getSimpleName());
+
+
+        List<SyncEstado> syncEstadoList = SyncEstado.findWithQuery(SyncEstado.class, "SELECT * FROM  SYNC_ESTADO WHERE nombre_Tabla = '" + nameTable + "' AND estado_Sync='" + paraExportar + "' ; ", null);
+
+        String ids = "";
+        for (int i = 0; i < syncEstadoList.size(); i++) {
+
+            if (i == (syncEstadoList.size() - 1)) {
+                ids = ids + syncEstadoList.get(i).getCampoId() + "";
+            } else {
+                ids = ids + syncEstadoList.get(i).getCampoId() + ",";
+            }
+
+        }
+
+        return SugarRecord.find(classType, "" + getIdFromTable(classType) + " in (" + ids + ")", null);
     }
 
     public static <T> List<T> getListForExInIn(Class<T> classType, int paraExportar) {

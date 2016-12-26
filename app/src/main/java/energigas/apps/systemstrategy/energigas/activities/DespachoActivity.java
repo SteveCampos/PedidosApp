@@ -5,6 +5,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.asyntask.ConectarDispositivoAsyn;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
@@ -46,6 +47,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -249,7 +251,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         progressDialog.setTitle("Cargando...");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         myRef = mDatabase.child(Constants.FIREBASE_CHILD_NOTIFICACIONES).child(Constants.FIREBASE_CHILD_ATENCION_PEDIDO);
-        locationVehiculeListener = new LocationVehiculeListener(this);
+        locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(1));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
 
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
@@ -291,6 +293,26 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         Log.d(TAG, "ID: " + id);
         myRef.child(id).setValue(new FBRegistroPedido(cajaLiquidacion.getLiqId(), cajaLiquidacionDetalle.getLidId(), pedido.getPeId(), Long.parseLong(establecimiento.getEstIEstablecimientoId() + ""), Long.parseLong("45"), Long.parseLong("" + usuario.getUsuIUsuarioId())));
 
+        new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
+
+
+        new AtencionesAsyntask().execute();
+    }
+
+    public int getOrden(Integer[] args) {
+        int may = -10000;
+        String cad = "";
+        int Num[] = new int[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Num[i] = args[i];
+            if (Num[i] > may) {
+                may = Num[i];
+            }
+            cad = cad + " " + Num[i];
+        }
+        System.out.println(cad);
+        System.out.println("El mayor es:" + may);
+        return may + 1;
     }
 
     private void updatLiqDetalle() {
@@ -300,11 +322,25 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             sumDespachado = sumDespachado + despacho.getCantidadDespachada();
         }
         if (pedidoDetalle.getAlmId() == 0) {
+            Integer[] integers = new Integer[CajaLiquidacionDetalle.listAll(CajaLiquidacionDetalle.class).size()];
+            for (int i = 0; i < CajaLiquidacionDetalle.listAll(CajaLiquidacionDetalle.class).size(); i++) {
+                integers[i] = CajaLiquidacionDetalle.listAll(CajaLiquidacionDetalle.class).get(i).getOrdenAtencion();
+            }
+            int ordenAtencion = getOrden(integers);
+            if (cajaLiquidacionDetalle.getOrdenAtencion() != 0) {
+                ordenAtencion = cajaLiquidacionDetalle.getOrdenAtencion() + 1;
+            }
+
             double porEntrega = sumDespachado / pedidoDetalle.getCantidad();
             cajaLiquidacionDetalle.setPorDespacho(100);
-            cajaLiquidacionDetalle.setPorEntrega(porEntrega);
+            cajaLiquidacionDetalle.setPorEntrega(porEntrega * 100);
             cajaLiquidacionDetalle.setEstadoFactId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.setPorFacturado(0.0);
+            cajaLiquidacionDetalle.setEstadoId(42);
+            cajaLiquidacionDetalle.setEstadoFacId(Constants.NO_FACTURADO);
+            cajaLiquidacionDetalle.setOrdenAtencion(ordenAtencion);
+            Log.d("AtencionesAsyntask", "Orden: " + cajaLiquidacionDetalle.getOrdenAtencion());
+            cajaLiquidacionDetalle.save();
         } else {
 
             List<PedidoDetalle> pedidoDetalles = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "");
@@ -315,10 +351,13 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
             double porDespacho = despachoList.size() / pedidoDetalles.size();
             double porEntrega = sumDespachado / sumCanPedDetalle;
+
             cajaLiquidacionDetalle.setPorDespacho(porDespacho);
             cajaLiquidacionDetalle.setPorEntrega(porEntrega);
             cajaLiquidacionDetalle.setEstadoFactId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.setPorFacturado(0.0);
+            cajaLiquidacionDetalle.setEstadoId(42);
+            cajaLiquidacionDetalle.setEstadoFacId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.save();
         }
     }
@@ -403,6 +442,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             public void onSavePressed(AlertDialog alertDialog) {
                 DespachoActivity.super.onBackPressed();
                 alertDialog.dismiss();
+                locationVehiculeListener.stopLocationUpdates();
             }
 
             @Override
@@ -410,18 +450,24 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 alertDialog.dismiss();
             }
         });
+
+
     }
 
     @OnClick(R.id.btnGuardar)
     public void clickBtnGuardar() {
+
+        if (!validateField()) {
+            return;
+        }
 
         new DialogGeneral(DespachoActivity.this).setTextButtons("GUARDAR", "CANCELAR").setMessages("Atencion", "¿Seguro de guardar?").setCancelable(true).showDialog(new DialogGeneralListener() {
             @Override
             public void onSavePressed(AlertDialog alertDialog) {
                 if (validateField()) {
                     SugarTransactionHelper.doInTransaction(DespachoActivity.this);
-                    // progressDialog.show();
-                    new ExportTask(DespachoActivity.this, DespachoActivity.this).execute(Constants.TABLA_DESPACHO, Constants.S_CREADO);
+
+                    // new ExportTask(DespachoActivity.this, DespachoActivity.this).execute(Constants.TABLA_DESPACHO, Constants.S_CREADO);
                 } else {
                     Toast.makeText(DespachoActivity.this, "Datos vacios", Toast.LENGTH_SHORT).show();
                 }
@@ -439,11 +485,18 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private boolean validateField() {
 
-        if (editTextCantidadDespachada.getText().toString().length() < 0) {
+        if (TextUtils.isEmpty(editTextCantidadDespachada.getText().toString())) {
+            Toast.makeText(this, "Ingrese cantidad", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (Double.parseDouble(editTextCantidadDespachada.getText().toString()) < 1.00) {
+            Toast.makeText(this, "Ingrese cantidad", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (latAndLong == null) {
+            Toast.makeText(this, "Ubicacion desconoida, por favor intente nuevamente", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -811,13 +864,17 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     public void manipulateInTransaction() {
         saveDespacho();
 
-
+        progressDialog.dismiss();
+        startActivity(new Intent(this, PrintDispatch.class));
+        this.finish();
+        locationVehiculeListener.stopLocationUpdates();
     }
 
 
     @Override
     public void errorInTransaction(String error) {
         Toast.makeText(DespachoActivity.this, error, Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
     }
 
     @Override
@@ -834,9 +891,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @Override
     public void onLoadSuccess(String message) {
         // Toast.makeText(DespachoActivity.this,message,Toast.LENGTH_SHORT).show();
-        // progressDialog.dismiss();
-        startActivity(new Intent(this, PrintDispatch.class));
-        this.finish();
+
     }
 
     @Override

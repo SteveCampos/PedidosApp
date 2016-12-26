@@ -40,12 +40,15 @@ public class CajaLiquidacionDetalle extends SugarRecord {
 
     private double porFacturado;
 
+    private int ordenAtencion;
+
+    private int estadoFacId;
 
 
     public CajaLiquidacionDetalle() {
     }
 
-    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion, long peId, double porDespacho, double porEntrega, int estadoFactId, double porFacturado) {
+    public CajaLiquidacionDetalle(long lidId, long liId, int establecimientoId, String fecha, String fechaAccion, int motivoNoAtencionId, int estadoId, int orden, String fechaAtencion, long peId, double porDespacho, double porEntrega, int estadoFactId, double porFacturado, int ordenAtencion, int estadoFacId) {
         this.lidId = lidId;
         this.liId = liId;
         this.establecimientoId = establecimientoId;
@@ -60,6 +63,24 @@ public class CajaLiquidacionDetalle extends SugarRecord {
         this.porEntrega = porEntrega;
         this.estadoFactId = estadoFactId;
         this.porFacturado = porFacturado;
+        this.ordenAtencion = ordenAtencion;
+        this.estadoFacId = estadoFacId;
+    }
+
+    public int getOrdenAtencion() {
+        return ordenAtencion;
+    }
+
+    public void setOrdenAtencion(int ordenAtencion) {
+        this.ordenAtencion = ordenAtencion;
+    }
+
+    public int getEstadoFacId() {
+        return estadoFacId;
+    }
+
+    public void setEstadoFacId(int estadoFacId) {
+        this.estadoFacId = estadoFacId;
     }
 
     public double getPorDespacho() {
@@ -175,7 +196,7 @@ public class CajaLiquidacionDetalle extends SugarRecord {
     }
 
     public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablec(String establecimiento) {
-        Log.d("ESTABLECIMIENTOID",establecimiento);
+        Log.d("ESTABLECIMIENTOID", establecimiento);
         if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=?", new String[]{establecimiento}).size() > 0) {
             return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=?", new String[]{establecimiento}).get(0);
         }
@@ -183,10 +204,10 @@ public class CajaLiquidacionDetalle extends SugarRecord {
 
     }
 
-    public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablecAndPedido(String establecimiento,String pedidoId) {
-        Log.d("ESTABLECIMIENTOID",establecimiento);
-        if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ? ", new String[]{establecimiento,pedidoId}).size() > 0) {
-            return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ?", new String[]{establecimiento,pedidoId}).get(0);
+    public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablecAndPedido(String establecimiento, String pedidoId) {
+        Log.d("ESTABLECIMIENTOID", establecimiento);
+        if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ? ", new String[]{establecimiento, pedidoId}).size() > 0) {
+            return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ?", new String[]{establecimiento, pedidoId}).get(0);
         }
         return null;
 

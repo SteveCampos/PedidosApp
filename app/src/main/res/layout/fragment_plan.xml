@@ -1,9 +1,11 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="energigas.apps.systemstrategy.energigas.fragments.PlanFragment">
+    android:fillViewport="true">
+
+    <!--
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -20,6 +22,255 @@
             app:mcv_showOtherDates="all" />
 
         <include layout="@layout/recycler_view" />
-    </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v7.widget.LinearLayoutCompat>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/dimen_15dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1">
+
+
+                    <ImageView
+                        android:id="@+id/imgIndicador1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_20dp"
+                        android:src="@drawable/ic_refresh" />
+
+                    <TextView
+                        android:id="@+id/textIndicador1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="12%"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|top"
+                        android:text="Eficacia Venta"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imgIndicador2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_20dp"
+                        android:src="@drawable/octagon_shape" />
+
+                    <TextView
+                        android:id="@+id/textIndicador2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="60%"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|top"
+                        android:text="Optimizacion Flota"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imgIndicador3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_20dp"
+                        android:src="@drawable/circular_shape" />
+
+                    <TextView
+                        android:id="@+id/textIndicador3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="74%"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|top"
+                        android:text="Eficacia Atencion"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imgIndicador4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_20dp"
+                        android:src="@drawable/ic_star_shape" />
+
+                    <TextView
+                        android:id="@+id/textIndicador4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="63%"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|top"
+                        android:text="Demanda Insatisfecha"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:padding="@dimen/dimen_5dp"
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="BSC DE LA SEMANA"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12dp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Eficacia \n venta"
+                    android:textSize="10dp"
+                    android:id="@+id/textView6" />
+
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Capacidad \n Unidad"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Eficacia \n Atencion"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Demanda\ninsatisfecha"
+                    android:textSize="10dp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/listViewHIstorial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_color"
+                android:scrollbars="vertical">
+
+            </ListView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

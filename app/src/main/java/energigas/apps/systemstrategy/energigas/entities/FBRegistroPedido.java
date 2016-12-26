@@ -5,6 +5,7 @@ package energigas.apps.systemstrategy.energigas.entities;
  */
 
 public class FBRegistroPedido {
+
     private Long liquidacionId;
     private Long liquidaciondetalleId;
     private Long pedidoId;

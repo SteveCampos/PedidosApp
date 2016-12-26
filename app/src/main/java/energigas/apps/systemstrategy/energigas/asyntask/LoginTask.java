@@ -45,14 +45,14 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     private static final String TAG = "LoginTask";
 
     private JSONObject jsonObjectUsuario = null;
-    private JSONObject jsonObjectConceptos = null;
+
     private JSONObject jsonLiquidacion = null;
 
     private OnLoginAsyntaskListener aListener;
     private Context context;
     private int result = 0;
     private Usuario objUsuario;
-    private BEGeneral objGeneral;
+
     private CajaLiquidacion cajaLiquidacion;
     private ManipuleData manipuleData;
 
@@ -85,11 +85,11 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
         try {
 
             jsonObjectUsuario = restAPI.fobj_ObtenerUsuario(usuario, clave);
-            objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObjectUsuario), Usuario.class);
 
-            jsonObjectConceptos = restAPI.fobj_ObtenerDatosGenerales();
-            objGeneral = mapper.readValue(Utils.getJsonObResult(jsonObjectConceptos), BEGeneral.class);
-            if (Utils.isSuccessful(jsonObjectUsuario) && Utils.isSuccessful(jsonObjectConceptos)) {
+
+            if (Utils.isSuccessful(jsonObjectUsuario)) {
+
+                objUsuario = mapper.readValue(Utils.getJsonObResult(jsonObjectUsuario), Usuario.class);
 
                 if (objUsuario.getUsuIUsuarioId() < 0) {
                     result = 1;
@@ -164,15 +164,7 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
             }
         }
 
-        /**DATOS GENERALES**/
 
-        SugarRecord.saveInTx(objGeneral.getItemsConceptos());
-        SugarRecord.saveInTx(objGeneral.getItemsEstados());
-        SugarRecord.saveInTx(objGeneral.getItemUbigeos());
-        SugarRecord.saveInTx(objGeneral.getItemsProductos());
-        SugarRecord.saveInTx(objGeneral.getItemsUnidades());
-        SugarRecord.saveInTx(objGeneral.getItemsProductoUnidad());
-        SugarRecord.saveInTx(objGeneral.getItemsTipos());
 
 
         if (cajaLiquidacion != null) {

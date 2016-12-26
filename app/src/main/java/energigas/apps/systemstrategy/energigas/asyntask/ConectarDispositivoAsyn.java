@@ -8,10 +8,11 @@ import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionLis
  * Created by kelvi on 13/10/2016.
  */
 
-public class ConectarDispositivoAsyn extends AsyncTask<String,String,String>{
+public class ConectarDispositivoAsyn extends AsyncTask<String, String, String> {
     BluetoothConnectionListener bluetoothConnectionListener;
     boolean estado = false;
-    public ConectarDispositivoAsyn (BluetoothConnectionListener bluetoothConnectionListener){
+
+    public ConectarDispositivoAsyn(BluetoothConnectionListener bluetoothConnectionListener) {
         this.bluetoothConnectionListener = bluetoothConnectionListener;
     }
 
@@ -23,12 +24,8 @@ public class ConectarDispositivoAsyn extends AsyncTask<String,String,String>{
     @Override
     protected String doInBackground(String... params) {
 
-        estado =true;
-        try {
-            Thread.sleep(560);
+        estado = true;
 
-        } catch (Exception e) {
-        }
         return null;
     }
 

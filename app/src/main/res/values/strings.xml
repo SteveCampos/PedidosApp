@@ -9,7 +9,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configuraciones</string>
     <string name="action_print">Imprimir</string>
 
     <string name="login_hint_email">Email</string>
@@ -47,9 +47,9 @@
     <string name="ordered_product_title_name">Productos</string>
     <string name="ordered_dispatch_title_name">Despachos</string>
 
-    <string name="estb_title_name">Estaciones</string>
+    <string name="estb_title_name">Plan</string>
     <string name="order_title_name">Pedidos</string>
-    <string name="plan_title_name">Plan</string>
+    <string name="plan_title_name">BSC</string>
     <string name="expenses_title_name">Gastos</string>
     <string name="collect_title_name">Cobranzas</string>
     <string name="collect_title_inventory">Cargar Inventario</string>
@@ -82,7 +82,7 @@
         "PLACA: %3$s \n"
         "AGENTE DE VENTA: %4$s \n "
         "NUMERO DE COMPROBANTE: %5$s \n \n "
-        "******************      DEPACHO      **************** \n \n"
+        "******************      DESPACHO      **************** \n \n"
         "FECHA: %6$s \n"
         "HORA INICIO: %7$s \n"
         "HORA FIN: %8$s \n"
@@ -96,13 +96,16 @@
         "NUMERO DE TRANSPORTE: %15$s \n \n"
         " -------------------------- \n"
         "RECIBIDO POR:\n"
-        "NOMBRE: ________________________________ \n"
-        "DNI: __________________________________\n"
-        "FIRMA POR: _____________________________ \n"
-        "******************      Documento sin valor tributario      **************** \n"
-        "******************      Consulte este documento en       **************** \n \n"
-        "******************      %16$s       **************** \n \n"
+        "NOMBRE: ________________________________ \n \n"
+        "DNI:  __________________________________\n \n"
+        "FIRMA POR: _____________________________ \n \n"
+        "**      Documento sin valor tributario      ** \n"
+        "**      Consulte este documento en       *** \n \n"
+        "               %16$s          \n \n"
     </string>
+
+
+
 
 
     <string name="print_factura_empresa">
@@ -111,8 +114,14 @@
         " %3$s \n"
         " %4$s \n"
         " %5$s \n\n"
-        " FACTURA ELECTRONICA "
+        " %6$s"
     </string>
+
+
+    <string name="cabecerca_titulo_resumen">
+        " RESUMEN DEL DÍA \n"
+    </string>
+
 
     <string name="print_factura_header">
         "NUMERO   : %1$s \n"
@@ -122,8 +131,28 @@
         "DIRECCION: %5$s "
     </string>
 
+
+      <string name="print_factura_header_resumen">
+        "AGENTE           : %1$s \n"
+        "LIQUIDACION : %2$s \n"
+        "FECHA             : %3$s \n"
+    </string>
+
+     <string name="print_factura_detalle_resumen">
+         "SALDO INICIAL   :  S/.           %1$s \n"
+         "INGRESOS TOTALES:  S/.           %2$s \n"
+         "EN EFECTIVO     :  S/.           %3$s \n"
+         "GASTOS TOTALES  :  S/.           %4$s \n"
+         "TOTAL A RENDIR  :  S/.           %5$s \n"
+    </string>
+
      <string name="text_detalle_ingresos">
          "%1$-10s"
+    </string>
+
+     <string name="print_detalle_ingresos_items">
+         " %1$s \n"
+         " <b> %2$s </b>\n"
     </string>
 
 
@@ -153,7 +182,7 @@
         "OP. GRAVADA     S/.\n"
         "OP. INAFECTA    S/.\n"
         "OP. EXONERADA   S/.\n"
-        "OP. GRATUIRA    S/.\n"
+        "OP. GRATUITA    S/.\n"
         "DESCUENTOS      S/.\n"
         "I.G.V.          S/.\n\n"
         "PRECIO VENTA    S/.\n"
@@ -171,7 +200,7 @@
 
 
    <string name="print_factura_footer">
-        "\n\n %1$s \n\n"
+        "\n  \n"
         " %2$s \n"
         "AGENTE: %3$s \n\n"
         "V. Resumen: %4$s  \n\n"
@@ -282,7 +311,7 @@
     <string name="estable_default_address">Panamericana Norte Km 1076 Piura</string>
     <string name="estable_default_description">3:00 - 7:00 p.m.</string>
     <string name="estable_action_attend">Atender</string>
-    <string name="estable_default_marker">5.4 km</string>
+    <string name="estable_default_marker">15:00</string>
     <!--##############################-->
 
 
@@ -489,6 +518,7 @@
     <string name="dialog_cobranza_Si">Si</string>
     <string name="dialog_cobranza_Cancelar">CANCELAR</string>
     <string name="dialog_cobranza_Aceptar">ACEPTAR</string>
+    <string name="title_activity_main_configuraciones">MainConfiguraciones</string>
 
     <!--Fin Cobranza-->
 </resources>

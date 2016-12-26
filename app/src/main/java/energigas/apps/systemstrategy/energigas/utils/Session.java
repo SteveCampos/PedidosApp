@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,7 @@ import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Servidores;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 
 /**
@@ -39,6 +41,26 @@ public class Session {
         }
         return null;
     }
+
+
+    public static boolean saveServidores(List<Servidores> servidoresList, Context context) {
+
+        try {
+
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SERVIDORES, Context.MODE_PRIVATE).edit();
+            editor.putString(Constants.SERVIDORES_DISTRIBUCION, servidoresList.get(0).getName() + "|" + servidoresList.get(0).getDescription());
+            editor.putString(Constants.SERVIDORES_FACTURACION, servidoresList.get(1).getName() + "|" + servidoresList.get(1).getDescription());
+            editor.commit();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
 
     public static boolean saveIdsDespachos(List<String> despachos, Context context) {
 
@@ -160,6 +182,7 @@ public class Session {
 
     }
 
+
     public static void savePedidoDetalle(Context context, PedidoDetalle pedidoDetalle) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -222,6 +245,21 @@ public class Session {
         return prefs.getBoolean(Constants.DEFINE_TIPO_DESPACHO_SN_ESTADO, false);
     }
 
+    public static void setServidores(Context context, boolean estado) {
+
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SERVIDORES, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.SERVIDORES, estado);
+        editor.commit();
+
+
+    }
+
+    public static boolean getsaveServidores(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SERVIDORES, Context.MODE_PRIVATE);
+        return prefs.getBoolean(Constants.SERVIDORES, false);
+    }
+
 
     public static void saveTipoDespachoSN(Context context, boolean estado) {
 
@@ -244,8 +282,7 @@ public class Session {
         SharedPreferences prefs = context.getSharedPreferences(Constants.DEFINE_CUOTAS, Context.MODE_PRIVATE);
         String json = prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null);
 
-        if (!prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null).equals("0"))
-        {
+        if (!prefs.getString(Constants.OBJECTS_LIST_DETALLE_CUOTAS, null).equals("0")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 List<PlanPagoDetalle> myObjects = mapper.readValue(json, new TypeReference<List<PlanPagoDetalle>>() {
@@ -351,6 +388,7 @@ public class Session {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE).edit();
             editor.putLong(Constants.SESSION_COMPROBANTE_VENTA_ID, comprobanteVenta.getCompId());
+
             editor.commit();
             return true;
 
@@ -365,5 +403,12 @@ public class Session {
         ComprobanteVenta comprobanteVenta = new ComprobanteVenta();
         comprobanteVenta.setCompId(prefs.getLong(Constants.SESSION_COMPROBANTE_VENTA_ID, 0));
         return comprobanteVenta;
+    }
+
+    public static String getSha1(Context context) {
+
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE);
+
+        return prefs.getString(Constants.SHA, null);
     }
 }

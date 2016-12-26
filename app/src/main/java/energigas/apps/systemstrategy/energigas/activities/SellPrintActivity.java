@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,6 @@ import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,16 +38,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
+import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
+import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
-public class SellPrintActivity extends AppCompatActivity implements View.OnClickListener {
+public class SellPrintActivity extends AppCompatActivity implements View.OnClickListener, ExportObjectsListener {
     private Boolean isFabOpen = false;
     private BluetoothPort bp;
     private BluetoothAdapter mBluetoothAdapter;
@@ -66,8 +70,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     FloatingActionButton floatingPrint;
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
-    @BindView(R.id.fabNext)
-    FloatingActionButton floatingNext;
+
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -78,7 +81,6 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
     @BindView(R.id.textViewVentaCabecera)
     TextView venta_cabecera;
-
 
 
     @BindView(R.id.textViewImprimirContenidoRight)
@@ -102,7 +104,10 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    private Resources res ;
+    private Resources res;
+    private BeDocElectronico beDocElectronico;
+    private Double igv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +116,12 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
         res = getResources();
         comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(Session.getComprobanteVenta(this).getCompId() + "");
-        comprobanteVentaDetalles = ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId()+"");
+        beDocElectronico = BeDocElectronico.getBeDocElectronico(comprobanteVenta.getCompId() + "");
+        igv = Double.parseDouble(Session.getConceptoIGV().getDescripcion());
+        comprobanteVentaDetalles = ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId() + "");
         comprobanteVenta.setItemsDetalle(comprobanteVentaDetalles);
-        usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId()+"");
-        cliente = Cliente.getCliente(comprobanteVenta.getClienteId()+"");
+        usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
+        cliente = Cliente.getCliente(comprobanteVenta.getClienteId() + "");
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
@@ -124,7 +131,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         floatingActionButton.setOnClickListener(this);
         floatingPrint.setOnClickListener(this);
         floatingDisconect.setOnClickListener(this);
-        floatingNext.setOnClickListener(this);
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -138,58 +145,62 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-
     private void setTextCabecera() {
 
         String compVar = comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc();
-        String clienteVar = cliente.getPersona().getPerVNombres()+" "+cliente.getPersona().getPerVApellidoPaterno();
-
-        String text = String.format(res.getString(R.string.print_factura_empresa),"Energigas S.A.C", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502","San Isidro Lima","RUC: 20506151547","Telf: (511) 2033001");
+        String clienteVar = cliente.getPersona().getPerVNombres() + " " + cliente.getPersona().getPerVApellidoPaterno();
+        String compro = "BOLETA ELECTRONICA";
+        if (comprobanteVenta.getTipoComprobanteId() == Constants.TIPO_DOCUMENTO_FACTURA) {
+            compro = "FACTURA ELECTRONICA";
+        }
+        String text = String.format(res.getString(R.string.print_factura_empresa), "Energigas S.A.C", "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001", compro);
         cabecera_empresa.setText(text);
 
-        String textVC = String.format(res.getString(R.string.print_factura_header),compVar,Utils.getDatePhoneWithTime(),clienteVar,cliente.getPersona().getPerVDocIdentidad(),cliente.getPersona().getUbicacion().getDescripcion());
+        String textVC = String.format(res.getString(R.string.print_factura_header), compVar, Utils.getDatePhoneWithTime(), clienteVar, cliente.getPersona().getPerVDocIdentidad(), cliente.getPersona().getUbicacion().getDescripcion());
         venta_cabecera.setText(textVC);
     }
 
-    private void setTextItems(){
+
+    private void setTextItems() {
 
         String costoUnidad = "";
         String cantidadNombre = "";
         double importeTotal = 0.0;
+
         for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
-            importeTotal = importeTotal + comprobanteVentaDetalles.get(i).getImporte();
+            importeTotal = importeTotal + Utils.formatDoubleNumber(comprobanteVentaDetalles.get(i).getImporte());
+
             if (i == (comprobanteVentaDetalles.size() - 1)) {
 
-                costoUnidad = costoUnidad +comprobanteVentaDetalles.get(i).getImporte();
-                cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" ";
+                costoUnidad = costoUnidad + Utils.formatDouble(comprobanteVentaDetalles.get(i).getImporte());
+                cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " ";
             } else {
 
-                costoUnidad = costoUnidad + comprobanteVentaDetalles.get(i).getImporte()+ " \n";
-                cantidadNombre = cantidadNombre+ comprobanteVentaDetalles.get(i).getCantidad()+"   "+Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+"")+" \n";
+                costoUnidad = costoUnidad + Utils.formatDouble(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
+                cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " \n";
             }
 
         }
+        Double importeIgv = importeTotal * igv;
 
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe),costoUnidad,importeTotal+"","12.12","13.13","14.14","15.15","16.16",importeTotal+"");
+        Double importeTotalIgv = new Double(importeTotal + importeIgv);
+
+        String textImporte = String.format(res.getString(R.string.print_factura_items_importe), costoUnidad, importeTotalIgv + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDouble(importeIgv), Utils.formatDouble(importeTotalIgv));
         textViewImprimirContenidoRight.setText(textImporte);
 
-        String textCNombre = String.format(res.getString(R.string.print_factura_items),cantidadNombre);
+        String textCNombre = String.format(res.getString(R.string.print_factura_items), cantidadNombre);
         textViewImprimirContenidoLeft.setText(textCNombre);
         String textTipoVenta = "VENTA AL CONTADO";
-        if(comprobanteVenta.getPlanPago() !=null){
+        if (comprobanteVenta.getPlanPago() != null) {
             textTipoVenta = "VENTA AL CREDITO";
         }
-        String codigoVenta = "MUOy4w/Q6VGqEBNiwQOhMYLCvm8";
-
-        String comproFooter = String.format(res.getString(R.string.print_factura_footer),comprobanteVenta.getValorResumen(),textTipoVenta,usuario.getPersona().getPerVNombres()+" "+usuario.getPersona().getPerVApellidoPaterno(),codigoVenta,"http://www.energigas.com.pe");
+        String codigoVenta = beDocElectronico.getResumenFirma();
+        Log.d("", codigoVenta);
+        String comproFooter = String.format(res.getString(R.string.print_factura_footer), beDocElectronico.getResumenFirma(), textTipoVenta, usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno(), codigoVenta, "http://www.energigas.com.pe");
         textViewFooterComp.setText(comproFooter);
 
 
-
-
     }
-
-
 
 
     @Override
@@ -219,6 +230,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         disconnectPrinter();
     }
 
@@ -263,7 +275,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNowComprobante(cliente,comprobanteVenta,usuario);
+                printDispatch.printNowComprobante(cliente, comprobanteVenta, usuario, beDocElectronico);
                 floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
                 floatingActionButton.startAnimation(rotate_backward);
                 floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SellPrintActivity.this, R.color.greem_background_item)));
@@ -271,18 +283,13 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
             case R.id.fabDisconec:
                 floatingPrint.startAnimation(fab_close);
                 floatingDisconect.startAnimation(fab_close);
-                floatingNext.startAnimation(fab_close);
 
-                floatingNext.setClickable(false);
                 floatingPrint.setClickable(false);
                 floatingDisconect.setClickable(false);
                 isFabOpen = false;
                 btDisconn();
                 break;
-            case R.id.fabNext:
-                //ORDER
-                startActivity(new Intent(SellPrintActivity.this, PrintFacturaActivity.class));
-                break;
+
         }
     }
 
@@ -291,7 +298,6 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
         CoordinatorLayout.LayoutParams pDes = (CoordinatorLayout.LayoutParams) floatingDisconect.getLayoutParams();
         CoordinatorLayout.LayoutParams pPrint = (CoordinatorLayout.LayoutParams) floatingPrint.getLayoutParams();
-        CoordinatorLayout.LayoutParams pNext = (CoordinatorLayout.LayoutParams) floatingNext.getLayoutParams();
 
 
         if (!connected) {
@@ -313,34 +319,32 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
                 pPrint.setBehavior(null);
                 pDes.setBehavior(null);
-                pNext.setBehavior(null);
+
                 floatingPrint.setLayoutParams(pPrint);
                 floatingDisconect.setLayoutParams(pDes);
-                floatingNext.setLayoutParams(pNext);
+
 
                 floatingPrint.startAnimation(fab_close);
                 floatingDisconect.startAnimation(fab_close);
-                floatingNext.startAnimation(fab_close);
+
 
                 floatingPrint.setClickable(false);
                 floatingDisconect.setClickable(false);
-                floatingNext.setClickable(false);
+
                 isFabOpen = false;
             } else {
 
                 pPrint.setBehavior(new FABScrollBehavior(this, null));
                 pDes.setBehavior(new FABScrollBehavior(this, null));
-                pNext.setBehavior(new FABScrollBehavior(this, null));
+
 
                 floatingPrint.setLayoutParams(pPrint);
                 floatingDisconect.setLayoutParams(pDes);
-                floatingNext.setLayoutParams(pNext);
 
-                floatingNext.startAnimation(fab_open);
                 floatingPrint.startAnimation(fab_open);
                 floatingDisconect.startAnimation(fab_open);
 
-                floatingNext.setClickable(true);
+
                 floatingPrint.setClickable(true);
                 floatingDisconect.setClickable(true);
                 isFabOpen = true;
@@ -421,6 +425,21 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    @Override
+    public void onLoadSuccess(String message) {
+
+    }
+
+    @Override
+    public void onLoadError(String message) {
+
+    }
+
+    @Override
+    public void onLoadErrorProcedure(String message) {
+
     }
 
 

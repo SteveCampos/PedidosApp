@@ -333,6 +333,7 @@ public class ComprobanteVenta extends SugarRecord {
     public static List<ComprobanteVenta> getComprobanteVentas(List<ComprobanteVenta> comprobanteVentaList) {
 
 
+
         List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
 
         for (ComprobanteVenta comprobanteVenta : comprobanteVentaList) {

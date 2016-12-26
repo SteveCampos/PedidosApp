@@ -1,16 +1,15 @@
-package energigas.apps.systemstrategy.energigas.entities.de;
+package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kelvi on 13/12/2016.
  */
 
-public class BEDocElectronico extends SugarRecord {
+public class BeDocElectronico extends SugarRecord {
     @Unique
     private long docElectronicoId;
     private int tipoDocumentoId;
@@ -50,21 +49,22 @@ public class BEDocElectronico extends SugarRecord {
     private int estadoTrackId;
     private int estadoId;
     private int sistemaId;
-    private String totalDescuentos;
+    private Double totalDescuentos;
     private int correlativo;
     private String serie;
     private String resumenFirma;
     private String scop;
     private String placaVehiculo;
-    private List<BEDocElectronicoDetalle> detalle;
+    private List<BeDocElectronicoDetalle> detalle;
     private String datosXml;
-    private int rucEntidad;
+    private String rucEntidad;
     private Long comprobanteVentaId;
+    private String tipoDocCodigo;
 
-    public BEDocElectronico() {
+    public BeDocElectronico() {
     }
 
-    public BEDocElectronico(long docElectronicoId, int tipoDocumentoId, String numeroDoc, String fechaEmision, int monedaId, Double gravadas, Double gratuitas, Double inafectas, Double exoneradas, Double descuentoGlobal, Double totalVenta, Double totalIgv, Double totalIsc, Double totalOtrosTributos, String montoEnLetras, int tipoOperacionId, Double calculoIgv, Double calculoIsc, Double calculoDetraccion, Double montoPercepcion, Double montoDetraccion, int tipoDocAnticipoId, String docAnticipo, int monedaAnticipoId, Double montoAnticipo, int clienteId, String nombreFacturacion, String direccionFacturacion, int corporacionId, int entidadId, int unidadNegocioId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, int estadoTrackId, int estadoId, int sistemaId, String totalDescuentos, int correlativo, String serie, String resumenFirma, String scop, String placaVehiculo, List<BEDocElectronicoDetalle> detalle, String datosXml, int rucEntidad, Long comprobanteVentaId) {
+    public BeDocElectronico(long docElectronicoId, int tipoDocumentoId, String numeroDoc, String fechaEmision, int monedaId, Double gravadas, Double gratuitas, Double inafectas, Double exoneradas, Double descuentoGlobal, Double totalVenta, Double totalIgv, Double totalIsc, Double totalOtrosTributos, String montoEnLetras, int tipoOperacionId, Double calculoIgv, Double calculoIsc, Double calculoDetraccion, Double montoPercepcion, Double montoDetraccion, int tipoDocAnticipoId, String docAnticipo, int monedaAnticipoId, Double montoAnticipo, int clienteId, String nombreFacturacion, String direccionFacturacion, int corporacionId, int entidadId, int unidadNegocioId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, int estadoTrackId, int estadoId, int sistemaId, Double totalDescuentos, int correlativo, String serie, String resumenFirma, String scop, String placaVehiculo, List<BeDocElectronicoDetalle> detalle, String datosXml, String rucEntidad, Long comprobanteVentaId, String tipoDocCodigo) {
         this.docElectronicoId = docElectronicoId;
         this.tipoDocumentoId = tipoDocumentoId;
         this.numeroDoc = numeroDoc;
@@ -113,6 +113,15 @@ public class BEDocElectronico extends SugarRecord {
         this.datosXml = datosXml;
         this.rucEntidad = rucEntidad;
         this.comprobanteVentaId = comprobanteVentaId;
+        this.tipoDocCodigo = tipoDocCodigo;
+    }
+
+    public String getTipoDocCodigo() {
+        return tipoDocCodigo;
+    }
+
+    public void setTipoDocCodigo(String tipoDocCodigo) {
+        this.tipoDocCodigo = tipoDocCodigo;
     }
 
     public Long getComprobanteVentaId() {
@@ -427,11 +436,11 @@ public class BEDocElectronico extends SugarRecord {
         this.sistemaId = sistemaId;
     }
 
-    public String getTotalDescuentos() {
+    public Double getTotalDescuentos() {
         return totalDescuentos;
     }
 
-    public void setTotalDescuentos(String totalDescuentos) {
+    public void setTotalDescuentos(Double totalDescuentos) {
         this.totalDescuentos = totalDescuentos;
     }
 
@@ -475,11 +484,11 @@ public class BEDocElectronico extends SugarRecord {
         this.placaVehiculo = placaVehiculo;
     }
 
-    public List<BEDocElectronicoDetalle> getDetalle() {
+    public List<BeDocElectronicoDetalle> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<BEDocElectronicoDetalle> detalle) {
+    public void setDetalle(List<BeDocElectronicoDetalle> detalle) {
         this.detalle = detalle;
     }
 
@@ -491,26 +500,26 @@ public class BEDocElectronico extends SugarRecord {
         this.datosXml = datosXml;
     }
 
-    public int getRucEntidad() {
+    public String getRucEntidad() {
         return rucEntidad;
     }
 
-    public void setRucEntidad(int rucEntidad) {
+    public void setRucEntidad(String rucEntidad) {
         this.rucEntidad = rucEntidad;
     }
 
-    public static BEDocElectronico getBeDocElectronico(String comprobanteVentaId) {
-        List<BEDocElectronico> beDocElectronicoList = BEDocElectronico.find(BEDocElectronico.class, "comprobante_Venta_Id=?", new String[]{comprobanteVentaId});
+    public static BeDocElectronico getBeDocElectronico(String comprobanteVentaId) {
+        List<BeDocElectronico> beDocElectronicoList = BeDocElectronico.find(BeDocElectronico.class, "comprobante_Venta_Id=?", new String[]{comprobanteVentaId});
         if (beDocElectronicoList.size() > 0) {
             return beDocElectronicoList.get(0);
         }
         return null;
     }
 
-    public static List<BEDocElectronico> beDocElectronicoList(List<BEDocElectronico> beDocElectronicos) {
+    public static List<BeDocElectronico> beDocElectronicoList(List<BeDocElectronico> beDocElectronicos) {
 
         for (int i = 0; i < beDocElectronicos.size(); i++) {
-            List<BEDocElectronicoDetalle> beDocElectronicoDetalles = BEDocElectronicoDetalle.find(BEDocElectronicoDetalle.class, "doc_Electronico_Id=?", new String[]{beDocElectronicos.get(0).getDocElectronicoId() + ""});
+            List<BeDocElectronicoDetalle> beDocElectronicoDetalles = BeDocElectronicoDetalle.find(BeDocElectronicoDetalle.class, "doc_Electronico_Id=?", new String[]{beDocElectronicos.get(0).getDocElectronicoId() + ""});
             beDocElectronicos.get(0).setDetalle(beDocElectronicoDetalles);
         }
         return beDocElectronicos;

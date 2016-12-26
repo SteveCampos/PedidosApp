@@ -37,7 +37,6 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     private RecyclerView recyclerView;
 
     public EstablecimientoFragment() {
-
     }
 
 

@@ -40,14 +40,17 @@ public class Persona extends SugarRecord {
 
     private String perVEmail;
 
+
     @Ignore
     private GeoUbicacion ubicacion;
+
+    private String nombreComercial;
 
 
     public Persona() {
     }
 
-    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, boolean perBEstado, int perITipoDocIdentidadId, int perITipoPersonaId, int perlUsuarioCreacion, String perDTFechaCreacion, int perIUsuarioActualizacion, String perDTFechaActualizacion, int perIEmpresaId, String perVEmail, GeoUbicacion ubicacion) {
+    public Persona(int perIPersonaId, String perVRazonSocial, String perVNombres, String perVApellidoPaterno, String perVApellidoMaterno, String perVDocIdentidad, boolean perBEstado, int perITipoDocIdentidadId, int perITipoPersonaId, int perlUsuarioCreacion, String perDTFechaCreacion, int perIUsuarioActualizacion, String perDTFechaActualizacion, int perIEmpresaId, String perVEmail, GeoUbicacion ubicacion, String nombreComercial) {
         this.perIPersonaId = perIPersonaId;
         this.perVRazonSocial = perVRazonSocial;
         this.perVNombres = perVNombres;
@@ -64,6 +67,15 @@ public class Persona extends SugarRecord {
         this.perIEmpresaId = perIEmpresaId;
         this.perVEmail = perVEmail;
         this.ubicacion = ubicacion;
+        this.nombreComercial = nombreComercial;
+    }
+
+    public String getNombreComercial() {
+        return nombreComercial;
+    }
+
+    public void setNombreComercial(String nombreComercial) {
+        this.nombreComercial = nombreComercial;
     }
 
     public GeoUbicacion getUbicacion() {
@@ -194,7 +206,7 @@ public class Persona extends SugarRecord {
         this.perVEmail = perVEmail;
     }
 
-    public static Persona getPersona (String personaId){
-        return Persona.find(Persona.class," per_I_Persona_Id = ? ",new String[]{personaId}).get(0);
+    public static Persona getPersona(String personaId) {
+        return Persona.find(Persona.class, " per_I_Persona_Id = ? ", new String[]{personaId}).get(0);
     }
 }

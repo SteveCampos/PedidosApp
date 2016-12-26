@@ -8,6 +8,7 @@ import com.sewoo.jpos.request.RequestQueue;
 import java.text.DecimalFormat;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
@@ -18,6 +19,9 @@ import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 
@@ -33,6 +37,7 @@ public class SheetsPrintDispatch {
     private RequestQueue rq;
     private static char ESC = ESCPOS.ESC;
     private static char LF = ESCPOS.LF;
+    private Double igv;
 
     public SheetsPrintDispatch() {
         posPtr = new POSPrinterService();
@@ -41,14 +46,15 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printNowComprobante(Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario) {
-        String codigoVenta = "MUOy4w/Q6VGqEBNiwQOhMYLCvm8";
+    public void printNowComprobante(Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico) {
+        String codigoVenta = beDocElectronico.getResumenFirma();
         String url = "www.energigas.com";
         DecimalFormat df = new DecimalFormat("#.00");
         String tipoDocumento = "FACTURA ELECTRONICA";
-        if (true) {
+        if (comprobanteVenta.getTipoComprobanteId() != Constants.TIPO_DOCUMENTO_FACTURA) {
             tipoDocumento = "BOLETA ELECTRONICA";
         }
+        igv = Double.parseDouble(Session.getConceptoIGV().getDescripcion());
 
         String textTipoVenta = "VENTA AL CONTADO";
         if (comprobanteVenta.getPlanPago() != null) {
@@ -69,22 +75,24 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI/RUC: " + cliente.getPersona().getPerVDocIdentidad() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION: " + cliente.getPersona().getUbicacion().getDescripcion() + LF);
             printLineas();
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", "CANT") + String.format("%-30s", "Producto")  +  String.format("%-5s", "") + String.format("%-7s", "IMPORTE") + LF + "");
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", "CANT") + String.format("%-30s", "Producto") + String.format("%-5s", "") + String.format("%-7s", "IMPORTE") + LF + "");
             printLineas();
             double importeTotal = 0.0;
             for (ComprobanteVentaDetalle comprobanteVentaDetalle : comprobanteVenta.getItemsDetalle()) {
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + ""))+ String.format("%-5s", "")+ String.format("%-9s",df.format(comprobanteVentaDetalle.getImporte())) + LF + "");
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%-5s", "") + String.format("%-9s", df.format(comprobanteVentaDetalle.getImporte())) + LF + "");
 
                 importeTotal = importeTotal + comprobanteVentaDetalle.getImporte();
             }
-            String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(importeTotal)) + LF;
-            String inafecta = ESC + "|lA" + String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(0.00)) + LF;
-            String exonerada = ESC + "|lA" + String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(0.00)) + LF;
-            String gratuita = ESC + "|lA" + String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(0.00)) + LF;
-            String descuentos = ESC + "|lA" + String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(0.00)) + LF;
-            String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(0.00)) + LF;
+            Double importeIgv = importeTotal * igv;
+            Double importeTotalCIgv = importeIgv + importeTotal;
+            String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeTotalCIgv)) + LF;
+            String inafecta = ESC + "|lA" + String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
+            String exonerada = ESC + "|lA" + String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
+            String gratuita = ESC + "|lA" + String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
+            String descuentos = ESC + "|lA" + String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
+            String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeIgv)) + LF;
             String rayaTotal = ESC + "|rA" + "---------" + LF;
-            String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(importeTotal)) + LF;
+            String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeTotalCIgv)) + LF;
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gravada);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, inafecta);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, exonerada);
@@ -94,7 +102,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, rayaTotal);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, precioVenta);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + comprobanteVenta.getValorResumen() + LF);
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + comprobanteVenta.getValorResumen() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + textTipoVenta + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "AGENTE: " + usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno() + LF);
@@ -116,11 +124,10 @@ public class SheetsPrintDispatch {
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Energigas SAC" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "DIRECCION" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "telefono" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lima" + ", " + "Peru" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC" + LF);//RUC
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "San Isidro Lima" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: (511) 2033001" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20506151547" + LF);//RUC
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre: " + establecimiento.getEstVDescripcion() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Direccion: " + establecimiento.getUbicacion().getDescripcion() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Instalacion: " + almacen.getNombre() + LF);

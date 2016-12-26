@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_weight="3.5"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="ABRIL"
+            android:textColor="@color/colorAccent"
+            android:textSize="10dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textDia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textMes"
+            android:gravity="center"
+            android:text="25"
+            android:textColor="#000"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/textAnno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textDia"
+            android:gravity="center"
+            android:text="2016"
+            android:textColor="#A7A7A6"
+            android:textSize="8dp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:background="#CECECE"
+        android:foregroundGravity="right" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textDiaString"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="Lunes"
+            android:textColor="@color/colorAccent"
+            android:textSize="15dp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_weight="1.5"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnTotal"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"
+            android:text="56%"
+            android:textColor="#fff"
+            android:textSize="8dp" />
+
+        <Button
+            android:layout_marginLeft="25dp"
+            android:id="@+id/sh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"
+            android:text="56%"
+            android:textColor="#fff"
+            android:textSize="8dp" />
+
+        <Button
+            android:layout_marginLeft="25dp"
+            android:id="@+id/rhrt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"
+            android:text="56%"
+            android:textColor="#fff"
+            android:textSize="8dp" />
+
+        <Button
+            android:layout_marginLeft="25dp"
+            android:id="@+id/btnTorthrhtal"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circular_shape"
+            android:text="56%"
+            android:textColor="#fff"
+            android:textSize="8dp" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

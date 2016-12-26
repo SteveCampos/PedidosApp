@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_collapsing"
             android:fitsSystemWindows="true"
-            app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="@dimen/expanded_title_margin_bottom"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
             app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
             <LinearLayout
                 style="@style/Widget.CardContent"
@@ -41,21 +41,30 @@
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="Lunes, 1 de Agosto"
                         android:layout_marginBottom="@dimen/margin_top_layout"
-                        android:textSize="@dimen/text_size_14"/>
+                        android:text="Lunes, 1 de Agosto"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14" />
 
                     <TextView
                         android:id="@+id/tv_description"
+                        style="@style/ExpenseTrackerTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ExpenseTrackerTextView"
                         android:layout_marginBottom="15dp"
-                        android:textSize="24sp"
-                        android:textColor="@color/white"
                         android:gravity="center"
-                        android:text="Est. La Molina"/>
+                        android:text="Est. La Molina"
+                        android:textColor="@color/white"
+
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:paddingTop="20dp"
+                        android:drawableLeft="@android:drawable/stat_sys_phone_call"
+                        android:textSize="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=": 977737208" />
 
                 </LinearLayout>
 
@@ -92,12 +101,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:visibility="gone"
-        android:src="@drawable/ic_add_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
-        android:layout_marginRight="@dimen/md_keylines" />
+        android:layout_marginRight="@dimen/md_keylines"
+        android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone" />
+
 
 </android.support.design.widget.CoordinatorLayout>

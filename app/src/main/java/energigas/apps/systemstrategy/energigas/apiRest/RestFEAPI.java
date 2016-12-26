@@ -1,6 +1,8 @@
 /* JSON API for android application [Web Service] */
 package energigas.apps.systemstrategy.energigas.apiRest;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,8 +23,16 @@ import java.net.URL;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import energigas.apps.systemstrategy.energigas.entities.Servidores;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+
 public class RestFEAPI {
-    private final String urlString = "http://CCIE/SW/RestfulApi.ashx";
+  //  private final String urlString = "http://192.168.0.157/SW/RestfulApi.ashx";
+
+    Servidores servidores = Servidores.find(Servidores.class, " name = ? ", new String[]{"Facturacion"}).get(0);
+
+
+    private final String urlString = Constants.URL_PRE + servidores.getDescription() + Constants.URL_POST_FACTURACION;
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";
@@ -211,7 +221,7 @@ public class RestFEAPI {
         return result;
     }
 
-        public JSONObject generarFactura(Object doc, String cert) throws Exception {
+    public JSONObject generarFactura(Object doc, String cert) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -363,12 +373,15 @@ public class RestFEAPI {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","RestAPI");
+        o.put("interface", "RestAPI");
         o.put("method", "flst_IniciarFacturasMovil");
-        p.put("mlst_doc",mapObject(mlst_doc));
+        p.put("mlst_doc", mapObject(mlst_doc));
         o.put("parameters", p);
+
         String s = o.toString();
         String r = load(s);
+
+        Log.d("ServiceExport", "FE: " +p.toString());
         result = new JSONObject(r);
         return result;
     }

@@ -34,6 +34,7 @@ import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
@@ -85,6 +86,7 @@ public class MainStationActivity extends AppCompatActivity
     private Usuario usuario;
     private HashMap<String, Boolean> booleanHashMap;
     private List<AccessFragment> accessFragmentList;
+    private Cliente cliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,18 @@ public class MainStationActivity extends AppCompatActivity
                         new AccessFragment(getString(R.string.activity_charges_fac),
                                 new ComprobanteVentaFragment(), 0, 5))
                 .isFragmentEnable();
+        cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
+        setTipoCliente();
 
+    }
+
+    private void setTipoCliente() {
+
+        if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
+            setTitle("Cliente");
+        } else {
+            setTitle("Estación");
+        }
 
     }
 
@@ -264,8 +277,9 @@ public class MainStationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
-        new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+        initViews();
+        // new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        // new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
     }
 
     @Override

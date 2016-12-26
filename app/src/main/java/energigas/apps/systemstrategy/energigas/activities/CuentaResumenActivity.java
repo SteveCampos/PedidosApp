@@ -1,7 +1,9 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -38,6 +41,9 @@ public class CuentaResumenActivity extends AppCompatActivity {
     @BindView(R.id.textAccountNro)
     TextView textViewNro;
 
+    @BindView(R.id.fabImprimirResumen)
+    FloatingActionButton actionButtonResumen;
+
 
     private CustomTabsAdapter tabsAdapter;
     private Usuario usuario;
@@ -55,6 +61,16 @@ public class CuentaResumenActivity extends AppCompatActivity {
         setToolbar();
         setupCollapsingToolbar();
         setCaberceraText();
+        imprimirResumen();
+    }
+
+    private void imprimirResumen() {
+        actionButtonResumen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ResumenPrintActivity.class));
+            }
+        });
     }
 
     private void setupCollapsingToolbar() {

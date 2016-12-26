@@ -341,7 +341,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(idCajaMovimiento + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaGasto.class.getSimpleName()), Integer.parseInt(idCajaGasto + ""), Constants.S_CREADO).save();
-                new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+               // new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
 
             }

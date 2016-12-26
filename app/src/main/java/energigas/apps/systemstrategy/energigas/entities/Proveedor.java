@@ -1,0 +1,148 @@
+package energigas.apps.systemstrategy.energigas.entities;
+
+import com.orm.SugarRecord;
+
+/**
+ * Created by kelvi on 26/12/2016.
+ */
+
+public class Proveedor extends SugarRecord {
+
+    private int proveedorId;
+
+    private int personaId;
+
+    private int diasCredito;
+
+    private double montoCredito;
+
+    private int modalidadCreditoId;
+
+    private boolean agenteRetencion;
+
+    private boolean agentePercepcion;
+
+    private int estadoId;
+
+    private int usuarioCreacionId;
+
+    private String fechaCreacion;
+
+    private int usuarioAccionId;
+
+    private String fechaAccion;
+
+    public Proveedor() {
+    }
+
+    public Proveedor(int proveedorId, int personaId, int diasCredito, double montoCredito, int modalidadCreditoId, boolean agenteRetencion, boolean agentePercepcion, int estadoId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion) {
+        this.proveedorId = proveedorId;
+        this.personaId = personaId;
+        this.diasCredito = diasCredito;
+        this.montoCredito = montoCredito;
+        this.modalidadCreditoId = modalidadCreditoId;
+        this.agenteRetencion = agenteRetencion;
+        this.agentePercepcion = agentePercepcion;
+        this.estadoId = estadoId;
+        this.usuarioCreacionId = usuarioCreacionId;
+        this.fechaCreacion = fechaCreacion;
+        this.usuarioAccionId = usuarioAccionId;
+        this.fechaAccion = fechaAccion;
+    }
+
+    public int getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(int proveedorId) {
+        this.proveedorId = proveedorId;
+    }
+
+    public int getPersonaId() {
+        return personaId;
+    }
+
+    public void setPersonaId(int personaId) {
+        this.personaId = personaId;
+    }
+
+    public int getDiasCredito() {
+        return diasCredito;
+    }
+
+    public void setDiasCredito(int diasCredito) {
+        this.diasCredito = diasCredito;
+    }
+
+    public double getMontoCredito() {
+        return montoCredito;
+    }
+
+    public void setMontoCredito(double montoCredito) {
+        this.montoCredito = montoCredito;
+    }
+
+    public int getModalidadCreditoId() {
+        return modalidadCreditoId;
+    }
+
+    public void setModalidadCreditoId(int modalidadCreditoId) {
+        this.modalidadCreditoId = modalidadCreditoId;
+    }
+
+    public boolean isAgenteRetencion() {
+        return agenteRetencion;
+    }
+
+    public void setAgenteRetencion(boolean agenteRetencion) {
+        this.agenteRetencion = agenteRetencion;
+    }
+
+    public boolean isAgentePercepcion() {
+        return agentePercepcion;
+    }
+
+    public void setAgentePercepcion(boolean agentePercepcion) {
+        this.agentePercepcion = agentePercepcion;
+    }
+
+    public int getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public int getUsuarioCreacionId() {
+        return usuarioCreacionId;
+    }
+
+    public void setUsuarioCreacionId(int usuarioCreacionId) {
+        this.usuarioCreacionId = usuarioCreacionId;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public int getUsuarioAccionId() {
+        return usuarioAccionId;
+    }
+
+    public void setUsuarioAccionId(int usuarioAccionId) {
+        this.usuarioAccionId = usuarioAccionId;
+    }
+
+    public String getFechaAccion() {
+        return fechaAccion;
+    }
+
+    public void setFechaAccion(String fechaAccion) {
+        this.fechaAccion = fechaAccion;
+    }
+}

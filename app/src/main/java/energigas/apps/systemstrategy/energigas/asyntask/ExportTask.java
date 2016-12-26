@@ -16,7 +16,6 @@ import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.apiRest.RestFEAPI;
 import energigas.apps.systemstrategy.energigas.entities.BERespFacturaM;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaEgreso;
-import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaIngreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVenta;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaDespacho;
@@ -32,7 +31,7 @@ import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
-import energigas.apps.systemstrategy.energigas.entities.de.BEDocElectronico;
+import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NetworkUtil;
@@ -85,6 +84,11 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                 exportCreatedComprobanteVenta(type);
                 break;
             case Constants.TABLA_GASTO:
+                exportCreatedGasto(type);
+                break;
+            case Constants.EXPORTAR_TODO:
+                exportCreatedDespacho(type);
+                exportCreatedComprobanteVenta(type);
                 exportCreatedGasto(type);
                 break;
 
@@ -182,86 +186,91 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
                             if (comprobanteVenta.getId() == beRespuestaCpVenta.getCompIdAndroid()) {
 
-                                BEDocElectronico beDocElectronico = BEDocElectronico.getBeDocElectronico(comprobanteVenta.getCompId() + "");
+                                BeDocElectronico beDocElectronico = BeDocElectronico.getBeDocElectronico(comprobanteVenta.getCompId() + "");
                                 beDocElectronico.setComprobanteVentaId(beRespuestaCpVenta.getCompIdServer());
                                 beDocElectronico.save();
 
 
                                 saveEstado(comprobanteVenta.getId() + "", beRespuestaCpVenta.getCompIdServer() + "", ComprobanteVenta.class);
                                 comprobanteVenta.setCompId(beRespuestaCpVenta.getCompIdServer());
+
                                 Long es = comprobanteVenta.save();
                                 Log.d(TAG, "ComprobanteVenta " + es);
-                            }
 
-                            for (BERespuestaCpVentaDetalle respuestaCpVentaDetalle : beRespuestaCpVenta.getItemsCpVenta()) {
 
-                                for (ComprobanteVentaDetalle ventaDetalle : comprobanteVenta.getItemsDetalle()) { /**Comprobante Venta Detalle**/
+                                for (BERespuestaCpVentaDetalle respuestaCpVentaDetalle : beRespuestaCpVenta.getItemsCpVenta()) {
 
-                                    if (ventaDetalle.getId() == respuestaCpVentaDetalle.getCompdIdAndroid()) {
+                                    for (ComprobanteVentaDetalle ventaDetalle : comprobanteVenta.getItemsDetalle()) { /**Comprobante Venta Detalle**/
 
-                                        ventaDetalle.setCompId(beRespuestaCpVenta.getCompIdServer());
-                                        ventaDetalle.setCompdId(respuestaCpVentaDetalle.getCompdIdServer());
-                                        Long sD = ventaDetalle.save();
-                                        saveEstado(ventaDetalle.getId() + "", respuestaCpVentaDetalle.getCompdIdServer() + "", ComprobanteVentaDetalle.class);
-                                        Log.d(TAG, "ComprobanteVentaDetalle " + sD);
+                                        if (ventaDetalle.getId() == respuestaCpVentaDetalle.getCompdIdAndroid()) {
+
+                                            ventaDetalle.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                            ventaDetalle.setCompdId(respuestaCpVentaDetalle.getCompdIdServer());
+                                            Long sD = ventaDetalle.save();
+                                            saveEstado(ventaDetalle.getId() + "", respuestaCpVentaDetalle.getCompdIdServer() + "", ComprobanteVentaDetalle.class);
+                                            Log.d(TAG, "ComprobanteVentaDetalle " + sD);
+                                        }
                                     }
+
                                 }
 
-                            }
+                                //Es al credito
+                                if (comprobanteVenta.getPlanPago() != null) {
 
-                            //Es al credito
-                            if (comprobanteVenta.getPlanPago() != null) {
+                                    /**Plan Pago**/
+                                    PlanPago planPago = comprobanteVenta.getPlanPago();
+                                    saveEstado(planPago.getId() + "", beRespuestaCpVenta.getPlanPago().getPlanPaIdServer() + "", PlanPago.class);
+                                    planPago.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                    planPago.setPlanPaId(beRespuestaCpVenta.getPlanPago().getPlanPaIdServer());
+                                    Long pp = planPago.save();
+                                    Log.d(TAG, "PlanPago " + pp);
 
-                                /**Plan Pago**/
-                                PlanPago planPago = comprobanteVenta.getPlanPago();
-                                saveEstado(planPago.getId() + "", beRespuestaCpVenta.getPlanPago().getPlanPaIdServer() + "", PlanPago.class);
-                                planPago.setCompId(beRespuestaCpVenta.getCompIdServer());
-                                planPago.setPlanPaId(beRespuestaCpVenta.getPlanPago().getPlanPaIdServer());
-                                Long pp = planPago.save();
-                                Log.d(TAG, "PlanPago " + pp);
+                                    for (BERespuestaPlanPagoDetalle beRespuestaPlanPagoDetalle : beRespuestaCpVenta.getPlanPago().getItemsPlan()) { /**Plan pago detalle**/
 
-                                for (BERespuestaPlanPagoDetalle beRespuestaPlanPagoDetalle : beRespuestaCpVenta.getPlanPago().getItemsPlan()) { /**Plan pago detalle**/
+                                        for (PlanPagoDetalle planPagoDetalle : planPago.getDetalle()) {
 
-                                    for (PlanPagoDetalle planPagoDetalle : planPago.getDetalle()) {
+                                            if (planPagoDetalle.getId() == beRespuestaPlanPagoDetalle.getPlanPaDeIdAndroid()) {
+                                                saveEstado(planPagoDetalle.getId() + "", beRespuestaPlanPagoDetalle.getPlanPaDeIdServer() + "", PlanPagoDetalle.class);
+                                                planPagoDetalle.setPlanPaId(planPago.getPlanPaId());
+                                                planPagoDetalle.setPlanPaDeId(beRespuestaPlanPagoDetalle.getPlanPaDeIdServer());
+                                                Long ppd = planPagoDetalle.save();
+                                                Log.d(TAG, "PlanPagoDetalle " + ppd);
 
-                                        if (planPagoDetalle.getId() == beRespuestaPlanPagoDetalle.getPlanPaDeIdAndroid()) {
-                                            saveEstado(planPagoDetalle.getId() + "", beRespuestaPlanPagoDetalle.getPlanPaDeIdServer() + "", PlanPagoDetalle.class);
-                                            planPagoDetalle.setPlanPaId(planPago.getPlanPaId());
-                                            planPagoDetalle.setPlanPaDeId(beRespuestaPlanPagoDetalle.getPlanPaDeIdServer());
-                                            Long ppd = planPagoDetalle.save();
-                                            Log.d(TAG, "PlanPagoDetalle " + ppd);
+                                            }
 
                                         }
 
                                     }
 
+
+                                } else {//Es al contado
+
+
+                                    /**Caja Movimiento**/
+                                    CajaMovimiento cajaMovimiento = comprobanteVenta.getCajaMovimiento();
+                                    saveEstado(cajaMovimiento.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer() + "", CajaMovimiento.class);
+                                    cajaMovimiento.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
+
+                                    cajaMovimiento.save();
+
+                                    /**Caja pago**/
+                                    CajaPago cajaPago = comprobanteVenta.getCajaMovimiento().getPago();
+                                    saveEstado(cajaPago.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajPagIdServer() + "", CajaPago.class);
+                                    cajaPago.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
+                                    cajaPago.setCajPagId(beRespuestaCpVenta.getCajaIngreso().getCajPagIdServer());
+                                    cajaPago.save();
+
+                                    /**Caja Comprobante**/
+
+                                    CajaComprobante cajaComprobante = comprobanteVenta.getCajaMovimiento().getComprobante();
+                                    saveEstado(cajaComprobante.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajCompIdServer() + "", CajaComprobante.class);
+                                    cajaComprobante.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
+                                    cajaComprobante.setCajCompId(beRespuestaCpVenta.getCajaIngreso().getCajCompIdServer());
+                                    cajaComprobante.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                    cajaComprobante.save();
+
+
                                 }
-
-
-                            } else {//Es al contado
-
-                                /**Caja Movimiento**/
-                                CajaMovimiento cajaMovimiento = comprobanteVenta.getCajaMovimiento();
-                                saveEstado(cajaMovimiento.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer() + "", CajaMovimiento.class);
-                                cajaMovimiento.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
-                                cajaMovimiento.save();
-
-                                /**Caja pago**/
-                                CajaPago cajaPago = comprobanteVenta.getCajaMovimiento().getPago();
-                                saveEstado(cajaPago.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajPagIdServer() + "", CajaPago.class);
-                                cajaPago.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
-                                cajaPago.setCajPagId(beRespuestaCpVenta.getCajaIngreso().getCajPagIdServer());
-                                cajaPago.save();
-
-                                /**Caja Comprobante**/
-
-                                CajaComprobante cajaComprobante = comprobanteVenta.getCajaMovimiento().getComprobante();
-                                saveEstado(cajaComprobante.getId() + "", beRespuestaCpVenta.getCajaIngreso().getCajCompIdServer() + "", CajaComprobante.class);
-                                cajaComprobante.setCajMovId(beRespuestaCpVenta.getCajaIngreso().getCajMovIdServer());
-                                cajaComprobante.setCajCompId(beRespuestaCpVenta.getCajaIngreso().getCajCompIdServer());
-                                cajaComprobante.save();
-
-
                             }
 
 
@@ -279,6 +288,7 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                     exportObjectsListener.onLoadErrorProcedure("Error de Procedimiento");
                 }
 
+
                 // exportDocumentoElectronico();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -287,14 +297,14 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
             }
         }
 
-
+        exportDocumentoElectronico(estado);
     }
 
     private void exportDocumentoElectronico(int estado) {
         jsonObjectResponse = null;
-        List<BEDocElectronico> beDocElectronicos = BEDocElectronico.beDocElectronicoList(new ArrayList<BEDocElectronico>(Utils.getListForExIn(BEDocElectronico.class, estado)));
+        List<BeDocElectronico> beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado)));
         if (beDocElectronicos.size() > 0) {
-            Log.d(TAG, "cantidad gasto: " + beDocElectronicos.get(0).getDocElectronicoId());
+            Log.d(TAG, "CANTIDAD FE: " + beDocElectronicos.get(0).getDocElectronicoId());
         }
 
         if (beDocElectronicos.size() > 0) {
@@ -309,11 +319,12 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
                     for (BERespFacturaM beRespFacturaM : beRespFacturaMList) {
 
-                        for (BEDocElectronico docElectronico : beDocElectronicos) {
+                        for (BeDocElectronico docElectronico : beDocElectronicos) {
 
-                            if (beRespFacturaM.getIdAndroid() == docElectronico.getComprobanteVentaId()) {
+                            if (docElectronico.getId().equals(beRespFacturaM.getIdAndroid())) {
                                 docElectronico.setDocElectronicoId(beRespFacturaM.getIdServer());
                                 docElectronico.save();
+                                saveEstado(beRespFacturaM.getIdAndroid() + "", beRespFacturaM.getIdServer() + "", BeDocElectronico.class);
                             }
                         }
                     }

@@ -1,7 +1,12 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,6 +26,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -40,12 +51,18 @@ import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
 import energigas.apps.systemstrategy.energigas.entities.RolUsuario;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
 import energigas.apps.systemstrategy.energigas.fragments.CajaExistenteFragment;
+import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
+import energigas.apps.systemstrategy.energigas.services.ServiceExportMyLocation;
+import energigas.apps.systemstrategy.energigas.services.ServiceFirebase;
+import energigas.apps.systemstrategy.energigas.services.ServiceSync;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -55,7 +72,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener, IntentListenerAccess {
+        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener, IntentListenerAccess, TabLayout.OnTabSelectedListener {
     //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -73,6 +90,40 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawer)
     DrawerLayout drawer;
     Agent agent;
+
+    @BindView(R.id.textNombreAgente)
+    TextView textViewNombreAgente;
+
+    @BindView(R.id.textVehiculoPlaca)
+    TextView textViewPlaca;
+
+    @BindView(R.id.textFecha)
+    TextView textViewFecha;
+
+    @BindView(R.id.layoutProfile)
+    LinearLayout linearLayoutProfile;
+
+    @BindView(R.id.layoutBsc)
+    LinearLayout linearLayoutBsc;
+
+    @BindView(R.id.imageViewAgente)
+    ImageView imageViewAgente;
+
+    @BindView(R.id.imageViewProfile2)
+    ImageView imageViewAgente2;
+
+
+    @BindView(R.id.textBSC)
+    TextView textViewBsc;
+
+    @BindView(R.id.textAgente)
+    TextView textViewAgente;
+
+    @BindView(R.id.textUnidadTransporte)
+    TextView textViewUnidadTransporte;
+
+    private int colorInicial;
+
     private Usuario usuario;
     private HashMap<String, Boolean> booleanHashMap;
     private List<AccessFragment> accessFragments;
@@ -83,14 +134,17 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        colorInicial = R.color.colorAccent;
         Log.d(TAG, "Usuario: " + Session.getSession(this).getUsuIUsuarioId() + "");
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
+
         if (!Utils.getGpsEnable(this)) {
             Intent intent = new Intent(this, ModalActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+        validaExistencia();
         new AccessPrivilegesManager(getClass())
                 .setViews(fab)
                 .setListenerIntent(this)
@@ -99,18 +153,95 @@ public class MainActivity extends AppCompatActivity
                 .isIntentEnable()
                 .setFragment(
                         new AccessFragment(getString(R.string.estb_title_name),
-                                new EstablecimientoFragment(), R.drawable.ic_gas_station, 1),
+                                new EstablecimientoFragment(), R.drawable.ic_calendar, 1),
                         new AccessFragment(getString(R.string.plan_title_name),
-                                new PlanFragment(), R.drawable.ic_calendar, 2))
+                                new PlanFragment(), R.drawable.ic_heat, 2))
                 .isFragmentEnable();
 
 
         hideFloatingButton();
 
-        //  new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
-        new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
-        new AtencionesAsyntask().execute();
+        //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        //new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
+
+
+        startService(new Intent(MainActivity.this, ServiceExportMyLocation.class));
+        startService(new Intent(MainActivity.this, ServiceFirebase.class));
+        startService(new Intent(MainActivity.this, ServiceSync.class));
+
+    }
+
+    private void initProfileAgente() {
+        CajaLiquidacion caja = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        Usuario usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
+        Vehiculo vehiculo = Vehiculo.getVehiculo(usuario.getUsuIUsuarioId() + "");
+        textViewNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
+        textViewPlaca.setText("Placa V.: " + vehiculo.getPlaca());
+        String fecha = Utils.getDateDescription(caja.getFechaApertura());
+        textViewFecha.setText(fecha);
+
+
+        textViewBsc.setText("BSC del Agente");
+
+        textViewAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
+        textViewUnidadTransporte.setText("Placa V.: " + vehiculo.getPlaca());
+
+
+        viewToolbaViews(R.color.colorPrimaryDark, 1);
+    }
+
+    private void viewToolbaViews(int color, int tipo) {
+
+        tabs.setBackgroundColor(getResources().getColor(color));
+        toolbar.setBackgroundColor(getResources().getColor(color));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(color));
+        }
+
+
+        if (tipo == 1) {
+            linearLayoutProfile.setVisibility(View.VISIBLE);
+            linearLayoutBsc.setVisibility(View.GONE);
+            tabs.setSelectedTabIndicatorColor(getResources().getColor(colorInicial));
+            colorInicial = color;
+        } else {
+            tabs.setSelectedTabIndicatorColor(getResources().getColor(colorInicial));
+            linearLayoutProfile.setVisibility(View.GONE);
+            linearLayoutBsc.setVisibility(View.VISIBLE);
+            colorInicial = color;
+        }
+    }
+
+    private void validaExistencia() {
+        Intent intent = new Intent();
+        intent.setAction("fe.apps.systemstrategy.GENERAR_XML");
+        intent.setType("text/plain");
+
+
+        // Verify it resolves
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+        if (!isIntentSafe) {
+            new DialogGeneral(this).setCancelable(false).setMessages("Atencion", "Es necesario tener instala la aplicacion de facturacion electronica").setTextButtons("Salir", "Instalar").showDialog(new DialogGeneralListener() {
+                @Override
+                public void onSavePressed(AlertDialog alertDialog) {
+                    MainActivity.this.finish();
+                }
+
+                @Override
+                public void onCancelPressed(AlertDialog alertDialog) {
+                    try {
+                        MainActivity.this.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -126,6 +257,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "TAMAÑO FRAG: " + accessFragments.size());
         initViews();
+        initProfileAgente();
     }
 
     private void hideFloatingButton() {
@@ -134,7 +266,7 @@ public class MainActivity extends AppCompatActivity
         if (planDistribucion.size() > 0) {
             fab.hide();
         } else {
-            CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId() + "").show(getSupportFragmentManager(), "");
+            // CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId() + "").show(getSupportFragmentManager(), "");
         }
 
     }
@@ -198,14 +330,18 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        tabLayout.addOnTabSelectedListener(this);
+
+
     }
+
 
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            MainActivity.this.finish();
         }
     }
 
@@ -246,6 +382,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(getApplicationContext(), MainConfiguraciones.class));
             return true;
         } else if (id == android.R.id.home) {
             drawer.openDrawer(GravityCompat.START);
@@ -377,6 +514,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadErrorProcedure(String message) {
         Log.d(TAG, message);
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        if (tab.getPosition() == 0) {
+            viewToolbaViews(R.color.colorPrimaryDark, 1);
+        }
+        if (tab.getPosition() == 1) {
+            viewToolbaViews(R.color.colorAccent, 2);
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 
 

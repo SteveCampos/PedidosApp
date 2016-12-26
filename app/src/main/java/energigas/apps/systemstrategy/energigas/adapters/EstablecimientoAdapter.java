@@ -8,10 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoHolder;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -55,18 +59,22 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         // Get the data model based on position
         //
 
-        Log.d(Utils.TAG, "onBindViewHolder: "+ position);
-      //  holder.bind(mListEstablecimientos.get(position), mContext, listener);
+        Log.d(Utils.TAG, "onBindViewHolder: " + position);
+        //  holder.bind(mListEstablecimientos.get(position), mContext, listener);
         final Establecimiento establecimiento = mListEstablecimientos.get(position);
-
+        Cliente cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
+        Pedido pedido = Pedido.getPedido(establecimiento.getEstIEstablecimientoId() + "");
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
         GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
-        Log.d(TAG, "GeoUbicacion: "+ geoUbicacion);
+        Log.d(TAG, "GeoUbicacion: " + geoUbicacion);
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.
-        if (geoUbicacion!=null){
-
+        if (geoUbicacion != null && pedido != null) {
+            holder.mubicacion.setText(pedido.getHoraProgramada());
             holder.maddress.setText(geoUbicacion.getDescripcion());
+
         }
+
+        holder.imageView2.setImageDrawable(mContext.getResources().getDrawable(getImage(cliente.getCliITipoClienteId())));
 
         //holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
         //holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
@@ -81,14 +89,11 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
 
     }
 
-    int getImage(String tipoestacion) {
-        switch (tipoestacion) {
-            case "externo":
-                return R.drawable.ic_gas_station_c;
-            case "interno":
-                return R.drawable.logo;
-            default:
-                return R.drawable.logo;
+    int getImage(int tipoestacion) {
+        if (Constants.ESTABLECIMIENTO_EXTERNO == tipoestacion) {
+            return R.drawable.gas_station_b;
+        } else {
+            return R.drawable.logo;
         }
     }
 

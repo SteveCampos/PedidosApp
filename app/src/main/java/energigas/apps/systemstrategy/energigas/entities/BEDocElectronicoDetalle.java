@@ -1,4 +1,4 @@
-package energigas.apps.systemstrategy.energigas.entities.de;
+package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
@@ -7,7 +7,7 @@ import com.orm.dsl.Unique;
  * Created by kelvi on 13/12/2016.
  */
 
-public class BEDocElectronicoDetalle extends SugarRecord {
+public class BeDocElectronicoDetalle extends SugarRecord {
 
     private int docElectronicoId;
     @Unique
@@ -28,10 +28,10 @@ public class BEDocElectronicoDetalle extends SugarRecord {
     private String precioReferencial;
     private String descuento;
 
-    public BEDocElectronicoDetalle() {
+    public BeDocElectronicoDetalle() {
     }
 
-    public BEDocElectronicoDetalle(int docElectronicoId, int docdetalleId, Double cantidad, int unidadMedidaId, Double suma, Double totalVenta, Double precioUnitario, int tipoPrecioId, int tipoImpuestoId, Double impuesto, Double impuestoSelectivo, Double otroImpuesto, int productoId, String descripcion, String codigoItem, String precioReferencial, String descuento) {
+    public BeDocElectronicoDetalle(int docElectronicoId, int docdetalleId, Double cantidad, int unidadMedidaId, Double suma, Double totalVenta, Double precioUnitario, int tipoPrecioId, int tipoImpuestoId, Double impuesto, Double impuestoSelectivo, Double otroImpuesto, int productoId, String descripcion, String codigoItem, String precioReferencial, String descuento) {
         this.docElectronicoId = docElectronicoId;
         this.docdetalleId = docdetalleId;
         this.cantidad = cantidad;

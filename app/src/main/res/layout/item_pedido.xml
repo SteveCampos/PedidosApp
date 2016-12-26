@@ -42,7 +42,7 @@
             android:id="@+id/text_station_order_scope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="84399786"
+            android:text="SCOP: SS"
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_below="@+id/text_station_order_title"
             />
@@ -61,7 +61,7 @@
             android:id="@+id/text_station_order_programed_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Martes 16"
+            android:text="FE: 16"
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_alignBottom="@+id/text_station_order_state"
             android:layout_alignParentEnd="true" />

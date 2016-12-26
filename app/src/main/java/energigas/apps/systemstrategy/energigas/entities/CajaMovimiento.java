@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -222,6 +224,8 @@ public class CajaMovimiento extends SugarRecord {
         if (cajaComprobante == null) {
             return null;
         }
+
+
         CajaMovimiento cajaMovimiento = CajaMovimiento.find(CajaMovimiento.class, "caj_Mov_Id=?", new String[]{cajaComprobante.getCajMovId() + ""}).get(0);
         CajaPago cajaPago = CajaPago.getCajaPago(cajaMovimiento.getCajMovId() + "");
         cajaMovimiento.setComprobante(cajaComprobante);

@@ -115,11 +115,11 @@
 
     <style name="TextLabelDespacho" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-       <!-- <item name="android:textColorHint">@color/</item>-->
+        <!-- <item name="android:textColorHint">@color/</item>-->
         <item name="android:textSize">14sp</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorAccent">@color/colorAccent</item>
-       <!-- <item name="colorControlNormal">@color/Color Name</item>-->
+        <!-- <item name="colorControlNormal">@color/Color Name</item>-->
         <item name="android:textStyle">bold</item>
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
@@ -128,7 +128,6 @@
     <style name="myDialogActivity" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
-
 
 
 </resources>

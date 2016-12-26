@@ -36,10 +36,12 @@ public class CajaGasto extends SugarRecord {
 
     private String fechaActualizacion;
 
+    private int tipoComprobanteId;
+
     public CajaGasto() {
     }
 
-    public CajaGasto(long cajGasId, long cajMoId, double igv, double valorVenta, double importe, int tipoGastoId, int usuarioActualizacion, int usuarioCreacion, String fechaCreacion, String fechaActualizacion) {
+    public CajaGasto(long cajGasId, long cajMoId, double igv, double valorVenta, double importe, int tipoGastoId, int usuarioActualizacion, int usuarioCreacion, String fechaCreacion, String fechaActualizacion, int tipoComprobanteId) {
         this.cajGasId = cajGasId;
         this.cajMoId = cajMoId;
         this.igv = igv;
@@ -50,6 +52,15 @@ public class CajaGasto extends SugarRecord {
         this.usuarioCreacion = usuarioCreacion;
         this.fechaCreacion = fechaCreacion;
         this.fechaActualizacion = fechaActualizacion;
+        this.tipoComprobanteId = tipoComprobanteId;
+    }
+
+    public int getTipoComprobanteId() {
+        return tipoComprobanteId;
+    }
+
+    public void setTipoComprobanteId(int tipoComprobanteId) {
+        this.tipoComprobanteId = tipoComprobanteId;
     }
 
     public long getCajGasId() {
@@ -132,13 +143,6 @@ public class CajaGasto extends SugarRecord {
         this.fechaActualizacion = fechaActualizacion;
     }
 
-    public static List<CajaGasto> getListCajaGastos() {
-        List<CajaGasto> cajaGastos = new ArrayList<>();
-        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 120, 50, 70, 80, "28/07/2016", "Cambio de Aceite"));
-        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 50, 50, 70, 80, "28/07/2016", "Peajes"));
-        cajaGastos.add(new CajaGasto(10, 20, 30, 40, 140, 50, 70, 80, "28/07/2016", "Almuerzo Semanal"));
-        return cajaGastos;
-    }
 
     public static List<CajaGasto> getListCajaGastosLiquidacion(String liquidacion) {
 

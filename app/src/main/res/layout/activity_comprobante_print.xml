@@ -24,18 +24,7 @@
 
     <include layout="@layout/layout_print_factura" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/print_margin_bottom_fab_4"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorPrimary"
-        app:elevation="@dimen/print_elevation_fab"
-        app:pressedTranslationZ="@dimen/print_translation_z"
-        android:src="@drawable/ic_arrow_forward_" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabDisconec"

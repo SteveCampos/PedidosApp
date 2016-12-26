@@ -94,6 +94,7 @@ public class ResumentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_fragment_summary, container, false);
         ButterKnife.bind(this, rootView);
+        textViewDetalleItemsTotales.setVisibility(View.GONE);
         //SummaryAdapter adapter = new SummaryAdapter(getActivity(), 0, Summary.getListSummary(getActivity()));
         summary = Summary.getListSummary(getActivity());
         res = getActivity().getResources();
@@ -126,8 +127,11 @@ public class ResumentFragment extends Fragment {
             detalleStrings = detalleStrings + s;
         }
 
-        String stringFormarItems = String.format(res.getString(R.string.text_detalle_ingresos), detalleStrings);
-        textViewDetalleItemsTotales.setText(stringFormarItems);
+        if (!detalleStrings.equals("")) {
+            String stringFormarItems = String.format(res.getString(R.string.text_detalle_ingresos), detalleStrings);
+            textViewDetalleItemsTotales.setText(stringFormarItems);
+        }
+
 
     }
 
