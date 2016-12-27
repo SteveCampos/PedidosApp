@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
+import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
@@ -69,6 +70,8 @@ public class AsynObtenerDatosGenerales extends AsyncTask<String, String, String>
 
         for (Proveedor proveedor : objGeneral.getProveedoresList()) {
             Persona persona = proveedor.getPersona();
+            GeoUbicacion geoUbicacion = persona.getUbicacion();
+            geoUbicacion.save();
             persona.save();
         }
 

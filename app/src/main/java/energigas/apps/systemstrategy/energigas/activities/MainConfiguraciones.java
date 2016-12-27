@@ -46,6 +46,7 @@ public class MainConfiguraciones extends AppCompatActivity implements Servidores
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_configuraciones);
         ButterKnife.bind(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Importando");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
