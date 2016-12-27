@@ -43,6 +43,7 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
@@ -152,10 +153,27 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen), summary.getSaldoInicial() + "", summary.getIngresosTotales() + "", "" + summary.getIngresosTotales(), "" + summary.getGastos(), summary.getEfectivoRendir() + "");
         textViewDetalleResumen.setText(stringdetallle);
 
-        String detalleItems = "";
+        String detalleStrings = "";
         String detalleTotal = "";
+        int cantidad = 1;
+        double total = 0.00;
 
-        String detalleItemCaja = String.format(res.getString(R.string.print_detalle_ingresos_items), "", "");
+
+        for (Concepto concepto : summary.getIncome().keySet()) {
+            String s = "";
+            double importeItem = 0.0;
+            for (Double importeTotal : summary.getIncome().get(concepto)) {
+                importeItem = importeItem + importeTotal;
+            }
+            s = concepto.getDescripcion() + "                                                           " + Utils.formatDouble(importeItem) + "\n";
+            detalleStrings = detalleStrings + s;
+        }
+
+        if (!detalleStrings.equals("")) {
+            String detalleItemCaja = String.format(res.getString(R.string.print_detalle_ingresos_items), detalleStrings, "");
+            textViewDetalleResumen.setText(detalleItemCaja);
+        }
+
 
     }
 

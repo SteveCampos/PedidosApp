@@ -26,10 +26,11 @@ public class Proveedor extends SugarRecord {
     @Ignore
     private Persona persona;
 
+
     public Proveedor() {
     }
 
-    public Proveedor(int proveedorId, int personaId, int diasCredito, double montoCredito, int modalidadCreditoId, Boolean agenteRetencion, Boolean agentePercepcion, int estadoId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, Persona persona) {
+    public Proveedor(int proveedorId, int personaId, int diasCredito, double montoCredito, int modalidadCreditoId, boolean agenteRetencion, boolean agentePercepcion, int estadoId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, Persona persona) {
         this.proveedorId = proveedorId;
         this.personaId = personaId;
         this.diasCredito = diasCredito;
@@ -42,30 +43,6 @@ public class Proveedor extends SugarRecord {
         this.fechaCreacion = fechaCreacion;
         this.usuarioAccionId = usuarioAccionId;
         this.fechaAccion = fechaAccion;
-        this.persona = persona;
-    }
-
-    public Boolean getAgenteRetencion() {
-        return agenteRetencion;
-    }
-
-    public void setAgenteRetencion(Boolean agenteRetencion) {
-        this.agenteRetencion = agenteRetencion;
-    }
-
-    public Boolean getAgentePercepcion() {
-        return agentePercepcion;
-    }
-
-    public void setAgentePercepcion(Boolean agentePercepcion) {
-        this.agentePercepcion = agentePercepcion;
-    }
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
         this.persona = persona;
     }
 
@@ -163,5 +140,13 @@ public class Proveedor extends SugarRecord {
 
     public void setFechaAccion(String fechaAccion) {
         this.fechaAccion = fechaAccion;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 }

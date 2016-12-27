@@ -66,6 +66,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:24.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-appindexing:9.2.1'
+    compile 'com.race604.waveloading:library:1.1.0'
 
 }
 buildscript {
