@@ -151,6 +151,9 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
 
         String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen), summary.getSaldoInicial() + "", summary.getIngresosTotales() + "", "" + summary.getIngresosTotales(), "" + summary.getGastos(), summary.getEfectivoRendir() + "");
         textViewDetalleResumen.setText(stringdetallle);
+
+     //   String detalleItemCaja = String.format(res.getString(R.string.print_detalle_ingresos_items),)
+
     }
 
 

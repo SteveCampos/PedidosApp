@@ -2,20 +2,21 @@ package energigas.apps.systemstrategy.energigas.entities;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
 
 /**
  * Created by kelvi on 26/12/2016.
  */
 
 public class Proveedor extends SugarRecord {
-
+    @Unique
     private int proveedorId;
     private int personaId;
     private int diasCredito;
     private double montoCredito;
     private int modalidadCreditoId;
-    private Boolean agenteRetencion;
-    private Boolean agentePercepcion;
+    private boolean agenteRetencion;
+    private boolean agentePercepcion;
     private int estadoId;
     private int usuarioCreacionId;
     private String fechaCreacion;
