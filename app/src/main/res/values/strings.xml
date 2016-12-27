@@ -521,4 +521,37 @@
     <string name="title_activity_main_configuraciones">MainConfiguraciones</string>
 
     <!--Fin Cobranza-->
+
+    <!--ORDEN DE CARGA-->
+
+
+    <string name="ordencarga.text.tipocarga">Tipo de Carga</string>
+    <string name="ordencarga.text.conversion">Factor de Conversión</string>
+    <string name="ordencarga.text.densidad">Densidad</string>
+    <string name="ordencarga.text.producto">Producto</string>
+    <string name="ordencarga.text.cantidad">Cantidad</string>
+    <string name="ordencarga.text.precio">Precio</string>
+    <string name="ordencarga.text.unidadmedida">Unidad de Medida</string>
+
+    <string name="ordencarga.carga.text.emision">F. emisión</string>
+    <string name="ordencarga.carga.text.entrega">F. entrega</string>
+
+
+    <string name="ordencarga.button.text.pickdate">Seleccionar Fecha</string>
+
+
+    <string name="ordencarga.compra.text.title">Compra</string>
+    <string name="ordencarga.compra.text.ruc">RUC</string>
+    <string name="ordencarga.compra.text.rs">Razón Social</string>
+    <string name="ordencarga.compra.text.factura">Nro Factura</string>
+    <string name="ordencarga.compra.text.guia">Nro Guía</string>
+    <string name="ordencarga.compra.text.emision">Fecha emisión</string>
+    <string name="ordencarga.compra.text.entrega">Fecha entrega</string>
+
+    <string name="ordencarga.trasciego.text.title">Trasciego</string>
+    <string name="ordencarga.trasciego.tipoorigen">Tipo de Origen</string>
+    <string name="ordencarga.trasciego.text.guia">Nro Guía</string>
+    <string name="ordencarga.trasciego.text.emision">Fecha emisión</string>
+    <string name="ordencarga.trasciego.text.entrega">Fecha entrega</string>
+
 </resources>

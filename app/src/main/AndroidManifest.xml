@@ -180,10 +180,7 @@
             android:name=".activities.SellPrintActivity"
             android:label="Imprimir Comprobante"
             android:theme="@style/AppTheme" />
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -194,7 +191,8 @@
         <activity
             android:name=".activities.MainConfiguraciones"
             android:label="@string/title_activity_main_configuraciones"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/myDialogActivity"></activity>
+        <activity android:name=".activities.OrdenCargaActivity"></activity>
     </application>
 
 </manifest>

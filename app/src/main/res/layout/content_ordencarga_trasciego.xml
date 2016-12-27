@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/container.trasciego"
+    android:padding="8dp">
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/ordencarga.trasciego.text.title"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/ordencarga.trasciego.tipoorigen" />
+
+            <Spinner
+                android:id="@+id/spnTrasciegoTipoOrigen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:entries="@array/ordencarga_trasciego_tipoorigen_entries"
+                android:entryValues="@array/ordencarga_trasciego_tipoorigen_values" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etTrasciegoGuia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ordencarga.trasciego.text.guia"
+                    android:inputType="phone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtTrasciegoEntrega"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ordencarga.compra.text.entrega" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/btn.fechaentrega"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ordencarga.button.text.pickdate" />
+                </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

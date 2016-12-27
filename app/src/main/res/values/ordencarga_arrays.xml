@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ordencarga_tipocarga_entries">
+        <item>Compra</item>
+        <item>Trasciego</item>
+    </string-array>
+    <string-array name="ordencarga_tipocarga_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="ordencarga_trasciego_tipoorigen_entries">
+        <item>Planta</item>
+        <item>Cisterna</item>
+    </string-array>
+    <string-array name="ordencarga_trasciego_tipoorigen_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="ordencarga_producto_entries">
+        <item>GLP</item>
+    </string-array>
+    <string-array name="ordencarga_producto_values">
+        <item>1</item>
+    </string-array>
+    <string-array name="ordencarga_unidadmedida_entries">
+        <item>KG</item>
+        <item>Litros</item>
+    </string-array>
+    <string-array name="ordencarga_unidadmedida_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>
