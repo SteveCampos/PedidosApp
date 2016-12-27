@@ -20,15 +20,15 @@
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
             app:counterMaxLength="11"
             app:errorEnabled="true"
             >
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/etCompraRuc"
+            <android.support.v7.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et.compra.ruc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/etCompraRazonSocial"
+            <android.support.v7.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/et.compra.nombrecomercial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/etCompraFactura"
+                android:id="@+id/et.compra.factura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/etCompraGuia"
+                android:id="@+id/et.compra.guia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -95,7 +95,7 @@
                 android:layout_weight="1"
                 >
                 <TextView
-                    android:id="@+id/txtCompraEmision"
+                    android:id="@+id/text.compra.emision"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ordencarga.compra.text.emision"
@@ -116,7 +116,7 @@
                 android:layout_weight="1"
                 >
                 <TextView
-                    android:id="@+id/txtCompraEntrega"
+                    android:id="@+id/text.compra.entrega"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ordencarga.compra.text.entrega"

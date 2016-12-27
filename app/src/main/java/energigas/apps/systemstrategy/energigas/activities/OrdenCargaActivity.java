@@ -2,11 +2,16 @@ package energigas.apps.systemstrategy.energigas.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -18,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.adapters.ProveedorAdapter;
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Proveedor;
@@ -33,7 +39,26 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     LinearLayout lytCompra;
     @BindView(R.id.container_trasciego)
     LinearLayout lytTrasciego;
+    @BindView(R.id.et_compra_ruc)
+    AppCompatAutoCompleteTextView actCompraRuc;
+    @BindView(R.id.et_compra_nombrecomercial)
+    AppCompatAutoCompleteTextView actCompraNombreComercial;
+    @BindView(R.id.et_compra_factura)
+    EditText etCompraFactura;
+    @BindView(R.id.et_compra_guia)
+    EditText etCompraGuia;
+    @BindView(R.id.text_compra_emision)
+    TextView txtCompraEmision;
+    @BindView(R.id.text_compra_entrega)
+    TextView txtCompraEntrega;
+    @BindView(R.id.btn_compra_fechaemision)
+    AppCompatButton btnCompraEmision;
+    @BindView(R.id.btn_compra_fechaentrega)
+    AppCompatButton btnCompraEntrega;
 
+
+    ProveedorAdapter proveedorAdapterRuc;
+    ProveedorAdapter proveedorAdapterNombreComercial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +66,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         setContentView(R.layout.activity_orden_carga);
         ButterKnife.bind(this);
         initVies();
-        List<Proveedor> list = Proveedor.getProveedorList();
-        Log.d(TAG, "getProveedorList() size: " + list.size());
-        for (Proveedor p :
-                list) {
-            Log.d(TAG, "proveedor persona razonsocial: " + p.getPersona().getPerVRazonSocial());
-            Log.d(TAG, "proveedor persona getPerVDocIdentidad: " + p.getPersona().getPerVDocIdentidad());
-        }
     }
 
 
@@ -81,11 +99,50 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     @Override
     public void initVies() {
         handleSpinnerTipoCarga();
+        initAutocompleteRuc();
+        initAutoCumpleteNombreComercial();
     }
 
     @Override
     public void handleSpinnerTipoCarga() {
         spnTipoCarga.setOnItemSelectedListener(tipoCargaSelectedItemListener);
+    }
+
+    @Override
+    public void initAutocompleteRuc() {
+        proveedorAdapterRuc = new ProveedorAdapter(this, ProveedorAdapter.DOCUMENTO_IDENTIDAD ,Proveedor.getProveedorList());
+        actCompraRuc.setAdapter(proveedorAdapterRuc);
+        actCompraRuc.setOnItemClickListener(proveedorItemSelectedListener);
+    }
+    AdapterView.OnItemClickListener proveedorItemSelectedListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            Proveedor proveedor = proveedorAdapterRuc.getItem(i);
+            actCompraRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
+            actCompraNombreComercial.setText(proveedor.getPersona().getNombreComercial());
+        }
+
+    };
+
+    AdapterView.OnItemClickListener proveedorNCItemSelectedListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            Proveedor proveedor = proveedorAdapterNombreComercial.getItem(i);
+            actCompraRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
+            actCompraNombreComercial.setText(proveedor.getPersona().getNombreComercial());
+        }
+
+    };
+
+
+    @Override
+    public void initAutoCumpleteNombreComercial() {
+        proveedorAdapterNombreComercial = new ProveedorAdapter(this, ProveedorAdapter.NOMBRE_COMERCIAL, Proveedor.getProveedorList());
+        actCompraNombreComercial.setAdapter(proveedorAdapterNombreComercial);
+        actCompraNombreComercial.setOnItemClickListener(proveedorNCItemSelectedListener);
+
     }
 
     private AdapterView.OnItemSelectedListener tipoCargaSelectedItemListener = new AdapterView.OnItemSelectedListener() {
@@ -125,7 +182,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     @Override
     public void guardarOrdenCarga() {
-
         OrdenCargo ordenCargo = new OrdenCargo();
 
     }
