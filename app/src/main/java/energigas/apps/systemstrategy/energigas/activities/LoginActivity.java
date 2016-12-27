@@ -23,6 +23,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Servidores;
 import energigas.apps.systemstrategy.energigas.fragments.ProgressDialogFragment;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -99,14 +100,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String mPassword = editTextPassword.getText().toString();
 
         boolean valida = true;
-        if (mEmail == null || mEmail.equals("")) {
+
+        if (Concepto.listAll(Concepto.class).size() <= 0) {
             valida = false;
-            Toast.makeText(getApplicationContext(), "Usuario Incorrecto", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Por favor, importe datos generales", Toast.LENGTH_LONG).show();
         }
-        if (mPassword == null || mPassword.equals("")) {
-            valida = true;
-            Toast.makeText(getApplicationContext(), "Clave Incorrecto", Toast.LENGTH_LONG).show();
+
+
+        if (mEmail.length() <= 0 || mPassword.length() <= 0) {
+            valida = false;
+            Toast.makeText(getApplicationContext(), "Usuario o password Incorrecto", Toast.LENGTH_LONG).show();
         }
+
         if (valida) {
             startLogin(mEmail, mPassword);
 
@@ -120,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void checkLogin() {
         if (Utils.isSignin(this)) {
             startActivity(new Intent(this, MainActivity.class));
-            this.finish();
+            LoginActivity.this.finish();
         }
     }
 

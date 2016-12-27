@@ -311,4 +311,18 @@ public class RestAPI {
     }
 
 
+    public JSONObject fupd_CajaLiquidacion(Object vobj_Liquidacion) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface", "RestAPI");
+        o.put("method", "fupd_CajaLiquidacion");
+        p.put("vobj_Liquidacion", mapObject(vobj_Liquidacion));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

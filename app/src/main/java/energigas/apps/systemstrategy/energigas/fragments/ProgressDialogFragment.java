@@ -101,6 +101,8 @@ public class ProgressDialogFragment extends DialogFragment implements OnLoginAsy
         Utils.saveStateLogin(context, true);
         Session.saveCajaLiquidacion(getActivity(), cajaLiquidacion);
         initMain();
+        dismiss();
+        getActivity().finish();
     }
 
     @Override

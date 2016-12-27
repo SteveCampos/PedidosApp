@@ -238,8 +238,14 @@ public class Vehiculo extends SugarRecord {
     }
 
     public static Vehiculo getVehiculo(String usuarioId) {
-        VehiculoUsuario vehiculoUsuario = VehiculoUsuario.find(VehiculoUsuario.class, "usuario_Id=?", new String[]{usuarioId}).get(0);
-        Vehiculo vehiculo = Vehiculo.find(Vehiculo.class, "ve_Id=?", new String[]{vehiculoUsuario.getVeId() + ""}).get(0);
-        return vehiculo;
+        boolean b = VehiculoUsuario.find(VehiculoUsuario.class, "usuario_Id=?", new String[]{usuarioId}).size() > 0;
+        if (b) {
+            VehiculoUsuario vehiculoUsuario = VehiculoUsuario.find(VehiculoUsuario.class, "usuario_Id=?", new String[]{usuarioId}).get(0);
+            Vehiculo vehiculo = Vehiculo.find(Vehiculo.class, "ve_Id=?", new String[]{vehiculoUsuario.getVeId() + ""}).get(0);
+            return vehiculo;
+        } else {
+            return null;
+        }
+
     }
 }

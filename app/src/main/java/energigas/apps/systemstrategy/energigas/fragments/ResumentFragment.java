@@ -128,6 +128,7 @@ public class ResumentFragment extends Fragment {
         }
 
         if (!detalleStrings.equals("")) {
+            textViewDetalleItemsTotales.setVisibility(View.VISIBLE);
             String stringFormarItems = String.format(res.getString(R.string.text_detalle_ingresos), detalleStrings);
             textViewDetalleItemsTotales.setText(stringFormarItems);
         }

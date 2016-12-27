@@ -101,10 +101,15 @@ public class CajaLiquidacion extends SugarRecord {
     private DEEntidad entidad; //
 
 
+    private double stockInicial;
+
+    private double stockFinal;
+
+
     public CajaLiquidacion() {
     }
 
-    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, int entidadId, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos, List<Dispositivo> itemsDispositivos, Vehiculo vehiculo, List<VehiculoDispositivo> itemsVehiculoDispositivo, VehiculoUsuario vehiculoUsuario, List<DispositivoSerie> itemsDispositivoSeries, DEEntidad entidad) {
+    public CajaLiquidacion(long liqId, int usuarioId, String fechaApertura, String fechaCierre, int estadoId, double ingresos, double gastos, double meta, int porcentaje, int kmInicial, int kmFinal, double pesoInicial, double pesoFinal, double pIT, double pFT, String fechaActualizacion, int usuarioActualizacion, int tipoId, String placaVehiculo, int veId, int almId, String latitudInicio, String longitudInicio, String latitudFinal, String longitudFinal, long pdId, int pdfId, double saldoInicial, double saldoFinal, int entidadId, PlanDistribucion planDistribucionD, List<Cliente> itemsClientes, List<CajaLiquidacionDetalle> itemsLiquidacion, List<Serie> itemsSeries, List<Pedido> itemsPedidos, List<Dispositivo> itemsDispositivos, Vehiculo vehiculo, List<VehiculoDispositivo> itemsVehiculoDispositivo, VehiculoUsuario vehiculoUsuario, List<DispositivoSerie> itemsDispositivoSeries, DEEntidad entidad, double stockInicial, double stockFinal) {
         this.liqId = liqId;
         this.usuarioId = usuarioId;
         this.fechaApertura = fechaApertura;
@@ -146,6 +151,24 @@ public class CajaLiquidacion extends SugarRecord {
         this.vehiculoUsuario = vehiculoUsuario;
         this.itemsDispositivoSeries = itemsDispositivoSeries;
         this.entidad = entidad;
+        this.stockInicial = stockInicial;
+        this.stockFinal = stockFinal;
+    }
+
+    public double getStockInicial() {
+        return stockInicial;
+    }
+
+    public void setStockInicial(double stockInicial) {
+        this.stockInicial = stockInicial;
+    }
+
+    public double getStockFinal() {
+        return stockFinal;
+    }
+
+    public void setStockFinal(double stockFinal) {
+        this.stockFinal = stockFinal;
     }
 
     public int getEntidadId() {
@@ -477,11 +500,17 @@ public class CajaLiquidacion extends SugarRecord {
     }
 
     public static CajaLiquidacion getCajaLiquidacion(String liquidacionId) {
-        CajaLiquidacion cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).get(Constants.CURRENT);
-        DEEntidad deEntidad = DEEntidad.getEntidadById(cajaLiquidacion.getEntidadId() + "");
-        deEntidad.setCertificado(CertificadoDigital.find(CertificadoDigital.class, "entidad_Id=?", new String[]{deEntidad.getEntidadId() + ""}).get(0));
-        cajaLiquidacion.setEntidad(deEntidad);
-        return cajaLiquidacion;
+        Boolean aBoolean = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).size() > 0;
+        if (aBoolean) {
+            CajaLiquidacion cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).get(Constants.CURRENT);
+            DEEntidad deEntidad = DEEntidad.getEntidadById(cajaLiquidacion.getEntidadId() + "");
+            deEntidad.setCertificado(CertificadoDigital.find(CertificadoDigital.class, "entidad_Id=?", new String[]{deEntidad.getEntidadId() + ""}).get(0));
+            cajaLiquidacion.setEntidad(deEntidad);
+            return cajaLiquidacion;
+        }
+        return null;
+
+
     }
 
 }

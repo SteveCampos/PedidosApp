@@ -139,11 +139,11 @@
     </string>
 
      <string name="print_factura_detalle_resumen">
-         "SALDO INICIAL   :  S/.           %1$s \n"
+         "SALDO INICIAL           :  S/.           %1$s \n"
          "INGRESOS TOTALES:  S/.           %2$s \n"
-         "EN EFECTIVO     :  S/.           %3$s \n"
-         "GASTOS TOTALES  :  S/.           %4$s \n"
-         "TOTAL A RENDIR  :  S/.           %5$s \n"
+         "EN EFECTIVO             :  S/.           %3$s \n"
+         "GASTOS TOTALES    :  S/.           %4$s \n"
+         "TOTAL A RENDIR       :  S/.           %5$s \n"
     </string>
 
      <string name="text_detalle_ingresos">
@@ -152,6 +152,7 @@
 
      <string name="print_detalle_ingresos_items">
          " %1$s \n"
+         " ----------------------------------------------------------------------------------------\n"
          " <b> %2$s </b>\n"
     </string>
 

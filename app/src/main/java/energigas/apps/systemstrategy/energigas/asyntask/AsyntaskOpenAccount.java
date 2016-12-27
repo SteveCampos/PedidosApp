@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -29,6 +30,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     private int estado = 0;
     private String message = "";
     private CajaLiquidacion cajaLiquidacion;
+    private int codigoId = 0;
 
     public AsyntaskOpenAccount(OnAsyntaskListener onAsyntaskListener) {
         this.onAsyntaskListener = onAsyntaskListener;
@@ -54,6 +56,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                     SugarTransactionHelper.doInTransaction(this);
                 } else {
                     estado = Constants.ERROR_PROCEDIMIENTO;
+                    codigoId = Integer.parseInt(cajaLiquidacion.getLiqId() + "");
                     message = "Error de procedimiento";
                 }
 
@@ -77,10 +80,10 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
+        Concepto concepto = Concepto.getConceptoByCodigo(codigoId + "");
         switch (estado) {
             case Constants.ERROR_PROCEDIMIENTO:
-                onAsyntaskListener.onLoadErrorProcedure(message);
+                onAsyntaskListener.onLoadErrorProcedure(concepto.getDescripcion());
                 break;
             case Constants.ERROR_CONEXION:
                 onAsyntaskListener.onLoadError(message);
@@ -89,7 +92,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
                 onAsyntaskListener.onLoadError(message);
                 break;
             case Constants.OPERACION_EXITOSA:
-                onAsyntaskListener.onLoadSuccess(message,cajaLiquidacion);
+                onAsyntaskListener.onLoadSuccess(message, cajaLiquidacion);
                 break;
             default:
                 onAsyntaskListener.onLoadError(message);
@@ -97,7 +100,6 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
         }
 
     }
-
 
 
     @Override

@@ -145,47 +145,60 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         validaExistencia();
-        new AccessPrivilegesManager(getClass())
-                .setViews(fab)
-                .setListenerIntent(this)
-                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
-                .setClassIntent(MainStationActivity.class)
-                .isIntentEnable()
-                .setFragment(
-                        new AccessFragment(getString(R.string.estb_title_name),
-                                new EstablecimientoFragment(), R.drawable.ic_calendar, 1),
-                        new AccessFragment(getString(R.string.plan_title_name),
-                                new PlanFragment(), R.drawable.ic_heat, 2))
-                .isFragmentEnable();
+        initProfileAgente();
+        if (hideFloatingButton()) {
+
+            new AccessPrivilegesManager(getClass())
+                    .setViews(fab)
+                    .setListenerIntent(this)
+                    .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                    .setClassIntent(MainStationActivity.class)
+                    .isIntentEnable()
+                    .setFragment(
+                            new AccessFragment(getString(R.string.estb_title_name),
+                                    new EstablecimientoFragment(), R.drawable.ic_calendar, 1),
+                            new AccessFragment(getString(R.string.plan_title_name),
+                                    new PlanFragment(), R.drawable.ic_heat, 2))
+                    .isFragmentEnable();
 
 
-        hideFloatingButton();
-
-        //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
-        //new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+            //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+            //new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
 
+            startService(new Intent(MainActivity.this, ServiceExportMyLocation.class));
+            startService(new Intent(MainActivity.this, ServiceFirebase.class));
+            startService(new Intent(MainActivity.this, ServiceSync.class));
+        }
 
-        startService(new Intent(MainActivity.this, ServiceExportMyLocation.class));
-        startService(new Intent(MainActivity.this, ServiceFirebase.class));
-        startService(new Intent(MainActivity.this, ServiceSync.class));
 
     }
 
     private void initProfileAgente() {
         CajaLiquidacion caja = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        String fecha;
+        if (caja != null) {
+            fecha = caja.getFechaApertura();
+        } else {
+
+            fecha = "Aun no abrio caja";
+        }
         Usuario usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         Vehiculo vehiculo = Vehiculo.getVehiculo(usuario.getUsuIUsuarioId() + "");
+        String placa = "Sin vehiculo asignada";
+        if (vehiculo != null) {
+            placa = vehiculo.getPlaca();
+        }
         textViewNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
-        textViewPlaca.setText("Placa V.: " + vehiculo.getPlaca());
-        String fecha = Utils.getDateDescription(caja.getFechaApertura());
-        textViewFecha.setText(fecha);
+        textViewPlaca.setText("Placa V.: " + placa);
+        String fechaMain = Utils.getDateDescription(fecha);
+        textViewFecha.setText(fechaMain);
 
 
         textViewBsc.setText("BSC del Agente");
 
         textViewAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
-        textViewUnidadTransporte.setText("Placa V.: " + vehiculo.getPlaca());
+        textViewUnidadTransporte.setText("Placa V.: " + placa);
 
 
         viewToolbaViews(R.color.colorPrimaryDark, 1);
@@ -257,15 +270,18 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "TAMAÑO FRAG: " + accessFragments.size());
         initViews();
-        initProfileAgente();
+
     }
 
-    private void hideFloatingButton() {
+    private boolean hideFloatingButton() {
 
-        List<PlanDistribucion> planDistribucion = PlanDistribucion.find(PlanDistribucion.class, " fecha_Inicio=? ", new String[]{Utils.getDatePhoneWithTime()});
-        if (planDistribucion.size() > 0) {
+        List<CajaLiquidacion> cajaLiquidacions = CajaLiquidacion.find(CajaLiquidacion.class, "estado_Id=?", new String[]{Constants.CAJA_ABIERTA + ""});
+        if (cajaLiquidacions.size() > 0) {
             fab.hide();
+            return true;
         } else {
+            showDialogAccount();
+            return false;
             // CajaExistenteFragment.newIntance(usuario.getUsuIUsuarioId() + "").show(getSupportFragmentManager(), "");
         }
 

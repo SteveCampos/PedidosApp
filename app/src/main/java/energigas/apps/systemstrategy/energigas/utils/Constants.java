@@ -38,6 +38,8 @@ public class Constants {
 
     public static final int CURRENT = 0;
 
+    public static final int CAJA_ABIERTA = 31;
+
 
     /**
      * Nombres Caja Liquidacion

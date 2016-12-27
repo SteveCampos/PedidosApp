@@ -94,8 +94,14 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
                 saveIsAvibleData();
                 break;
             case R.id.btn_cancel:
+                List<CajaLiquidacion> cajaLiquidacion = CajaLiquidacion.listAll(CajaLiquidacion.class);
+                if (cajaLiquidacion.size() <= 0) {
+                    Toast.makeText(getActivity(), "Es necesario abrir caja", Toast.LENGTH_SHORT).show();
+                } else {
+                    dismiss();
+                }
                 locationVehiculeListener.stopLocationUpdates();
-                dismiss();
+
                 break;
         }
     }

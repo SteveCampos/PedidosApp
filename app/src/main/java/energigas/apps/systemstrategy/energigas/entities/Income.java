@@ -10,8 +10,10 @@ public class Income {
     private String descripcion;
     private double cantidad;
     private double cobrado;
-    private double  emitido;
-    private double  pagado;
+    private double emitido;
+    private double pagado;
+    private String descripcionComprobante;
+
     public Income() {
     }
 

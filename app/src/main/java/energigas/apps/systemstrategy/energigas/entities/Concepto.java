@@ -21,17 +21,18 @@ public class Concepto extends SugarRecord {
 
     private int empresaId;
 
-    private String  fechaInicio;
+    private String fechaInicio;
 
     private String fechaFin;
 
     private String abreviatura;
+    private int codigo;
 
 
     public Concepto() {
     }
 
-    public Concepto(int idConcepto, String objeto, String concepto, String descripcion, int estado, int empresaId, String fechaInicio, String fechaFin, String abreviatura) {
+    public Concepto(int idConcepto, String objeto, String concepto, String descripcion, int estado, int empresaId, String fechaInicio, String fechaFin, String abreviatura, int codigo) {
         this.idConcepto = idConcepto;
         this.objeto = objeto;
         this.concepto = concepto;
@@ -41,6 +42,15 @@ public class Concepto extends SugarRecord {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.abreviatura = abreviatura;
+        this.codigo = codigo;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public String getAbreviatura() {
@@ -115,11 +125,15 @@ public class Concepto extends SugarRecord {
         this.fechaFin = fechaFin;
     }
 
-    public static Concepto getConceptoById(String  id){
-        return Concepto.find(Concepto.class," id_Concepto=?  ",new String[]{id}).get(0);
+    public static Concepto getConceptoById(String id) {
+        return Concepto.find(Concepto.class, " id_Concepto=?  ", new String[]{id}).get(0);
     }
 
-    public static Concepto getConcepto(String  codigo){
-        return Concepto.find(Concepto.class," id_Concepto=?  ",new String[]{codigo}).get(0);
+    public static Concepto getConceptoByCodigo(String codigo) {
+        return Concepto.find(Concepto.class, " codigo=?  ", new String[]{codigo}).get(0);
+    }
+
+    public static Concepto getConcepto(String codigo) {
+        return Concepto.find(Concepto.class, " id_Concepto=?  ", new String[]{codigo}).get(0);
     }
 }

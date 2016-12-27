@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,13 +16,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
@@ -44,9 +50,12 @@ import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
+import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.Inventory;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
+import energigas.apps.systemstrategy.energigas.entities.SummaryIncome;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
@@ -90,6 +99,20 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     TextView textViewDetalleResumen;
 
 
+    @BindView(R.id.cardIngresos)
+    CardView cardViewIngreso;
+
+    @BindView(R.id.tableLayoutIngresos)
+    TableLayout tableLayoutIngresos;
+
+
+    @BindView(R.id.cardCostos)
+    CardView cardViewCostos;
+
+    @BindView(R.id.tablayoutGastos)
+    TableLayout tableLayoutGastos;
+
+
     private static final String TAG = "SellPrintActivity";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -100,6 +123,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     private CajaLiquidacion cajaLiquidacion;
     private Usuario usuario;
     private Summary summary;
+    private List<Inventory> inventoryList;
 
 
     @Override
@@ -108,6 +132,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.layout_print_resumen);
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        inventoryList = Inventory.getInventoryList(this);
         res = getResources();
         usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
@@ -127,6 +152,8 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         }
         setTextCabecera();
         setDetalleResumen();
+        setIngresos();
+        setCostos();
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -153,30 +180,254 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen), summary.getSaldoInicial() + "", summary.getIngresosTotales() + "", "" + summary.getIngresosTotales(), "" + summary.getGastos(), summary.getEfectivoRendir() + "");
         textViewDetalleResumen.setText(stringdetallle);
 
-        String detalleStrings = "";
-        String detalleTotal = "";
-        int cantidad = 1;
-        double total = 0.00;
-
-
-        for (Concepto concepto : summary.getIncome().keySet()) {
-            String s = "";
-            double importeItem = 0.0;
-            for (Double importeTotal : summary.getIncome().get(concepto)) {
-                importeItem = importeItem + importeTotal;
-            }
-            s = concepto.getDescripcion() + "                                                           " + Utils.formatDouble(importeItem) + "\n";
-            detalleStrings = detalleStrings + s;
-        }
-
-        if (!detalleStrings.equals("")) {
-            String detalleItemCaja = String.format(res.getString(R.string.print_detalle_ingresos_items), detalleStrings, "");
-            textViewDetalleResumen.setText(detalleItemCaja);
-        }
-
 
     }
 
+    private void setIngresos() {
+        Log.d(TAG, "" + summary.getSummaryIncomeList().size());
+
+        if (Integer.parseInt(summary.getSummaryIncomeList().get(0).getCantidad()) < 1) {
+            return;
+        }
+        cardViewIngreso.setVisibility(View.VISIBLE);
+
+        TableRow tableRow1 = new TableRow(this);
+
+        TextView textDescripcion1 = new TextView(this);
+        TextView textCantidad1 = new TextView(this);
+        TextView textTotalEmitidos1 = new TextView(this);
+        TextView textTotalPagados1 = new TextView(this);
+        TextView textTotalCobrados1 = new TextView(this);
+
+        textDescripcion1.setGravity(Gravity.CENTER);
+        textCantidad1.setGravity(Gravity.CENTER);
+        textTotalEmitidos1.setGravity(Gravity.CENTER);
+        textTotalPagados1.setGravity(Gravity.CENTER);
+        textTotalCobrados1.setGravity(Gravity.CENTER);
+
+        textDescripcion1.setTypeface(Typeface.DEFAULT_BOLD);
+        textCantidad1.setTypeface(Typeface.DEFAULT_BOLD);
+        textTotalEmitidos1.setTypeface(Typeface.DEFAULT_BOLD);
+        textTotalPagados1.setTypeface(Typeface.DEFAULT_BOLD);
+        textTotalCobrados1.setTypeface(Typeface.DEFAULT_BOLD);
+
+
+        textDescripcion1.setTextSize(12);
+        textCantidad1.setTextSize(12);
+        textTotalEmitidos1.setTextSize(12);
+        textTotalPagados1.setTextSize(12);
+        textTotalCobrados1.setTextSize(12);
+
+        tableRow1.addView(textDescripcion1);
+        tableRow1.addView(textCantidad1);
+        tableRow1.addView(textTotalEmitidos1);
+        tableRow1.addView(textTotalPagados1);
+        tableRow1.addView(textTotalCobrados1);
+
+        textDescripcion1.setText("Descripcion");
+        textCantidad1.setText("Cantidad");
+        textTotalEmitidos1.setText("Emitidos");
+        textTotalPagados1.setText("Pagados");
+        textTotalCobrados1.setText("Cobrados");
+
+        tableLayoutIngresos.addView(tableRow1, 0);
+
+        int sumaCount = 0;
+        Double sumaCantidad = 0.00;
+        Double sumaTotalEmitidos = 0.00;
+        Double sumaTotalPagados = 0.00;
+        Double sumaTotalCobradas = 0.00;
+
+
+        for (int i = 0; i < summary.getSummaryIncomeList().size(); i++) {
+
+
+            int count = i + 1;
+            sumaCount = count;
+            SummaryIncome income = summary.getSummaryIncomeList().get(i);
+
+            sumaCantidad = sumaCantidad + Double.parseDouble(income.getCantidad());
+            sumaTotalEmitidos = sumaTotalEmitidos + Double.parseDouble(income.getEmitidos());
+            sumaTotalPagados = sumaTotalPagados + Double.parseDouble(income.getPagados());
+            sumaTotalCobradas = sumaTotalCobradas + Double.parseDouble(income.getCobrados());
+
+            TableRow tableRow = new TableRow(this);
+            //tableRow.removeAllViews();
+
+            TextView textDescripcion = new TextView(this);
+            TextView textCantidad = new TextView(this);
+            TextView textTotalEmitidos = new TextView(this);
+            TextView textTotalPagados = new TextView(this);
+            TextView textTotalCobrados = new TextView(this);
+
+            textDescripcion.setGravity(Gravity.CENTER);
+            textCantidad.setGravity(Gravity.CENTER);
+            textTotalEmitidos.setGravity(Gravity.CENTER);
+            textTotalPagados.setGravity(Gravity.CENTER);
+            textTotalCobrados.setGravity(Gravity.CENTER);
+
+
+            textDescripcion.setTextSize(12);
+            textCantidad.setTextSize(12);
+            textTotalEmitidos.setTextSize(12);
+            textTotalPagados.setTextSize(12);
+            textTotalCobrados.setTextSize(12);
+
+
+            tableRow.addView(textDescripcion);
+            tableRow.addView(textCantidad);
+            tableRow.addView(textTotalEmitidos);
+            tableRow.addView(textTotalPagados);
+            tableRow.addView(textTotalCobrados);
+
+            Double aCantidad = (Double.parseDouble(income.getCantidad()));
+            textDescripcion.setText(income.getConcepto());
+            textCantidad.setText(aCantidad.intValue() + "");
+            textTotalEmitidos.setText(Utils.formatDouble(Double.parseDouble(income.getEmitidos())));
+            textTotalPagados.setText(Utils.formatDouble(Double.parseDouble(income.getPagados())));
+            textTotalCobrados.setText(Utils.formatDouble(Double.parseDouble(income.getCobrados())));
+
+
+            tableLayoutIngresos.addView(tableRow, count);
+        }
+
+
+        TableRow tableRow = new TableRow(this);
+        tableRow.setBackgroundColor(Color.parseColor("#bdbdbd"));
+        TextView textDescripcion = new TextView(this);
+        TextView textCantidad = new TextView(this);
+        TextView textTotalEmitidos = new TextView(this);
+        TextView textTotalPagados = new TextView(this);
+        TextView textTotalCobrados = new TextView(this);
+
+        textDescripcion.setGravity(Gravity.CENTER);
+        textCantidad.setGravity(Gravity.CENTER);
+        textTotalEmitidos.setGravity(Gravity.CENTER);
+        textTotalPagados.setGravity(Gravity.CENTER);
+        textTotalCobrados.setGravity(Gravity.CENTER);
+
+        textDescripcion.setTextSize(12);
+        textCantidad.setTextSize(12);
+        textTotalEmitidos.setTextSize(12);
+        textTotalPagados.setTextSize(12);
+        textTotalCobrados.setTextSize(12);
+
+        tableRow.addView(textDescripcion);
+        tableRow.addView(textCantidad);
+        tableRow.addView(textTotalEmitidos);
+        tableRow.addView(textTotalPagados);
+        tableRow.addView(textTotalCobrados);
+
+        textDescripcion.setText("Total");
+        textCantidad.setText("" + sumaCantidad.intValue());
+        textTotalEmitidos.setText(Utils.formatDouble(sumaTotalEmitidos));
+        textTotalPagados.setText(Utils.formatDouble(sumaTotalPagados));
+        textTotalCobrados.setText(Utils.formatDouble(sumaTotalCobradas));
+
+        tableLayoutIngresos.addView(tableRow, sumaCount + 1);
+    }
+
+    private void setCostos() {
+        if (summary == null || summary.getCostsList().size() < 1) {
+            return;
+        }
+        cardViewCostos.setVisibility(View.VISIBLE);
+
+        TableRow tableRow2 = new TableRow(this);
+
+        TextView textDescrip = new TextView(this);
+        TextView textRuta = new TextView(this);
+        TextView textImporte = new TextView(this);
+
+        textDescrip.setGravity(Gravity.CENTER);
+        textRuta.setGravity(Gravity.CENTER);
+        textImporte.setGravity(Gravity.CENTER);
+
+        textDescrip.setTypeface(Typeface.DEFAULT_BOLD);
+        textRuta.setTypeface(Typeface.DEFAULT_BOLD);
+        textImporte.setTypeface(Typeface.DEFAULT_BOLD);
+
+
+        textDescrip.setTextSize(12);
+        textRuta.setTextSize(12);
+        textImporte.setTextSize(12);
+
+        textDescrip.setText("Descripcion");
+        textRuta.setText("En Ruta");
+        textImporte.setText("Importe");
+
+        tableRow2.addView(textDescrip);
+        tableRow2.addView(textRuta);
+        tableRow2.addView(textImporte);
+
+        tableLayoutGastos.addView(tableRow2, 0);
+        int sumaCountGastos = 0;
+
+        double sumaImporte = 0.00;
+
+        for (int i = 0; i < summary.getCostsList().size(); i++) {
+            Costs costs = summary.getCostsList().get(i);
+
+            sumaImporte = sumaImporte + costs.getTotal();
+
+            int count = i + 1;
+            sumaCountGastos = count;
+
+            TableRow tableRow3 = new TableRow(this);
+
+            TextView textViewDES = new TextView(this);
+            TextView textViewRUTA = new TextView(this);
+            TextView textViewIMPORTE = new TextView(this);
+
+            textViewDES.setGravity(Gravity.CENTER);
+            textViewRUTA.setGravity(Gravity.CENTER);
+            textViewIMPORTE.setGravity(Gravity.CENTER);
+
+
+            textViewDES.setTextSize(12);
+            textViewRUTA.setTextSize(12);
+            textViewIMPORTE.setTextSize(12);
+
+            textViewDES.setText(costs.getDescripcion());
+            textViewRUTA.setText(costs.getEnRuta());
+            textViewIMPORTE.setText(Utils.formatDouble(costs.getTotal()));
+
+            tableRow3.addView(textViewDES);
+            tableRow3.addView(textViewRUTA);
+            tableRow3.addView(textViewIMPORTE);
+
+            tableLayoutGastos.addView(tableRow3, count);
+        }
+
+        TableRow tableRow3 = new TableRow(this);
+        tableRow3.setBackgroundColor(Color.parseColor("#bdbdbd"));
+        TextView textDescrip3 = new TextView(this);
+        TextView textRuta3 = new TextView(this);
+        TextView textImporte3 = new TextView(this);
+
+        textDescrip3.setGravity(Gravity.CENTER);
+        textRuta3.setGravity(Gravity.CENTER);
+        textImporte3.setGravity(Gravity.CENTER);
+
+        textDescrip3.setTypeface(Typeface.DEFAULT_BOLD);
+        textRuta3.setTypeface(Typeface.DEFAULT_BOLD);
+        textImporte3.setTypeface(Typeface.DEFAULT_BOLD);
+
+
+        textDescrip3.setTextSize(12);
+        textRuta3.setTextSize(12);
+        textImporte3.setTextSize(12);
+
+        textDescrip3.setText("Total");
+        textRuta3.setText("");
+        textImporte3.setText(Utils.formatDouble(sumaImporte));
+
+        tableRow3.addView(textDescrip3);
+        tableRow3.addView(textRuta3);
+        tableRow3.addView(textImporte3);
+
+        tableLayoutGastos.addView(tableRow3, sumaCountGastos + 1);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,7 +501,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                //printDispatch.printNowComprobante(cliente, comprobanteVenta, usuario, beDocElectronico);
+                printDispatch.printResumen(cajaLiquidacion, usuario, summary);
                 floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
                 floatingActionButton.startAnimation(rotate_backward);
                 floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ResumenPrintActivity.this, R.color.greem_background_item)));

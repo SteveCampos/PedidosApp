@@ -61,13 +61,13 @@ public class Inventory {
         this.cantidadFinal = cantidadFinal;
     }
 
-    public List<Inventory> instanceListInventory() {
+    public  List<Inventory> instanceListInventory() {
         inventoriesList = new ArrayList<Inventory>();
         return inventoriesList;
 
     }
 
-    public List<Inventory> getInventoryList(Context context) {
+    public static List<Inventory> getInventoryList(Context context) {
 
         CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(context).getLiqId() + "");
         List<Producto> productoList = Producto.getAllProducto();
@@ -78,7 +78,7 @@ public class Inventory {
         for (Producto producto : productoList) {
             Log.d("InventarioFragment", producto.getProId() + "-" + almacen.getProductoId());
             if (producto.getProId() == almacen.getProductoId()) {
-                Inventory inventory = new Inventory(producto.getNombre(), almacen.getStockPermanente(), almacen.getStockPermanente(), almacen.getStockActual());
+                Inventory inventory = new Inventory(producto.getNombre(), cajaLiquidacion.getStockInicial(), almacen.getStockPermanente(), cajaLiquidacion.getStockFinal());
                 inventoryList.add(inventory);
             }
         }

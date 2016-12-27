@@ -24,17 +24,19 @@ public class Summary {
     private static final String TAG = "Summary";
 
     private HashMap<Concepto, List<Double>> incomeList;
+    private HashMap<String, List<Income>> incomeListHashMap;
 
     private int type;
     private List<SummaryIncome> summaryIncomeList;
 
-    public Summary(double saldoInicial, double ingresosTotales, double gastos, double efectivoRendir, List<Costs> costsList, HashMap<Concepto, List<Double>> incomeList, int type, List<SummaryIncome> summaryIncomeList) {
+    public Summary(double saldoInicial, double ingresosTotales, double gastos, double efectivoRendir, List<Costs> costsList, HashMap<Concepto, List<Double>> incomeList, HashMap<String, List<Income>> incomeListHashMap, int type, List<SummaryIncome> summaryIncomeList) {
         this.saldoInicial = saldoInicial;
         this.ingresosTotales = ingresosTotales;
         this.gastos = gastos;
         this.efectivoRendir = efectivoRendir;
         this.costsList = costsList;
         this.incomeList = incomeList;
+        this.incomeListHashMap = incomeListHashMap;
         this.type = type;
         this.summaryIncomeList = summaryIncomeList;
     }
@@ -80,6 +82,14 @@ public class Summary {
 
     public void setIngresosTotales(double ingresosTotales) {
         this.ingresosTotales = ingresosTotales;
+    }
+
+    public HashMap<String, List<Income>> getIncomeListHashMap() {
+        return incomeListHashMap;
+    }
+
+    public void setIncomeListHashMap(HashMap<String, List<Income>> incomeListHashMap) {
+        this.incomeListHashMap = incomeListHashMap;
     }
 
     public double getGastos() {
@@ -134,7 +144,11 @@ public class Summary {
 
         List<Double[]> doubleListFacturas = new ArrayList<>();
         List<Double[]> doubleListBoletas = new ArrayList<>();
+        HashMap<String, List<Income>> conceptoListHashMap = new HashMap<>();
 
+
+        List<Income> incomesBoletasEmitidas = new ArrayList<>();
+        List<Income> incomesFacturasEmitidas = new ArrayList<>();
 
         for (ComprobanteVenta comprobanteVenta : comprobanteVentaList) {
 
@@ -144,6 +158,8 @@ public class Summary {
                 ingresos[0] = comprobanteVenta.getTotal();
                 ingresos[1] = Double.parseDouble(comprobanteVenta.getTipoComprobanteId() + "");
                 doubleListBoletas.add(ingresos);
+                //incomesBoletasEmitidas.add()
+
             }
 
             if (comprobanteVenta.getTipoComprobanteId() == Constants.TIPO_DOCUMENTO_FACTURA) {
@@ -165,6 +181,12 @@ public class Summary {
 
 
         }
+
+
+        conceptoListHashMap.put("BOLETAS EMITIDAS", incomesBoletasEmitidas);
+        conceptoListHashMap.put("FACTURAS EMITIDAS", incomesFacturasEmitidas);
+
+
         HashMap<Concepto, List<Double>> listHashMap = new HashMap<>();
 
         /**Ingresos**/
@@ -229,7 +251,7 @@ public class Summary {
                 Utils.formatDoubleNumber(importeGastos),
                 Utils.formatDoubleNumber(efectivoRendir),
                 costsList,
-                listHashMap, 0, summaryIncomeList);
+                listHashMap, null, 0, summaryIncomeList);
 
 
         return sumaryResumen;
