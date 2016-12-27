@@ -257,7 +257,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                             usuario.getUsuIUsuarioId(),
                             usuario.getUsuIUsuarioId(),
                             Utils.getDatePhoneTime(),
-                            Utils.getDatePhoneTime()
+                            Utils.getDatePhoneTime(),0
                     );
                     Log.d(TAG, "CountID: " + idCajagasto);
 //                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
@@ -307,7 +307,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         Utils.getDatePhoneTimeSQLSERVER(),
                         mDescription,
                         conceptoTipoCateGasto.getIdConcepto(),
-                        Constants.GASTO_ESTADO_CREADO);
+                        Constants.GASTO_ESTADO_CREADO,"","");
                 long idInformeGasto = informeGasto.save();
                 informeGasto.setInfGasId(idInformeGasto);
                 informeGasto.save();

@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.BEGeneral;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -64,6 +66,11 @@ public class AsynObtenerDatosGenerales extends AsyncTask<String, String, String>
         SugarRecord.saveInTx(objGeneral.getItemsProductoUnidad());
         SugarRecord.saveInTx(objGeneral.getItemsTipos());
         SugarRecord.saveInTx(objGeneral.getProveedoresList());
+
+        for (Proveedor proveedor : objGeneral.getProveedoresList()) {
+            Persona persona = proveedor.getPersona();
+            persona.save();
+        }
 
         estado = 2;
         estadoDescripcion = "Importacion Exitosa";
