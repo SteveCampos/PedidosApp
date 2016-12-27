@@ -83,7 +83,7 @@
                         android:hint="@string/ordencarga.text.cantidad"
                         app:counterEnabled="true"
                         app:counterMaxLength="10"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         /></android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
@@ -121,7 +121,7 @@
                         android:hint="@string/ordencarga.text.conversion"
                         app:counterEnabled="true"
                         app:counterMaxLength="10"
-                        android:inputType="phone"
+                        android:inputType="numberDecimal"
                         /></android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout

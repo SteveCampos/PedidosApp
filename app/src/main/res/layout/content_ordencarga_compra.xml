@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="8dp"
     android:id="@+id/container.compra"
     >
@@ -20,22 +20,25 @@
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:counterEnabled="true"
+            app:counterMaxLength="11"
+            app:errorEnabled="true"
+            >
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/etCompraRuc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/ordencarga.compra.text.ruc"
-                app:counterEnabled="true"
-                app:counterMaxLength="10"
-                android:inputType="phone"
+                android:inputType="number"
+                app:counterOverflowTextAppearance="@style/CounterOverFlow"
+                app:counterTextAppearance="@style/Counter"
                 />
 
         </android.support.design.widget.TextInputLayout>
-
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

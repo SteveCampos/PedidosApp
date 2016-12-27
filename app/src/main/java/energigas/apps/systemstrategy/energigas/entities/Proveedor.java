@@ -4,6 +4,9 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kelvi on 26/12/2016.
  */
@@ -148,5 +151,22 @@ public class Proveedor extends SugarRecord {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public static List<Proveedor> getProveedorList(){
+        List<Proveedor> list = Proveedor.listAll(Proveedor.class);
+        List<Proveedor> proveedorList = new ArrayList<>();
+        for (Proveedor proveedor : list) {
+            if (proveedor != null) {
+                Persona persona = Persona.getPersona("" + proveedor.getPersonaId());
+                if (persona != null) {
+                    if (persona.getPerVRazonSocial() != null && persona.getPerVDocIdentidad() != null) {
+                        proveedor.setPersona(persona);
+                        proveedorList.add(proveedor);
+                    }
+                }
+            }
+        }
+        return proveedorList;
     }
 }

@@ -10,12 +10,17 @@ import android.widget.Spinner;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.ordencarga.OrdenCargaView;
 
 public class OrdenCargaActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, OrdenCargaView {
@@ -36,19 +41,28 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         setContentView(R.layout.activity_orden_carga);
         ButterKnife.bind(this);
         initVies();
+        List<Proveedor> list = Proveedor.getProveedorList();
+        Log.d(TAG, "getProveedorList() size: " + list.size());
+        for (Proveedor p :
+                list) {
+            Log.d(TAG, "proveedor persona razonsocial: " + p.getPersona().getPerVRazonSocial());
+            Log.d(TAG, "proveedor persona getPerVDocIdentidad: " + p.getPersona().getPerVDocIdentidad());
+        }
     }
+
 
     @OnClick(R.id.btn_compra_fechaemision)
-    public void selectFechaEntrega(){
+    public void selectFechaEntrega() {
         createTimePicker();
     }
+
     @OnClick(R.id.btn_compra_fechaentrega)
-    public void selectFechaEmision(){
+    public void selectFechaEmision() {
         createTimePicker();
     }
 
 
-    private void createTimePicker(){
+    private void createTimePicker() {
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 OrdenCargaActivity.this,
@@ -77,18 +91,18 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     private AdapterView.OnItemSelectedListener tipoCargaSelectedItemListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-             String item = (String) adapterView.getItemAtPosition(i);
-             switch (item){
-                 case "Compra":
-                     mostrarCompraView();
-                     break;
-                 case "Trasciego":
-                     mostrarTrasciegoView();
-                     break;
-                 default:
-                     Log.d(TAG, " tipoCargaSelectedItemListener onItemSelected default");
-                     break;
-             }
+            String item = (String) adapterView.getItemAtPosition(i);
+            switch (item) {
+                case "Compra":
+                    mostrarCompraView();
+                    break;
+                case "Trasciego":
+                    mostrarTrasciegoView();
+                    break;
+                default:
+                    Log.d(TAG, " tipoCargaSelectedItemListener onItemSelected default");
+                    break;
+            }
         }
 
         @Override
@@ -111,6 +125,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     @Override
     public void guardarOrdenCarga() {
+
+        OrdenCargo ordenCargo = new OrdenCargo();
 
     }
 }
