@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,34 +16,33 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.orm.SugarTransactionHelper;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
-
-import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.adapters.ProveedorAdapter;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -69,19 +70,36 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     TextView txtdate;
     @BindView(R.id.btndialog)
     FloatingActionButton btndialog;
+    @BindView(R.id.textViewNombreAgente)
+    TextView textViewNombreAgente;
+    @BindView(R.id.textViewPlaca)
+    TextView textViewPlaca;
 
 
     private CustomTabsAdapter tabsAdapter;
     AlertDialog alertDialog;
     private List<Concepto> conceptoList = new ArrayList<>();
     private List<Concepto> conceptoTipoCatList = new ArrayList<>();
+    private List<Concepto> conceptoTipoDocument = new ArrayList<>();
 
-    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = new Date();
+    private List<Proveedor> proveedorList = new ArrayList<>();
+
+    Activity activity;
     int idCajagasto = 0;
     Concepto conceptoTipoGasto;
     Concepto conceptoTipoCateGasto;
     Concepto conceptoIgv;
+
+    Proveedor getmProveedor;
+
+    ProveedorAdapter proveedorAdapterRuc;
+
+    final Calendar calendar = Calendar.getInstance();
+    int yy = calendar.get(Calendar.YEAR);
+    int mm = calendar.get(Calendar.MONTH);
+    int dd = calendar.get(Calendar.DAY_OF_MONTH);
+
+    private Proveedor mProveedor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +107,16 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_account_expenses);
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
-        usuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        //usuario = Usuario.find(Usuario.class, "usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
+        usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         conceptoIgv = Concepto.getConceptoById(Constants.CONCEPTO_IGV_ID);
+        Vehiculo vehiculo = Vehiculo.getVehiculo(usuario.getUsuIUsuarioId() + "");
+        // Log.d(TAG,"PROVEEDOR: "+ proveedor);
+
+        textViewNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
+        textViewPlaca.setText("Placa V: " + vehiculo.getPlaca());
+        String fecha = Utils.getDateDescription(Utils.getDatePhone());
+        txtdate.setText(fecha);
         btndialog.setOnClickListener(this);
         setTabsAdapterFragment();
         setToolbar();
@@ -191,6 +217,10 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         return tabsAdapter.getItem(pos);
     }
 
+
+    private String date = "";
+    private String idProveedor = "";
+
     public void inflate_dialog() {
 
         final View layout_dialog_expenses = View.inflate(this, R.layout.fragment_dialog_new_expense, null);
@@ -201,8 +231,15 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         final EditText txtdgdescription = (EditText) layout_dialog_expenses.findViewById(R.id.et_description);
         final Spinner sp_tiposgastos = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tiposgastos);
         final Spinner sp_catTGasto = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tcGasto);
+        final Spinner sp_TipoDoc = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tipoDoc);
+        final TextView btndate = (TextView) layout_dialog_expenses.findViewById(R.id.btndate);
+        final LinearLayout viewLinerLayout = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura);
+        final LinearLayout viewLinerLayout2 = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura2);
+        final EditText et_num_comprob = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_comprob);
 
-
+        /*AutoComplete*/
+        final AutoCompleteTextView et_nameautoCompleteRuc = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRuc);
+        final AutoCompleteTextView et_nameautoCompleteRazon = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRazon);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
@@ -215,6 +252,91 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 .setCancelable(true);
         btnsave.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
+        sp_TipoDoc.setPrompt("Seleccione tipo Documento");
+
+
+//        proveedorList = Proveedor.getProveedorList();
+//        ProveedorAdapter proveedorAdapter = new ProveedorAdapter(this, 0, proveedorList);
+//        et_nameautoComplete.setAdapter(proveedorAdapter);
+//        et_nameautoComplete.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//              //  Proveedor proveedor = Proveedor.findWithQuery("Select * from Proveedor where");
+//                List<Proveedor> proveedor = Proveedor.findWithQuery(Proveedor.class, "Select * from Proveedor where   like%");
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+
+
+        proveedorAdapterRuc = new ProveedorAdapter(this, ProveedorAdapter.DOCUMENTO_IDENTIDAD, Proveedor.getProveedorList());
+        et_nameautoCompleteRuc.setAdapter(proveedorAdapterRuc);
+
+        et_nameautoCompleteRuc.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Proveedor proveedor = proveedorAdapterRuc.getItem(i);
+                et_nameautoCompleteRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
+                et_nameautoCompleteRazon.setText(proveedor.getPersona().getNombreComercial());
+                idProveedor = proveedor.getProveedorId();
+            }
+
+        });
+
+        conceptoTipoDocument = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_CATEGORIA_TIPO_COMPROBANTE, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
+        sp_TipoDoc.setAdapter(new ConceptoAdapter(this, 0, conceptoTipoDocument));
+
+        sp_TipoDoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+
+                    case 0:
+                        viewLinerLayout.setVisibility(View.VISIBLE);
+                        viewLinerLayout2.setVisibility(View.VISIBLE);
+                        break;
+
+                    case 1:
+                        viewLinerLayout.setVisibility(View.GONE);
+                        viewLinerLayout2.setVisibility(View.GONE);
+                        break;
+                    case 2:
+                        viewLinerLayout.setVisibility(View.GONE);
+                        viewLinerLayout2.setVisibility(View.GONE);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        btndate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                       date = "Fecha: " + String.valueOf(year) + "-" + String.valueOf(monthOfYear)
+                                + "-" + String.valueOf(dayOfMonth);
+
+                        btndate.setText(date);
+                    }
+                }, yy, mm, dd);
+                datePicker.show();
+            }
+        });
 
 
         conceptoList = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_TIPO_GASTO, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
@@ -232,13 +354,20 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View view) {
 
                 String description = txtdgdescription.getText().toString();
+                String txtnumbcomprobante = et_num_comprob.getText().toString();
 
                 conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
                 conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
 
                 Log.d(TAG, "Concepto: " + conceptoTipoGasto.getId() + "-" + conceptoTipoGasto.getDescripcion());
+                Log.d(TAG, "Concepto: " + conceptoTipoCateGasto.getId() + "-" + conceptoTipoCateGasto.getDescripcion());
+                final String cbConceptoTipoGasto = String.valueOf(conceptoTipoGasto.getDescripcion());
+                final String cbConceptoCateTipoGasto = String.valueOf(conceptoTipoCateGasto.getDescripcion());
 
+                Log.d(TAG, "cbConceptoTipoGasto: " + cbConceptoTipoGasto);
+                Log.d(TAG, "cbConceptoCateTipoGasto: " + cbConceptoCateTipoGasto);
 
+                //   listcombo(cbConceptoTipoGasto,cbConceptoCateTipoGasto);
                 Fragment expensesFragment = getFragment(0);
                 if (txtttotal.getText().toString().equals("")) {
                     txtttotal.setError("Ingrese Total");
@@ -257,26 +386,25 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                             usuario.getUsuIUsuarioId(),
                             usuario.getUsuIUsuarioId(),
                             Utils.getDatePhoneTime(),
-                            Utils.getDatePhoneTime(),0
+                            Utils.getDatePhoneTime(), 0
                     );
                     Log.d(TAG, "CountID: " + idCajagasto);
 //                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
                     if (expensesFragment != null) {
+
                         ((CajaGastoFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
                     }
-
                     alertDialog.dismiss();
                     //  expenses.save();
-                    save(expenses, description);
 
-
+                    save(expenses, description,txtnumbcomprobante);
                 }
-
-
             }
 
 
         });
+
+
         // create alert dialog
         alertDialog = alertDialogBuilder.create();
         // show it
@@ -285,13 +413,12 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    private void save(final CajaGasto mcajaGasto, final String mDescription) {
+    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante) {
 
 
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
             @Override
             public void manipulateInTransaction() {
-
                 /** Caja Gasto **/
                 Long idCajaGasto = mcajaGasto.save();
                 mcajaGasto.setCajGasId(idCajaGasto);
@@ -300,6 +427,11 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
                 /**Informe de gasto**/
 
+
+
+
+                Log.d(TAG,"DATE"+date+"PROVEEDORID"+idProveedor);
+
                 InformeGasto informeGasto = new InformeGasto(0,
                         conceptoTipoGasto.getIdConcepto(),
                         mcajaGasto.getCajGasId(),
@@ -307,7 +439,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         Utils.getDatePhoneTimeSQLSERVER(),
                         mDescription,
                         conceptoTipoCateGasto.getIdConcepto(),
-                        Constants.GASTO_ESTADO_CREADO,"","");
+                        Constants.GASTO_ESTADO_CREADO,txtnumbcomprobante,date,idProveedor);
                 long idInformeGasto = informeGasto.save();
                 informeGasto.setInfGasId(idInformeGasto);
                 informeGasto.save();
@@ -388,8 +520,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onAddnewCajaGasto(String date, Double total) {
         txtotal.setText("S/." + Utils.formatDouble(total));
-        txtdate.setText(Utils.getDatePhone());
-        Log.d("DATE", "date " + date + total);
+
     }
 
 
@@ -501,6 +632,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     public void onLoadErrorProcedure(String message) {
 
     }
+
 
 
 }

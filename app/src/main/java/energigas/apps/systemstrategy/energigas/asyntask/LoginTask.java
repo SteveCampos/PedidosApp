@@ -69,12 +69,12 @@ public class LoginTask extends AsyncTask<String, String, String> implements Suga
     protected String doInBackground(String... strings) {
         Log.d(TAG, "PING " + NetworkUtil.hasActiveInternetConnection(context));
 
-        if (!NetworkUtil.hasActiveInternetConnection(context)) {
+       /* if (!NetworkUtil.hasActiveInternetConnection(context)) {
             Log.d(TAG, "Error pin ");
             result = 2;
 
             return null;
-        }
+        }*/
 
         RestAPI restAPI = new RestAPI();
         String usuario = strings[0];

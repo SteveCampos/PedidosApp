@@ -120,6 +120,7 @@ public class Constants {
     public static final String CONCEPTO_CAJA_GASTO = "Caja Gastos";
     public static final String CONCEPTO_TIPO_GASTO = "Tipo Gasto";
     public static final String CONCEPTO_CATEGORIA_TIPO_GASTO = "Categoria Tipo Gasto";
+    public static final String CONCEPTO_CATEGORIA_TIPO_COMPROBANTE = "Tipo Comprobante";
 
 
     /**

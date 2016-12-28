@@ -14,9 +14,15 @@ import energigas.apps.systemstrategy.energigas.R;
 
 public class CajaGastoHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.tv_description) public TextView mdescription;
+    @BindView(R.id.tv_descriptionc) public TextView mdescription;
     @BindView(R.id.tv_category) public TextView mdocument;
     @BindView(R.id.tv_total) public TextView mtotal;
+    @BindView(R.id.tv_date) public TextView tv_date;
+    @BindView(R.id.tv_ruc) public TextView tv_ruc;
+    @BindView(R.id.tv_nm_comprobante)public TextView tv_nm_comprobante;
+    @BindView(R.id.tv_razonSocial)public  TextView tv_razonSocial;
+
+
 
     public CajaGastoHolder(View itemView) {
         super(itemView);

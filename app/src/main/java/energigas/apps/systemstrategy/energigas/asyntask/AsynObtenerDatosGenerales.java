@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.asyntask;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orm.SugarRecord;
@@ -23,6 +24,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class AsynObtenerDatosGenerales extends AsyncTask<String, String, String> implements SugarTransactionHelper.Callback {
 
 
+    private static final String TAG = "DatoGenerales";
     private JSONObject jsonObjectConceptos = null;
     private BEGeneral objGeneral;
     private int estado = -1;
@@ -83,6 +85,7 @@ public class AsynObtenerDatosGenerales extends AsyncTask<String, String, String>
     public void errorInTransaction(String error) {
         estado = 3;
         estadoDescripcion = error;
+        Log.d(TAG,"error:" + error);
     }
 
     @Override

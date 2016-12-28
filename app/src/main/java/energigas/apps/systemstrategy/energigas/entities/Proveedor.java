@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Proveedor extends SugarRecord {
     @Unique
-    private int proveedorId;
+    private String proveedorId;
     private int personaId;
     private int diasCredito;
     private double montoCredito;
@@ -33,7 +33,7 @@ public class Proveedor extends SugarRecord {
     public Proveedor() {
     }
 
-    public Proveedor(int proveedorId, int personaId, int diasCredito, double montoCredito, int modalidadCreditoId, boolean agenteRetencion, boolean agentePercepcion, int estadoId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, Persona persona) {
+    public Proveedor(String proveedorId, int personaId, int diasCredito, double montoCredito, int modalidadCreditoId, boolean agenteRetencion, boolean agentePercepcion, int estadoId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, Persona persona) {
         this.proveedorId = proveedorId;
         this.personaId = personaId;
         this.diasCredito = diasCredito;
@@ -49,11 +49,11 @@ public class Proveedor extends SugarRecord {
         this.persona = persona;
     }
 
-    public int getProveedorId() {
+    public String getProveedorId() {
         return proveedorId;
     }
 
-    public void setProveedorId(int proveedorId) {
+    public void setProveedorId(String proveedorId) {
         this.proveedorId = proveedorId;
     }
 

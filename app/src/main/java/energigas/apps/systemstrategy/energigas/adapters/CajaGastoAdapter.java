@@ -18,6 +18,8 @@ import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.holders.CajaGastoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -102,14 +104,22 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         // Get the data model based on position
 
         final CajaGasto cajaGasto = mListCajaGasto.get(position);
-        InformeGasto informeGasto = InformeGasto.getInformeGasto(cajaGasto.getCajGasId()+"");
-
+        //InformeGasto informeGasto = InformeGasto.getInformeGasto(cajaGasto.getCajGasId()+"");
+        Concepto concepto = Concepto.getConcepto(cajaGasto.getTipoGastoId()+"");
+        //Concepto concepto2 = Concepto.getConcepto(cajaGasto.getCajGasId()+"");
         Log.d(Utils.TAG, "onBindViewHolder: " + position);
         //  CajaMovimiento mcajamovimiento = CajaMovimiento.find(CajaMovimiento.class," caj_Mov_Id = ?",new String[]{cajaGasto.getCajMoId()+""}).get(Constants.CURRENT);
         InformeGasto mInformeGasto = InformeGasto.find(InformeGasto.class, "caj_Gas_Id = ?", new String[]{cajaGasto.getCajGasId() + ""}).get(Constants.CURRENT);
+       // Proveedor mProveedor = Proveedor.find(Proveedor.class , "proveedor_Id", new String[]{mInformeGasto.getProveedorId()+""}).get(Constants.CURRENT);
+        Proveedor mProveedor = Proveedor.getProveedorList().get(Constants.CURRENT);
+        //Persona persona = Persona.find(Persona.class , "per_I_Persona_Id",new String[]{mProveedor.getPersonaId()+""}).get(Constants.CURRENT);
         holder.mdocument.setText(mInformeGasto.getReferencia());
-        holder.mdescription.setText(cajaGasto.getImporte() + "");
+        holder.mdescription.setText("Tipo de Concepto: "+concepto.getDescripcion() + "");
+        holder.tv_date.setText(""+mInformeGasto.getFechaEmision());
         holder.mtotal.setText("S./ " + Utils.formatDouble(cajaGasto.getImporte()));
+        holder.tv_ruc.setText("Ruc:"+mProveedor.getPersona().getPerVDocIdentidad()+"");
+        holder.tv_razonSocial.setText("Razón Social:"+mProveedor.getPersona().getNombreComercial()+"");
+        holder.tv_nm_comprobante.setText("N°Comprobante: "+mInformeGasto.getNroComporbante());
         Log.d(TAG, "CAJAMOVIMIENTOCOUNT: " + mInformeGasto);
 
 
