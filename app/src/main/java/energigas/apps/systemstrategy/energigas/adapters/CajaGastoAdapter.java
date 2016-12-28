@@ -119,7 +119,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         holder.mtotal.setText("S./ " + Utils.formatDouble(cajaGasto.getImporte()));
         holder.tv_ruc.setText("Ruc:"+mProveedor.getPersona().getPerVDocIdentidad()+"");
         holder.tv_razonSocial.setText("Razón Social:"+mProveedor.getPersona().getNombreComercial()+"");
-        holder.tv_nm_comprobante.setText("N°Comprobante: F001-"+mInformeGasto.getNroComporbante());
+        holder.tv_nm_comprobante.setText("N°Comprobante: "+mInformeGasto.getNroComporbante());
         Log.d(TAG, "CAJAMOVIMIENTOCOUNT: " + mInformeGasto);
 
 
