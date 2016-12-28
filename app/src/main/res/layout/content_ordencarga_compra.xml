@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:padding="8dp"
     android:id="@+id/container.compra"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <TextView
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/ordencarga.compra.text.title"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        />
+        android:text="@string/ordencarga.compra.text.title" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til.compra.ruc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
             app:counterMaxLength="11"
-            app:errorEnabled="true"
-            >
+            app:errorEnabled="true">
 
             <android.support.v7.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/et.compra.ruc"
@@ -35,12 +35,12 @@
                 android:hint="@string/ordencarga.compra.text.ruc"
                 android:inputType="number"
                 app:counterOverflowTextAppearance="@style/CounterOverFlow"
-                app:counterTextAppearance="@style/Counter"
-                />
+                app:counterTextAppearance="@style/Counter" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til.compra.razonsocial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -53,86 +53,132 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et.compra.factura"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til.compra.factura.serie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/ordencarga.compra.text.factura"
-                android:inputType="phone" />
+                app:counterEnabled="true"
+                app:counterMaxLength="4"
+                app:errorEnabled="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/et.compra.factura.serie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="4"
+                    android:hint="@string/ordencarga.compra.text.factura.serie"
+                    android:inputType="text" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/et.compra.guia"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til.compra.factura.correlativo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/ordencarga.compra.text.guia"
-                android:inputType="phone" />
-        </android.support.design.widget.TextInputLayout>
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/et.compra.factura.correlativo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:hint="@string/ordencarga.compra.text.factura.correlativo"
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn.compra.factura.fechaemision"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ordencarga.button.text.pickdate" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            >
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til.compra.guia.serie"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_weight="1"
-                >
-                <TextView
-                    android:id="@+id/text.compra.emision"
+                app:counterEnabled="true"
+                app:counterMaxLength="4"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/et.compra.guia.serie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ordencarga.compra.text.emision"
-                    />
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn.compra.fechaemision"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:text="@string/ordencarga.button.text.pickdate"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
+                    android:ems="4"
+                    android:hint="@string/ordencarga.compra.text.guia.serie"
+                    android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til.compra.guia.correlativo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_weight="1"
-                >
-                <TextView
-                    android:id="@+id/text.compra.entrega"
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/et.compra.guia.correlativo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ordencarga.compra.text.entrega"
-                    />
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn.compra.fechaentrega"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:text="@string/ordencarga.button.text.pickdate"
-                    />
-            </LinearLayout>
+                    android:ems="6"
+                    android:hint="@string/ordencarga.compra.text.factura.correlativo"
+                    android:inputType="number" />
 
+            </android.support.design.widget.TextInputLayout>
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn.compra.guia.fechaemision"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ordencarga.button.text.pickdate" />
 
         </LinearLayout>
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text.compra.entrega"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ordencarga.compra.text.entrega" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn.compra.fechaentrega"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ordencarga.button.text.pickdate" />
+
+
+        </LinearLayout>-->
 
     </LinearLayout>
 </LinearLayout>

@@ -33,7 +33,7 @@
                 android:text="@string/ordencarga.trasciego.tipoorigen" />
 
             <Spinner
-                android:id="@+id/spnTrasciegoTipoOrigen"
+                android:id="@+id/spn_trasciego_tipoorigen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -44,44 +44,53 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:id="@+id/til.trasciego.guia.serie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="4"
+                app:errorEnabled="true">
 
                 <EditText
-                    android:id="@+id/etTrasciegoGuia"
+                    android:id="@+id/et.trasciego.guia.serie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/ordencarga.trasciego.text.guia"
-                    android:inputType="phone"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="10" />
+                    android:ems="4"
+                    android:hint="@string/ordencarga.compra.text.guia.serie"
+                    android:inputType="text" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtTrasciegoEntrega"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ordencarga.compra.text.entrega" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/btn.fechaentrega"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ordencarga.button.text.pickdate" />
-                </LinearLayout>
             </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til.trasciego.guia.correlativo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/et.trasciego.guia.correlativo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:hint="@string/ordencarga.compra.text.factura.correlativo"
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn.trasciego.guia.fechaemision"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ordencarga.button.text.pickdate" />
+
         </LinearLayout>
 
     </LinearLayout>

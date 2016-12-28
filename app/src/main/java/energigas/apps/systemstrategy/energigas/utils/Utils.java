@@ -67,9 +67,12 @@ public class Utils {
     }
 
     public static Double formatDoubleNumber(Double d) {
-
         Double aDouble = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", d));
         return aDouble;
+    }
+
+    public static Double formatDouble(String format, Double d){
+        return  Double.parseDouble(String.format(Locale.ENGLISH, format, d));
     }
 
     public static String getDateDescription(String fecha) {
@@ -103,9 +106,8 @@ public class Utils {
 
     public static String getDatePhoneWithTime() {
         Date now = new Date();
-        Date alsoNow = Calendar.getInstance().getTime();
-        String nowAsString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
-        return nowAsString;
+        //Date alsoNow = Calendar.getInstance().getTime();
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(now);
     }
 
     public static String getDatePhoneWithTimeFE() {

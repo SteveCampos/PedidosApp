@@ -38,7 +38,7 @@ public class UnidadAdapter extends ArrayAdapter<Unidad> {
         txt.setPadding(16, 16, 16, 16);
         txt.setTextSize(18);
         txt.setGravity(Gravity.CENTER_VERTICAL);
-        txt.setText(unidadList.get(position).getDescripcion());
+        txt.setText(unidadList.get(position).getAbreviatura());
         return  txt;
         //return super.getView(position, convertView, parent);
     }

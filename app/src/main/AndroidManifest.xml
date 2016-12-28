@@ -181,6 +181,11 @@
             android:label="Imprimir Comprobante"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".activities.BluetoothActivity"
+            android:label="Configurar Bluetooth"
+            android:theme="@style/AppTheme" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

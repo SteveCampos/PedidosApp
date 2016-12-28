@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -135,5 +137,9 @@ public class Concepto extends SugarRecord {
 
     public static Concepto getConcepto(String codigo) {
         return Concepto.find(Concepto.class, " id_Concepto=?  ", new String[]{codigo}).get(0);
+    }
+
+    public static List<Concepto> getConceptos(String objeto, String concepto){
+        return Concepto.find(Concepto.class, "objeto = ? AND concepto = ?", objeto, concepto);
     }
 }

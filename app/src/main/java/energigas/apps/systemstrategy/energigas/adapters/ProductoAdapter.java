@@ -38,7 +38,7 @@ public class ProductoAdapter extends ArrayAdapter<Producto> {
         txt.setPadding(16, 16, 16, 16);
         txt.setTextSize(18);
         txt.setGravity(Gravity.CENTER_VERTICAL);
-        txt.setText(productoList.get(position).getDescripcion());
+        txt.setText(productoList.get(position).getNombre());
         return  txt;
         //return super.getView(position, convertView, parent);
     }

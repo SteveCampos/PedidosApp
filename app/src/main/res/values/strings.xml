@@ -52,7 +52,7 @@
     <string name="plan_title_name">BSC</string>
     <string name="expenses_title_name">Gastos</string>
     <string name="collect_title_name">Cobranzas</string>
-    <string name="collect_title_inventory">Cargar Inventario</string>
+    <string name="collect_title_inventory">Cargar Orden</string>
     <string name="bluetooth_title_name">Configurar Bluetooth</string>
     <string name="summary_title_name">Resumen</string>
 
@@ -538,14 +538,17 @@
     <string name="ordencarga.carga.text.entrega">F. entrega</string>
 
 
-    <string name="ordencarga.button.text.pickdate">Seleccionar Fecha</string>
+    <string name="ordencarga.button.text.pickdate">Fecha</string>
+    <string name="ordencarga.button.text.save">Guardar</string>
 
 
     <string name="ordencarga.compra.text.title">Compra</string>
     <string name="ordencarga.compra.text.ruc">RUC</string>
     <string name="ordencarga.compra.text.rs">Razón Social</string>
-    <string name="ordencarga.compra.text.factura">Nro Factura</string>
-    <string name="ordencarga.compra.text.guia">Nro Guía</string>
+    <string name="ordencarga.compra.text.factura.serie">Fact. Serie</string>
+    <string name="ordencarga.compra.text.factura.correlativo">Correlativo</string>
+    <string name="ordencarga.compra.text.guia.serie">Guia Serie</string>
+    <string name="ordencarga.compra.text.guia.correlativo">Correlativo</string>
     <string name="ordencarga.compra.text.emision">Fecha emisión</string>
     <string name="ordencarga.compra.text.entrega">Fecha entrega</string>
 

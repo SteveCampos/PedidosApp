@@ -6,7 +6,10 @@ package energigas.apps.systemstrategy.energigas.ordencarga;
 
 public interface OrdenCargaView {
     void initVies();
-    void handleSpinnerTipoCarga();
+    void initSpinnerTipoCarga();
+    void initSpinnerTipoOrigen();
+    void initSpinnerProducto();
+    void initSpinnerUnidadMedia();
     void initAutocompleteRuc();
     void initAutoCumpleteNombreComercial();
     void mostrarCompraView();
