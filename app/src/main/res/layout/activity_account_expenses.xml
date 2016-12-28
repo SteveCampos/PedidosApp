@@ -36,7 +36,22 @@
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-
+                    <TextView
+                        android:id="@+id/textViewNombreAgente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Testing"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/text_size_14"/>
+                    <TextView
+                        android:id="@+id/textViewPlaca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Placa"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/text_size_14"/>
                     <TextView
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
@@ -93,7 +108,7 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="34dp"
                 android:layout_gravity="bottom"
                 app:tabIndicatorColor="@color/colorAccent"
                 app:tabMode="fixed" />
