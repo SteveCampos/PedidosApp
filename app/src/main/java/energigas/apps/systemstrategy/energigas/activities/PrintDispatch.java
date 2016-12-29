@@ -40,6 +40,7 @@ import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
@@ -136,7 +137,12 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     private void viewTextCabecera() {
         DEEntidad deEntidad = CajaLiquidacion.getEntidad();
-        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), deEntidad.getRazonSocial(), "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
+        UbicacionGeoreferencia georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(deEntidad.getDistritoId() + "");
+        UbicacionGeoreferencia georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
+        UbicacionGeoreferencia georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
+
+
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), deEntidad.getRazonSocial(), deEntidad.getDireccionFiscal(), georeferencia.getDescripcion() + ", " + georeferenciaProvincia.getDescripcion() + " \n " + georeferenciaDepartamento.getDescripcion(), "RUC: " + deEntidad.getrUC(), "Telf: (511) 2033001");
         textCabecera.setText(tetextCabeceraxt);
     }
 
