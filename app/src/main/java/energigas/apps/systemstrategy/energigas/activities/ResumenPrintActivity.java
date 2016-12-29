@@ -52,6 +52,7 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
@@ -199,7 +200,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     private void setDetalleResumen() {
 
 
-        String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen),Utils.formatDoublePrint(summary.getSaldoInicial()) + "",Utils.formatDoublePrint( summary.getIngresosTotales()) + "", "" +Utils.formatDoublePrint( summary.getIngresosTotales()), "" +Utils.formatDoublePrint( summary.getGastos()),Utils.formatDoublePrint( summary.getEfectivoRendir()) + "");
+        String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen), Utils.formatDoublePrint(summary.getSaldoInicial()) + "", Utils.formatDoublePrint(summary.getIngresosTotales()) + "", "" + Utils.formatDoublePrint(summary.getIngresosTotales()), "" + Utils.formatDoublePrint(summary.getGastos()), Utils.formatDoublePrint(summary.getEfectivoRendir()) + "");
         textViewDetalleResumen.setText(stringdetallle);
 
 
@@ -523,8 +524,10 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
                 bluetoothConnect();
                 break;
             case R.id.fabPrint:
+                DEEntidad deEntidad = new CajaLiquidacion().getCajaLiquidacion(Session.getCajaLiquidacion(getApplicationContext()).getLiqId() + "").getEntidad();
+                DatosEmpresa datosEmpresa = new DatosEmpresa(deEntidad);
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printResumen(cajaLiquidacion, usuario, summary,inventoryList);
+                printDispatch.printResumen(cajaLiquidacion, usuario, summary, inventoryList, datosEmpresa);
                 floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
                 floatingActionButton.startAnimation(rotate_backward);
                 floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ResumenPrintActivity.this, R.color.greem_background_item)));

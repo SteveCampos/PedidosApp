@@ -14,6 +14,7 @@ import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Costs;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
@@ -51,7 +52,7 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printNowComprobante(Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico) {
+    public void printNowComprobante(Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico, DatosEmpresa datosEmpresa) {
         String codigoVenta = beDocElectronico.getResumenFirma();
         String url = "www.energigas.com";
         DecimalFormat df = new DecimalFormat("#.00");
@@ -68,11 +69,12 @@ public class SheetsPrintDispatch {
 
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Energigas SAC" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "San Isidro Lima" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: (511) 2033001" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20506151547" + LF);//RUC
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + tipoDocumento + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "COMPROBANTE: " + comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA: " + comprobanteVenta.getFechaCreacion() + LF);
@@ -119,7 +121,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Visualice este documento en" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + url + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
         } catch (JposException e) {
@@ -128,14 +130,15 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printNow(Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente) {
+    public void printNow(Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa) {
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Energigas SAC" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "San Isidro Lima" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: (511) 2033001" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20506151547" + LF);//RUC
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre: " + establecimiento.getEstVDescripcion() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Direccion: " + establecimiento.getUbicacion().getDescripcion() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Instalacion: " + almacen.getNombre() + LF);
@@ -168,7 +171,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Firma :" + "................................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Documento sin valor tributario" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Consultar su comprobante de pago electronico en" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "www.energigas.com" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
@@ -182,14 +185,15 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printResumen(CajaLiquidacion cajaLiquidacion, Usuario usuario, Summary summary, Inventory inventory) {
+    public void printResumen(CajaLiquidacion cajaLiquidacion, Usuario usuario, Summary summary, Inventory inventory, DatosEmpresa datosEmpresa) {
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Energigas SAC" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "San Isidro Lima" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: (511) 2033001" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20506151547" + LF);//RUC
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             printLineas();
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + "RESUMEN DEL DIA" + LF);

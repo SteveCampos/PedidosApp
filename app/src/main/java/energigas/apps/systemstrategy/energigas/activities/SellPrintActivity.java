@@ -39,9 +39,12 @@ import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
+import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
@@ -107,6 +110,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     private Resources res;
     private BeDocElectronico beDocElectronico;
     private Double igv;
+    private DatosEmpresa datosEmpresa;
 
 
     @Override
@@ -131,7 +135,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         floatingActionButton.setOnClickListener(this);
         floatingPrint.setOnClickListener(this);
         floatingDisconect.setOnClickListener(this);
-
+        DEEntidad deEntidad = new CajaLiquidacion().getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "").getEntidad();
+        datosEmpresa = new DatosEmpresa(deEntidad);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -277,7 +282,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNowComprobante(cliente, comprobanteVenta, usuario, beDocElectronico);
+                printDispatch.printNowComprobante(cliente, comprobanteVenta, usuario, beDocElectronico, datosEmpresa);
                 floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
                 floatingActionButton.startAnimation(rotate_backward);
                 floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SellPrintActivity.this, R.color.greem_background_item)));

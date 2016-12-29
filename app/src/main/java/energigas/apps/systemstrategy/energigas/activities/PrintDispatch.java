@@ -35,6 +35,7 @@ import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
@@ -91,6 +92,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     private static final String TAG = "PrintDispatch";
 
+    private DatosEmpresa datosEmpresa;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,19 +133,21 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        DEEntidad deEntidad = CajaLiquidacion.getEntidad();
+        UbicacionGeoreferencia georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(deEntidad.getDistritoId() + "");
+        UbicacionGeoreferencia georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
+        UbicacionGeoreferencia georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
+        datosEmpresa = new DatosEmpresa(deEntidad, georeferencia.getDescripcion(), georeferenciaProvincia.getDescripcion(), georeferenciaDepartamento.getDescripcion(), "www.energigas.com");
+
         viewTextCabecera();
         viewTextInfoDespacho();
 
     }
 
     private void viewTextCabecera() {
-        DEEntidad deEntidad = CajaLiquidacion.getEntidad();
-        UbicacionGeoreferencia georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(deEntidad.getDistritoId() + "");
-        UbicacionGeoreferencia georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
-        UbicacionGeoreferencia georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
 
-
-        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), deEntidad.getRazonSocial(), deEntidad.getDireccionFiscal(), georeferencia.getDescripcion() + ", " + georeferenciaProvincia.getDescripcion() + " \n " + georeferenciaDepartamento.getDescripcion(), "RUC: " + deEntidad.getrUC(), "Telf: (511) 2033001");
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), datosEmpresa.getEntidad().getRazonSocial(), datosEmpresa.getEntidad().getDireccionFiscal(), datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + " \n " + datosEmpresa.getDepartamento(), "RUC: " + datosEmpresa.getEntidad().getrUC(), "Telf: " + datosEmpresa.getEntidad().getTelefono());
         textCabecera.setText(tetextCabeceraxt);
     }
 
@@ -152,7 +157,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
                 agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", mainDispatch.getSerie() + "-" + mainDispatch.getNumero(), mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio(),
                 mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino() + "", mainDispatch.getpFTDestino() + "",
-                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com", cliente.getPersona().getPerVRazonSocial());
+                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", datosEmpresa.getUrl(), cliente.getPersona().getPerVRazonSocial());
         textInfoDespacho.setText(textInfo);
     }
 
@@ -228,7 +233,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente);
+                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente,datosEmpresa);
 
                 break;
             case R.id.fabDisconec:
