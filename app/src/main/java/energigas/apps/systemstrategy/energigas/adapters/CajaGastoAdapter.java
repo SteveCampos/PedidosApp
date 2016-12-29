@@ -112,7 +112,7 @@ public class CajaGastoAdapter extends RecyclerView.Adapter<CajaGastoHolder> {
         InformeGasto mInformeGasto = InformeGasto.find(InformeGasto.class, "caj_Gas_Id = ?", new String[]{cajaGasto.getCajGasId() + ""}).get(Constants.CURRENT);
        // Proveedor mProveedor = Proveedor.find(Proveedor.class , "proveedor_Id", new String[]{mInformeGasto.getProveedorId()+""}).get(Constants.CURRENT);
         Proveedor mProveedor = Proveedor.getProveedorList().get(Constants.CURRENT);
-        //Persona persona = Persona.find(Persona.class , "per_I_Persona_Id",new String[]{mProveedor.getPersonaId()+""}).get(Constants.CURRENT);
+        //Persona persona = Persona.find(Persona.class , "per_I_Persona_Id",new String b[]{mProveedor.getPersonaId()+""}).get(Constants.CURRENT);
         holder.mdocument.setText(mInformeGasto.getReferencia());
         holder.mdescription.setText("Tipo de Concepto: "+concepto.getDescripcion() + "");
         holder.tv_date.setText(""+mInformeGasto.getFechaEmision());

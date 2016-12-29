@@ -86,6 +86,9 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     Activity activity;
     int idCajagasto = 0;
+    int mSerieFact = 0;
+    int mSerieBol = 0;
+
     Concepto conceptoTipoGasto;
     Concepto conceptoTipoCateGasto;
     Concepto conceptoIgv;
@@ -220,6 +223,14 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     private String date = "";
     private String idProveedor = "";
+    private String converSerie ="";
+    private String positioniItem = "";
+
+    /*Tipo Doc:*/
+
+    private String tip_docfactura="F00";
+    private String tip_docboleta="B00";
+
 
     public void inflate_dialog() {
 
@@ -236,6 +247,8 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         final LinearLayout viewLinerLayout = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura);
         final LinearLayout viewLinerLayout2 = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura2);
         final EditText et_num_comprob = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_comprob);
+        final EditText et_num_serie = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_serie);
+
 
         /*AutoComplete*/
         final AutoCompleteTextView et_nameautoCompleteRuc = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRuc);
@@ -287,7 +300,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 Proveedor proveedor = proveedorAdapterRuc.getItem(i);
                 et_nameautoCompleteRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
                 et_nameautoCompleteRazon.setText(proveedor.getPersona().getNombreComercial());
-                idProveedor = proveedor.getProveedorId();
+                idProveedor = String.valueOf(proveedor.getProveedorId());
             }
 
         });
@@ -303,16 +316,22 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                     case 0:
                         viewLinerLayout.setVisibility(View.VISIBLE);
                         viewLinerLayout2.setVisibility(View.VISIBLE);
+                        positioniItem = String.valueOf(position);
+                        et_num_serie.setText(tip_docfactura);
+
                         break;
 
                     case 1:
                         viewLinerLayout.setVisibility(View.GONE);
                         viewLinerLayout2.setVisibility(View.GONE);
+                        positioniItem = String.valueOf(position);
+                        et_num_serie.setText(tip_docboleta);
                         break;
                     case 2:
                         viewLinerLayout.setVisibility(View.GONE);
                         viewLinerLayout2.setVisibility(View.GONE);
-
+                        positioniItem = String.valueOf(position);
+                        et_num_serie.setText(tip_docboleta);
                 }
             }
 
@@ -397,14 +416,40 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                     alertDialog.dismiss();
                     //  expenses.save();
 
-                    save(expenses, description,txtnumbcomprobante);
+
+
+                    if(positioniItem=="0"){
+                        mSerieFact = mSerieFact + 1;
+                        converSerie = "F00"+mSerieFact;
+                        //globalSerie = String.valueOf(mSerie);
+                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        Log.d(TAG,"positioniItem"+converSerie);
+                    }else if (positioniItem =="1"){
+                        mSerieBol = mSerieBol + 1;
+                        //globalSerie = String.valueOf(mSerie);
+                        converSerie = "B00"+mSerieBol;
+                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        Log.d(TAG,"positioniItem"+converSerie);
+                    } else if (positioniItem == "2"){
+                        mSerieBol = mSerieBol + 1;
+                        converSerie = "B00"+mSerieBol;
+                        //globalSerie = String.valueOf(mSerie);
+                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        Log.d(TAG,"positioniItem"+converSerie);
+                    }
+
+
+
+                    //globalSerie = String.valueOf(mSerie);
+                    //save(expenses, description,txtnumbcomprobante,converSerie);
                 }
             }
 
 
         });
 
-
+       // int globatipodoc=mSerie+1;
+//        et_num_serie.setText(converSerie+globatipodoc);
         // create alert dialog
         alertDialog = alertDialogBuilder.create();
         // show it
@@ -413,7 +458,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante) {
+    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante,final String converSerie) {
 
 
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
@@ -439,7 +484,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         Utils.getDatePhoneTimeSQLSERVER(),
                         mDescription,
                         conceptoTipoCateGasto.getIdConcepto(),
-                        Constants.GASTO_ESTADO_CREADO,txtnumbcomprobante,date,idProveedor);
+                        Constants.GASTO_ESTADO_CREADO,converSerie+txtnumbcomprobante,date,idProveedor);
                 long idInformeGasto = informeGasto.save();
                 informeGasto.setInfGasId(idInformeGasto);
                 informeGasto.save();
