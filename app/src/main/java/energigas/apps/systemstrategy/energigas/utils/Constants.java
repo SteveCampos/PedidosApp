@@ -17,6 +17,7 @@ public class Constants {
     public static final String URL_POST_DISTRIBUCION = "/ServiceDistribucion.ashx";
     public static final String URL_POST_FACTURACION = "/RestfulApi.ashx";
     public static final String FIREBASE_CHILD_NOTIFICACIONES = "NOTIFICACIONES";
+    public static final String FIREBASE_CHILD_ATEN_PEDIDO = "ATEN_PEDIDO";
     public static final String FIREBASE_CHILD_ATENCION_PEDIDO = "ATENCION_PEDIDO";
 
     public static final int _CREADO = 2;
@@ -243,7 +244,10 @@ public class Constants {
     public static final int COBRANZA_COBRADO = 61;
     public static final int COBRANZA_ANULADO = 62;
     public static final int COBRANZA_PARCIAL = 63;
-
+    public static final int ESTADO_ESTABLECIMIENTO_ATENDIDO = 42;
+    public static final int ESTADO_ESTABLECIMIENTO_NO_ATENDIDO = 43;
+    public static final int ESTADO_ESTABLECIMIENTO_PENDIENTE = 41;
+    public static final int ESTADO_DESPACHO_ATENDIDO = 18;
 
     /**
      * ESTADO FACTURADO

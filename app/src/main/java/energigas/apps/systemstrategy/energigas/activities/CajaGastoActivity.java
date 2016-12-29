@@ -2,6 +2,7 @@ package energigas.apps.systemstrategy.energigas.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -34,6 +35,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.ProveedorAdapter;
+import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
@@ -92,6 +94,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     Concepto conceptoTipoGasto;
     Concepto conceptoTipoCateGasto;
     Concepto conceptoIgv;
+    Concepto tipoDocumento;
 
     Proveedor getmProveedor;
 
@@ -222,7 +225,6 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
 
     private String date = "";
-    private String idProveedor = "";
     private String converSerie ="";
     private String positioniItem = "";
 
@@ -231,6 +233,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     private String tip_docfactura="F00";
     private String tip_docboleta="B00";
 
+    private int idProveedor;
 
     public void inflate_dialog() {
 
@@ -293,14 +296,14 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         proveedorAdapterRuc = new ProveedorAdapter(this, ProveedorAdapter.DOCUMENTO_IDENTIDAD, Proveedor.getProveedorList());
         et_nameautoCompleteRuc.setAdapter(proveedorAdapterRuc);
 
-        et_nameautoCompleteRuc.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+        et_nameautoCompleteRuc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Proveedor proveedor = proveedorAdapterRuc.getItem(i);
                 et_nameautoCompleteRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
                 et_nameautoCompleteRazon.setText(proveedor.getPersona().getNombreComercial());
-                idProveedor = String.valueOf(proveedor.getProveedorId());
+                idProveedor = proveedor.getProveedorId();
             }
 
         });
@@ -347,8 +350,9 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 final DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                       date = "Fecha: " + String.valueOf(year) + "-" + String.valueOf(monthOfYear)
-                                + "-" + String.valueOf(dayOfMonth);
+
+                        date = String.valueOf(dayOfMonth) + "/" + String.valueOf(monthOfYear + 1) + "/" + String.valueOf(year);
+
 
                         btndate.setText(date);
                     }
@@ -373,8 +377,8 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View view) {
 
                 String description = txtdgdescription.getText().toString();
-                String txtnumbcomprobante = et_num_comprob.getText().toString();
-
+                String txtnumbcomprobante = et_num_serie.getText().toString() + "-" + et_num_comprob.getText().toString();
+                tipoDocumento = (Concepto) sp_TipoDoc.getSelectedItem();
                 conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
                 conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
 
@@ -405,7 +409,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                             usuario.getUsuIUsuarioId(),
                             usuario.getUsuIUsuarioId(),
                             Utils.getDatePhoneTime(),
-                            Utils.getDatePhoneTime(), 0
+                            Utils.getDatePhoneTime(), tipoDocumento.getIdConcepto()
                     );
                     Log.d(TAG, "CountID: " + idCajagasto);
 //                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
@@ -442,6 +446,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
                     //globalSerie = String.valueOf(mSerie);
                     //save(expenses, description,txtnumbcomprobante,converSerie);
+                   // save(expenses, description, txtnumbcomprobante);
                 }
             }
 
@@ -457,7 +462,13 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    @Override
+    public void onBackPressed() {
+        new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+    }
 
+    //private void save(final CajaGasto mcajaGasto, final String mDescription, final String txtnumbcomprobante) {
     private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante,final String converSerie) {
 
 
@@ -473,9 +484,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 /**Informe de gasto**/
 
 
-
-
-                Log.d(TAG,"DATE"+date+"PROVEEDORID"+idProveedor);
+                Log.d(TAG, "DATE" + date + "PROVEEDORID" + idProveedor);
 
                 InformeGasto informeGasto = new InformeGasto(0,
                         conceptoTipoGasto.getIdConcepto(),
@@ -486,6 +495,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         conceptoTipoCateGasto.getIdConcepto(),
                         Constants.GASTO_ESTADO_CREADO,converSerie+txtnumbcomprobante,date,idProveedor);
                 long idInformeGasto = informeGasto.save();
+                informeGasto.setCajGasId(idCajaGasto);
                 informeGasto.setInfGasId(idInformeGasto);
                 informeGasto.save();
 
@@ -518,14 +528,14 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                 new SyncEstado(0, Utils.separteUpperCase(InformeGasto.class.getSimpleName()), Integer.parseInt(idInformeGasto + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaMovimiento.class.getSimpleName()), Integer.parseInt(idCajaMovimiento + ""), Constants.S_CREADO).save();
                 new SyncEstado(0, Utils.separteUpperCase(CajaGasto.class.getSimpleName()), Integer.parseInt(idCajaGasto + ""), Constants.S_CREADO).save();
-               // new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+                // new ExportTask(CajaGastoActivity.this, CajaGastoActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
 
 
             }
 
             @Override
             public void errorInTransaction(String error) {
-
+                Log.d(TAG, "ERROR TRANSACTION: " + error);
             }
         });
     }

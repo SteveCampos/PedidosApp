@@ -54,6 +54,7 @@ import energigas.apps.systemstrategy.energigas.fragments.StationProductsFragment
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
+import energigas.apps.systemstrategy.energigas.services.ServiceSync;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -88,6 +89,9 @@ public class MainStationActivity extends AppCompatActivity
     private List<AccessFragment> accessFragmentList;
     private Cliente cliente;
 
+    @BindView(R.id.textViewTel)
+    TextView textViewTelefono;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +124,10 @@ public class MainStationActivity extends AppCompatActivity
 
     }
 
+
+
+
+
     private void setTipoCliente() {
 
         if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
@@ -127,6 +135,20 @@ public class MainStationActivity extends AppCompatActivity
         } else {
             setTitle("Estación");
         }
+
+        textViewTelefono.setText(cliente.getCliVTelefono());
+        textViewTelefono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!cliente.getCliVTelefono().equals("SN")) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + cliente.getCliVTelefono()));
+                    startActivity(intent);
+                }
+
+
+            }
+        });
 
     }
 
@@ -152,7 +174,6 @@ public class MainStationActivity extends AppCompatActivity
         setToolbar();
         setTabsAdapterFragment();
         viewpager.setCurrentItem(1);
-
         textViewDescripcion.setText(establecimiento.getEstVDescripcion());
     }
 
@@ -162,6 +183,11 @@ public class MainStationActivity extends AppCompatActivity
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     private void setTabsAdapterFragment() {
@@ -274,13 +300,6 @@ public class MainStationActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initViews();
-        // new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
-        // new ExportTask(MainStationActivity.this, MainStationActivity.this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
-    }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
@@ -340,5 +359,6 @@ public class MainStationActivity extends AppCompatActivity
 
 
     }
+
 
 }

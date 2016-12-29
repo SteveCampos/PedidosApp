@@ -15,8 +15,11 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.AlmacenHolder;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 10/08/2016.
@@ -52,14 +55,50 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder> {
     @Override
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
-        holder.title.setText("Tanque " + (++position));
+        PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(Session.getPedido(mContext).getPeId() + "").get(0);
+        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
 
-        holder.capacity.setText(almacen.getStockMinimo() + " - " + almacen.getCapacidadNeta());
-        holder.politica.setText(almacen.getPolitica() + " - " + almacen.getCapacidadReal());
-        holder.capacidadNeta.setText(almacen.getCapacidadNeta() + "");
-        holder.programado.setText(almacen.getNombre());
+        holder.title.setText(almacen.getNombre());
+        holder.programado.setText("Cap. Real : " + Utils.formatDoublePrint(almacen.getCapacidadReal()));
+        holder.capacity.setText("Stock Minimo     : " + almacen.getStockMinimo() + "\nCapacidad Neta :" + almacen.getCapacidadNeta());
+        holder.politica.setText("Politica                : " + almacen.getPolitica());
+        holder.capacidadNeta.setText("Cap. Neta: " + almacen.getCapacidadNeta() + " " + unidad.getAbreviatura());
 
-        int color = R.color.dark_grey;
+
+        boolean b = true;
+        for (Despacho despacho : Despacho.find(Despacho.class, "liq_Id=?", new String[]{cajaLiquidacion.getLiqId() + ""})) {
+            if (despacho.getAlmacenEstId() == almacen.getAlmId()) {
+                b = false;
+            }
+        }
+        if (b) {
+            holder.estado.setText("Pendiente");
+        } else {
+            holder.estado.setText("Atendido");
+        }
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean b = true;
+                Log.d(TAG, "CLICKED: " + view);
+                for (Despacho despacho : Despacho.find(Despacho.class, "liq_Id=?", new String[]{cajaLiquidacion.getLiqId() + ""})) {
+                    if (despacho.getAlmacenEstId() == almacen.getAlmId()) {
+                        b = false;
+                    }
+                }
+
+                if (b) {
+                    listener.onAlmacenClickListener(almacen, view, 0);
+                } else {
+                    Toast.makeText(mContext, "Despacho ya realizado para este almacen", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
        /* int resto = position % 3;
 
 
@@ -86,29 +125,7 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder> {
         */
 
         // holder.programado.setText(programado);
-        holder.estado.setText("");
-        holder.estado.setTextColor(ContextCompat.getColor(mContext, color));
-        holder.capacidadNeta.setText(almacen.getCapacidadNeta() + " GAL");
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean b = true;
-                Log.d(TAG, "CLICKED: " + view);
-                for (Despacho despacho : Despacho.find(Despacho.class, "liq_Id=?", new String[]{cajaLiquidacion.getLiqId() + ""})) {
-                    if (despacho.getAlmacenEstId() == almacen.getAlmId()) {
-                        b = false;
-                    }
-                }
-
-                if (b) {
-                    listener.onAlmacenClickListener(almacen, view, 0);
-                } else {
-                    Toast.makeText(mContext, "Despacho ya realizado para este almacen", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
        /* holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {

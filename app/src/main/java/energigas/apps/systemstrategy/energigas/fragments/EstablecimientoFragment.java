@@ -19,15 +19,17 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 19/07/2016.
  */
 
-public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener       {
+public class EstablecimientoFragment extends Fragment implements EstablecimientoAdapter.OnEstablecimientoClickListener {
 
 
     private static final String TAG = EstablecimientoFragment.class.getSimpleName();
@@ -48,14 +50,14 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
     @Override
     public void onStop() {
-       // SugarContext.terminate();
+        // SugarContext.terminate();
         super.onStop();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        recyclerView= (RecyclerView) inflater.inflate(
+        recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         establecimientoList = getEstablecimientoList();
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
@@ -66,30 +68,36 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     }
 
 
-    private List<Establecimiento> getEstablecimientoList(){
-        List<Establecimiento> list= Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
+    private List<Establecimiento> getEstablecimientoList() {
+        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
 
-        for (int i=0; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             Establecimiento establecimiento = list.get(i);
+            for (CajaLiquidacionDetalle liquidacionDetalle : CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "li_Id=?", new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId() + ""})) {
 
-            List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", ""+establecimiento.getUbId());
-            Log.d(TAG, "List<GeoUbicacion> size: " + geoUbicacions.size());
-            //CHECKAR QUE LA LISTA DE OBJETOS ANIDADOS, NO ESTÉ VACÍA.
-            if (geoUbicacions.size()>0){
-                Log.d(TAG, "geoUbicacions.get(0).getDescripcion(): "+ geoUbicacions.get(0).getDescripcion());
-                establecimiento.setUbicacion(geoUbicacions.get(0));
+                if (liquidacionDetalle.getEstablecimientoId() == establecimiento.getEstIEstablecimientoId()) {
+                    List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", "" + establecimiento.getUbId());
+                    Log.d(TAG, "List<GeoUbicacion> size: " + geoUbicacions.size());
+                    //CHECKAR QUE LA LISTA DE OBJETOS ANIDADOS, NO ESTÉ VACÍA.
+                    if (geoUbicacions.size() > 0) {
+                        Log.d(TAG, "geoUbicacions.get(0).getDescripcion(): " + geoUbicacions.get(0).getDescripcion());
+                        establecimiento.setUbicacion(geoUbicacions.get(0));
+                    }
+                    list.set(i, establecimiento);
+                }
             }
-            list.set(i, establecimiento);
+
+
         }
-        return  list;
+        return list;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnEstablecimientoClickListener){
+        if (context instanceof OnEstablecimientoClickListener) {
             listener = (OnEstablecimientoClickListener) context;
-        }else{
+        } else {
             throw new RuntimeException(context.toString() +
                     " must implement OnEstablecimientoClickListener");
         }
@@ -105,8 +113,8 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     public void onEstablecimientoClickListener(Establecimiento establecimiento, View view) {
         //Log.d(Utils.TAG, "EstablecimientoFragment onEstablecimientoClickListener: "+ position);
         int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
-        Log.d(Utils.TAG, "recyclerView.childAdapterPosition(): "+ childAdapterPosition);
-        if (establecimientoList.size()>childAdapterPosition && childAdapterPosition >= 0){
+        Log.d(Utils.TAG, "recyclerView.childAdapterPosition(): " + childAdapterPosition);
+        if (establecimientoList.size() > childAdapterPosition && childAdapterPosition >= 0) {
             /*establecimientoList.remove(childAdapterPosition);
             adapter.notifyItemRemoved(childAdapterPosition);*/
             listener.onEstablecimientoClickListener(establecimiento, view);

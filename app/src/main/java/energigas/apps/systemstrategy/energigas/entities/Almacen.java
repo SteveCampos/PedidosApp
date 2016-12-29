@@ -252,5 +252,13 @@ public class Almacen extends SugarRecord {
         return null;
     }
 
+    public static Almacen getAlmacenById(String almacenId) {
+        List<Almacen> almacenList = Almacen.find(Almacen.class, "alm_Id=?", new String[]{almacenId});
+        if (almacenList.size() > 0) {
+            return almacenList.get(0);
+        }
+        return null;
+    }
+
 
 }

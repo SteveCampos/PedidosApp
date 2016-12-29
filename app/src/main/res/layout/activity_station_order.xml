@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_collapsing"
             android:fitsSystemWindows="true"
-            app:titleEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="@dimen/expanded_title_margin_bottom"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
             app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
             <LinearLayout
                 style="@style/Widget.CardContent"
@@ -41,28 +41,29 @@
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="Fecha Programada"
                         android:layout_marginBottom="@dimen/margin_top_layout"
-                        android:textSize="@dimen/text_size_14"/>
+                        android:text="Fecha Programada"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14" />
 
                     <TextView
                         android:id="@+id/tv_description"
+                        style="@style/ExpenseTrackerTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ExpenseTrackerTextView"
-                        android:textSize="24sp"
-                        android:textColor="@color/white"
                         android:gravity="center"
-                        android:text="Lunes, 1 de Agosto."/>
+                        android:text="Lunes, 1 de Agosto."
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/tv_time"
+                        style="@style/TextAppearance.AppCompat.Subhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/TextAppearance.AppCompat.Subhead"
+                        android:drawableLeft="@drawable/ic_reloj"
                         android:gravity="center"
-                        android:text="16:00 - 19:00"/>
+                        android:text="16:00 - 19:00" />
 
                 </LinearLayout>
 
@@ -99,12 +100,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:tag="fab"
-        android:src="@drawable/ic_arrow_forward_"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
-        android:layout_marginRight="@dimen/md_keylines" />
+        android:layout_marginRight="@dimen/md_keylines"
+        android:src="@drawable/ic_arrow_forward_"
+        android:tag="fab"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -230,6 +230,7 @@ public class RestAPI {
         o.put("method", "fins_SaveGasto");
         p.put("vlst_Gasto", mapObject(vlst_Gasto));
         o.put("parameters", p);
+        Log.d("PRAMS", "" + p.toString());
         String s = o.toString();
         Log.d("ServiceExport", "SEND: " + o.toString());
         String r = load(s);

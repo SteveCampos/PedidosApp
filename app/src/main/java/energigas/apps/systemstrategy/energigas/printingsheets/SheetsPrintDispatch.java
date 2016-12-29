@@ -17,6 +17,7 @@ import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Inventory;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
@@ -83,20 +84,23 @@ public class SheetsPrintDispatch {
             printLineas();
             double importeTotal = 0.0;
             for (ComprobanteVentaDetalle comprobanteVentaDetalle : comprobanteVenta.getItemsDetalle()) {
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%-5s", "") + String.format("%-9s", df.format(comprobanteVentaDetalle.getImporte())) + LF + "");
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%-5s", "") + String.format("%-9s", Utils.formatDoubleNumber(comprobanteVentaDetalle.getImporte())) + LF + "");
 
                 importeTotal = importeTotal + comprobanteVentaDetalle.getImporte();
             }
+
             Double importeIgv = importeTotal * igv;
             Double importeTotalCIgv = importeIgv + importeTotal;
-            String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeTotalCIgv)) + LF;
-            String inafecta = ESC + "|lA" + String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
-            String exonerada = ESC + "|lA" + String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
-            String gratuita = ESC + "|lA" + String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
-            String descuentos = ESC + "|lA" + String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(0.00)) + LF;
-            String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeIgv)) + LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+            printLineas();
+            String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) + LF;
+            String inafecta = ESC + "|lA" + String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) + LF;
+            String exonerada = ESC + "|lA" + String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) + LF;
+            String gratuita = ESC + "|lA" + String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) + LF;
+            String descuentos = ESC + "|lA" + String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) + LF;
+            String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeIgv)) + LF;
             String rayaTotal = ESC + "|rA" + "---------" + LF;
-            String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDouble(importeTotalCIgv)) + LF;
+            String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) + LF;
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gravada);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, inafecta);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, exonerada);
@@ -138,9 +142,10 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Coordenadas: " + dispatch.getLatitud() + ", " + dispatch.getLongitud() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Placa: " + vehiculo.getPlaca() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Chofer: " + agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Cliente: " + agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Serie Nro: " + dispatch.getSerie() + "-" + dispatch.getNumero() + LF);
             printLineas();
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "DESPACHO" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + "DESPACHO" + LF);
             printLineas();
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Fecha: " + dispatch.getFechaDespacho() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Hora Inicio: " + dispatch.getHoraInicio() + LF);
@@ -156,7 +161,7 @@ public class SheetsPrintDispatch {
             printLineas();
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Recibido por" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre :" + "............        ...................." + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre :" + "..............................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI :" + "..................................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
@@ -177,7 +182,7 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printResumen(CajaLiquidacion cajaLiquidacion, Usuario usuario, Summary summary) {
+    public void printResumen(CajaLiquidacion cajaLiquidacion, Usuario usuario, Summary summary, Inventory inventory) {
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Energigas SAC" + LF);
@@ -194,14 +199,14 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "LIQUIDACION: " + cajaLiquidacion.getLiqId() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "FECHA      : " + Utils.getDateDescription(cajaLiquidacion.getFechaApertura()) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "SALDO INICIAL    : " + summary.getSaldoInicial() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "INGRESOS TOTALES : " + summary.getIngresosTotales() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "EN EFECTIVO      : " + summary.getIngresosTotales() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "GASTOS TOTALES   : " + summary.getGastos() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "TOTAL A RENDIR   : " + summary.getEfectivoRendir() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "SALDO INICIAL    : " + Utils.formatDoublePrint(summary.getSaldoInicial()) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "INGRESOS TOTALES : " + Utils.formatDoublePrint(summary.getIngresosTotales()) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "EN EFECTIVO      : " + Utils.formatDoublePrint(summary.getIngresosTotales()) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "GASTOS TOTALES   : " + Utils.formatDoublePrint(summary.getGastos()) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "TOTAL A RENDIR   : " + Utils.formatDoublePrint(summary.getEfectivoRendir()) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "INGRESOS" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "VENTA" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "DESCR.") + String.format("%1$6s", "CANT.") + String.format("%1$8s", "EMIT.") + String.format("%1$8s", "PAG.") + String.format("%1$8s", "COBR.") + LF);
 
             Double sumaCantidad = 0.00;
@@ -219,11 +224,11 @@ public class SheetsPrintDispatch {
                 sumaTotalCobradas = sumaTotalCobradas + Double.parseDouble(income.getCobrados());
 
                 Double aCantidad = (Double.parseDouble(income.getCantidad()));
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", income.getConcepto()) + String.format("%1$2s", aCantidad.intValue() + "") + String.format("%1$10s", Utils.formatDouble(Double.parseDouble(income.getEmitidos()))) + String.format("%1$8s", Utils.formatDouble(Double.parseDouble(income.getPagados()))) + String.format("%1$8s", Utils.formatDouble(Double.parseDouble(income.getCobrados()))) + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", income.getConcepto()) + String.format("%1$2s", aCantidad.intValue() + "") + String.format("%1$10s", Utils.formatDoublePrint(Double.parseDouble(income.getEmitidos()))) + String.format("%1$8s", Utils.formatDoublePrint(Double.parseDouble(income.getPagados()))) + String.format("%1$8s", Utils.formatDoublePrint(Double.parseDouble(income.getCobrados()))) + LF);
 
 
             }
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "TOTAL") + String.format("%1$2s", sumaCantidad.intValue() + "") + String.format("%1$10s", Utils.formatDouble(sumaTotalEmitidos)) + String.format("%1$8s", Utils.formatDouble(sumaTotalPagados)) + String.format("%1$8s", Utils.formatDouble(sumaTotalCobradas)) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "TOTAL") + String.format("%1$2s", sumaCantidad.intValue() + "") + String.format("%1$10s", Utils.formatDoublePrint(sumaTotalEmitidos)) + String.format("%1$8s", Utils.formatDoublePrint(sumaTotalPagados)) + String.format("%1$8s", Utils.formatDoublePrint(sumaTotalCobradas)) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "GASTOS" + LF);
@@ -246,9 +251,12 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "TOTAl.") + String.format("%1$6s", "") + String.format("%1$8s", "") + String.format("%1$8s", "") + String.format("%1$8s", Utils.formatDouble(sumaImporte)) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "PRODUCTO.") + String.format("%1$8s", "S. INICIAL") + String.format("%1$6s", "") + String.format("%1$4s", "S. VENDIDO") + String.format("%1$10s", "S. FINAL") + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "PRODUCTO.") + String.format("%1$8s", "S. INICIAL") + String.format("%1$6s", "") + String.format("%1$4s", "S. VENDIDO") + String.format("%1$10s", "S. FINAL") + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "INVENTARIO" + LF);
 
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", "PROD.") + String.format("%1$3s", "INI.") + String.format("%1$8s", "VEND.") + String.format("%1$4s", "") + String.format("%1$8s", "FIN.") + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + String.format("%-18s", inventory.getNombre()) + String.format("%1$3s", Utils.formatDoublePrint(inventory.getCantidadInicial())) + String.format("%1$8s", Utils.formatDoublePrint(inventory.getCantidadVendida())) + String.format("%1$4s", "") + String.format("%1$8s", Utils.formatDoublePrint(inventory.getCantidadFinal())) + LF);
+
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
 
         } catch (JposException e) {

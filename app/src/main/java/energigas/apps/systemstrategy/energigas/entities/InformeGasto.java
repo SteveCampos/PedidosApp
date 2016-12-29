@@ -33,7 +33,7 @@ public class InformeGasto extends SugarRecord {
 
     private String fechaEmision;
 
-    private String proveedorId;
+    private int proveedorId;
 
 
     public InformeGasto() {
@@ -47,15 +47,15 @@ public class InformeGasto extends SugarRecord {
         this.estadoId = estadoId;
     }
 
-    public String getProveedorId() {
+    public int getProveedorId() {
         return proveedorId;
     }
 
-    public void setProveedorId(String proveedorId) {
+    public void setProveedorId(int proveedorId) {
         this.proveedorId = proveedorId;
     }
 
-    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId, int estadoId, String nroComporbante, String fechaEmision, String proveedorId) {
+    public InformeGasto(long infGasId, int tipoGastoId, long cajGasId, int usuarioAccion, String fechaAccion, String referencia, int catTipoGastoId, int estadoId, String nroComporbante, String fechaEmision, int proveedorId) {
         this.infGasId = infGasId;
         this.tipoGastoId = tipoGastoId;
         this.cajGasId = cajGasId;

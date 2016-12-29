@@ -16,16 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.holders.DespachoHolder;
 import energigas.apps.systemstrategy.energigas.holders.StationDispatchsHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 3/08/2016.
  */
 
-public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatchsHolder> {
+public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder> {
 
     private static final String TAG = StationDispatchsAdapter.class.getSimpleName();
     // Store a member variable for the list;
@@ -50,31 +54,40 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
     }
 
     @Override
-    public StationDispatchsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DespachoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // Inflate the custom layout
-        View view = inflater.inflate(R.layout.item_station_dispatch, parent, false);
+        View view = inflater.inflate(R.layout.item_despacho, parent, false);
         // Return a new holder instance
-        return new StationDispatchsHolder(view);
+        return new DespachoHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(StationDispatchsHolder holder, int position) {
-        final Despacho dispatch = stationDispatches.get(position);
-        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{dispatch.getProId() + ""}).get(Constants.CURRENT);
+    public void onBindViewHolder(DespachoHolder holder, int position) {
+        final Despacho despacho = stationDispatches.get(position);
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
         Log.d(TAG, "produclist" + producto);
 
-        int number = position;
-        number++;
+        Almacen almacen = Almacen.getAlmacenById(despacho.getAlmacenEstId() + "");
+        holder.title.setText(despacho.getSerie() + "-" + despacho.getNumero());
+        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + "");
+        String facturadoString = "";
 
-        holder.dispatchTank.setText("Despacho:  " + dispatch.getSerie()+"-"+dispatch.getNumero());
-        holder.dispatchProduct.setText(producto.getNombre());
-        holder.dispatchQuantity.setText(dispatch.getCantidadDespachada() + " Gal");
-        if (dispatch.getCompId()>0){
-            holder.dispatchState.setText("Facturado");
-        }else {
-            holder.dispatchState.setText("Despachado");
+        if (despacho.getCompId() > 0) {
+            ComprobanteVenta comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(despacho.getCompId() + "");
+            facturadoString = "Factura: " + comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc();
+            holder.state.setText("Facturado");
+        } else {
+            holder.state.setText("Despachado");
         }
+
+
+        holder.information.setText(
+                "Tanque: " + almacen.getNombre() + "\n" +
+                        "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialOrigen()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalOrigen()) + "\n" +
+                        "P. Inicial: " + despacho.getpITOrigen() + " - " + "P. Final: " + despacho.getpFTOrigen() + "\n" +
+                        "Hora de despacho: " + despacho.getHoraFin() + "\n" + facturadoString
+        );
 
         int colorAccent = ContextCompat.getColor(mContext, R.color.colorAccent);
         int colorWhite = ContextCompat.getColor(mContext, R.color.white);
@@ -82,17 +95,17 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         holder.itemView
                 .setBackgroundColor(mSelectedItemsIds.get(position, false) ? colorAccent
                         : Color.WHITE);
-        holder.dispatchQuantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
+        holder.quantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dispatch.getCompId() > 0) {
-                    Toast.makeText(mContext,"Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
+                if (despacho.getCompId() > 0) {
+                    Toast.makeText(mContext, "Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    listener.onStationDispatchClickListener(dispatch, view, 0);
+                    listener.onStationDispatchClickListener(despacho, view, 0);
                 }
 
             }
@@ -100,11 +113,11 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<StationDispatc
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (dispatch.getCompId() > 0) {
-                    Toast.makeText(mContext,"Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
+                if (despacho.getCompId() > 0) {
+                    Toast.makeText(mContext, "Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    listener.onStationDispatchClickListener(dispatch, view, 1);
+                    listener.onStationDispatchClickListener(despacho, view, 1);
                 }
 
                 return true;

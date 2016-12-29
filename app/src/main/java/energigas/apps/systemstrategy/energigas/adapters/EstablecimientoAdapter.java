@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoHolder;
@@ -62,23 +64,23 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         Log.d(Utils.TAG, "onBindViewHolder: " + position);
         //  holder.bind(mListEstablecimientos.get(position), mContext, listener);
         final Establecimiento establecimiento = mListEstablecimientos.get(position);
+        CajaLiquidacionDetalle cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndEstado(establecimiento.getEstIEstablecimientoId() + "");
+
+        Estado estado = Estado.getEstado(cajaLiquidacionDetalle.getEstadoId() + "");
         Cliente cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
         Pedido pedido = Pedido.getPedido(establecimiento.getEstIEstablecimientoId() + "");
+        holder.textAtendido.setText(estado.getDescripcion());
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
         GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
         Log.d(TAG, "GeoUbicacion: " + geoUbicacion);
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.
         if (geoUbicacion != null && pedido != null) {
-            holder.mubicacion.setText(pedido.getHoraProgramada());
+            holder.mubicacion.setText("Hora Entrega: " + pedido.getHoraProgramada());
             holder.maddress.setText(geoUbicacion.getDescripcion());
 
         }
 
         holder.imageView2.setImageDrawable(mContext.getResources().getDrawable(getImage(cliente.getCliITipoClienteId())));
-
-        //holder.mpoint.setText(Utils.capitalize(""+establecimiento.getEstIClienteId()));
-        //holder.mubicacion.setText(Utils.capitalize(establecimiento.getEstVTelefono()));
-        //holder.imageView2.setImageDrawable(ContextCompat.getDrawable(mContext, getImage(establecimiento.getEstVCodigo())));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

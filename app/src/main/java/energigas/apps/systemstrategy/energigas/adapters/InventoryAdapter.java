@@ -22,9 +22,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryHolder> {
     List<Inventory> inventories;
     Context context;
 
-    public InventoryAdapter (List<Inventory> inventories, Context context){
+    public InventoryAdapter(List<Inventory> inventories, Context context) {
 
-        this.inventories=inventories;
+        this.inventories = inventories;
         this.context = context;
     }
 
@@ -42,6 +42,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryHolder> {
         final Inventory inventory = inventories.get(position);
         //holder.bind(inventories.get(position));
         holder.nameTextView.setText(inventory.getNombre());
+        holder.inicio.setText(inventory.getCantidadInicial() + "");
+        holder.venta.setText(inventory.getCantidadVendida() + "");
+        holder.textFinal.setText(inventory.getCantidadFinal() + "");
     }
 
     @Override

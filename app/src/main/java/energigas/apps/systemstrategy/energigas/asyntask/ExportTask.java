@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.orm.SugarTransactionHelper;
 
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
@@ -42,10 +44,10 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Created by kelvi on 27/10/2016.
  */
 
-public class ExportTask extends AsyncTask<Integer, String, String> {
+public class ExportTask extends AsyncTask<Integer, String, String> implements SugarTransactionHelper.Callback {
 
 
-    private static final String TAG = "ServiceExport";
+    private static final String TAG = "ExportTask";
     private RestAPI restAPI;
     private RestFEAPI restFEAPI;
     private JSONObject jsonObjectResponse;
@@ -53,6 +55,8 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
     private ExportObjectsListener exportObjectsListener;
     private Context context;
     private int mainEstado = 0;
+    int table;
+    int type;
 
     public ExportTask(ExportObjectsListener exportObjectsListener, Context context) {
         this.context = context;
@@ -65,16 +69,25 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
 
     @Override
     protected String doInBackground(Integer... params) {
-        if (!NetworkUtil.hasActiveInternetConnection(context)) {
+      /*  if (!NetworkUtil.hasActiveInternetConnection(context)) {
             Log.d(TAG, "Error pin ");
             mainEstado = -1;
 
             return null;
-        }
+        }*/
 
-        int table = params[0];
-        int type = params[1];
 
+        table = params[0];
+        type = params[1];
+
+        SugarTransactionHelper.doInTransaction(this);
+
+
+        return null;
+    }
+
+    @Override
+    public void manipulateInTransaction() {
         switch (table) {
 
             case Constants.TABLA_DESPACHO:
@@ -93,9 +106,11 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                 break;
 
         }
+    }
 
-
-        return null;
+    @Override
+    public void errorInTransaction(String error) {
+        Log.d("FACTURASID", "ERROR: " + error);
     }
 
 
@@ -189,15 +204,17 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                                 BeDocElectronico beDocElectronico = BeDocElectronico.getBeDocElectronico(comprobanteVenta.getCompId() + "");
                                 beDocElectronico.setComprobanteVentaId(beRespuestaCpVenta.getCompIdServer());
                                 beDocElectronico.save();
-
-
+                                Pedido pedido = Pedido.getPedidobyCompId(comprobanteVenta.getId() + "");
+                                pedido.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                pedido.save();
+                                Despacho despacho = Despacho.getDespachoByCompro(comprobanteVenta.getId() + "");
+                                despacho.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                despacho.save();
                                 saveEstado(comprobanteVenta.getId() + "", beRespuestaCpVenta.getCompIdServer() + "", ComprobanteVenta.class);
                                 comprobanteVenta.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                Long aLong = comprobanteVenta.save();
 
-                                Long es = comprobanteVenta.save();
-                                Log.d(TAG, "ComprobanteVenta " + es);
-
-
+                                Log.d("FACTURASID", aLong + "");
                                 for (BERespuestaCpVentaDetalle respuestaCpVentaDetalle : beRespuestaCpVenta.getItemsCpVenta()) {
 
                                     for (ComprobanteVentaDetalle ventaDetalle : comprobanteVenta.getItemsDetalle()) { /**Comprobante Venta Detalle**/
@@ -422,4 +439,6 @@ public class ExportTask extends AsyncTask<Integer, String, String> {
                 break;
         }
     }
+
+
 }

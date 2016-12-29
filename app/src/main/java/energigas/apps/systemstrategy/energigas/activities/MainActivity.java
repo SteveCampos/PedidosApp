@@ -41,6 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
@@ -72,7 +73,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
         ViewPager.OnPageChangeListener,
-        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener, IntentListenerAccess, TabLayout.OnTabSelectedListener {
+        EstablecimientoFragment.OnEstablecimientoClickListener, ExportObjectsListener, IntentListenerAccess, TabLayout.OnTabSelectedListener, AccountDialog.ListenerOpenAccount {
     //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -138,14 +139,13 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "Usuario: " + Session.getSession(this).getUsuIUsuarioId() + "");
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
-
         if (!Utils.getGpsEnable(this)) {
             Intent intent = new Intent(this, ModalActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
         validaExistencia();
-        initProfileAgente();
+
         if (hideFloatingButton()) {
 
             new AccessPrivilegesManager(getClass())
@@ -164,15 +164,14 @@ public class MainActivity extends AppCompatActivity
 
             //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
             //new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+            // startService(new Intent(MainActivity.this, ServiceSync.class));
 
-
-            startService(new Intent(MainActivity.this, ServiceExportMyLocation.class));
-            startService(new Intent(MainActivity.this, ServiceFirebase.class));
-            startService(new Intent(MainActivity.this, ServiceSync.class));
         }
 
-
     }
+
+
+
 
     private void initProfileAgente() {
         CajaLiquidacion caja = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
@@ -270,6 +269,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "TAMAÑO FRAG: " + accessFragments.size());
         initViews();
+        initProfileAgente();
 
     }
 
@@ -550,6 +550,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onSuccessOpenAccount() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
 

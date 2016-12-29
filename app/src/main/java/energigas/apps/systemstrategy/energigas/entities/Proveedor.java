@@ -153,7 +153,7 @@ public class Proveedor extends SugarRecord {
         this.persona = persona;
     }
 
-    public static List<Proveedor> getProveedorList(){
+    public static List<Proveedor> getProveedorList() {
         List<Proveedor> list = Proveedor.listAll(Proveedor.class);
         List<Proveedor> proveedorList = new ArrayList<>();
         for (Proveedor proveedor : list) {
@@ -168,5 +168,27 @@ public class Proveedor extends SugarRecord {
             }
         }
         return proveedorList;
+    }
+
+    public static Proveedor getProveedorById(int proveedorId) {
+        List<Proveedor> list = Proveedor.listAll(Proveedor.class);
+        List<Proveedor> proveedorList = new ArrayList<>();
+        for (Proveedor proveedor : list) {
+
+            if (proveedorId == proveedor.getProveedorId()) {
+                if (proveedor != null) {
+                    Persona persona = Persona.getPersona("" + proveedor.getPersonaId());
+                    if (persona != null) {
+
+                        proveedor.setPersona(persona);
+                        proveedorList.add(proveedor);
+
+                    }
+                }
+            }
+
+
+        }
+        return proveedorList.get(0);
     }
 }

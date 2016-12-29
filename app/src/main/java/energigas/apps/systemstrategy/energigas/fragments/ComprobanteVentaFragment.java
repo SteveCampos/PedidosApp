@@ -90,17 +90,18 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
 
     @Override
     public void onComprobanteVentaClickListener(ComprobanteVenta comprobanteVenta, View view) {
-        Session.saveComprobanteVenta(getActivity(), comprobanteVenta);
+
         //  startActivity(new Intent(getActivity(), SellPrintActivity.class));
 
 
-            if (booleanHashMap != null) {
+        if (booleanHashMap != null) {
 
-                if (booleanHashMap.get(SellPrintActivity.class.getSimpleName())) {
-                    // listener.onStationOrderClickListener(pedido);
-                    startActivity(new Intent(getActivity(), SellPrintActivity.class));
-                }
+            if (booleanHashMap.get(SellPrintActivity.class.getSimpleName())) {
+                Log.d("FACTURASID", comprobanteVenta.getCompId() + "");
+                Session.saveComprobanteVenta(getActivity(), comprobanteVenta);
+                startActivity(new Intent(getActivity(), SellPrintActivity.class));
             }
+        }
 
 
     }

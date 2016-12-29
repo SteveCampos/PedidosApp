@@ -2,7 +2,6 @@ package energigas.apps.systemstrategy.energigas;
 
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.FirebaseDatabase;
 import com.orm.SugarApp;
 
@@ -10,7 +9,7 @@ import com.orm.SugarApp;
  * Created by kelvi on 17/08/2016.
  */
 
-public class Application extends SugarApp {
+public class Application extends SugarApp  {
     @Override
     public void onCreate() {
 
@@ -20,7 +19,5 @@ public class Application extends SugarApp {
         }
         super.onCreate();//capau  //   //1/0
     }
-
-
 
 }

@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_margin"
     android:layout_marginLeft="@dimen/card_margin"
-    android:layout_marginRight="@dimen/card_margin"
-    android:layout_marginBottom="@dimen/card_margin">
+    android:layout_marginRight="@dimen/card_margin">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -44,7 +44,6 @@
                 android:stretchColumns="*">
 
 
-
                 <TableRow
                     android:id="@+id/tableRow1"
                     android:layout_width="match_parent"
@@ -53,46 +52,56 @@
                     <TextView
                         android:id="@+id/a1"
                         android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:text="Producto"
                         android:textSize="@dimen/size_text_item"
-                        android:textStyle="bold"
-                        android:text="Serie-Numero"/>
+                        android:textStyle="bold" />
 
-
+                    <TextView
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:text="U. Medida"
+                        android:textSize="@dimen/size_text_item"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/TextView01"
-                        android:text="Cantidad"
                         android:layout_marginRight="@dimen/margin_rigth"
-                        android:textSize="@dimen/size_text_item"
                         android:gravity="right"
-                        android:textStyle="bold"/>
+                        android:text="Cantidad"
+                        android:textSize="@dimen/size_text_item"
+                        android:textStyle="bold" />
 
                 </TableRow>
 
                 <TableRow
-                    android:layout_marginBottom="3dp"
                     android:id="@+id/a2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp">
 
                     <TextView
-                        android:id="@+id/textSerieNumero"
-                        android:text="D001-000001021"
-                        android:gravity="left"
+                        android:id="@+id/textProducto"
                         android:layout_marginLeft="@dimen/margin_rigth"
-                        android:textSize="@dimen/size_text_item"
-                        />
+                        android:gravity="left"
+                        android:text="GLP"
+                        android:textSize="@dimen/size_text_item" />
+
+                    <TextView
+                        android:id="@+id/textUnidadMedida"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:text="GAL"
+                        android:textSize="@dimen/size_text_item" />
 
                     <TextView
                         android:id="@+id/textCantidad"
-                        android:textSize="@dimen/size_text_item"
-                        android:gravity="right"
                         android:layout_marginRight="@dimen/size_title_summary"
-                        android:text="5"/>
+                        android:gravity="right"
+                        android:text="5"
+                        android:textSize="@dimen/size_text_item" />
 
 
                 </TableRow>
-
 
 
             </TableLayout>

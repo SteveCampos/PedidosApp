@@ -142,6 +142,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
     }
 
 
@@ -172,11 +174,11 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
             if (i == (comprobanteVentaDetalles.size() - 1)) {
 
-                costoUnidad = costoUnidad + Utils.formatDouble(comprobanteVentaDetalles.get(i).getImporte());
+                costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte());
                 cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " ";
             } else {
 
-                costoUnidad = costoUnidad + Utils.formatDouble(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
+                costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
                 cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " \n";
             }
 
@@ -185,7 +187,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
         Double importeTotalIgv = new Double(importeTotal + importeIgv);
 
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe), costoUnidad, importeTotalIgv + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDouble(importeIgv), Utils.formatDouble(importeTotalIgv));
+        String textImporte = String.format(res.getString(R.string.print_factura_items_importe), costoUnidad, Utils.formatDoublePrint(importeTotalIgv) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
         textViewImprimirContenidoRight.setText(textImporte);
 
         String textCNombre = String.format(res.getString(R.string.print_factura_items), cantidadNombre);

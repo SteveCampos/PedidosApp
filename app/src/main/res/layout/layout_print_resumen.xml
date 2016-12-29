@@ -61,7 +61,6 @@
         app:elevation="@dimen/print_elevation_fab"
         app:backgroundTint="@color/colorAccent"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
         android:src="@drawable/ic_printer_sync_print" />
 
 

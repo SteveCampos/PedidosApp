@@ -1,7 +1,9 @@
 package energigas.apps.systemstrategy.energigas.asyntask;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,8 @@ import energigas.apps.systemstrategy.energigas.apiRest.ManipuleData;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -31,6 +35,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     private String message = "";
     private CajaLiquidacion cajaLiquidacion;
     private int codigoId = 0;
+
 
     public AsyntaskOpenAccount(OnAsyntaskListener onAsyntaskListener) {
         this.onAsyntaskListener = onAsyntaskListener;
@@ -102,11 +107,16 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     }
 
 
+
+
     @Override
     public void manipulateInTransaction() {
 
         ManipuleData manipuleData = new ManipuleData();
         manipuleData.saveLiquidacion(cajaLiquidacion);
+
+        estado = -4;
+        message ="Importancion exitosa.";
     }
 
     @Override
@@ -115,4 +125,6 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
         estado = Constants.ERROR_GUARDAR;
         Log.d(TAG, "CORRECTAMENTE");
     }
+
+
 }

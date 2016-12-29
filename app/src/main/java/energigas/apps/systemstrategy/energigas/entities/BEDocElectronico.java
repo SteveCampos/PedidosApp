@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
@@ -510,6 +512,10 @@ public class BeDocElectronico extends SugarRecord {
 
     public static BeDocElectronico getBeDocElectronico(String comprobanteVentaId) {
         List<BeDocElectronico> beDocElectronicoList = BeDocElectronico.find(BeDocElectronico.class, "comprobante_Venta_Id=?", new String[]{comprobanteVentaId});
+
+        for (BeDocElectronico beDocElectronico : BeDocElectronico.listAll(BeDocElectronico.class)) {
+            Log.d("FACTURASID", "" + beDocElectronico.getComprobanteVentaId() + "- PARM" + comprobanteVentaId);
+        }
         if (beDocElectronicoList.size() > 0) {
             return beDocElectronicoList.get(0);
         }

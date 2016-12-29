@@ -174,10 +174,13 @@ public class Summary {
 
             ingresosImporte = ingresosImporte + comprobanteVenta.getTotal();
             CajaMovimiento cajaMovimiento = CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId() + "");
-            CajaPago cajaPago = CajaPago.getCajaPago(cajaMovimiento.getCajMovId() + "");
-            Concepto concepto = Concepto.getConceptoById(cajaPago.getTipoPagoId() + "");
-            conceptoHashMap.put(concepto.getIdConcepto(), concepto);
-            cajaPagos.add(cajaPago);
+
+            if (cajaMovimiento != null) {
+                CajaPago cajaPago = CajaPago.getCajaPago(cajaMovimiento.getCajMovId() + "");
+                Concepto concepto = Concepto.getConceptoById(cajaPago.getTipoPagoId() + "");
+                conceptoHashMap.put(concepto.getIdConcepto(), concepto);
+                cajaPagos.add(cajaPago);
+            }
 
 
         }
@@ -244,9 +247,9 @@ public class Summary {
 
 
         double efectivoRendir = ingresosImporte - importeGastos;
+        double saldoInicialMain = (cajaLiquidacion.getSaldoInicial() + ingresosImporte) - importeGastos;
 
-
-        Summary sumaryResumen = new Summary(Utils.formatDoubleNumber(cajaLiquidacion.getSaldoInicial()),
+        Summary sumaryResumen = new Summary(Utils.formatDoubleNumber(saldoInicialMain),
                 Utils.formatDoubleNumber(ingresosImporte),
                 Utils.formatDoubleNumber(importeGastos),
                 Utils.formatDoubleNumber(efectivoRendir),

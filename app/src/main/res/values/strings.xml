@@ -81,6 +81,7 @@
         "COORDENADAS: %2$s \n"
         "PLACA: %3$s \n"
         "AGENTE DE VENTA: %4$s \n "
+        "CLIENTE: %17$s \n "
         "NUMERO DE COMPROBANTE: %5$s \n \n "
         "******************      DESPACHO      **************** \n \n"
         "FECHA: %6$s \n"
@@ -325,7 +326,7 @@
     <string name="information_date">19/07/2016</string>
     <string name="information_summary">41</string>
     <string name="information_agent">Kelvin Thony Meza Espiritu</string>
-    <string name="title_activity_dispatch">Despachos</string>
+    <string name="title_activity_dispatch">Facturar</string>
     <string name="title_activity_costs">CostsActivity</string>
     <string name="title_activity_print_dispatch">Imprimir Despacho</string>
     <string name="title_activity_print_factura">Imprimir Factura</string>
@@ -519,7 +520,7 @@
     <string name="dialog_cobranza_Si">Si</string>
     <string name="dialog_cobranza_Cancelar">CANCELAR</string>
     <string name="dialog_cobranza_Aceptar">ACEPTAR</string>
-    <string name="title_activity_main_configuraciones">MainConfiguraciones</string>
+    <string name="title_activity_main_configuraciones">Configuraciones</string>
 
     <!--Fin Cobranza-->
 
@@ -557,5 +558,6 @@
     <string name="ordencarga.trasciego.text.guia">Nro Guía</string>
     <string name="ordencarga.trasciego.text.emision">Fecha emisión</string>
     <string name="ordencarga.trasciego.text.entrega">Fecha entrega</string>
+    <string name="title_activity_pruebamaps">Map</string>
 
 </resources>

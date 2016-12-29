@@ -1,9 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
+    android:paddingTop="@dimen/dimen_10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="energigas.apps.systemstrategy.energigas.activities.CargarInventarioActivity"
     tools:showIn="@layout/activity_sell">
@@ -25,8 +26,8 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <EditText
                         android:id="@+id/editScop"
@@ -37,16 +38,14 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <CheckBox
-                    android:layout_weight="1"
                     android:id="@+id/checkboxResumen"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="Resumen Total" />
 
             </LinearLayout>
-
-
 
 
             <LinearLayout
@@ -236,12 +235,12 @@
 
                 <Button
                     android:id="@+id/btnDefinirCuotas"
-                    android:tag="btnDefinirCuotas"
-                    android:textColor="@color/white"
-                    android:layout_weight="1"
-                    android:text="Cuotas"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="btnDefinirCuotas"
+                    android:text="Cuotas"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <LinearLayout
@@ -254,9 +253,9 @@
 
                 <Button
                     android:id="@+id/btnVender"
-                    android:tag="btnVender"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
+                    android:tag="btnVender"
                     android:text="VENDER"
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -267,4 +266,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -59,6 +59,7 @@
                         android:textSize="24sp" />
 
                     <TextView
+                        android:id="@+id/textViewTel"
                         android:paddingTop="20dp"
                         android:drawableLeft="@android:drawable/stat_sys_phone_call"
                         android:textSize="20dp"

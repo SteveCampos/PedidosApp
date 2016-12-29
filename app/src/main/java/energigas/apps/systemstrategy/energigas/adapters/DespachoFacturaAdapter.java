@@ -10,6 +10,8 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.DespachoFacturaHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -39,10 +41,11 @@ public class DespachoFacturaAdapter extends RecyclerView.Adapter<DespachoFactura
     public void onBindViewHolder(DespachoFacturaHolder holder, int position) {
         final Despacho despacho = despachos.get(position);
 
-        holder.textDespachoNro.setText("Despacho Nro: " + despacho.getNumero());
-        holder.textSerieNumero.setText("" + despacho.getSerie() + " - " + despacho.getNumero());
-
-
+        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(despacho.getUnId() + "");
+        Producto producto = Producto.getProductoById(despacho.getProId() + "");
+        holder.textDespachoNro.setText("" + despacho.getSerie() + " - " + despacho.getNumero());
+        holder.textProducto.setText(producto.getNombre());
+        holder.textViewUnidadMedida.setText(unidad.getAbreviatura());
         holder.textCantidad.setText(Utils.formatDouble(despacho.getCantidadDespachada()));
     }
 

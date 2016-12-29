@@ -17,13 +17,21 @@ import energigas.apps.systemstrategy.energigas.R;
 public class EstablecimientoHolder extends RecyclerView.ViewHolder {
 
 
-    @BindView(R.id.txtnombre) public TextView mname;
-    @BindView(R.id.txtdireccion) public TextView maddress;
-    @BindView(R.id.txtpoints) public TextView mpoint;
-    @BindView(R.id.txtubicacion) public TextView mubicacion;
-    @BindView(R.id.imageView2) public ImageView imageView2;
+    @BindView(R.id.txtnombre)
+    public TextView mname;
+    @BindView(R.id.txtdireccion)
+    public TextView maddress;
+    @BindView(R.id.txtpoints)
+    public TextView mpoint;
+    @BindView(R.id.txtubicacion)
+    public TextView mubicacion;
+    @BindView(R.id.imageView2)
+    public ImageView imageView2;
+    @BindView(R.id.textAtendido)
+    public TextView textAtendido;
+
     public EstablecimientoHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

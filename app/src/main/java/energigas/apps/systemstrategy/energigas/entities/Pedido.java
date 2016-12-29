@@ -552,5 +552,13 @@ public class Pedido extends SugarRecord {
         return null;
     }
 
+    public static Pedido getPedidobyCompId(String comprobanteVentaId) {
+        List<Pedido> pedidoList = Pedido.find(Pedido.class, "comp_Id=?", new String[]{comprobanteVentaId});
+        if (pedidoList != null) {
+            return pedidoList.get(0);
+        }
+        return null;
+    }
+
 
 }

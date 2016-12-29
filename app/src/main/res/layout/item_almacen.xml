@@ -7,74 +7,75 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardPreventCornerOverlap="false"
-    card_view:cardUseCompatPadding="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="@dimen/activity_vertical_margin"
-        >
+        android:padding="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/text_station_tank_title"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="10562851"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_toStartOf="@+id/text_station_programed" />
+            android:layout_toStartOf="@+id/text_station_programed"
+            android:text="10562851" />
 
         <TextView
             android:id="@+id/text_station_programed"
+            style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="300 GAL"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            style="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorAccent"
+            android:textSize="13dp"
             android:layout_alignParentTop="true"
-            />
-
-        <TextView
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:id="@+id/text_station_tank_capacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="300 - 1300"
-            android:layout_below="@+id/text_station_tank_title"
-            />
+            android:layout_centerInParent="true"
+            android:text="300 GAL"
+            android:textColor="@color/colorAccent" />
 
         <TextView
             android:id="@+id/text_station_tank_politica"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="85% o 1105 GAL"
             android:layout_below="@+id/text_station_tank_capacity"
-            />
-        
+            android:text="85% o 1105 GAL"
+            android:textStyle="bold"
+            android:textSize="@dimen/dimen_10dp" />
+
         <TextView
             android:id="@+id/text_station_tank_capacity_neta"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1500 GAL"
-            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_below="@+id/text_station_tank_politica"
-            />
+            android:text="1500 GAL"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_almacen_estado"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ATENDIDO"
-            android:textColor="@color/md_green_500"
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignBottom="@+id/text_station_tank_politica"
             android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/text_station_tank_capacity_neta"
-            />
+            android:text="ATENDIDO"
+            android:textColor="@color/md_green_500" />
+
+        <TextView
+            android:id="@+id/text_station_tank_capacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_station_programed"
+            android:layout_marginTop="12dp"
+            android:text="300 - 1300"
+            android:textStyle="bold"
+            android:textSize="@dimen/dimen_10dp" />
 
     </RelativeLayout>
 

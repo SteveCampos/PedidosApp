@@ -136,15 +136,17 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     private void viewTextCabecera() {
         DEEntidad deEntidad = CajaLiquidacion.getEntidad();
-        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa),deEntidad.getRazonSocial(), "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), deEntidad.getRazonSocial(), "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima", "RUC: 20506151547", "Telf: (511) 2033001");
         textCabecera.setText(tetextCabeceraxt);
     }
 
     private void viewTextInfoDespacho() {
+
+
         String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
                 agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", mainDispatch.getSerie() + "-" + mainDispatch.getNumero(), mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio(),
                 mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino() + "", mainDispatch.getpFTDestino() + "",
-                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com");
+                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com", cliente.getPersona().getPerVRazonSocial());
         textInfoDespacho.setText(textInfo);
     }
 
@@ -241,7 +243,6 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
         CoordinatorLayout.LayoutParams pDes = (CoordinatorLayout.LayoutParams) floatingDisconect.getLayoutParams();
         CoordinatorLayout.LayoutParams pPrint = (CoordinatorLayout.LayoutParams) floatingPrint.getLayoutParams();
-
 
 
         if (!connected) {

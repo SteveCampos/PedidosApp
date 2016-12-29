@@ -48,14 +48,34 @@
             />
 
         <TextView
+            android:id="@+id/horarioAtencion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horario: 21:00"
+            android:textStyle="italic|bold"
+            android:textSize="@dimen/dimen_10dp"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_below="@+id/text_station_order_scope"
+            />
+
+        <TextView
             android:id="@+id/text_station_order_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EN PROCESO"
             style="@style/TextAppearance.AppCompat.Small"
-            android:layout_marginTop="8dp"
-            android:layout_below="@+id/text_station_order_scope"
+            android:layout_below="@+id/horarioAtencion"
             />
+
+        <TextView
+            android:id="@+id/textPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S./ 3.65"
+            android:textSize="@dimen/dimen_15dp"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_alignBottom="@+id/text_station_order_scope"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/text_station_order_programed_date"

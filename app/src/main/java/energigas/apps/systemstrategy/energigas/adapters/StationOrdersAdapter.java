@@ -15,6 +15,7 @@ import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.EstablecimientoPedidoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -31,7 +32,7 @@ public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPe
     private Context mContext;
     public OnOrderClickListener listener;
 
-    public interface OnOrderClickListener{
+    public interface OnOrderClickListener {
         public void onOrderClickListener(Pedido pedido);
     }
 
@@ -52,36 +53,19 @@ public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPe
 
     @Override
     public void onBindViewHolder(EstablecimientoPedidoHolder holder, int position) {
+
         final Pedido pedido = pedidoList.get(position);
-
-        Estado estados = Estado.find(Estado.class," id_Estado = ?",new String[]{pedido.getEstadoId()+""}).get(Constants.CURRENT);
-        PedidoDetalle pedidoDetalle=PedidoDetalle.find(PedidoDetalle.class," pe_Id = ?",new String[]{pedido.getPeId()+""}).get(Constants.CURRENT);
-        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{pedidoDetalle.getProductoId()+""}).get(Constants.CURRENT);
-        //  if(estados!=null) {
-        holder.scope.setText(pedido.getScop()+"");
+        Estado estados = Estado.find(Estado.class, " id_Estado = ?", new String[]{pedido.getEstadoId() + ""}).get(Constants.CURRENT);
+        PedidoDetalle pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ?", new String[]{pedido.getPeId() + ""}).get(Constants.CURRENT);
+        Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{pedidoDetalle.getProductoId() + ""}).get(Constants.CURRENT);
+        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
+        holder.scope.setText("SCOP: " + pedido.getScop() + "");
         holder.state.setText(estados.getDescripcion() + "");
-        holder.quantity.setText(pedidoDetalle.getCantidad()+"");
-        holder.title.setText(producto.getDescripcion()+"");
-        //long dateprogrameddate = Long.parseLong(pedido.getFechaEntregaProgramada()+"");
-       // String data= pedido.getFechaEntregaProgramada();
-       // Long lObj1 = new Long(data);
+        holder.quantity.setText(Utils.formatDoublePrint(pedidoDetalle.getCantidad()) + " " + unidad.getAbreviatura());
+        holder.title.setText(producto.getNombre() + "");
         holder.programedDate.setText(Utils.getNameOfDay(new Date(pedido.getFechaEntregaProgramada())));
-
-        //}
-        /*
-        holder.title.setText(pedido.getProductsName()[0]);
-        holder.quantity.setText(pedido.getProductsName()[1]);
-        holder.scope.setText(position + "56542682256" + position);
-        holder.state.setText("ACTIVO");
-        holder.programedDate.setText(Utils.getNameOfDay(new Date(pedido.getOrderDate())));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "holder.itemView.setOnClickListener");
-            }
-        });
-        */
-
+        holder.textPrecio.setText("S/. " + Utils.formatDouble(pedidoDetalle.getPrecioUnitario()));
+        holder.textHorarioAtencion.setText("Horario Entrega: " + pedido.getHoraEntrega());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -68,9 +68,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/estable_default_marker"
+                    android:textSize="@dimen/dimen_12dp"
                     android:textAppearance="@style/TextViewSmall"
                     android:drawablePadding="8dp"
                     android:gravity="center"
+                    android:textStyle="italic|bold"
                     android:drawableLeft="@drawable/ic_reloj" />
 
 

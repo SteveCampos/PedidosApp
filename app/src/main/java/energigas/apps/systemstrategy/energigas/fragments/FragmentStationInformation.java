@@ -6,13 +6,28 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +58,7 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  * Use the {@link FragmentStationInformation#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentStationInformation extends Fragment  {
+public class FragmentStationInformation extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,11 +72,11 @@ public class FragmentStationInformation extends Fragment  {
     private Persona persona;
     private OnFragmentInteractionListener mListener;
     private static final String TAG = "FragmentInfo";
-    @BindView(R.id.btn_map)
-    AppCompatButton buttonMap;
+    /*@BindView(R.id.btn_map)
+    AppCompatButton buttonMap;*/
     @BindView(R.id.frag_st_title)
-    AppCompatTextView frag_st_title;
-    @BindView(R.id.frag_st_description)
+    TextView frag_st_title;
+    /*@BindView(R.id.frag_st_description)
     AppCompatTextView frag_st_description;
     @BindView(R.id.frag_st_lt_long)
     AppCompatTextView frag_st_lt_long;
@@ -72,9 +87,16 @@ public class FragmentStationInformation extends Fragment  {
     @BindView(R.id.est_frag_iddocument)
     AppCompatTextView est_frag_iddocument;
     @BindView(R.id.est_frag_lati_long)
-    AppCompatTextView est_frag_lati_long;
+    AppCompatTextView est_frag_lati_long;*/
 
     private Usuario usuario;
+
+
+    MapView mapView;
+    GoogleMap map;
+
+   /* @BindView(R.id.scroll)
+    NestedScrollView nestedScrollView;*/
 
     public FragmentStationInformation() {
         // Required empty public constructor
@@ -122,9 +144,22 @@ public class FragmentStationInformation extends Fragment  {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_station_information, container, false);
         ButterKnife.bind(this, view);
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+
+
+        MapsInitializer.initialize(getActivity());
+
+        mapView = (MapView) view.findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+//        Log.d("MAPVIEW", "GoogleMap: " + mapView.getAccessibilityClassName());
+        mapView.onResume();
+        // Gets to GoogleMap from the MapView and does initialization stuff
+        mapView.getMapAsync(this);
+        //mapView.setOnTouchListener(this);
+
         usuario = Session.getSession(getActivity());
         new AccessPrivilegesManager(getClass())
-                .setViews(buttonMap)
+                .setViews(frag_st_title)
                 .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "");
 
 
@@ -138,12 +173,12 @@ public class FragmentStationInformation extends Fragment  {
         return view;
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
     }
-
 
 
     @Override
@@ -152,8 +187,6 @@ public class FragmentStationInformation extends Fragment  {
         super.onResume();
     }
     //fragment is active
-
-
 
 
     @Override
@@ -165,12 +198,12 @@ public class FragmentStationInformation extends Fragment  {
 
     public void senddata() {
         frag_st_title.setText(establecimiento.getEstVDescripcion() + "");
-        frag_st_description.setText(geoUbicacion.getDescripcion() + "");
+      /*  frag_st_description.setText(geoUbicacion.getDescripcion() + "");
         frag_st_lt_long.setText(geoUbicacion.getLatitud() + "," + geoUbicacion.getLongitud() + "");
         frag_st_cliente_name.setText(persona.getPerVRazonSocial() + "");
         est_frag_description.setText(establecimiento.getEstVDescripcion());
         est_frag_iddocument.setText(persona.getPerVDocIdentidad() + "");
-        est_frag_lati_long.setText(geoUbicacion.getLatitud() + "," + geoUbicacion.getLongitud() + "");
+        est_frag_lati_long.setText(geoUbicacion.getLatitud() + "," + geoUbicacion.getLongitud() + "");*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -192,16 +225,46 @@ public class FragmentStationInformation extends Fragment  {
         }*/
     }
 
-    @OnClick(R.id.btn_map)
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d("MAPVIEW", "GoogleMap: " + googleMap.getCameraPosition());
+        map = googleMap;
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.setMyLocationEnabled(true);
+        LatLng latLng = new LatLng(Double.parseDouble(geoUbicacion.getLatitud()), Double.parseDouble(geoUbicacion.getLongitud()));
+        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title(geoUbicacion.getDescripcion());
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_gasoline));
+        map.addMarker(markerOptions);
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(latLng.latitude, latLng.longitude));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+        map.moveCamera(center);
+        map.animateCamera(zoom);
+    }
+
+   /* @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                nestedScrollView.requestDisallowInterceptTouchEvent(true);
+                break;
+            case MotionEvent.ACTION_UP:
+                nestedScrollView.requestDisallowInterceptTouchEvent(false);
+            case MotionEvent.ACTION_CANCEL:
+                nestedScrollView.requestDisallowInterceptTouchEvent(false);
+                break;
+        }
+        return mapView.onTouchEvent(event);
+    }*/
+
+
+    /*@OnClick(R.id.btn_map)
     public void showMap() {
         float latitude = (float) Double.parseDouble(geoUbicacion.getLatitud());
         float longitude = (float) Double.parseDouble(geoUbicacion.getLongitud());
         String uri = String.format(Locale.getDefault(), "geo:%1$f,%2$f?q=%1$f,%2$f(%3$s)", latitude, longitude, establecimiento.getEstVDescripcion());
         Log.d(TAG, "URI: " + uri);
         Utils.showMap(getActivity(), Uri.parse(uri));
-    }
-
-
+    }*/
 
 
     /**

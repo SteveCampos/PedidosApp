@@ -19,6 +19,8 @@ public class ComprobanteVentaHolder extends RecyclerView.ViewHolder {
     public TextView textViewDetalle;
     @BindView(R.id.text_cv_total)
     public TextView textViewTotal;
+    @BindView(R.id.textHorario)
+    public TextView textViewHorario;
 
     public ComprobanteVentaHolder(View itemView) {
         super(itemView);

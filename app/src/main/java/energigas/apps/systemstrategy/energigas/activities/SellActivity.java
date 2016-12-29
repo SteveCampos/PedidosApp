@@ -67,6 +67,7 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
@@ -180,13 +181,26 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     private HashMap<String, Boolean> booleanHashMap;
 
+
+    @BindView(R.id.text_despacho_serie_numero)
+    TextView textViewSerieNumero;
+
+    @BindView(R.id.textViewTanque)
+    TextView textViewTanque;
+
+    @BindView(R.id.textViewProducto)
+    TextView textViewProducto;
+
+    @BindView(R.id.text_despacho_estacion)
+    TextView textDespachoEstacion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("Cargando...");
+        progressDialog.setTitle("Realizar Venta");
 
         Toast.makeText(this, "" + Session.getCajaLiquidacion(this).getLiqId() + "", Toast.LENGTH_SHORT).show();
         if (!Session.getTipoDespachoSN(this)) {
@@ -244,22 +258,36 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         buttonVender.setOnClickListener(this);
         hideLinear(getFormaPago());
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef = mDatabase.child(Constants.FIREBASE_CHILD_NOTIFICACIONES).child(Constants.FIREBASE_CHILD_ATENCION_PEDIDO);
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
+        serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, getTipoComprobante().getIdConcepto()), null).get(Constants.CURRENT);
 
+        setTextDescripcion();
+
+    }
+
+    private void setTextDescripcion() {
+        PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "").get(0);
+        textViewSerieNumero.setText(": " + serie.getCompVSerie() + "-" + Utils.completaZeros(getNumeroComprobante(), serie.getParametro()));
+        textViewProducto.setText(Producto.getNameProducto(pedidoDetalle.getProductoId() + ""));
+        textDespachoEstacion.setText(establecimiento.getEstVDescripcion());
     }
 
 
     private void notificarAtencionPedido() {
 
 
-        String id = myRef.push().getKey();
-        Log.d(TAG, "ID: " + id);
-        myRef.child(id).setValue(new FBRegistroPedido(cajaLiquidacion.getLiqId(), cajaLiquidacionDetalle.getLidId(), pedido.getPeId(), Long.parseLong(establecimiento.getEstIEstablecimientoId() + ""), Long.parseLong("45"), Long.parseLong("" + usuario.getUsuIUsuarioId())));
-
         new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
-
-
         new AtencionesAsyntask().execute();
+
+        myRef.child(cajaLiquidacion.getLiqId() + "-" + cajaLiquidacionDetalle.getLidId()).setValue(new NotificacionCajaDetalle(establecimiento.getEstIEstablecimientoId(),
+                cajaLiquidacionDetalle.getEstadoFacId(), cajaLiquidacionDetalle.getEstadoId(), Utils.getDatePhone(),
+                Integer.parseInt(cajaLiquidacion.getLiqId() + ""),
+                Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""),
+                cajaLiquidacionDetalle.getOrdenAtencion(),
+                Integer.parseInt(pedido.getPeId() + ""),
+                cajaLiquidacionDetalle.getPorDespacho(),
+                cajaLiquidacionDetalle.getPorEntrega(),
+                cajaLiquidacionDetalle.getPorFacturado()));
     }
 
 
@@ -409,10 +437,14 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         this.finish();
     }
 
+    private String getNumeroComprobante() {
+        String numero = ComprobanteVenta.findWithQuery(ComprobanteVenta.class, Utils.getQueryNumberSell(), null).get(Constants.CURRENT).getNumDoc();
+        return numero;
+    }
+
     private void generarVenta() {
 
 
-        serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, getTipoComprobante().getIdConcepto()), null).get(Constants.CURRENT);
         String numero = ComprobanteVenta.findWithQuery(ComprobanteVenta.class, Utils.getQueryNumberSell(), null).get(Constants.CURRENT).getNumDoc();
         int compId = Integer.parseInt(numero);
 
@@ -485,6 +517,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
 
         Log.d(TAG, " comprobanteVenta " + comproVentaId);
+        pedido.setCompId(comproVentaId);
+        pedido.save();
         //  Log.d(TAG, " pedidoId " + pedidoId);
 
         /**Guardar para la exportacion**/
@@ -946,9 +980,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     private void initImportesDetalle() {
 
         double[] doubles = obtenerCalculos();
-        textTotal.setText(Utils.formatDouble(doubles[Constants.VENTA_TOTAL]) + "");
-        textBaseImponible.setText(Utils.formatDouble(doubles[Constants.VENTA_BASE_IMPONIBLE]) + "");
-        textIGV.setText(Utils.formatDouble(doubles[Constants.VENTA_IMPORTE_IGV]) + "");
+        textTotal.setText(Utils.formatDoublePrint(doubles[Constants.VENTA_TOTAL]) + "");
+        textBaseImponible.setText(Utils.formatDoublePrint(doubles[Constants.VENTA_BASE_IMPONIBLE]) + "");
+        textIGV.setText(Utils.formatDoublePrint(doubles[Constants.VENTA_IMPORTE_IGV]) + "");
 
     }
 

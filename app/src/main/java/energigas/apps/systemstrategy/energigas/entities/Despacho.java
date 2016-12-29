@@ -453,7 +453,7 @@ public class Despacho extends SugarRecord {
 
     public static List<Despacho> getListDespachoByPedido(String pedidoId) {
 
-        List<Despacho> despachoList = Despacho.find(Despacho.class,"pe_Id=?", new String[]{pedidoId});
+        List<Despacho> despachoList = Despacho.find(Despacho.class, "pe_Id=?", new String[]{pedidoId});
         if (despachoList.size() > 0) {
             return despachoList;
         }
@@ -463,7 +463,7 @@ public class Despacho extends SugarRecord {
 
     public static List<Despacho> getListDespachoByPedidoNoCompId(String pedidoId) {
 
-        List<Despacho> despachoList = Despacho.find(Despacho.class,"pe_Id=? ", new String[]{pedidoId});
+        List<Despacho> despachoList = Despacho.find(Despacho.class, "pe_Id=? ", new String[]{pedidoId});
         if (despachoList.size() > 0) {
             return despachoList;
         }
@@ -485,6 +485,14 @@ public class Despacho extends SugarRecord {
         List<Despacho> despachoList = Despacho.find(Despacho.class, "establecimiento_Id=? and comp_Id != ?  ", new String[]{establecimientoId, "0"});
         if (despachoList.size() > 0) {
             return despachoList;
+        }
+        return null;
+    }
+
+    public static Despacho getDespachoByCompro(String compId) {
+        List<Despacho> despachoList = Despacho.find(Despacho.class, "comp_Id=? ", new String[]{compId});
+        if (despachoList.size() > 0) {
+            return despachoList.get(0);
         }
         return null;
     }

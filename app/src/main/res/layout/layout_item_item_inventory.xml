@@ -85,6 +85,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/inicio"
                     android:textStyle="bold"
                     android:text="10"
                     android:gravity="center"
@@ -93,6 +94,7 @@
                     android:layout_height="match_parent" />
 
                 <TextView
+                    android:id="@+id/venta"
                     android:textStyle="bold"
                     android:text="50"
                     android:layout_weight="1"
@@ -101,6 +103,7 @@
                     android:layout_height="match_parent" />
 
                 <TextView
+                    android:id="@+id/textfinal"
                     android:textStyle="bold"
                     android:text="50"
                     android:layout_weight="1"

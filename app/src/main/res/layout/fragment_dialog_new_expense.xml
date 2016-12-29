@@ -20,33 +20,34 @@
             android:layout_marginLeft="@dimen/dimen_20dp"
             android:layout_marginRight="@dimen/dimen_20dp"
             android:layout_marginTop="@dimen/dimen_20dp"
-            android:prompt="@string/save"
-            android:entries="@array/spinnerItemsExpeneses" />
+            android:entries="@array/spinnerItemsExpeneses"
+            android:prompt="@string/save" />
 
         <LinearLayout
             android:id="@+id/LinearFactura"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <AutoCompleteTextView
                 android:id="@+id/et_nameautoCompleteRuc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_marginLeft="@dimen/dimen_20dp"
                 android:layout_marginRight="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:hint="Ingrese Ruc" />
+                android:focusable="true"
+                android:hint="Ingrese Ruc"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearFactura2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <AutoCompleteTextView
                 android:id="@+id/et_nameautoCompleteRazon"
@@ -58,14 +59,14 @@
                 android:hint="Razón Social" />
         </LinearLayout>
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
             <EditText
                 android:id="@+id/et_num_serie"
@@ -81,25 +82,25 @@
                 android:focusableInTouchMode="false"
                 android:hint="Serie" />
 
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-        <EditText
-            android:id="@+id/et_num_comprob"
-            android:layout_width="190dp"
-            android:enabled="true"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="110dp"
-            android:inputType="number"
-            android:hint="N° Comprobante" />
+                <EditText
+                    android:id="@+id/et_num_comprob"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="110dp"
+                    android:enabled="true"
+                    android:hint="N° Comprobante"
+                    android:inputType="number" />
 
-    </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-</RelativeLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+
 /**
  * Created by kelvi on 10/08/2016.
  */
@@ -210,6 +212,22 @@ public class CajaLiquidacionDetalle extends SugarRecord {
             return CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and pe_Id = ?", new String[]{establecimiento, pedidoId}).get(0);
         }
         return null;
+
+    }
+
+    public static CajaLiquidacionDetalle getLiquidacionDetalleByEstablecAndEstado(String establecimiento) {
+        Log.d("ESTABLECIMIENTOID", establecimiento);
+        CajaLiquidacionDetalle cajaLiquidacionDetalle = null;
+
+        if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ? ", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_ATENDIDO + ""}).size() > 0) {
+            cajaLiquidacionDetalle = CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ?", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_ATENDIDO + ""}).get(0);
+        } else if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ? ", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_NO_ATENDIDO + ""}).size() > 0) {
+            cajaLiquidacionDetalle = CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ?", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_NO_ATENDIDO + ""}).get(0);
+        } else if (CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ? ", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_PENDIENTE + ""}).size() > 0) {
+            cajaLiquidacionDetalle = CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "establecimiento_Id=? and estado_Id = ?", new String[]{establecimiento, Constants.ESTADO_ESTABLECIMIENTO_PENDIENTE + ""}).get(0);
+
+        }
+        return cajaLiquidacionDetalle;
 
     }
 }

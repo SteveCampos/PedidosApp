@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".Application"
@@ -50,11 +51,13 @@
             android:name=".activities.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.PrintFacturaActivity"
@@ -99,12 +102,10 @@
             android:name=".activities.PrintDispatch"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.ResumenPrintActivity"
             android:label="@string/title_activity_print_dispatch"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.CajaGastoActivity"
             android:label="@string/activity_expenses_account"
@@ -163,11 +164,9 @@
         <service
             android:name=".services.ServiceSync"
             android:process=":ServiceSync" />
-
         <service
             android:name=".services.ServiceFirebase"
             android:process=":ServiceFirebase" />
-
         <service
             android:name=".services.ServiceExportMyLocation"
             android:process=":ExportLocation" />
@@ -180,7 +179,6 @@
             android:name=".activities.SellPrintActivity"
             android:label="Imprimir Comprobante"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.BluetoothActivity"
             android:label="Configurar Bluetooth"
@@ -192,12 +190,32 @@
 
         <activity
             android:name=".activities.ModalActivity"
-            android:theme="@style/myDialogActivity"></activity>
+            android:theme="@style/myDialogActivity" />
         <activity
             android:name=".activities.MainConfiguraciones"
             android:label="@string/title_activity_main_configuraciones"
-            android:theme="@style/myDialogActivity"></activity>
-        <activity android:name=".activities.OrdenCargaActivity"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.OrdenCargaActivity" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".pruebamaps"
+            android:label="@string/title_activity_pruebamaps">
+
+
+
+
+        </activity>
     </application>
 
 </manifest>

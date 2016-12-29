@@ -333,7 +333,6 @@ public class ComprobanteVenta extends SugarRecord {
     public static List<ComprobanteVenta> getComprobanteVentas(List<ComprobanteVenta> comprobanteVentaList) {
 
 
-
         List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
 
         for (ComprobanteVenta comprobanteVenta : comprobanteVentaList) {
@@ -349,6 +348,10 @@ public class ComprobanteVenta extends SugarRecord {
     }
 
     public static ComprobanteVenta getComprobanteVentaId(String comprobanteId) {
+
+        for (ComprobanteVenta comprobanteVenta : ComprobanteVenta.listAll(ComprobanteVenta.class)) {
+            Log.d("COMPROBANTEID", "COMP : " + comprobanteVenta.getCompId() + "-" + comprobanteId);
+        }
         return ComprobanteVenta.find(ComprobanteVenta.class, "comp_Id=?", new String[]{comprobanteId}).get(0);
     }
 

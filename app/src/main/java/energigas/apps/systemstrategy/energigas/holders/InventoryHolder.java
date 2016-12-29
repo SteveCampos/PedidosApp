@@ -13,9 +13,17 @@ import energigas.apps.systemstrategy.energigas.R;
  */
 
 public class InventoryHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.textNameProduct) public TextView nameTextView;
+    @BindView(R.id.textNameProduct)
+    public TextView nameTextView;
+    @BindView(R.id.inicio)
+    public TextView inicio;
+    @BindView(R.id.venta)
+    public TextView venta;
+    @BindView(R.id.textfinal)
+    public TextView textFinal;
+
     public InventoryHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

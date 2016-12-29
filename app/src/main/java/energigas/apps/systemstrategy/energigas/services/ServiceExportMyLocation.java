@@ -75,10 +75,16 @@ public class ServiceExportMyLocation extends Service implements OnLocationListen
 
         @Override
         protected String doInBackground(Location... params) {
-            restAPI = new RestAPI();
+          //  restAPI = new RestAPI();
             //jsonObject = restAPI.fins_GuardarCobro();
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            locationVehiculeListener.stopLocationUpdates();
+            super.onPostExecute(s);
         }
     }
 }

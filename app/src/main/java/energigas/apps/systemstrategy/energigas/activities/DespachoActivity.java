@@ -16,6 +16,7 @@ import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
@@ -47,7 +48,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -160,8 +163,6 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @BindView(R.id.editCantidadDespachada)
     EditText editTextCantidadDespachada;
 
-    @BindView(R.id.tanq_destino_orden_sugerencia)
-    TextView textViewOrdenSugerencia;
 
     @BindView(R.id.text_despacho_serie_numero)
     TextView textViewSerieNumero;
@@ -211,6 +212,18 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private static final String TAG = "DespachoActivity";
 
+
+    @BindView(R.id.tanq_destino_capacidad)
+    TextView textViewDestinoCapacidad;
+
+    @BindView(R.id.tanq_destino_programado)
+    TextView textViewDestinoProgramado;
+
+
+    @BindView(R.id.tanq_destino_orden_sugerencia)
+    TextView textViewOrdenSugerencia;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,7 +263,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Cargando...");
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef = mDatabase.child(Constants.FIREBASE_CHILD_NOTIFICACIONES).child(Constants.FIREBASE_CHILD_ATENCION_PEDIDO);
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
         locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(1));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
 
@@ -274,7 +287,33 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         intanceAnimation();
         toolbar();
         setTextField();
+        textCantidadValida();
 
+    }
+
+    private void textCantidadValida() {
+        editTextCantidadDespachada.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 0) {
+                    Double cantidad = Double.parseDouble(s.toString());
+                    if (cantidad > almacen.getCapacidadReal()) {
+                        editTextCantidadDespachada.setText("");
+                        Toast.makeText(DespachoActivity.this, "La Cantidad supera lo programado", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
 
@@ -289,9 +328,10 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     }
 
     private void notificarAtencionPedido() {
-        String id = myRef.push().getKey();
-        Log.d(TAG, "ID: " + id);
-        myRef.child(id).setValue(new FBRegistroPedido(cajaLiquidacion.getLiqId(), cajaLiquidacionDetalle.getLidId(), pedido.getPeId(), Long.parseLong(establecimiento.getEstIEstablecimientoId() + ""), Long.parseLong("45"), Long.parseLong("" + usuario.getUsuIUsuarioId())));
+
+        myRef.child(cajaLiquidacion.getLiqId() + "-" + cajaLiquidacionDetalle.getLidId()).setValue(new NotificacionCajaDetalle(establecimiento.getEstIEstablecimientoId(),
+                Constants.NO_FACTURADO, cajaLiquidacionDetalle.getEstadoId(), cajaLiquidacion.getFechaApertura(), Integer.parseInt(cajaLiquidacion.getLiqId() + ""), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""),
+                cajaLiquidacionDetalle.getOrdenAtencion(), Integer.parseInt(pedido.getId() + ""), cajaLiquidacionDetalle.getPorDespacho(), cajaLiquidacionDetalle.getPorEntrega(), cajaLiquidacionDetalle.getPorFacturado()));
 
         new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
 
@@ -360,6 +400,11 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             cajaLiquidacionDetalle.setEstadoFacId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.save();
         }
+
+        // establecimiento.setEstIEstadoId(Constants.ESTADO_ESTABLECIMIENTO_ATENDIDO);
+        //  establecimiento.save();
+        pedidoDetalle.setEstadoAtencionId(Constants.ESTADO_DESPACHO_ATENDIDO);
+        pedidoDetalle.save();
     }
 
     private void toolbar() {
@@ -395,7 +440,10 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private void setTextField() {
 
-        textViewOrdenSugerencia.setText(": " + getCapacidadSugerencia() + "");
+
+        textViewDestinoCapacidad.setText(Utils.formatDoublePrint(almacen.getCapacidadReal()) + "");
+        textViewDestinoProgramado.setText(Utils.formatDoublePrint(pedidoDetalle.getCantidad()) + "");
+        textViewOrdenSugerencia.setText(": " + Utils.formatDoublePrint(getCapacidadSugerencia()) + "");
 
         textViewSerieNumero.setText(": " + serie.getCompVSerie() + "-" + Utils.completaZeros(getNumeroDespacho(), serie.getParametro()));
         textViewTanque.setText(almacen.getPlaca());
@@ -500,16 +548,16 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             return false;
         }
 
-        if (editTextCantidadDespachada.getText().toString().length() < 0 ||
-                editTextContadorInicial.getText().toString().length() < 0 ||
-                editTextPorcentajeInicial.getText().toString().length() < 0 ||
-                editTextDestinoContadorInicial.getText().toString().length() < 0 ||
-                editTextDestinoPorcentajeInicial.getText().toString().length() < 0 ||
-                editOrigen2CF.getText().toString().length() < 0 ||
-                editOrigen2PF.getText().toString().length() < 0 ||
-                editDestino2CF.getText().toString().length() < 0 ||
-                editDestino2PF.getText().toString().length() < 0) {
-
+        if (TextUtils.isEmpty(editTextCantidadDespachada.getText().toString()) ||
+                TextUtils.isEmpty(editTextContadorInicial.getText().toString()) ||
+                TextUtils.isEmpty(editTextPorcentajeInicial.getText().toString()) ||
+                TextUtils.isEmpty(editTextDestinoContadorInicial.getText().toString()) ||
+                TextUtils.isEmpty(editTextDestinoPorcentajeInicial.getText().toString()) ||
+                TextUtils.isEmpty(editOrigen2CF.getText().toString()) ||
+                TextUtils.isEmpty(editOrigen2PF.getText().toString()) ||
+                TextUtils.isEmpty(editDestino2CF.getText().toString()) ||
+                TextUtils.isEmpty(editDestino2PF.getText().toString())) {
+            Toast.makeText(this, "Por favor obtenga los datos de los tanques", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -875,6 +923,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     public void errorInTransaction(String error) {
         Toast.makeText(DespachoActivity.this, error, Toast.LENGTH_SHORT).show();
         progressDialog.dismiss();
+        locationVehiculeListener.stopLocationUpdates();
     }
 
     @Override

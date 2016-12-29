@@ -62,8 +62,6 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
                 .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
                 .setClassIntent(StationOrderActivity.class)
                 .isIntentEnable();
-        //estado=Estado.find(Estado.class," id_Estado = ?",new String[]{pedidos.get()});
-
 
         adapter = new StationOrdersAdapter(pedidos, getActivity(), this);
         recyclerView.setAdapter(adapter);

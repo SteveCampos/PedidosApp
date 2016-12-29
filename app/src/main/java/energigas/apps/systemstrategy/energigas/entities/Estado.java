@@ -8,7 +8,7 @@ import com.orm.dsl.Unique;
  */
 
 public class Estado extends SugarRecord {
-@Unique
+    @Unique
     private int idEstado;
 
     private String objeto;
@@ -57,5 +57,10 @@ public class Estado extends SugarRecord {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
+    }
+
+
+    public static Estado getEstado(String estadoId) {
+        return Estado.find(Estado.class, "id_Estado=?", new String[]{estadoId}).get(0);
     }
 }

@@ -77,7 +77,6 @@
         app:backgroundTint="@color/colorAccent"
         app:pressedTranslationZ="@dimen/print_translation_z"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior"
         android:src="@drawable/ic_printer_sync_print" />
 
 

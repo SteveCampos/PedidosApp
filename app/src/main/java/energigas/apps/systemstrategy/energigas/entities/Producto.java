@@ -135,6 +135,14 @@ public class Producto extends SugarRecord {
         return Producto.listAll(Producto.class);
     }
 
+    public static Producto getProductoById(String productoId) {
+        List<Producto> producto = Producto.find(Producto.class, "pro_Id=?", new String[]{productoId});
+        if (producto.size() > 0) {
+            return producto.get(0);
+        }
+        return null;
+    }
+
     public static String getNameProducto(String productoId) {
         return Producto.find(Producto.class, "pro_Id=?", new String[]{productoId}).get(0).getNombre();
     }

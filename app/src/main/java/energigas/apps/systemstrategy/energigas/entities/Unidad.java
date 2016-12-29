@@ -9,7 +9,7 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Unidad extends SugarRecord{
+public class Unidad extends SugarRecord {
     @Unique
     private int unId;
 
@@ -61,7 +61,19 @@ public class Unidad extends SugarRecord{
         this.estado = estado;
     }
 
-    public static List<Unidad> getAllUnidad(){
-        return Unidad.find(Unidad.class,"estado = ?",new String[]{"1"});
+    public static List<Unidad> getAllUnidad() {
+        return Unidad.find(Unidad.class, "estado = ?", new String[]{"1"});
+    }
+
+    public static Unidad getUnidadProducto(String productoId) {
+
+        ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, "pro_Id=?", new String[]{productoId}).get(0);
+        return Unidad.find(Unidad.class, "un_Id = ?", new String[]{productoUnidad.getUnId() + ""}).get(0);
+    }
+
+    public static Unidad getUnidadProductobyUnidadMedidaId(String unidadMedidaId) {
+
+
+        return Unidad.find(Unidad.class, "un_Id = ?", new String[]{unidadMedidaId+ ""}).get(0);
     }
 }

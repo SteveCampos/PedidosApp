@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.holders.DespachoHolder;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by Steve on 11/08/2016.
@@ -40,15 +42,15 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
     @Override
     public void onBindViewHolder(DespachoHolder holder, int position) {
 
-        final  Despacho despacho = list.get(position);
-        holder.title.setText(despacho.getSerie()+"-"+despacho.getNumero());
-        holder.quantity.setText(despacho.getCantidadDespachada()+"");
+        final Despacho despacho = list.get(position);
+        Almacen almacen = Almacen.getAlmacenById(despacho.getAlmacenEstId() + "");
+        holder.title.setText(despacho.getSerie() + "-" + despacho.getNumero());
+        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + "");
         holder.information.setText(
-                "Despachado: " + despacho.getCantidadDespachada() + "\n\n" +
-                "Inicial: "+ despacho.getContadorInicialOrigen()+ "\n" +
-                "Final: " + despacho.getContadorFinalOrigen()+ "\n" +
-                "% Inicial: " + despacho.getpITOrigen() + "\n" +
-                "% Final: " + despacho.getpFTOrigen()+"\n"
+                "Tanque: " + almacen.getNombre() + "\n" +
+                        "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialOrigen()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalOrigen()) + "\n" +
+                        "P. Inicial: " + despacho.getpITOrigen() + " - " + "P. Final: " + despacho.getpFTOrigen() + "\n" +
+                        "Hora de despacho: " + despacho.getHoraFin() + "\n"
         );
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +67,7 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
         return list.size();
     }
 
-    public interface  OnDespachoClickListener{
+    public interface OnDespachoClickListener {
         void onDespachoClickListener(Despacho despacho, View view);
     }
 }

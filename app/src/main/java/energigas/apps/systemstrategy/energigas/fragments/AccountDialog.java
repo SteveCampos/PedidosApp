@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
@@ -31,6 +40,7 @@ import energigas.apps.systemstrategy.energigas.asyntask.AsyntaskOpenAccount;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 8/08/2016.
@@ -58,6 +68,9 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     Usuario usuario;
     private LocationVehiculeListener locationVehiculeListener;
     private Location location;
+    private AccountDialog.ListenerOpenAccount listener;
+    private DatabaseReference mDatabase;
+    private DatabaseReference myRef;
 
     public AccountDialog setFloating(FloatingActionButton fab) {
         this.fab = fab;
@@ -74,6 +87,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         setCancelable(false);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
         locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         return dialog;
     }
@@ -84,6 +99,28 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         ButterKnife.bind(this, rootView);
         btnOk.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+        editTextPI.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 0) {
+                    Double aDouble = Double.parseDouble(s.toString());
+                    if (aDouble > 100) {
+                        Toast.makeText(getActivity(), "Porcentaje invalido", Toast.LENGTH_SHORT).show();
+                        editTextPI.setText("");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return rootView;
     }
 
@@ -94,8 +131,8 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
                 saveIsAvibleData();
                 break;
             case R.id.btn_cancel:
-                List<CajaLiquidacion> cajaLiquidacion = CajaLiquidacion.listAll(CajaLiquidacion.class);
-                if (cajaLiquidacion.size() <= 0) {
+                List<CajaLiquidacion> cajaLiquidacions = CajaLiquidacion.find(CajaLiquidacion.class, "estado_Id=?", new String[]{Constants.CAJA_ABIERTA + ""});
+                if (cajaLiquidacions.size() <= 0) {
                     Toast.makeText(getActivity(), "Es necesario abrir caja", Toast.LENGTH_SHORT).show();
                 } else {
                     dismiss();
@@ -155,6 +192,27 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         new AsyntaskOpenAccount(this).execute(stringLiquidacion);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof EstablecimientoFragment.OnEstablecimientoClickListener) {
+            listener = (AccountDialog.ListenerOpenAccount) context;
+        } else {
+            throw new RuntimeException(context.toString() +
+                    " must implement OnEstablecimientoClickListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    public interface ListenerOpenAccount {
+        void onSuccessOpenAccount();
+    }
+
 
     @Override
     public void onLoadSuccess(String message, CajaLiquidacion cajaLiquidacion) {
@@ -164,12 +222,36 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         setMessage(message);
         Session.saveCajaLiquidacion(getActivity(), cajaLiquidacion);
         fab.hide();
+        for (CajaLiquidacionDetalle liquidacionDetalle : cajaLiquidacion.getItemsLiquidacion()) {
+            NotificacionCajaDetalle notificacionCajaDetalle = new NotificacionCajaDetalle(
+                    liquidacionDetalle.getEstablecimientoId(),
+                    Constants.NO_FACTURADO,
+                    liquidacionDetalle.getEstadoId(),
+                    Utils.getDatePhone(),
+                    Integer.parseInt(cajaLiquidacion.getLiqId() + ""),
+                    Integer.parseInt(liquidacionDetalle.getLidId() + ""),
+                    liquidacionDetalle.getOrdenAtencion(),
+                    Integer.parseInt(liquidacionDetalle.getPeId() + ""),
+                    0.00,
+                    0.00,
+                    0.00
+            );
+            myRef.child(cajaLiquidacion.getLiqId() + "-" + liquidacionDetalle.getLidId()).setValue(notificacionCajaDetalle, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                   // Log.d("FIREBASE_CREATE", " ERROR: " + databaseError.getMessage() + "");
+                   // Log.d("FIREBASE_CREATE", databaseReference.getKey());
+                }
+            });
+        }
+        listener.onSuccessOpenAccount();
+        dismiss();
     }
 
     @Override
     public void onLoadError(String message) {
         hideAnimationProgress();
-
+        locationVehiculeListener.stopLocationUpdates();
     }
 
     @Override

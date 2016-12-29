@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardPreventCornerOverlap="false"
-    card_view:cardUseCompatPadding="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,38 +20,44 @@
             android:id="@+id/linear_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_toStartOf="@+id/text_cv_total"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txt_factura"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="F001 - 00000124"
-                style="@style/TextAppearance.AppCompat.Title"
-                />
+                android:text="F001 - 00000124" />
+
+            <TextView
+                android:id="@+id/textHorario"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="GLP, 500 Gal\nGNV, 300 Gal" />
+
             <TextView
                 android:id="@+id/text_cv_details"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="GLP, 500 Gal\nGNV, 300 Gal"
-                style="@style/TextAppearance.AppCompat.Body1"
-                />
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="GLP, 500 Gal\nGNV, 300 Gal" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/text_cv_total"
+            style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="S/. 1180.00"
-            android:layout_alignParentEnd="true"
-            style="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorAccent"
             android:layout_alignBottom="@+id/linear_container"
+            android:layout_alignParentEnd="true"
             android:gravity="right"
-            />
+            android:text="S/. 1180.00"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/dimen_20dp" />
     </RelativeLayout>
 
 

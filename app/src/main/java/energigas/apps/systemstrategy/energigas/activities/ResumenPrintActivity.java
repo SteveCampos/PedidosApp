@@ -112,6 +112,18 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     @BindView(R.id.tablayoutGastos)
     TableLayout tableLayoutGastos;
 
+    @BindView(R.id.textDescripcion)
+    TextView textViewInvetarioDescripcion;
+
+    @BindView(R.id.textInicio)
+    TextView textViewInvetarioInicio;
+
+    @BindView(R.id.textVenta)
+    TextView textViewInvetarioVenta;
+
+    @BindView(R.id.textFinal)
+    TextView textViewInvetarioFinal;
+
 
     private static final String TAG = "SellPrintActivity";
     /**
@@ -123,7 +135,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     private CajaLiquidacion cajaLiquidacion;
     private Usuario usuario;
     private Summary summary;
-    private List<Inventory> inventoryList;
+    private Inventory inventoryList;
 
 
     @Override
@@ -132,7 +144,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.layout_print_resumen);
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
-        inventoryList = Inventory.getInventoryList(this);
+        inventoryList = Inventory.getInventoryList(this).get(0);
         res = getResources();
         usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
@@ -154,11 +166,21 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         setDetalleResumen();
         setIngresos();
         setCostos();
-
+        setTextInventario();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void setTextInventario() {
+        textViewInvetarioDescripcion.setText("" + inventoryList.getNombre());
+
+        textViewInvetarioInicio.setText("" + inventoryList.getCantidadInicial());
+
+        textViewInvetarioVenta.setText("" + inventoryList.getCantidadVendida());
+
+        textViewInvetarioFinal.setText("" + inventoryList.getCantidadFinal());
     }
 
 
@@ -177,7 +199,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
     private void setDetalleResumen() {
 
 
-        String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen), summary.getSaldoInicial() + "", summary.getIngresosTotales() + "", "" + summary.getIngresosTotales(), "" + summary.getGastos(), summary.getEfectivoRendir() + "");
+        String stringdetallle = String.format(res.getString(R.string.print_factura_detalle_resumen),Utils.formatDoublePrint(summary.getSaldoInicial()) + "",Utils.formatDoublePrint( summary.getIngresosTotales()) + "", "" +Utils.formatDoublePrint( summary.getIngresosTotales()), "" +Utils.formatDoublePrint( summary.getGastos()),Utils.formatDoublePrint( summary.getEfectivoRendir()) + "");
         textViewDetalleResumen.setText(stringdetallle);
 
 
@@ -429,6 +451,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
         tableLayoutGastos.addView(tableRow3, sumaCountGastos + 1);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -501,7 +524,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printResumen(cajaLiquidacion, usuario, summary);
+                printDispatch.printResumen(cajaLiquidacion, usuario, summary,inventoryList);
                 floatingActionButton.setImageResource(R.drawable.ic_printer_sync_ok);
                 floatingActionButton.startAnimation(rotate_backward);
                 floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ResumenPrintActivity.this, R.color.greem_background_item)));

@@ -66,6 +66,12 @@ public class Utils {
         return String.format(Locale.ENGLISH, "%.2f", d);
     }
 
+    public static String formatDoublePrint(Double d) {
+
+        DecimalFormat formatea = new DecimalFormat("###,###.00");
+        return formatea.format(d);
+    }
+
     public static Double formatDoubleNumber(Double d) {
         Double aDouble = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", d));
         return aDouble;

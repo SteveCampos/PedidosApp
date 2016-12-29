@@ -10,6 +10,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import energigas.apps.systemstrategy.energigas.fragments.StationOrderFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class StationOrderActivity extends AppCompatActivity implements IntentListenerAccess {
 
@@ -44,6 +48,9 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     TabLayout tabLayout;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+
+    @BindView(R.id.tv_description)
+    TextView textViewFechaDescripcion;
     private Usuario usuario;
 
     private Pedido pedido;
@@ -52,6 +59,7 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //
         setContentView(R.layout.activity_station_order);
         pedido = Pedido.find(Pedido.class, " pe_Id = ?  ", new String[]{Session.getPedido(this).getPeId() + ""}).get(0);
         usuario = Session.getSession(this);
@@ -83,7 +91,6 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     public void onIntentListenerAcces(HashMap<String, Boolean> booleanHashMap) {
 
 
-
     }
 
     @Override
@@ -103,6 +110,7 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
         setToolbar();
         setTabsAdapterFragment();
         viewpager.setCurrentItem(0);
+        textViewFechaDescripcion.setText(Utils.getDateDescription(pedido.getFechaEntregaProgramada()));
     }
 
     private void setToolbar() {

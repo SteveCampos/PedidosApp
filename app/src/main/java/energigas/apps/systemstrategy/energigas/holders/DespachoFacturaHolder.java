@@ -15,12 +15,15 @@ import energigas.apps.systemstrategy.energigas.R;
 public class DespachoFacturaHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textDespachoNro)
     public TextView textDespachoNro;
-    @BindView(R.id.textSerieNumero)
-    public TextView textSerieNumero;
+    @BindView(R.id.textProducto)
+    public TextView textProducto;
     @BindView(R.id.textCantidad)
     public TextView textCantidad;
+    @BindView(R.id.textUnidadMedida)
+    public TextView textViewUnidadMedida;
+
     public DespachoFacturaHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 }
