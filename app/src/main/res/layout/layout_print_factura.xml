@@ -51,6 +51,7 @@
                     android:background="@drawable/border_bottom"
                     android:gravity="left"
                     android:paddingBottom="4dp"
+
                     android:text="@string/print_factura_header" />
 
                 <LinearLayout
@@ -60,7 +61,7 @@
                     android:background="@drawable/border_bottom"
                     android:gravity="right"
                     android:orientation="horizontal"
-                    android:paddingBottom="2dp">
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"

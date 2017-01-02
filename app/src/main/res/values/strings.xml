@@ -76,36 +76,87 @@
         " %5$s \n\n"
     </string>
 
-      <string name="print_info_despacho">
+    <!--<string name="print_info_despacho">-->
+    <!--"INSTALACION: %1$s \n"-->
+    <!--"COORDENADAS: %2$s \n"-->
+    <!--"PLACA: %3$s \n"-->
+    <!--"AGENTE DE VENTA: %4$s \n "-->
+    <!--"CLIENTE: %17$s \n "-->
+    <!--"NUMERO DE COMPROBANTE: %5$s \n \n "-->
+    <!--"******************      DESPACHO      **************** \n \n"-->
+    <!--"FECHA: %6$s \n"-->
+    <!--"HORA INICIO: %7$s \n"-->
+    <!--"HORA FIN: %8$s \n"-->
+    <!--"CONTADOR INICIAL: %9$s \n"-->
+    <!--"CONTADOR FINAL: %10$s \n"-->
+    <!--"CANTIDAD DESPACHADA: %11$s \n"-->
+    <!--"\n "-->
+    <!--"PORCENTAJE INICIAL TANQUE: %12$s \n"-->
+    <!--"PORCENTAJE FINAL TANQUE: %13$s \n"-->
+    <!--"SERIE TANQUE: %14$s \n"-->
+    <!--"NUMERO DE TRANSPORTE: %15$s \n \n"-->
+    <!--" &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; \n"-->
+    <!--"RECIBIDO POR:\n"-->
+    <!--"NOMBRE: ________________________________ \n \n"-->
+    <!--"DNI:  __________________________________\n \n"-->
+    <!--"FIRMA POR: _____________________________ \n \n"-->
+    <!--"**      Documento sin valor tributario      ** \n"-->
+    <!--"**      Consulte este documento en       *** \n \n"-->
+    <!--"               %16$s          \n \n"-->
+    <!--</string>-->
+
+    <string name="print_info_despacho">
         "INSTALACION: %1$s \n"
         "COORDENADAS: %2$s \n"
         "PLACA: %3$s \n"
         "AGENTE DE VENTA: %4$s \n "
-        "CLIENTE: %17$s \n "
-        "NUMERO DE COMPROBANTE: %5$s \n \n "
-        "******************      DESPACHO      **************** \n \n"
-        "FECHA: %6$s \n"
-        "HORA INICIO: %7$s \n"
-        "HORA FIN: %8$s \n"
-        "CONTADOR INICIAL: %9$s \n"
-        "CONTADOR FINAL: %10$s \n"
-        "CANTIDAD DESPACHADA: %11$s \n"
-        "\n "
-        "PORCENTAJE INICIAL TANQUE: %12$s \n"
-        "PORCENTAJE FINAL TANQUE: %13$s \n"
-        "SERIE TANQUE: %14$s \n"
-        "NUMERO DE TRANSPORTE: %15$s \n \n"
-        " -------------------------- \n"
-        "RECIBIDO POR:\n"
-        "NOMBRE: ________________________________ \n \n"
-        "DNI:  __________________________________\n \n"
-        "FIRMA POR: _____________________________ \n \n"
-        "**      Documento sin valor tributario      ** \n"
-        "**      Consulte este documento en       *** \n \n"
-        "               %16$s          \n \n"
+        "CLIENTE: %5$s \n "
+        "NUMERO DE COMPROBANTE: %6$s \n \n "
+    </string>
+    <string name="print_info_dispatch_body1">
+      "FECHA\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "HORA INICIO\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "HORA FIN\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "CONTADOR INICIAL\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "CONTADOR FINAL\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "CANTIDAD DESPACHADA\t\t\t\t\t\t\t\t\t:\n"
+
+    </string>
+     <string name="print_resp_dispatch_body1">
+          " %1$s \n"
+          " %2$s \n"
+          " %3$s \n"
+          " %4$s \n"
+          " %5$s \n"
+          " %6$s \n"
+    </string>
+
+   <string name="print_info_dispatch_feet1">
+          "RECIBIDO POR:\n\n"
+       "NOMBRE\t\t\t: ________________________________ \n \n"
+       "DNI\t\t\t\t\t\t\t:\t_______________________________\n \n"
+       "FIRMA POR\t\t: ________________________________ \n \n"
     </string>
 
 
+   <string name="print_info_dispatch_feet2">
+       "          Documento sin valor tributario       \n"
+       "          Consulte este documento en        \n"
+       "           www.energigas.com          \n \n"
+    </string>
+
+      <string name="print_info_dispatch_body2">
+        " PORCENTAJE INICIAL TANQUE\t\t\t\t\t\t:\n"
+        "PORCENTAJE FINAL TANQUE\t\t\t\t\t\t\t:\n"
+        "SERIE TANQUE\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "NUMERO DE TRANSPORTE\t\t\t\t\t\t\t\t:\n"
+    </string>
+       <string name="print_resp_dispatch_body2">
+          " %1$s \n"
+          " %2$s \n"
+          " %3$s \n"
+          " %4$s \n"
+    </string>
 
 
 
@@ -125,8 +176,8 @@
 
 
     <string name="print_factura_header">
-        "NUMERO   : %1$s \n"
-        "FECHA    : %2$s \n"
+        " NUMERO  : %1$s \n"
+        "FECHA     : %2$s \n"
         "CLIENTE  : %3$s \n"
         "DNI/RUC  : %4$s \n"
         "DIRECCION: %5$s "
@@ -161,7 +212,7 @@
 
     <string name="print_factura_items">
         " %1$s \n"
-        "OP. GRAVADA\t\t\tS/.\n"
+        "OP. GRAVADA\t\t\t\tS/.\n"
         "OP. INAFECTA\t\t\tS/.\n"
         "OP. EXONERADA\t\tS/.\n"
         "OP. GRATUITA\t\t\tS/.\n"
@@ -422,6 +473,20 @@
         "Visualize este documento en .\n"
         "www.energigas.com"
     </string>
+
+    <!-- PRINT DISPATCH -->
+    <string name="print_dispatch_body3">
+        " %1$s \n"
+        "OP. GRAVADA\t\t\tS/.\n"
+        "OP. INAFECTA\t\t\tS/.\n"
+        "OP. EXONERADA\t\tS/.\n"
+        "OP. GRATUITA\t\t\tS/.\n"
+        "DESCUENTOS\t\t\tS/.\n"
+        "I.G.V.\t\t\t\t\t\t\t\t\tS/.\n\n"
+        "PRECIO VENTA\t\t\tS/.\n"
+    </string>
+
+    <!--Fin DISPATCH-->
 
     <string name="header_energigas">
         "Razon Social: %1$s.\n"

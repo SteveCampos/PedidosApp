@@ -75,7 +75,7 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
         GradientDrawable bgShape = (GradientDrawable) holder.buttonIndice.getBackground();
         bgShape.setColor(Color.BLACK);
-        holder.buttonIndice.setText(cajaLiquidacionDetalle.getOrden());
+        holder.buttonIndice.setText(cajaLiquidacionDetalle.getOrden()+"");
         GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
         Log.d(TAG, "GeoUbicacion: " + geoUbicacion);
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.
