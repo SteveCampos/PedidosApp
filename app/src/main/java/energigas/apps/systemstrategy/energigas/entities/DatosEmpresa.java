@@ -18,11 +18,11 @@ public class DatosEmpresa {
         UbicacionGeoreferencia georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(deEntidad.getDistritoId() + "");
         UbicacionGeoreferencia georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
         UbicacionGeoreferencia georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
-        setEntidad(entidad);
+        setEntidad(deEntidad);
         setDistrito(georeferencia.getDescripcion());
         setProvincia(georeferenciaProvincia.getDescripcion());
         setDepartamento(georeferenciaDepartamento.getDescripcion());
-        setUrl("www.energigas.com");
+        setUrl(deEntidad.getSite());
     }
 
     public DatosEmpresa(DEEntidad entidad, String distrito, String provincia, String departamento, String url) {

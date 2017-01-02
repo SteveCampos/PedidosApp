@@ -29,166 +29,242 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
 
+        <HorizontalScrollView
+            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/dimen_15dp">
+                android:layout_height="120dp"
+                android:orientation="horizontal">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1">
+                    android:layout_height="match_parent"
+                    android:paddingTop="@dimen/dimen_15dp">
 
-
-                    <ImageView
-                        android:id="@+id/imgIndicador1"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/dimen_20dp"
-                        android:src="@drawable/ic_refresh" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/textIndicador1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center"
-                        android:text="12%"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal|top"
-                        android:text="Eficacia Venta"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold" />
-                </FrameLayout>
+                        <ImageView
+                            android:id="@+id/indicadorLogoMeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/ic_refresh" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1">
+                        <TextView
+                                android:id="@+id/textLogroMeta"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="12%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/imgIndicador2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/dimen_20dp"
-                        android:src="@drawable/octagon_shape" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Logro Meta"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/textIndicador2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center"
-                        android:text="60%"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal|top"
-                        android:text="Optimizacion Flota"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold" />
-                </FrameLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/imgIndicador3"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/dimen_20dp"
-                        android:src="@drawable/circular_shape" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/textIndicador3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center"
-                        android:text="74%"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal|top"
-                        android:text="Eficacia Atencion"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold" />
-                </FrameLayout>
+                        <ImageView
+                            android:id="@+id/imgIndicador1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/ic_refresh" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1">
+                        <TextView
+                            android:id="@+id/textIndicador1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="12%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/imgIndicador4"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Eficacia Venta"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/dimen_20dp"
-                        android:src="@drawable/ic_star_shape" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/textIndicador4"
+                        <ImageView
+                            android:id="@+id/imgIndicador2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/octagon_shape" />
+
+                        <TextView
+                            android:id="@+id/textIndicador2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="60%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Optimizacion Flota"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center"
-                        android:text="63%"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
+                        <ImageView
+                            android:id="@+id/imgIndicador3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/circular_shape" />
+
+                        <TextView
+                            android:id="@+id/textIndicador3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="74%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Eficacia Atencion"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal|top"
-                        android:text="Demanda Insatisfecha"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold" />
-                </FrameLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
-            </LinearLayout>
+                        <ImageView
+                            android:id="@+id/imgIndicador4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/ic_star_shape" />
+
+                        <TextView
+                            android:id="@+id/textIndicador4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="63%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Demanda Insatisfecha"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
 
 
-        </android.support.v7.widget.CardView>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1">
 
+                        <ImageView
+                            android:id="@+id/indicadorEficienciaVenta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_20dp"
+                            android:src="@drawable/ic_star_shape" />
+
+                        <TextView
+                            android:id="@+id/textIndicadorEficiencia"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center"
+                            android:text="63%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|top"
+                            android:text="Demanda Insatisfecha"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+        </HorizontalScrollView>
 
 
         <LinearLayout
-            android:visibility="gone"
-            android:padding="@dimen/dimen_5dp"
-            android:fillViewport="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
+            android:fillViewport="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_5dp"
+            android:visibility="gone">
 
 
             <LinearLayout
@@ -217,33 +293,33 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Eficacia \n venta"
-                    android:textSize="10dp"
-                    android:id="@+id/textView6" />
+                    android:textSize="10dp" />
 
                 <TextView
-                    android:layout_marginLeft="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center"
                     android:text="Capacidad \n Unidad"
                     android:textSize="10dp" />
 
                 <TextView
-                    android:layout_marginLeft="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center"
                     android:text="Eficacia \n Atencion"
                     android:textSize="10dp" />
 
                 <TextView
-                    android:layout_marginLeft="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center"
                     android:text="Demanda\ninsatisfecha"
                     android:textSize="10dp" />

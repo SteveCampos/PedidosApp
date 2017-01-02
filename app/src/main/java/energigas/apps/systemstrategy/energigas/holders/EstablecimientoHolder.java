@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.holders;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ public class EstablecimientoHolder extends RecyclerView.ViewHolder {
     public ImageView imageView2;
     @BindView(R.id.textAtendido)
     public TextView textAtendido;
+    @BindView(R.id.indiceIcon)
+    public Button buttonIndice;
 
     public EstablecimientoHolder(View itemView) {
         super(itemView);

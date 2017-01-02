@@ -9,6 +9,10 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
  */
 
 public class Constants {
+
+
+    public static final String ACTION_EXPORT_SERVICE = "ACTION_EXPORT_SERVICE";
+
     public static final String _CLMEXPORT = "CLMEXPORT";
 
     public static final String URL_FOR_PING = "www.google.com";
@@ -40,6 +44,11 @@ public class Constants {
     public static final int CURRENT = 0;
 
     public static final int CAJA_ABIERTA = 31;
+
+
+
+    public static final String USUARIO_IMAGEN = "USUARIO_IMAGEN";
+    public static final String USUARIO_IMAGEN_PROFILE = "USUARIO_IMAGEN_PROFILE";
 
 
     /**

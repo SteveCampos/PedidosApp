@@ -3,11 +3,17 @@ package energigas.apps.systemstrategy.energigas.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -34,6 +40,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +65,8 @@ import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Rol;
@@ -66,6 +86,7 @@ import energigas.apps.systemstrategy.energigas.services.ServiceFirebase;
 import energigas.apps.systemstrategy.energigas.services.ServiceSync;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.ImageUtils;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -77,6 +98,7 @@ public class MainActivity extends AppCompatActivity
     //OrdersFragment.OnOrdersClickListener
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int RESULT_LOAD_IMG = 5;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -128,7 +150,9 @@ public class MainActivity extends AppCompatActivity
     private Usuario usuario;
     private HashMap<String, Boolean> booleanHashMap;
     private List<AccessFragment> accessFragments;
+    SimpleDraweeView draweeViewPerfil;
 
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +169,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         validaExistencia();
+
 
         if (hideFloatingButton()) {
 
@@ -168,9 +193,76 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        initHeaderViewNavigation();
+        if (Session.getImageUsuario(this) != null) {
+            draweeViewPerfil.setImageURI(Session.getImageUsuario(this));
+        }
+
+
+    }
+
+    private void initHeaderViewNavigation() {
+        DEEntidad deEntidad = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "").getEntidad();
+        DatosEmpresa datosEmpresa = new DatosEmpresa(deEntidad);
+        View view = navigationView.getHeaderView(0);
+        draweeViewPerfil = (SimpleDraweeView) view.findViewById(R.id.imgPerfil);
+        imageView = (ImageView) view.findViewById(R.id.imageView2);
+        TextView textViewInfoEmpresa = (TextView) view.findViewById(R.id.textInforEmpresa);
+        TextView textNombreAgente = (TextView) view.findViewById(R.id.textNombreAgente);
+        TextView textCorreoAgente = (TextView) view.findViewById(R.id.textCorreoAgente);
+
+        String informacionEmpre = String.format(getResources().getString(R.string.header_energigas), datosEmpresa.getEntidad().getRazonSocial(), datosEmpresa.getEntidad().getrUC(), datosEmpresa.getEntidad().getDireccionFiscal());
+        textViewInfoEmpresa.setText(informacionEmpre);
+        textNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
+        textCorreoAgente.setText(usuario.getPersona().getPerVEmail());
+        draweeViewPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadImagefromGallery(v);
+            }
+        });
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            // When an Image is picked
+            if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
+                    && null != data) {
+                // Get the Image from data
+                Uri selectedImage = data.getData();
+
+
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.inSampleSize = 4;
+                //  Bitmap bitmap = BitmapFactory.decodeFile(selectedImage.getPath(), opts);
+
+                Session.guardarImagenUsuario(selectedImage, getApplicationContext());
+                draweeViewPerfil.setImageURI(selectedImage);
+                // draweeViewPerfil.setImageBitmap(bitmap);
+                // imageView.setImageBitmap(ImageUtils.decodeSampledBitmapFromResource(selectedImage.getPath(), 100, 100));
+
+
+            } else {
+                Toast.makeText(MainActivity.this, "No ha seleccionado niguna imagen",
+                        Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Log.d("ERRORIMAGEN", e.getMessage());
+            Toast.makeText(MainActivity.this, "Vuelva a intentarlo", Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    public void loadImagefromGallery(View view) {
+        // Create intent to Open Image applications like Gallery, Google Photos
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // Start the Intent
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+    }
 
 
     private void initProfileAgente() {

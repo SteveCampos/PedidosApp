@@ -1,6 +1,8 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,6 +73,9 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         Pedido pedido = Pedido.getPedido(establecimiento.getEstIEstablecimientoId() + "");
         holder.textAtendido.setText(estado.getDescripcion());
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
+        GradientDrawable bgShape = (GradientDrawable) holder.buttonIndice.getBackground();
+        bgShape.setColor(Color.BLACK);
+        holder.buttonIndice.setText(cajaLiquidacionDetalle.getOrden());
         GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
         Log.d(TAG, "GeoUbicacion: " + geoUbicacion);
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.

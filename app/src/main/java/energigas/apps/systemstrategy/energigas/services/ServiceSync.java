@@ -30,9 +30,9 @@ public class ServiceSync extends Service implements ExportObjectsListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new ExportTask(this, this).execute(Constants.EXPORTAR_TODO, Constants.S_CREADO);
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
 

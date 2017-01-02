@@ -8,6 +8,7 @@ import android.util.Log;
 import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.services.SyncData;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
@@ -22,8 +23,9 @@ public class ScreenReceiver extends BroadcastReceiver implements ExportObjectsLi
             Log.v("KELVINLOCK", "In Method:  ACTION_SCREEN_OFF");
             // onPause() will be called.
 
-            new ExportTask(this, context).execute(Constants.EXPORTAR_TODO, Constants.S_CREADO);
-            new AtencionesAsyntask().execute();
+            Intent intentExportService = new Intent(context, SyncData.class);
+            intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+            context.startService(intentExportService);
 
 
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {

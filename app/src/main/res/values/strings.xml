@@ -423,6 +423,12 @@
         "www.energigas.com"
     </string>
 
+    <string name="header_energigas">
+        "Razon Social: %1$s.\n"
+        "R.U.C: %2$s.\n"
+        " %3$s "
+    </string>
+
 
     <string name="main_dialog_title_close">Cerrar caja</string>
     <string name="main_dialog_text_km_end">Kilometraje Final</string>

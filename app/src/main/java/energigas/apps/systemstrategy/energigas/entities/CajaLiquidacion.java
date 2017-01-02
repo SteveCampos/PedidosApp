@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
@@ -500,12 +502,16 @@ public class CajaLiquidacion extends SugarRecord {
     }
 
     public static CajaLiquidacion getCajaLiquidacion(String liquidacionId) {
+
+
         Boolean aBoolean = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).size() > 0;
+        Log.d("FINENTODAD", "" + aBoolean + "-" + liquidacionId);
         if (aBoolean) {
             CajaLiquidacion cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).get(Constants.CURRENT);
             DEEntidad deEntidad = DEEntidad.getEntidadById(cajaLiquidacion.getEntidadId() + "");
             deEntidad.setCertificado(CertificadoDigital.find(CertificadoDigital.class, "entidad_Id=?", new String[]{deEntidad.getEntidadId() + ""}).get(0));
             cajaLiquidacion.setEntidad(deEntidad);
+            Log.d("FINENTODAD", "ENTIDAD: " + deEntidad.getrUC());
             return cajaLiquidacion;
         }
         return null;

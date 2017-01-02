@@ -135,10 +135,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         }
 
         DEEntidad deEntidad = CajaLiquidacion.getEntidad();
-        UbicacionGeoreferencia georeferencia = UbicacionGeoreferencia.getUbicacionGeoreferencia(deEntidad.getDistritoId() + "");
-        UbicacionGeoreferencia georeferenciaProvincia = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferencia.getParentId() + "");
-        UbicacionGeoreferencia georeferenciaDepartamento = UbicacionGeoreferencia.getUbicacionGeoreferencia(georeferenciaProvincia.getParentId() + "");
-        datosEmpresa = new DatosEmpresa(deEntidad, georeferencia.getDescripcion(), georeferenciaProvincia.getDescripcion(), georeferenciaDepartamento.getDescripcion(), "www.energigas.com");
+
+        datosEmpresa = new DatosEmpresa(deEntidad);
 
         viewTextCabecera();
         viewTextInfoDespacho();
@@ -233,7 +231,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente,datosEmpresa);
+                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa);
 
                 break;
             case R.id.fabDisconec:

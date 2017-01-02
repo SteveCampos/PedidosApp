@@ -2,6 +2,7 @@ package energigas.apps.systemstrategy.energigas.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -136,6 +137,18 @@ public class Session {
         }
 
 
+    }
+
+    public static void guardarImagenUsuario(Uri uri, Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.USUARIO_IMAGEN, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.USUARIO_IMAGEN_PROFILE, uri.toString());
+        editor.commit();
+    }
+
+    public static Uri getImageUsuario(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.USUARIO_IMAGEN, Context.MODE_PRIVATE);
+        String sUri = prefs.getString(Constants.USUARIO_IMAGEN_PROFILE, "");
+        return Uri.parse(sUri);
     }
 
 

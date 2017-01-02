@@ -1,114 +1,116 @@
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true">
+        android:padding="8dp">
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/estable_default_description"
+            android:src="@drawable/ic_gas_station_c" />
+
+        <Button
+            android:id="@+id/indiceIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/circular_atencion"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="8dp" />
 
         <RelativeLayout
+            android:id="@+id/idLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/imageView2"
+            android:layout_toRightOf="@id/imageView2"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/estable_default_description"
-                android:src="@drawable/ic_gas_station_c"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="4dp" />
-
-            <RelativeLayout
-                android:id="@+id/idLinear"
+            <TextView
+                android:id="@+id/txtnombre"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/imageView2"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/imageView2">
+                android:layout_toStartOf="@+id/txtpoints"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/estable_default_name"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/txtnombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/estable_default_name"
-                    style="@style/TextAppearance.AppCompat.Title"
-                    android:textSize="16sp"
-                    android:layout_toStartOf="@+id/txtpoints"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    />
-
-                <TextView
-                    android:id="@+id/txtdireccion"
-                    android:layout_below="@+id/txtnombre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/estable_default_address"
-                    android:padding="2dp"
-                    style="@style/TextAppearance.AppCompat.Small"
-                    />
+            <TextView
+                android:id="@+id/txtdireccion"
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtnombre"
+                android:padding="2dp"
+                android:text="@string/estable_default_address" />
 
 
-                <TextView
-                    android:id="@+id/txtubicacion"
-                    android:layout_below="@+id/txtdireccion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/estable_default_marker"
-                    android:textSize="@dimen/dimen_12dp"
-                    android:textAppearance="@style/TextViewSmall"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:textStyle="italic|bold"
-                    android:drawableLeft="@drawable/ic_reloj" />
+            <TextView
+                android:id="@+id/txtubicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtdireccion"
+                android:drawableLeft="@drawable/ic_reloj"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/estable_default_marker"
+                android:textAppearance="@style/TextViewSmall"
+                android:textSize="@dimen/dimen_12dp"
+                android:textStyle="italic|bold" />
 
 
-                <TextView
-                    android:id="@+id/textAtendido"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ATENDIDO"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignBottom="@+id/txtubicacion"
-                    style="@style/TextAppearance.AppCompat.Caption"
-                    android:textColor="@color/md_light_green_400"
-                    />
+            <TextView
+                android:id="@+id/textAtendido"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/txtubicacion"
+                android:layout_alignParentRight="true"
+                android:text="ATENDIDO"
+                android:textColor="@color/md_light_green_400" />
 
 
-                <TextView
-                    android:id="@+id/txtpoints"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5"
-                    android:drawablePadding="8dp"
-                    android:textAppearance="@style/TextViewSmall"
-                    android:drawableStart="@drawable/ic_star"
-                    android:gravity="center"
-                    android:layout_alignParentEnd="true"
-                    android:drawableLeft="@drawable/ic_star"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-
-
-
-
+            <TextView
+                android:id="@+id/txtpoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/ic_star"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_star"
+                android:gravity="center"
+                android:text="5"
+                android:textAppearance="@style/TextViewSmall" />
 
         </RelativeLayout>
 
 
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
