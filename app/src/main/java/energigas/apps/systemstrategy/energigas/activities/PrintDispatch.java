@@ -84,6 +84,12 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     TextView textCabecera;
     @BindView(R.id.textViewInfoDespacho)
     TextView textInfoDespacho;
+    @BindView(R.id.et_resp_body1)
+    TextView textresbody1;
+    @BindView(R.id.et_resp_body2)
+    TextView textresbody2;
+//    @BindView(R.id.print_factura_items_importe)
+//    TextView textBody;
 
     private Resources resources;
     private Usuario usuario;
@@ -152,12 +158,29 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     private void viewTextInfoDespacho() {
 
 
-        String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+     /*   String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
                 agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", mainDispatch.getSerie() + "-" + mainDispatch.getNumero(), mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio(),
                 mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino() + "", mainDispatch.getpFTDestino() + "",
                 mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", datosEmpresa.getUrl(), cliente.getPersona().getPerVRazonSocial());
+                mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com", cliente.getPersona().getPerVRazonSocial());
+        textInfoDespacho.setText(textInfo);*/
+
+       String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+                agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", cliente.getPersona().getPerVRazonSocial(), mainDispatch.getSerie() + "-" + mainDispatch.getNumero());
         textInfoDespacho.setText(textInfo);
+
+
+        String textBody1 = String.format(resources.getString(R.string.print_resp_dispatch_body1),mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio()+"",
+                mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada()+"");
+        textresbody1.setText(textBody1);
+
+        String textBody2 = String.format(resources.getString(R.string.print_resp_dispatch_body2),mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino(),
+                mainDispatch.getSerie(),vehiculo.getPlaca());
+        textresbody2.setText(textBody2);
+
+
     }
+
 
 
     @Override
@@ -231,7 +254,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa);
+                printDispatch.printNow(cliente,mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa);
 
                 break;
             case R.id.fabDisconec:
