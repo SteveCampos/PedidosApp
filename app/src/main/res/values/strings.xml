@@ -429,6 +429,12 @@
         " %3$s "
     </string>
 
+    <string name="descripcion_indicadores">
+        "Logo Solicitado : %1$s.\n"
+        "Meta GI %2$s.\n"
+    </string>
+
+
 
     <string name="main_dialog_title_close">Cerrar caja</string>
     <string name="main_dialog_text_km_end">Kilometraje Final</string>

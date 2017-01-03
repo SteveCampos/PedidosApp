@@ -13,6 +13,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.OrderDetailAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
@@ -26,10 +28,14 @@ public class OrderDetailFragment extends Fragment {
 
 
     private List<PedidoDetalle> list;
-    private RecyclerView recyclerView;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     private OrderDetailAdapter adapter;
     private Pedido pedido;
     private static final String TAG = "OrderDetailFragment";
+
+    private View view;
 
     public OrderDetailFragment() {
         // Required empty public constructor
@@ -39,15 +45,21 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) inflater.inflate(
+        view = inflater.inflate(
                 R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
         pedido = Session.getPedido(getActivity());
         list = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{pedido.getPeId() + ""});
         adapter = new OrderDetailAdapter(list, getActivity());
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return recyclerView;
+        return view;
+    }
+
+
+    private void initDetalle() {
+
     }
 
 }

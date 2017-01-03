@@ -403,9 +403,23 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
         // establecimiento.setEstIEstadoId(Constants.ESTADO_ESTABLECIMIENTO_ATENDIDO);
         //  establecimiento.save();
+
+        List<Establecimiento> establecimientos = Establecimiento.getListEstablecimiento(cajaLiquidacion.getLiqId() + "");
+        Integer[] integers = new Integer[establecimientos.size()];
+        for (int i = 0; i < establecimientos.size(); i++) {
+            integers[i] = establecimientos.get(i).getOrdenAtencionAndroid();
+        }
+        int ordenAtencion = getOrden(integers);
+
+
+        cajaLiquidacionDetalle.setOrdenAtencion(CajaLiquidacionDetalle.getOrdenAtencion(cajaLiquidacion.getLiqId() + ""));
+
+        establecimiento.setOrdenAtencionAndroid(ordenAtencion);
+        establecimiento.save();
         pedidoDetalle.setEstadoAtencionId(Constants.ESTADO_DESPACHO_ATENDIDO);
         pedidoDetalle.save();
     }
+
 
     private void toolbar() {
 

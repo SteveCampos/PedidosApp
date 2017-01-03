@@ -30,11 +30,11 @@
             android:src="@drawable/ic_gas_station_c" />
 
         <Button
-            android:id="@+id/indiceIcon"
+            android:id="@+id/indiceorden"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:background="@drawable/circular_atencion"
-            android:text="1"
+            android:text="orden"
             android:textColor="@color/white"
             android:textSize="8dp" />
 

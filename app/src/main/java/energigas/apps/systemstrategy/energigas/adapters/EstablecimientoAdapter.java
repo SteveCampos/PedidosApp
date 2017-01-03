@@ -73,9 +73,23 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         Pedido pedido = Pedido.getPedido(establecimiento.getEstIEstablecimientoId() + "");
         holder.textAtendido.setText(estado.getDescripcion());
         holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
-        GradientDrawable bgShape = (GradientDrawable) holder.buttonIndice.getBackground();
-        bgShape.setColor(Color.BLACK);
-        holder.buttonIndice.setText(cajaLiquidacionDetalle.getOrden());
+        holder.button.setText(cajaLiquidacionDetalle.getOrden() + "");
+        GradientDrawable bgShape = (GradientDrawable) holder.button.getBackground();
+        String color = "";
+        switch (cajaLiquidacionDetalle.getEstadoId()) {
+            case Constants.ESTADO_ESTABLECIMIENTO_ATENDIDO:
+                color = "#5882FA";
+                break;
+            case Constants.ESTADO_ESTABLECIMIENTO_NO_ATENDIDO:
+                color = "#F7819F";
+                break;
+            case Constants.ESTADO_ESTABLECIMIENTO_PENDIENTE:
+                color = "#585858";
+                break;
+        }
+
+        bgShape.setColor(Color.parseColor(color));
+
         GeoUbicacion geoUbicacion = establecimiento.getUbicacion();
         Log.d(TAG, "GeoUbicacion: " + geoUbicacion);
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.

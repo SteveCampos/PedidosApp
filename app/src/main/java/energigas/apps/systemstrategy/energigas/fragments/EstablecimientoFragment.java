@@ -19,6 +19,7 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
@@ -37,6 +38,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     private EstablecimientoAdapter adapter;
     private List<Establecimiento> establecimientoList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private CajaLiquidacion cajaLiquidacion;
 
     public EstablecimientoFragment() {
     }
@@ -59,6 +61,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
+        cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(getActivity()).getLiqId() + "");
         establecimientoList = getEstablecimientoList();
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);
         recyclerView.setAdapter(adapter);
@@ -69,11 +72,14 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
 
     private List<Establecimiento> getEstablecimientoList() {
-        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, "Select * from Establecimiento");
 
-        for (int i = 0; i < list.size(); i++) {
+        String query = " select * from Establecimiento where liquidacion_Id_Android=?  order by orden_Atencion_Android "; //GROUP BY cd.establecimiento_Id
+
+        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, query, new String[]{cajaLiquidacion.getLiqId() + ""});
+
+        /*for (int i = 0; i < list.size(); i++) {
             Establecimiento establecimiento = list.get(i);
-            for (CajaLiquidacionDetalle liquidacionDetalle : CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "li_Id=?", new String[]{Session.getCajaLiquidacion(getActivity()).getLiqId() + ""})) {
+            for (CajaLiquidacionDetalle liquidacionDetalle : CajaLiquidacionDetalle.getLiquidacionDetalle(Session.getCajaLiquidacion(getActivity()).getLiqId() + "")) {
 
                 if (liquidacionDetalle.getEstablecimientoId() == establecimiento.getEstIEstablecimientoId()) {
                     List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", "" + establecimiento.getUbId());
@@ -88,7 +94,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
             }
 
 
-        }
+        }*/
         return list;
     }
 

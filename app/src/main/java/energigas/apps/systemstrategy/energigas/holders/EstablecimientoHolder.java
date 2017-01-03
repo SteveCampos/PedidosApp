@@ -30,8 +30,8 @@ public class EstablecimientoHolder extends RecyclerView.ViewHolder {
     public ImageView imageView2;
     @BindView(R.id.textAtendido)
     public TextView textAtendido;
-    @BindView(R.id.indiceIcon)
-    public Button buttonIndice;
+    @BindView(R.id.indiceorden)
+    public Button button;
 
     public EstablecimientoHolder(View itemView) {
         super(itemView);

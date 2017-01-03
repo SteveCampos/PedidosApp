@@ -53,15 +53,20 @@ public class Establecimiento extends SugarRecord {
     private String estVContacto;
 
     @Ignore
-    private List<Almacen> itemsAlmacen ;
+    private List<Almacen> itemsAlmacen;
     @Ignore
     private GeoUbicacion ubicacion;
+
+    private int ordenAtencionAndroid;
+
+    private int liquidacionIdAndroid;
+
 
     public Establecimiento() {
 
     }
 
-    public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto, List<Almacen> itemsAlmacen, GeoUbicacion ubicacion) {
+    public Establecimiento(int estIEstablecimientoId, String estVCodigo, String estVDescripcion, int estIClienteId, int ubId, int estICategoriaId, int estICanalId, String estVTelefono, String estVCelular, int estIUsuarioCreacion, String estDTFechaCreacion, int estIUsuarioActualizacion, String estDTFechaActualizacion, int estIEstadoId, int estIUsuarioAprobacion, String estDTFechaAprobacion, String estVObservacion, String estVKeyFireBase, String estVContacto, List<Almacen> itemsAlmacen, GeoUbicacion ubicacion, int ordenAtencionAndroid, int liquidacionIdAndroid) {
         this.estIEstablecimientoId = estIEstablecimientoId;
         this.estVCodigo = estVCodigo;
         this.estVDescripcion = estVDescripcion;
@@ -83,6 +88,24 @@ public class Establecimiento extends SugarRecord {
         this.estVContacto = estVContacto;
         this.itemsAlmacen = itemsAlmacen;
         this.ubicacion = ubicacion;
+        this.ordenAtencionAndroid = ordenAtencionAndroid;
+        this.liquidacionIdAndroid = liquidacionIdAndroid;
+    }
+
+    public int getLiquidacionIdAndroid() {
+        return liquidacionIdAndroid;
+    }
+
+    public void setLiquidacionIdAndroid(int liquidacionIdAndroid) {
+        this.liquidacionIdAndroid = liquidacionIdAndroid;
+    }
+
+    public int getOrdenAtencionAndroid() {
+        return ordenAtencionAndroid;
+    }
+
+    public void setOrdenAtencionAndroid(int ordenAtencionAndroid) {
+        this.ordenAtencionAndroid = ordenAtencionAndroid;
     }
 
     public int getEstIEstablecimientoId() {
@@ -253,20 +276,15 @@ public class Establecimiento extends SugarRecord {
         this.ubicacion = ubicacion;
     }
 
-    public static List<Establecimiento> getList(){
-        List<Establecimiento> listEstablecimiento = new ArrayList<>();
-        for (int i= 0; i<= 10; i++){
-            listEstablecimiento.add(new Establecimiento(100, "1000", "Descripción", 1, 1, 1, 1, "993061806", "993061806",
-                    1, "16/02/16", 1, "16/02/16", 1, 1, "126/06/16", "Observacion", "KEyFirebase", "Contacto",null,null));
-            /*
-            listEstablecimiento.add(new Establecimiento("Agropacking Export S.A.","car. panamericana norte km. 1076","2.0","1.4 km","externo"));
-            listEstablecimiento.add(new Establecimiento("Alsur Peru S.A.C.","av.Juan Pablo II N°  1130 MZA","4.0","7 km","interno"));
-            listEstablecimiento.add(new Establecimiento("America Textil Peru","Sector Peruano Zona II MZA.","3.0","24 km","externo"));*/
-        }
-        return listEstablecimiento;
+
+    public static Establecimiento getEstablecimientoById(String id) {
+        return Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", new String[]{id}).get(0);
     }
 
-    public static Establecimiento getEstablecimientoById(String id){
-        return Establecimiento.find(Establecimiento.class," est_I_Establecimiento_Id = ? ",new String[]{id}).get(0);
+    public static List<Establecimiento> getListEstablecimiento(String liquidacionId) {
+        String query = "Select es.* from Establecimiento es, Caja_Liquidacion_Detalle cd where cd.li_Id=? and es.est_I_Establecimiento_Id=cd.establecimiento_Id order by es.orden_Atencion_Android "; //GROUP BY cd.establecimiento_Id
+
+        List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, query, new String[]{liquidacionId + ""});
+        return list;
     }
 }

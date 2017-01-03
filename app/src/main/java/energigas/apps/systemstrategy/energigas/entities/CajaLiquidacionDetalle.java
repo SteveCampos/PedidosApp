@@ -5,6 +5,8 @@ import android.util.Log;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.List;
+
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
@@ -229,5 +231,26 @@ public class CajaLiquidacionDetalle extends SugarRecord {
         }
         return cajaLiquidacionDetalle;
 
+    }
+
+    public static List<CajaLiquidacionDetalle> getLiquidacionDetalle(String liquidacionDetalleId) {
+        Log.d("ESTABLECIMIENTOID", liquidacionDetalleId);
+        List<CajaLiquidacionDetalle> liquidacionDetalleList = CajaLiquidacionDetalle.findWithQuery(CajaLiquidacionDetalle.class, " select * from Caja_Liquidacion_Detalle where li_Id=? order by orden_Atencion ASC ", new String[]{liquidacionDetalleId});
+        if (liquidacionDetalleList != null) {
+            return liquidacionDetalleList;
+        }
+        return null;
+
+    }
+
+    public static int getOrdenAtencion(String liquidacionDetalleId) {
+        Log.d("ESTABLECIMIENTOID", liquidacionDetalleId);
+        List<CajaLiquidacionDetalle> liquidacionDetalleList = CajaLiquidacionDetalle.findWithQuery(CajaLiquidacionDetalle.class, " select * from Caja_Liquidacion_Detalle where li_Id=? order by orden_Atencion ASC ", new String[]{liquidacionDetalleId});
+        Long aLong = new Long(0);
+        if (liquidacionDetalleList != null) {
+            aLong = new Long(liquidacionDetalleList.get(0).getOrdenAtencion());
+
+        }
+        return aLong.intValue();
     }
 }

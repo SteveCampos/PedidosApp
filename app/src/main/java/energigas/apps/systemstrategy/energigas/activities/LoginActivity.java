@@ -23,10 +23,13 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
+import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Servidores;
 import energigas.apps.systemstrategy.energigas.fragments.ProgressDialogFragment;
 import energigas.apps.systemstrategy.energigas.services.ServiceSync;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -64,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         setToolbar();
         getSupportActionBar().setTitle((Html.fromHtml("<font color=\"#FFFFFF\">" + "Energigas" + "</font>")));
+
+
         buttonLogin.setOnClickListener(this);
         checkLogin();
     }

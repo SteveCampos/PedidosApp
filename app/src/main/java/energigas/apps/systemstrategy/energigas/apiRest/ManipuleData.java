@@ -7,15 +7,18 @@ import android.widget.Toast;
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispositivo;
 import energigas.apps.systemstrategy.energigas.entities.DispositivoSerie;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.EstablecimientoOrden;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
@@ -50,6 +53,7 @@ public class ManipuleData {
         Log.d(TAG, "CERTIFICADO: " + insCertiDigi);
         cajaLiquidacion.setEntidadId(cajaLiquidacion.getEntidad().getEntidadId());
         Long insert = cajaLiquidacion.save();
+        Log.d(TAG, "LIQUIDACION: " + insert);
         Log.d(TAG, "LIQUIDACION: " + insert);
         SugarRecord.saveInTx(cajaLiquidacion.getItemsLiquidacion());
         boolean estadoB = true;
@@ -88,7 +92,10 @@ public class ManipuleData {
                 /**Insertar Establecimientos**/
 
                 for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
+
+
                     Long est = establecimiento.save();
+
                     Long estGeo = establecimiento.getUbicacion().save();
                     if (est < 0 || estGeo < 0) {
                         estadoEst = false;
@@ -189,6 +196,33 @@ public class ManipuleData {
                 }
             }
             Log.d(TAG, " DispositivoSerie" + (estSerD));
+            int orden = 0;
+            HashMap<Integer, EstablecimientoOrden> detalleHashMap = new HashMap<>();
+            for (CajaLiquidacionDetalle distribucionDetalle : cajaLiquidacion.getItemsLiquidacion()) {
+                Establecimiento establecimiento = Establecimiento.getEstablecimientoById(distribucionDetalle.getEstablecimientoId() + "");
+                establecimiento.setOrdenAtencionAndroid(distribucionDetalle.getOrden());
+                establecimiento.save();
+                if (detalleHashMap.size() > 0) {
+
+                    if (!detalleHashMap.containsKey(distribucionDetalle.getEstablecimientoId())) {
+                        detalleHashMap.put(distribucionDetalle.getEstablecimientoId(), new EstablecimientoOrden(establecimiento, distribucionDetalle.getOrden()));
+                    }
+
+                } else {
+                    detalleHashMap.put(distribucionDetalle.getEstablecimientoId(), new EstablecimientoOrden(establecimiento, distribucionDetalle.getOrden()));
+                }
+
+            }
+            List<EstablecimientoOrden> establecimientoOrdens = new ArrayList<>(detalleHashMap.values());
+            for (int i = 0; i < establecimientoOrdens.size(); i++) {
+
+                Establecimiento establecimiento = establecimientoOrdens.get(i).getEstablecimiento();
+                establecimiento.setOrdenAtencionAndroid(establecimientoOrdens.get(i).getOrden());
+                establecimiento.setLiquidacionIdAndroid(Integer.parseInt(cajaLiquidacion.getLiqId() + ""));
+                establecimiento.save();
+
+            }
+
 
         }
     }
