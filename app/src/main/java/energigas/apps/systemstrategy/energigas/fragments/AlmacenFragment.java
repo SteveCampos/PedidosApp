@@ -78,7 +78,7 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
         recyclerView.setAdapter(adapter);
         //recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return recyclerView;
+        return view;
     }
 
     @Override

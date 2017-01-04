@@ -102,7 +102,7 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
                 .setClassIntent(StationOrderActivity.class)
                 .isIntentEnable();
         initiViews();
-        return recyclerView;
+        return view;
     }
 
 

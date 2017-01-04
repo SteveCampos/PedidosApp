@@ -84,7 +84,7 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return recyclerView;
+        return view;
 
 //        initViews();
 

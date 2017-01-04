@@ -73,7 +73,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return recyclerView;
+        return view;
     }
 
 

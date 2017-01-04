@@ -68,7 +68,7 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
         recyclerView.setHasFixedSize(true);
 
 
-        return recyclerView;
+        return view;
     }
 
 
