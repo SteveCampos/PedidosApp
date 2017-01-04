@@ -46,7 +46,8 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
 
     private static final String TAG = StationDispatchsFragment.class.getSimpleName();
     private List<Despacho> dispatchList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     private StationDispatchsAdapter adapter;
     private ActionMode mActionMode;
     private Usuario usuario;
@@ -91,7 +92,9 @@ public class StationDispatchsFragment extends Fragment implements ActionMode.Cal
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        view =  inflater.inflate(
+                R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
         usuario = Session.getSession(getActivity());
         new AccessPrivilegesManager(getClass())
                 .setListenerIntent(this)

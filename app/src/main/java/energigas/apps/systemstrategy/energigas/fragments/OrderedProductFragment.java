@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.OrderedProductAdapter;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
@@ -32,7 +34,8 @@ public class OrderedProductFragment extends Fragment implements OrderedProductAd
     private OnDispatchClickListener listenerDispatch;
     private OrderedProductAdapter adapter;
     private List<OrderProduct> orderProductList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     GestureDetectorCompat gestureDetector;
     ActionMode actionMode;
 
@@ -52,9 +55,9 @@ public class OrderedProductFragment extends Fragment implements OrderedProductAd
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        recyclerView= (RecyclerView) inflater.inflate(
+        view=  inflater.inflate(
                 R.layout.recycler_view, container, false);
-
+        ButterKnife.bind(this, view);
         orderProductList = OrderProduct.getList();
         adapter = new OrderedProductAdapter(orderProductList, getActivity(), this, this);
         recyclerView.setAdapter(adapter);

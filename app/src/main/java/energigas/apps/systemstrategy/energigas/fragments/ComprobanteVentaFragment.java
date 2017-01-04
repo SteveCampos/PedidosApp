@@ -39,7 +39,6 @@ import energigas.apps.systemstrategy.energigas.utils.Utils;
  */
 public class ComprobanteVentaFragment extends Fragment implements OnComprobanteVentaClickListener, IntentListenerAccess {
 
-    private RecyclerView recyclerView;
 
 
     private List<ComprobanteVenta> comprobanteVentas = new ArrayList<>();
@@ -51,6 +50,10 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
     private static final String TAG = "StationOrderFragment";
     private OnComprobanteVentaClickListener listener;
 
+
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
+
     public interface OnComprobanteVentaClickListener {
         // Required empty public constructor
         void nComprobanteVentaClickListener(ComprobanteVenta Comprobante);
@@ -61,8 +64,9 @@ public class ComprobanteVentaFragment extends Fragment implements OnComprobanteV
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // View view = inflater.inflate(R.layout.recycler_view, container, false);
-        recyclerView = (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
         // ButterKnife.bind(this, view);
 
 //        adapter = new ComprobanteVentaAdapter(comprobanteVentas, getActivity(), this);

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
 import energigas.apps.systemstrategy.energigas.adapters.StationOrdersAdapter;
@@ -35,7 +37,8 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
     private List<Pedido> pedidos = new ArrayList<>();
     private List<Estado> estado = new ArrayList<>();
     //private Estado estado;
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     private StationOrdersAdapter adapter;
     private OnStationOrderClickListener listener;
     private static final String TAG = "StationOrderFragment";
@@ -51,9 +54,9 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
-        //  pedidos= getPedidos();
+        ButterKnife.bind(this, view);
         usuario = Session.getSession(getActivity());
         pedidos = Pedido.find(Pedido.class, " establecimiento_Id = ?", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""});
         Log.d(TAG, Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "");

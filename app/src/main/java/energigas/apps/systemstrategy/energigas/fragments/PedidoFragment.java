@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.PedidoAdapter;
 
@@ -23,7 +25,8 @@ import energigas.apps.systemstrategy.energigas.entities.Pedido;
 public class PedidoFragment extends Fragment implements PedidoAdapter.OnPedidoClickListener {
 
     public OnPedidoClickListener listener;
-
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     public PedidoFragment() {
 
     }
@@ -37,9 +40,9 @@ public class PedidoFragment extends Fragment implements PedidoAdapter.OnPedidoCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
-
+        ButterKnife.bind(this, view);
        /* PedidoAdapter adapter = new PedidoAdapter(Pedido.getList(),getActivity(),this);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);

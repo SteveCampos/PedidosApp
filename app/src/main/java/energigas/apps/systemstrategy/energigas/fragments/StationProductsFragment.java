@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.OrderedProductAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.StationProductsAdapter;
@@ -35,7 +37,8 @@ public class StationProductsFragment extends Fragment {
     private String mParam2;*/
 
     private List<OrderProduct> orderProductList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     private StationProductsAdapter adapter;
 
     public StationProductsFragment() {
@@ -74,9 +77,9 @@ public class StationProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        recyclerView= (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
-
+        ButterKnife.bind(this, view);
         orderProductList = OrderProduct.getList();
         adapter = new StationProductsAdapter(orderProductList, getActivity());
         recyclerView.setAdapter(adapter);

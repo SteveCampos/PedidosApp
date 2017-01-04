@@ -17,6 +17,8 @@ import com.orm.SugarRecord;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.EstablecimientoAdapter;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
@@ -37,8 +39,11 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     public OnEstablecimientoClickListener listener;
     private EstablecimientoAdapter adapter;
     private List<Establecimiento> establecimientoList = new ArrayList<>();
-    private RecyclerView recyclerView;
+
+
     private CajaLiquidacion cajaLiquidacion;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
 
     public EstablecimientoFragment() {
     }
@@ -59,8 +64,9 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(getActivity()).getLiqId() + "");
         establecimientoList = getEstablecimientoList();
         adapter = new EstablecimientoAdapter(establecimientoList, getActivity(), this);

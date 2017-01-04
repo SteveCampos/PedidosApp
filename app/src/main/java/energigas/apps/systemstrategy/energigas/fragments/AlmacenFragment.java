@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DespachoActivity;
 import energigas.apps.systemstrategy.energigas.activities.DispatchActivity;
@@ -41,7 +43,8 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
 
     private static final String TAG = "AlmacenFragment";
     private List<Almacen> almacenList;
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     private AlmacenAdapter adapter;
     private Pedido pedido;
     private Establecimiento establecimiento;
@@ -57,8 +60,9 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        recyclerView = (RecyclerView) inflater.inflate(
+        view =  inflater.inflate(
                 R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
         // pedido = Pedido.find(Pedido.class," pe_Id=? ",new String[]{Session.getPedido(getActivity()).getPeId()+""}).get(0);
         almacenList = Almacen.find(Almacen.class, " establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + ""});
         // almacenList = Almacen.findWithQuery(Almacen.class," select capacidad_neta,* from almacen inner join establecimiento " + "where almacen.id=establecimiento.id ");

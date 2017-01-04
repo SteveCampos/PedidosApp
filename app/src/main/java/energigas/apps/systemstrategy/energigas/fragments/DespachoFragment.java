@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.DespachoActivity;
 import energigas.apps.systemstrategy.energigas.activities.PrintDispatch;
@@ -31,7 +33,8 @@ import energigas.apps.systemstrategy.energigas.utils.Session;
 public class DespachoFragment extends Fragment implements DespachoAdapter.OnDespachoClickListener, IntentListenerAccess {
 
     private List<Despacho> list;
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    private View view;
     private DespachoAdapter adapter;
     private Pedido pedido;
     private Usuario usuario;
@@ -46,7 +49,8 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         pedido = Session.getPedido(getActivity());
-        recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        view = inflater.inflate(R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, view);
     usuario = Session.getSession(getActivity());
 
         new AccessPrivilegesManager(getClass())
