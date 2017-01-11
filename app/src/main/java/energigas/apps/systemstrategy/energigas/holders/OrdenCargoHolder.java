@@ -65,7 +65,7 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
     public void bind(OrdenCargo ordenCargo, Context context, OrdenCargoListener listener) {
 
         Concepto  mconceptoTipoCarga = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
-
+        Producto mProducto= Producto.getProductoById(ordenCargo.getProId()+"");
         imageView2.setImageDrawable(context.getResources().getDrawable(getImage(mconceptoTipoCarga.getIdConcepto())));
 
         switch (mconceptoTipoCarga.getDescripcion().toLowerCase()) {
@@ -77,7 +77,7 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
                 relativeLayoutCompra.setVisibility(View.VISIBLE);
                 relativeLayoutTrasciego.setVisibility(View.GONE);
                 String tetextinfCompra = String.format(context.getString(R.string.string_info_orden_compra),mproveedor.getPersona().getNombreComercial()+"",mproveedor.getPersona().getPerVDocIdentidad()+"",
-                        Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura()+"", ordenCargo.getFechaAccion(), ordenCargo.getNroGuia());
+                        mProducto.getDescripcion()+"", ordenCargo.getFechaAccion(), ordenCargo.getNroGuia());
                 txtInfoOrdenCarga.setText(tetextinfCompra);
                 break;
             case "trasciego":
@@ -88,7 +88,7 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
                 relativeLayoutCompra.setVisibility(View.GONE);
                 relativeLayoutTrasciego.setVisibility(View.VISIBLE);
                 String tetextinfTrasciego = String.format(context.getString(R.string.string_info_orden_trasciego),mconcepto.getDescripcion(),
-                        Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura()+"", ordenCargo.getFechaAccion(), ordenCargo.getNroGuia());
+                        mProducto.getDescripcion()+"", ordenCargo.getFechaAccion(), ordenCargo.getNroGuia());
                 txtInfoOrdenCargaTrasciego.setText(tetextinfTrasciego);
                 break;
             default:
@@ -110,9 +110,9 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
 
     int getImage(int tipocarga) {
         if (Constants.ORDENCARGA_COMPRA == tipocarga) {
-            return R.drawable.gas_station_b;
+            return R.drawable.ordencarga_compra;
         } else {
-            return R.drawable.logo;
+            return R.drawable.ordencarga_trasciego;
         }
     }
 

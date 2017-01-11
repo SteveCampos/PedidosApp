@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.activities;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -70,15 +71,16 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         textViewAgente.setText(mAgente.getPerVNombres()+" "+mAgente.getPerVApellidoPaterno()+" "+mAgente.getPerVApellidoMaterno());
         textViewPlaca.setText(Utils.getDateDescription(Utils.getDatePhone()));
         initRecycler();
-        toolBarImageBack();
+        //toolBarImageBack();
+        collapSingTitle();
     }
 
     private void toolBarImageBack(){
 
         if (getSupportActionBar() != null) //
         {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -124,6 +126,32 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         Log.d(TAG,"onResume");
         initRecycler();
         super.onResume();
+    }
+
+    private void collapSingTitle(){
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                    toolBarImageBack();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle("Orden Carga");
+                    toolBarImageBack();
+                    isShow = true;
+                } else if(isShow) {
+                    collapsingToolbarLayout.setTitle(" ");//carefull there should a space between double quote otherwise it wont work
+                    toolBarImageBack();
+                    isShow = false;
+                }
+            }
+        });
     }
 
 
