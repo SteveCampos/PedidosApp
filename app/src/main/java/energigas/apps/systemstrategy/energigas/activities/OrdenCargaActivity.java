@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.activities;
 
+import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
@@ -13,11 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -32,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
+import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.OrdenCargaAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.ProductoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.ProveedorAdapter;
@@ -45,8 +50,10 @@ import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.OrdenCargoListener;
 import energigas.apps.systemstrategy.energigas.ordencarga.OrdenCargaView;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -142,9 +149,9 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     private int tipoFecha;
 
-
+/*
     @BindView(R.id.recycler)
-    RecyclerView recycler;
+    RecyclerView recycler;*/
     OrdenCargaAdapter ordenCargaAdapter;
     private List<OrdenCargo> ordenCargos = new ArrayList<>();
 
@@ -160,8 +167,13 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         setSupportActionBar(toolbar);
         setTitle(R.string.collect_title_inventory);
         toolbar.setTitle(R.string.collect_title_inventory);
+        if (getSupportActionBar() != null) //
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
     }
+
 
     @OnClick(R.id.btn_compra_factura_fechaemision)
     public void selectCompraFacturaFechaEmision() {
@@ -222,15 +234,16 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         initSpinnerUnidadMedia();
         initEdittext();
         initToolbar();
-        initRecycler();
-    }
+       // initRecycler();
 
+    }
+/*
     private void initRecycler() {
         ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ORDER BY id DESC"), this);
         recycler.setAdapter(ordenCargaAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(this));
     }
-
+*/
     private void initEdittext() {
         actCompraRuc.addTextChangedListener(watcherCompraRuc);
         etCompraFacturaSerie.addTextChangedListener(watcherCompraFacturaSerie);
@@ -406,13 +419,15 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
         String serieGuia = etTrasciegoGuiaSerie.getText().toString();
         String correlativoGuia = etTrasciegoGuiaCorrelativo.getText().toString();
-        String guiaFecha = btnCompraGuiaEmision.getText().toString();
+        String guiaFecha = btnTrasciegoGuiaEmision.getText().toString();
+
+
 
         boolean esGuiaSerieValida = esGuiaTrasciegoSerieValida(serieGuia);
         boolean esGuiaCorrelativoValido = esGuiaTrasciegoCorrelativoValido(correlativoGuia);
         boolean esFechaGuiaValida = esGuiaTrasciegoComprobanteValida(guiaFecha);
         boolean sonCamposGeneralesValidos = validarCamposGenerales();
-
+        Log.d(TAG,"esGuiaSerieValida:"+esGuiaSerieValida+"esGuiaCorrelativoValido:"+esGuiaCorrelativoValido+"esFechaGuiaValida:"+esFechaGuiaValida+"sonCamposGeneralesValidos:"+sonCamposGeneralesValidos);
         if (esGuiaSerieValida && esGuiaCorrelativoValido && esFechaGuiaValida &&
                 sonCamposGeneralesValidos) {
 
@@ -434,8 +449,10 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
 
+            Long getOrdeCarga_Id = OrdenCargo.findWithQuery(OrdenCargo.class, Utils.getQueryNumberOrderCargo(), null).get(Constants.CURRENT).getOrdeCargaId();
             OrdenCargo ordenCargo = new OrdenCargo(
                     0,
+                    getOrdeCarga_Id,
                     datetime,
                     "",
                     0,
@@ -461,6 +478,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
             saveOrdenCargo(ordenCargo);
         }else{
             Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+
         }
     }
 
@@ -485,7 +503,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         }
 
         cleanViews();
-        initRecycler();
+        //initRecycler();
     }
 
     private boolean esGuiaTrasciegoComprobanteValida(String guiaFecha) {
@@ -546,6 +564,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         String comprobanteFecha = btnCompraFacturaEmision.getText().toString();
         String guiaFecha = btnCompraGuiaEmision.getText().toString();
 
+
+
         boolean esProveedorValido = esProveedorValido(ruc);
         boolean esSerieValida = esSerieValida(serieFactura);
         boolean esCorrelativoValido = esCorrelativoValido(correlativoFactura);
@@ -581,9 +601,10 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
             String format = "%.4f";
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
-
+            long getOrdeCarga_Id = OrdenCargo.findWithQuery(OrdenCargo.class, Utils.getQueryNumberOrderCargo(), null).get(Constants.CURRENT).getOrdeCargaId();
             OrdenCargo ordenCargo = new OrdenCargo(
                     0,
+                    getOrdeCarga_Id,
                     datetime,
                     comprobanteFecha,
                     proveedor.getProveedorId(),
@@ -607,6 +628,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                     Utils.formatDouble(format, precio)
             );
             saveOrdenCargo(ordenCargo);
+            Log.d(TAG," getOrdeCarga_Id :"+ordenCargo.getOrdeCargaId() );
         }else{
             Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
         }
@@ -961,7 +983,35 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
     @Override
-    public void onOrdenCargoClickListener() {
-
+    public void onOrdenCargoClickListener(OrdenCargo ordenCargo) {
+        Intent intent = new Intent(this, PrintOrdenCarga.class);
+        intent.putExtra("ORDECARGAID", ordenCargo.getOrdeCargaId()+"");
+        startActivity(intent);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
+
+
 }

@@ -22,6 +22,7 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
@@ -360,6 +361,8 @@ public class Session {
 
     }
 
+
+
     public static Usuario getSession(Context context) {
 
         Usuario usuario = new Usuario();
@@ -380,7 +383,7 @@ public class Session {
 
             SharedPreferences.Editor editor = context.getSharedPreferences(Constants.CAJA_LIQUIDACION, Context.MODE_PRIVATE).edit();
             editor.putLong(Constants.CAJA_LIQUIDACION_ID, cajaLiquidacion.getLiqId());
-            editor.commit();
+            editor.apply();
             return true;
 
         } catch (Exception e) {

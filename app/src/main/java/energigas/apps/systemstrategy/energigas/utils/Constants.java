@@ -293,4 +293,12 @@ public class Constants {
 
     public static final int EXPORTAR_TODO = 1000;
 
+
+    /*Cargar Orden */
+
+
+    public static final int ORDENCARGA_COMPRA = 141;
+    public static final String ORDENCARGA_TRASCIEGO = "ORDENCARGA_TRASCIEGO";
+    /**/
+
 }

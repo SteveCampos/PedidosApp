@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:titleEnabled="false"
+    android:fitsSystemWindows="true"
+    tools:context="energigas.apps.systemstrategy.energigas.activities.OrdenCargaListActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="true"
+        app:titleEnabled="false"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <LinearLayout
+                style="@style/Widget.CardContent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Orden Carga"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/dimen_20dp"
+                        android:textStyle="bold"
+                        style="@style/TextAppearance.AppCompat.SearchResult.Title"/>
+
+                    <TextView
+                        android:id="@+id/textViewNombreAgente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:background="@drawable/collect_cash"
+                        android:textStyle="bold"
+                        style="@style/TextAppearance.AppCompat.SearchResult.Title"/>
+                    <TextView
+                        android:id="@+id/TView_Agente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="kike Rojas Palomino"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/text_size_14"/>
+
+                    <TextView
+                        android:id="@+id/TView_placa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Placa V::AJD-884"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/text_size_14"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Lunes,09 de Enero"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/margin_top_layout"
+                        android:textSize="@dimen/text_size_14"/>
+                    <!--<TextView-->
+                    <!--android:id="@+id/tv_date"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:text="10/10/15"-->
+                    <!--android:layout_marginBottom="@dimen/margin_top_layout"-->
+                    <!--android:textSize="@dimen/text_size_14"/>-->
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        android:src="@drawable/ic_add_white_24dp" />
+
+    <include layout="@layout/content_orden_carga_" />
+
+
+</android.support.design.widget.CoordinatorLayout>

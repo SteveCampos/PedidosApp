@@ -3,8 +3,11 @@ package energigas.apps.systemstrategy.energigas.printingsheets;
 import com.sewoo.jpos.POSPrinterService;
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.ESCPOS;
+import com.sewoo.jpos.printer.ESCPOSPrinter;
+import com.sewoo.jpos.printer.LKPrint;
 import com.sewoo.jpos.request.RequestQueue;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
@@ -13,16 +16,20 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
+import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
 import energigas.apps.systemstrategy.energigas.entities.SummaryIncome;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -39,6 +46,7 @@ public class SheetsPrintDispatch {
 
     private static String lineas = "------------------------------------------------------".substring(0, 48);
     private POSPrinterService posPtr;
+    private ESCPOSPrinter escposPrinter;
     private CPCL cpclPtr;
     private RequestQueue rq;
     private static char ESC = ESCPOS.ESC;
@@ -47,6 +55,7 @@ public class SheetsPrintDispatch {
 
     public SheetsPrintDispatch() {
         posPtr = new POSPrinterService();
+        escposPrinter = new ESCPOSPrinter();
         cpclPtr = new CPCL();
         rq = RequestQueue.getInstance();
     }
@@ -70,7 +79,8 @@ public class SheetsPrintDispatch {
 
         try {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
@@ -128,52 +138,85 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+
+
         } catch (JposException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void printNow(Cliente cliente,Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa) {
+    public void printNow(Cliente cliente, Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa,Unidad unidad) {
+
+
         try {
+            //49 caracteres!!
+
+            String mContadorFinal = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Contador Final") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getContadorFinalDestino()) + LF;
+            String mTanqueFinal = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Porcentaje Tanque Final") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getpFTDestino()) + LF;
+
+            String mPlaca = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Serie Tanque") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getPlaca()) + LF;
+            String mNrTransporte = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Nro Transporte") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getVeId()) + LF;
+
+            String mContandorInicial = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Contador Inicial") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getContadorInicialDestino()) + LF;
+            String mPTanqueInicial = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Porcentaje Tanque Inicial") + String.format("%-6s", ":") + String.format("%1$8s", dispatch.getpITDestino()) + LF;
+            String mCapacidadTanque = ESC + "|lA" + ESC + "|bC" + String.format("%1$-34s", "Capacidad de Tanque") + String.format("%-6s", ":") + String.format("%1$8s", almacen.getCapacidadReal()) + LF;
+            String mDateHours = ESC + "|lA" + ESC + "|bC" + String.format("%1$-23s", "Fecha  :" + dispatch.getFechaDespacho()) + String.format("%-17s", "Hora Inicio:") + String.format("%1$8s", dispatch.getHoraInicio()) + LF;
+
+      /*
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" +ESC+ "|bC"+ "Contador Final                      : " + dispatch.getContadorFinalDestino() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" +ESC+ "|bC"+ "Porcentaje Tanque Final             : " + dispatch.getpFTDestino() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" +ESC+ "|bC"+ "Serie Tanque                        : " + almacen.getPlaca() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" +ESC+ "|bC"+ "Nro Transporte                      : " + vehiculo.getVeId() + LF);
+
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" +"0000000000000000000000000000000000000000000000000"+ LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" +"1111111111111111111111111111111111111111111111111"+ LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" +"................................................."+ LF);
+        */
+
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + datosEmpresa.getEntidad().getRazonSocial() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre     : " + establecimiento.getEstVDescripcion() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Direccion  : " + establecimiento.getUbicacion().getDescripcion() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Instalacion: " + almacen.getNombre() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Coordenadas: " + dispatch.getLatitud() + ", " + dispatch.getLongitud() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Placa      : " + vehiculo.getPlaca() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Chofer     : " + agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Cliente    : " +  cliente.getPersona().getPerVRazonSocial()+ LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Serie Nro  : " + dispatch.getSerie() + "-" + dispatch.getNumero() + LF);
-            printLineas();
+
+
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Nombre     : " + establecimiento.getEstVDescripcion() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Direccion  : " + establecimiento.getUbicacion().getDescripcion() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Instalacion: " + almacen.getNombre() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Coordenadas: " + dispatch.getLatitud() + ", " + dispatch.getLongitud() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Placa      : " + vehiculo.getPlaca() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Agente     : " + agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Cliente    : " + cliente.getPersona().getPerVRazonSocial() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "NroDespacho: " + dispatch.getSerie() + "-" + dispatch.getNumero() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + "DESPACHO" + LF);
             printLineas();
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Fecha                               : " + dispatch.getFechaDespacho() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Hora Inicio                         : " + dispatch.getHoraInicio() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Hora Fin                            : " + dispatch.getHoraFin() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Contador Inicial                    : " + dispatch.getContadorInicialDestino() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Contador Final                      : " + dispatch.getContadorFinalDestino() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Cantidad Despachada                 : " + dispatch.getCantidadDespachada() + LF);
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" +ESC+ "|bC"+ "Fecha : " + dispatch.getFechaDespacho() + "     Hora Inicio :    "+dispatch.getHoraInicio()+ LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mDateHours);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "                  " + "     Hora Final :         " + dispatch.getHoraFin() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mContandorInicial);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mPTanqueInicial);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mPlaca);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mNrTransporte);
             printLineas();
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Porcentaje Tanque Inicial           : " + dispatch.getpITDestino() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Porcentaje Tanque Final             : " + dispatch.getpFTDestino() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Serie Tanque                        : " + almacen.getPlaca() + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nro Transporte                      : " + vehiculo.getVeId() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Cantidad Despachada "+unidad.getDescripcion()+": " + dispatch.getCantidadDespachada() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             printLineas();
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Recibido por" + "" + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mContadorFinal);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mTanqueFinal);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mCapacidadTanque);
+            printLineas();
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Recibido por" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Nombre    :" + "..............................." + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Nombre    :" + "..............................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI       :" + "..............................." + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "DNI       :" + "..............................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "Firma     :" + "..............................." + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Firma     :" + "..............................." + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Documento sin valor tributario" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Consultar su comprobante de pago electronico en" + LF);
@@ -182,12 +225,14 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
 
-            // posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", "CANT") + String.format("%-30s", "DESCRIPCION") + String.format("%1$12s", "P.U.") + LF);
-
-
         } catch (JposException e) {
             e.printStackTrace();
         }
+
+
+        // posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", "CANT") + String.format("%-30s", "DESCRIPCION") + String.format("%1$12s", "P.U.") + LF);
+
+
     }
 
 
@@ -274,8 +319,134 @@ public class SheetsPrintDispatch {
 
     }
 
+
+    public void printCompra(OrdenCargo ordenCargo, Concepto concepto, Proveedor proveedor, Producto producto, Unidad unidad, CajaLiquidacion cajaLiquidacion, Almacen almacen, DatosEmpresa datosEmpresa, Persona persona) {
+        {
+            try {
+
+                String mUnidadMedida = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Unidad de Medida") + String.format("%-6s", ":") + String.format("%1$12s", Utils.cleanAcentos(unidad.getDescripcion())) + LF;
+                String mCantidad = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Cantidad") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getCantidadDoc()) + LF;
+                String mFactorConversion = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Factor de Conversion") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getFactorConversion()) + LF;
+                String mDensidad = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Densidad") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getDensidad()) + LF;
+                String mPrecio = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Precio") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getPrecio()) + LF;
+
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + ESC + "|3C" + "TIPO DE CARGA : " + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + concepto.getDescripcion() + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Razon Social  : " + proveedor.getPersona().getNombreComercial() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Ruc           : " + proveedor.getPersona().getPerVDocIdentidad() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "NroComprobante: " + ordenCargo.getNroComprobante() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "NroGuia       : " + ordenCargo.getNroGuia() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Fecha Creacion: " + ordenCargo.getFechaCreacion() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Fecha Accion  : " + ordenCargo.getFechaAccion() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + ESC + "|3C" + "ITEM COMPRA :  " + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mUnidadMedida);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mCantidad);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mFactorConversion);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mDensidad);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mPrecio);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Agente: " + persona.getPerVNombres() + " " + persona.getPerVApellidoPaterno() + " " + persona.getPerVApellidoMaterno() + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Recibido por" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Nombre    :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "DNI       :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Firma     :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Documento sin valor tributario" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Consultar su comprobante de pago electronico en" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+            } catch (JposException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+
+    public void printTrasciego(OrdenCargo ordenCargo,String tipoOrigen,Concepto concepto, Producto producto, Unidad unidad,DatosEmpresa datosEmpresa,Persona persona){
+        {
+            try {
+
+                String mUnidadMedida = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Unidad de Medida") + String.format("%-6s", ":") + String.format("%1$12s", Utils.cleanAcentos(unidad.getDescripcion())) + LF;
+                String mCantidad = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Cantidad") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getCantidadDoc()) + LF;
+                String mFactorConversion = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Factor de Conversion") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getFactorConversion()) + LF;
+                String mDensidad = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Densidad") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getDensidad()) + LF;
+                String mPrecio = ESC + "|lA" + ESC + "|bC" + String.format("%1$-30s", "Precio") + String.format("%-6s", ":") + String.format("%1$12s", ordenCargo.getPrecio()) + LF;
+
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + datosEmpresa.getEntidad().getRazonSocial() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getEntidad().getDireccionFiscal() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getDepartamento() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Tel: " + datosEmpresa.getEntidad().getTelefono() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: " + datosEmpresa.getEntidad().getrUC() + LF);//RUC
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + ESC + "|3C" + "TIPO DE CARGA : " + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + concepto.getDescripcion() + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Tipo de Origen: " + tipoOrigen + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Producto      : " + producto.getDescripcion() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "NroGuia       : " + ordenCargo.getNroGuia() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Fecha Creacion: " + ordenCargo.getFechaCreacion() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Fecha Accion  : " + ordenCargo.getFechaAccion() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + ESC + "|3C" + "ITEM COMPRA :  " + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mUnidadMedida);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mCantidad);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mFactorConversion);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mDensidad);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mPrecio);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Agente: " + persona.getPerVNombres() + " " + persona.getPerVApellidoPaterno() + " " + persona.getPerVApellidoMaterno() + LF);
+                printLineas();
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Recibido por" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Nombre    :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "DNI       :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + ESC + "|bC" + "Firma     :" + "..............................." + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Documento sin valor tributario" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Consultar su comprobante de pago electronico en" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+            } catch (JposException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+
     private void printLineas() throws JposException {
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|bC" + lineas + LF);
     }
 
 }

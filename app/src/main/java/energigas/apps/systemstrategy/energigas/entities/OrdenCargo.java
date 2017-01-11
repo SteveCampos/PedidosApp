@@ -9,6 +9,8 @@ import com.orm.SugarRecord;
 public class OrdenCargo extends SugarRecord {
     private long ordenCargaId;
 
+    private long ordeCargaId;
+
     private String fechaRegistro;
 
     private String fechaComprobante;
@@ -48,13 +50,24 @@ public class OrdenCargo extends SugarRecord {
     private int usuarioAccionId;
 
     private String fechaAccion;
+
+
     private Double precio;
 
     public OrdenCargo() {
     }
 
-    public OrdenCargo(long ordenCargaId, String fechaRegistro, String fechaComprobante, int proveedorId, String nroComprobante, String nroGuia, int tipoCargaId, int tipoOrigenId, double factorConversion, String fechaGuia, double densidad, int proId, int unIdComprobante, double cantidadDoc, int unIdTransformada, double cantidadTransformada, int usuarioCreacionId, String fechaCreacion, int estadoId, int usuarioAccionId, String fechaAccion, Double precio) {
+    public long getOrdeCargaId() {
+        return ordeCargaId;
+    }
+
+    public void setOrdeCargaId(long ordeCargaId) {
+        this.ordeCargaId = ordeCargaId;
+    }
+
+    public OrdenCargo(long ordenCargaId, long ordeCargaId, String fechaRegistro, String fechaComprobante, int proveedorId, String nroComprobante, String nroGuia, int tipoCargaId, int tipoOrigenId, double factorConversion, String fechaGuia, double densidad, int proId, int unIdComprobante, double cantidadDoc, int unIdTransformada, double cantidadTransformada, int usuarioCreacionId, String fechaCreacion, int estadoId, int usuarioAccionId, String fechaAccion, Double precio) {
         this.ordenCargaId = ordenCargaId;
+        this.ordeCargaId = ordeCargaId;
         this.fechaRegistro = fechaRegistro;
         this.fechaComprobante = fechaComprobante;
         this.proveedorId = proveedorId;

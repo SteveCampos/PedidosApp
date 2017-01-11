@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.text.Text;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
@@ -40,8 +42,11 @@ import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Dispatch;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.GeoUbicacion;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
@@ -86,13 +91,26 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     TextView textInfoDespacho;
     @BindView(R.id.et_resp_body1)
     TextView textresbody1;
-    @BindView(R.id.et_resp_body2)
+   @BindView(R.id.et_resp_body2)
     TextView textresbody2;
+
+    @BindView(R.id.textview_title)
+    TextView txttitle;
+    @BindView(R.id.txt_dispatch_fecha)
+    TextView txtdate;
+    @BindView(R.id.et_resp_hora_iniciofin)
+    TextView txt_hours_startend;
 //    @BindView(R.id.print_factura_items_importe)
 //    TextView textBody;
+    @BindView(R.id.et_dispatch_cant)
+    TextView txtCanti_Dispatch;
 
     private Resources resources;
     private Usuario usuario;
+
+
+    private Unidad unidad;
+    private PedidoDetalle pedidoDetalle;
 
     private CajaLiquidacion CajaLiquidacion;
 
@@ -106,6 +124,11 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_print_dispatch);
         resources = getResources();
         mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
+
+       // pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " id_Detalle=? ", new String[]{unidad.getUnId() + ""}).get(Constants.CURRENT);
+        pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(Session.getPedido(this).getPeId() + "").get(0);
+        unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
+        Log.d(TAG,"pedidoDetalle: "+unidad.getDescripcion());
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " ub_Id = ? ", new String[]{establecimiento.getUbId() + ""}).get(0));
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{mainDispatch.getAlmacenEstId() + ""}).get(Constants.CURRENT);
@@ -150,8 +173,8 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     }
 
     private void viewTextCabecera() {
-
-        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), datosEmpresa.getEntidad().getRazonSocial(), datosEmpresa.getEntidad().getDireccionFiscal(), datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + " \n " + datosEmpresa.getDepartamento(), "RUC: " + datosEmpresa.getEntidad().getrUC(), "Telf: " + datosEmpresa.getEntidad().getTelefono());
+        txttitle.setText(datosEmpresa.getEntidad().getRazonSocial());
+        String tetextCabeceraxt = String.format(resources.getString(R.string.print_despacho_empresa), datosEmpresa.getEntidad().getDireccionFiscal(), datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia() + " \n " + datosEmpresa.getDepartamento(), "RUC: " + datosEmpresa.getEntidad().getrUC(), "Telf: " + datosEmpresa.getEntidad().getTelefono());
         textCabecera.setText(tetextCabeceraxt);
     }
 
@@ -165,22 +188,31 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 mainDispatch.getSerie() + "", vehiculo.getPlaca() + "", "www.energigas.com", cliente.getPersona().getPerVRazonSocial());
         textInfoDespacho.setText(textInfo);*/
 
-       String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+        txtdate.setText(mainDispatch.getFechaDespacho());
+        String texthours= String.format(resources.getString(R.string.print_resp_dispatch_hora_inicio_fin), mainDispatch.getHoraInicio() + "",
+                mainDispatch.getHoraFin());
+        txt_hours_startend.setText(texthours);
+
+//        String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+//                agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", cliente.getPersona().getPerVRazonSocial(), mainDispatch.getSerie() + "-" + mainDispatch.getNumero());
+//        textInfoDespacho.setText(textInfo);
+        String textInfo = String.format(resources.getString(R.string.print_info_despacho),establecimiento.getEstVDescripcion() ,establecimiento.getUbicacion().getDescripcion(),almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
                 agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", cliente.getPersona().getPerVRazonSocial(), mainDispatch.getSerie() + "-" + mainDispatch.getNumero());
         textInfoDespacho.setText(textInfo);
 
-
-        String textBody1 = String.format(resources.getString(R.string.print_resp_dispatch_body1),mainDispatch.getFechaDespacho(), mainDispatch.getHoraInicio()+"",
-                mainDispatch.getHoraFin(), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getContadorFinalDestino() + "", mainDispatch.getCantidadDespachada()+"");
+        String textBody1 = String.format(resources.getString(R.string.print_resp_dispatch_body1), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getpITDestino() + "",mainDispatch.getPlaca(),mainDispatch.getVeId()+"");
         textresbody1.setText(textBody1);
 
-        String textBody2 = String.format(resources.getString(R.string.print_resp_dispatch_body2),mainDispatch.getCantidadDespachada() + "", mainDispatch.getpITDestino(),
-                mainDispatch.getSerie(),vehiculo.getPlaca());
+
+        String textBody2 = String.format(resources.getString(R.string.print_resp_dispatch_body2),  mainDispatch.getContadorFinalDestino() + "", mainDispatch.getpFTDestino()+"",
+                almacen.getCapacidadReal()+"");
         textresbody2.setText(textBody2);
+
+        String textCantDispachada = String.format(resources.getString(R.string.print_dispatch_cantidad),unidad.getDescripcion(),mainDispatch.getCantidadDespachada()+"");
+        txtCanti_Dispatch.setText(textCantDispachada);
 
 
     }
-
 
 
     @Override
@@ -254,7 +286,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(cliente,mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa);
+                printDispatch.printNow(cliente, mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa,unidad);
 
                 break;
             case R.id.fabDisconec:

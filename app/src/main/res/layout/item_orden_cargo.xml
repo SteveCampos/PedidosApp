@@ -14,48 +14,143 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="@dimen/activity_vertical_margin">
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/txt.ordencargo.subtitle"
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/estable_default_description"
+            android:src="@drawable/ic_gas_station_c" />
+
+
+        <RelativeLayout
+            android:id="@+id/idLinearCompra"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tanque 1"
-            android:layout_toStartOf="@+id/txt.ordencargo.title"
-            style="@style/TextAppearance.AppCompat.Title"
-            />
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/imageView2"
+            android:layout_toRightOf="@id/imageView2"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt.ordencargo.date"
+            <TextView
+                android:id="@+id/tipocartext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:text="Tipo de carga:"
+                android:textAppearance="@style/TextViewSmall"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="italic|bold" />
+            <TextView
+                android:id="@+id/txtnombre"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tipocartext"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Compra"
+                android:textSize="14sp" />
+
+
+
+            <TextView
+                android:id="@+id/text_orden_cargo_cantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/txtnombre"
+                android:layout_alignParentRight="true"
+                android:text="300.00 GAL"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/txt_info_orden_carga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtnombre"
+                android:text="@string/string_info_orden_compra"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="7dp"
+                android:textStyle="bold" />
+
+
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/idLinearTrasciego"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="INFORMATION DESPACHO:"
-            android:layout_below="@+id/txt.ordencargo.subtitle"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_toEndOf="@id/imageView2"
+            android:layout_toRightOf="@id/imageView2"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt.ordencargo.title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="300.00 GAL"
-            android:layout_alignParentEnd="true"
-            style="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorAccent"
-            />
-        <!--<TextView
-            android:id="@+id/text_dispatch_state"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DESPACHADO"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/text_dispatch_requested_quantity"
-            style="@style/TextAppearance.AppCompat.Caption"
-            />-->
+            <TextView
+                android:id="@+id/tipocartextTrasciego"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:text="Tipo de carga:"
+                android:textAppearance="@style/TextViewSmall"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="italic|bold" />
+            <TextView
+                android:id="@+id/txtnombreTrasciego"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tipocartextTrasciego"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Trasciego"
+                android:textSize="14sp" />
+
+
+
+            <TextView
+                android:id="@+id/text_orden_cargo_cantidad_trasciego"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/txtnombreTrasciego"
+                android:layout_alignParentRight="true"
+                android:text="300.00 GAL"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/txt_info_orden_carga_trasciego"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtnombreTrasciego"
+                android:text="@string/string_info_orden_trasciego"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="7dp"
+                android:textStyle="bold" />
+
+
+
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
+
 
 
 </android.support.v7.widget.CardView>

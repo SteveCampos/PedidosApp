@@ -34,6 +34,19 @@
                 >
 
                 <TextView
+                    android:id="@+id/textview_facturatitle"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingBottom="20dp"
+                    android:text="ENERGIGAS S.A.C"
+                    android:textIsSelectable="true"
+                    android:textStyle="bold" />
+
+
+                <TextView
                     android:id="@+id/textViewImprimirCabecera"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

@@ -66,14 +66,99 @@
     <string name="title_activity_order">OrderActivity</string>
     <string name="title_order">Prioridad Alta</string>
 
+    <!--PrintOrdenCarga-->
+
+    <string name="print_orden_carga_empresa">
+        " %1$s \n"
+        " %2$s \n"
+        " %3$s \n"
+        " %4$s "
+    </string>
+
+        <string name="print_orden_carga">
+        " Razón Social: %1$s \n"
+        "RUC: %2$s \n"
+        "Nro Comprobante: %3$s \n"
+        "Nro Guia: %4$s \n"
+        "Fecha Creación: %5$s \n"
+        "Fecha Acción: %6$s \n"
+    </string>
+      <string name="print_info_orden_carga_body1">
+          " UNIDAD DE MEDIDAD\t\t\t\t\t\t\t\t\t\t:\n"
+          "CANTIDAD\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "FACTOR DE CONVERSION\t\t\t\t\t\t\t:\n"
+          "DENSIDAD\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "PRECIO\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+    </string>
+
+       <string name="print_resp_orden_carga_body1">
+          " %1$s \n"
+          " %2$s \n"
+          " %3$s \n"
+          " %4$s \n"
+          " %5$s \n"
+    </string>
+
+    <!--<string name="print_info_orden_carga_trasciego">-->
+    <!--" Tipo de Origen\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Producto\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Cantidad\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Unidad de Medidad\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Factor Conversión\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Densidad\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--"Precio\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"-->
+    <!--</string>-->
+     <string name="print_info_orden_carga_trasciego">
+          " Cantidad\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "Unidad de Medidad\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "Factor Conversión\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "Densidad\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+          "Precio\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+    </string>
+
+      <string name="print_resp_orden_carga_body1_trasciego">
+          " %1$s \n"
+          " %2$s \n"
+          " %3$s \n"
+          " %4$s \n"
+          " %5$s \n"
+
+    </string>
+
+    <string name="print_orden_carga_trasciego">
+        " Tipo de Origen: %1$s \n"
+        "Producto: %2$s \n"
+        "Nro Guia: %3$s \n"
+        "Fecha Creación: %4$s \n"
+        "Fecha Acción: %5$s \n"
+    </string>
+
+
+    <string name="string_info_orden_compra">
+        " Razón Social:%1$s\n"
+        "Ruc:%2$s\n"
+        "Producto:%3$s\n"
+        "Fecha de Acción:%4$s\n"
+        "NrGuia:%5$s"
+    </string>
+
+    <string name="string_info_orden_trasciego">
+        " Tipo de Origen:%1$s\n"
+        "Producto:%2$s\n"
+        "NrGuia:%3$s\n"
+        "Fecha de Acción:%4$s\n"
+    </string>
+
+
+    <!--Fin-->
+
 
 
     <string name="print_despacho_empresa">
         " %1$s \n"
         " %2$s \n"
         " %3$s \n"
-        " %4$s \n"
-        " %5$s \n\n"
+        " %4$s "
     </string>
 
     <!--<string name="print_info_despacho">-->
@@ -105,30 +190,37 @@
     <!--"               %16$s          \n \n"-->
     <!--</string>-->
 
+    <!--Update PrintDispatch -->
+
+    <!--Hora Inicio - Hora Fin-->
+   <string name="print_resp_dispatch_hora_inicio_fin">
+          "\t\t\tHora Inicio\t\t\t\t\t:\t  %1$s\n"
+       "\t\t\tHora Fin\t\t\t\t\t\t:\t  %2$s"
+    </string>
+    <!--FIN-->
+
+    <!--Fin PrintDispatch -->
     <string name="print_info_despacho">
-        "INSTALACION: %1$s \n"
-        "COORDENADAS: %2$s \n"
-        "PLACA: %3$s \n"
-        "AGENTE DE VENTA: %4$s \n "
-        "CLIENTE: %5$s \n "
-        "NUMERO DE COMPROBANTE: %6$s \n \n "
+        " Nombre\t\t\t\t:%1$s\n"
+        "Dirección\t\t\t:%2$s\n"
+        "Instalación\t\t:%3$s\n"
+        "Coordenadas\t:%4$s \n"
+        "Placa\t\t\t\t\t\t:%5$s \n"
+        "Agente\t\t\t\t\t:%6$s \n"
+        "Cliente\t\t\t\t\t:%7$s \n"
+        "NroDespacho\t:%8$s \n"
     </string>
     <string name="print_info_dispatch_body1">
-      "FECHA\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "HORA INICIO\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "HORA FIN\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "CONTADOR INICIAL\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "CONTADOR FINAL\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "CANTIDAD DESPACHADA\t\t\t\t\t\t\t\t\t:\n"
-
+        " Contador Inicial\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t :\n"
+        "Porcentaje Inicial\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t :\n"
+        "Serie Tanque\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t :\n"
+        "Nro Transporte\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t :\n"
     </string>
      <string name="print_resp_dispatch_body1">
           " %1$s \n"
           " %2$s \n"
           " %3$s \n"
           " %4$s \n"
-          " %5$s \n"
-          " %6$s \n"
     </string>
 
    <string name="print_info_dispatch_feet1">
@@ -136,6 +228,10 @@
        "NOMBRE\t\t\t: ________________________________ \n \n"
        "DNI\t\t\t\t\t\t\t:\t_______________________________\n \n"
        "FIRMA POR\t\t: ________________________________ \n \n"
+    </string>
+
+      <string name="print_dispatch_cantidad">
+          "Cantidad Depachada\t(%1$s)\t\t:\t%2$s    "
     </string>
 
 
@@ -146,16 +242,14 @@
     </string>
 
       <string name="print_info_dispatch_body2">
-        " PORCENTAJE INICIAL TANQUE\t\t\t\t\t\t:\n"
-        "PORCENTAJE FINAL TANQUE\t\t\t\t\t\t\t:\n"
-        "SERIE TANQUE\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
-        "NUMERO DE TRANSPORTE\t\t\t\t\t\t\t\t:\n"
+        " Contador Final\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "Porcentaje Tanque Final\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
+        "capacidad de Tanque\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t:\n"
     </string>
        <string name="print_resp_dispatch_body2">
           " %1$s \n"
           " %2$s \n"
           " %3$s \n"
-          " %4$s \n"
     </string>
 
 
@@ -261,6 +355,7 @@
         "Visualice este documento en:\n"
         "<u> %5$s </u>"
     </string>
+
 
 
 
@@ -636,5 +731,6 @@
     <string name="ordencarga.trasciego.text.emision">Fecha emisión</string>
     <string name="ordencarga.trasciego.text.entrega">Fecha entrega</string>
     <string name="title_activity_pruebamaps">Map</string>
+    <string name="title_activity_orden_carga_">OrdenCarga_Activity</string>
 
 </resources>

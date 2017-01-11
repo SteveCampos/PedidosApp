@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,15 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final OrdenCargo ordenCargo = list.get(position);
         OrdenCargoHolder ordenCargoHolder = (OrdenCargoHolder) holder;
+
         ordenCargoHolder.bind(ordenCargo, mContext, listener);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onOrdenCargoClickListener(ordenCargo);
+            }
+        });
     }
 
 

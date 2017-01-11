@@ -348,6 +348,12 @@ public class Utils {
                 "COSTO_VENTA,COMP_ID,CANTIDAD,IMPORTE,PRECIO,PRECIO_UNITARIO,PRO_ID,UNIDAD_ID,USUARIO_ACTUALIZACION FROM COMPROBANTE_VENTA_DETALLE ;";
     }
 
+    public static String getQueryNumberOrderCargo() {
+
+        return "SELECT ID,ORDEN_CARGA_ID,ORDE_CARGA_ID,FECHA_REGISTRO,FECHA_COMPROBANTE,PROVEEDOR_ID,NRO_COMPROBANTE,NRO_GUIA,TIPO_CARGA_ID,TIPO_ORIGEN_ID," +
+                "CASE  WHEN (SELECT COUNT(*) FROM ORDEN_CARGO ) IS 0 THEN (SELECT COUNT(*) FROM ORDEN_CARGO  ) +1 ELSE MAX(ORDE_CARGA_ID)+1 END AS 'ORDE_CARGA_ID' " +
+                ",FACTOR_CONVERSION,FECHA_GUIA,DENSIDAD,PRO_ID,UN_ID_COMPROBANTE,CANTIDAD_DOC,UN_ID_TRANSFORMADA,CANTIDAD_TRANSFORMADA, USUARIO_CREACION_ID,FECHA_CREACION,ESTADO_ID,USUARIO_ACCION_ID,FECHA_ACCION,PRECIO FROM ORDEN_CARGO  ;";
+    }
     public static String completaZeros(String numero, int largo) {
         String ceros = "";
         int cantidad = largo - numero.length();
@@ -603,5 +609,19 @@ public class Utils {
         return gps_enabled;
     }
 
+
+    public static String cleanAcentos(String string) {
+        /*String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";*/
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·'°";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  .";
+        if (string != null) {
+            //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
+            for (int i = 0; i < original.length(); i++ ) {
+                string = string.replace(original.charAt(i), ascii.charAt(i));
+            }
+        }
+        return string;
+    }
 
 }

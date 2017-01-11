@@ -33,35 +33,84 @@
                 android:paddingTop="12dp">
 
                 <TextView
-                    android:id="@+id/textview_title"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:paddingBottom="20dp"
+
                     android:text="ENERGIGAS S.A.C"
                     android:textIsSelectable="true"
                     android:textStyle="bold" />
 
-
                 <TextView
-                    android:id="@+id/textViewImprimirCabecera"
+                    android:id="@+id/txt_info_empresa"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@drawable/border_bottom"
                     android:gravity="center"
                     android:paddingBottom="8dp"
-                    android:text="@string/print_despacho_empresa"
+                    android:text="@string/print_orden_carga_empresa"
                     android:textIsSelectable="true"
                     android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_bottom"
+                        android:gravity="left"
+                        android:paddingBottom="4dp"
+                        android:text="TIPO DE CARGA :   "
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/txt_tipo_carga_orden"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_bottom"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:text=" Tipo de Carga   "
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
 
                 <TextView
-                    android:id="@+id/textViewInfoDespacho"
+                    android:visibility="gone"
+                    android:id="@+id/txt_head_orden_carga"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="@string/print_info_despacho"
+                    android:text="@string/print_orden_carga"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/txt_head_orden_carga_trasciego"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/print_orden_carga_trasciego"
                     android:textStyle="bold" />
 
 
@@ -76,51 +125,17 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_bottom"
-                        android:gravity="center"
-                        android:paddingBottom="4dp"
-                        android:text=" DESPACHO   "
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:id="@+id/textView7" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dimen_5dp"
-                        android:layout_weight="0"
-                        android:text=" FECHA :"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txt_dispatch_fecha"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="00/00/00"
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/et_resp_hora_iniciofin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_weight="1"
                         android:gravity="left"
-                        android:text="@string/print_resp_dispatch_hora_inicio_fin"
+                        android:paddingBottom="4dp"
+                        android:text="ITEM COMPRA :   "
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/Lineer_Orden_Compra"
+                    android:visibility="gone"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom"
@@ -131,115 +146,95 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/print_info_dispatch_body1"
+                        android:text="@string/print_info_orden_carga_body1"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/et_resp_body1"
+                        android:id="@+id/et_resp_ordencarga_body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="@string/print_resp_dispatch_body1"
+                        android:text="@string/print_resp_orden_carga_body1"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-
+                    android:id="@+id/Lineer_Orden_TrasCiego"
+                    android:visibility="gone"
                     android:layout_width="fill_parent"
-                    android:layout_height="44dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/et_dispatch_cant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/dimen_15dp"
-                        android:textColor="@color/black"
-                        android:text="@string/print_dispatch_cantidad"
+                        android:layout_weight="1"
+                        android:text="@string/print_info_orden_carga_trasciego"
                         android:textStyle="bold" />
 
-
+                    <TextView
+                        android:id="@+id/et_resp_ordencarga_body1_trasciego"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="@string/print_resp_orden_carga_body1_trasciego"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-
                 <!--<LinearLayout-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:paddingBottom="4dp">-->
+                    <!--android:visibility="visible"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
 
-                <!--<TextView-->
-                <!--android:id="@+id/et_body1"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="@string/print_info_dispatch_body1" />-->
-                <!--<TextView-->
-                <!--android:id="@+id/et_resp_body1"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="right"-->
-                <!--android:textStyle="bold"-->
-                <!--android:text="@string/print_resp_dispatch_body1" />-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:text="Cantidad"-->
+                        <!--android:textStyle="bold" />-->
+
                 <!--</LinearLayout>-->
-
-
-
-
 
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@drawable/border_bottom"
+                    android:orientation="horizontal"
+                    android:paddingBottom="4dp">
 
                     <TextView
-                        android:id="@+id/et_body2"
+
+                        style="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/print_info_dispatch_body2"
+                        android:text="Agente : "
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/et_resp_body2"
+                        android:id="@+id/et_agente_order_carga"
+                        style="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
                         android:layout_weight="1"
-                        android:gravity="right"
-                        android:text="@string/print_resp_dispatch_body2"
+                        android:gravity="left"
+                        android:text="Luis Enrique Rojas Palomino"
                         android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="3dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TextAppearance.AppCompat.Title"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_bottom"
-                        android:gravity="center"
-                        android:textStyle="bold" />
-
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/et_info_feet1"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-
-                    android:textStyle="bold"
                     android:gravity="left"
-                    android:text="@string/print_info_dispatch_feet1" />
+                    android:text="@string/print_info_dispatch_feet1"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -255,6 +250,7 @@
                         android:text="@string/print_info_dispatch_feet2"
                         android:textStyle="bold" />
                 </LinearLayout>
+
 
                 <Button
                     android:id="@+id/buttonImprimir"
@@ -272,8 +268,8 @@
                     android:text="Sincronizar"
                     android:visibility="gone" />
 
-
             </LinearLayout>
+
         </android.support.v4.widget.NestedScrollView>
     </android.support.v7.widget.CardView>
 
