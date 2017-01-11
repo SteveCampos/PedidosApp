@@ -84,7 +84,7 @@ public class LocationVehiculeListener implements LocationListener {
         Log.d(TAG, "onLocationChanged");
         onLocationListener.setLatAndLong(location);
         if (i < 3) {
-            Toast.makeText(context, "Latitude: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context, "Latitude: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
         }
         i++;
     }

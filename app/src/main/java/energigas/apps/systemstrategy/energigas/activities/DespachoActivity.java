@@ -264,7 +264,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         progressDialog.setTitle("Cargando...");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
-        locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(1));
+        locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
 
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);

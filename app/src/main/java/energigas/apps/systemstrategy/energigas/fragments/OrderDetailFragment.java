@@ -29,7 +29,7 @@ public class OrderDetailFragment extends Fragment {
 
     private List<PedidoDetalle> list;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
     private OrderDetailAdapter adapter;
     private Pedido pedido;

@@ -277,6 +277,7 @@ public class MainStationActivity extends AppCompatActivity
     public void onStationOrderClickListener(Pedido pedido) {
         Session.savePedido(getApplicationContext(), pedido);
         startActivity(new Intent(MainStationActivity.this, StationOrderActivity.class));
+        this.finish();
     }
 
     public void showMap(Uri geoLocation) {

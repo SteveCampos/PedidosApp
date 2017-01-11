@@ -28,7 +28,7 @@ public class Application extends SugarApp {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
         startService(new Intent(this, ServiceSync.class));
-        super.onCreate();//capau  //   //1/0
+        super.onCreate();//  //   //1/0
     }
 
     @Override

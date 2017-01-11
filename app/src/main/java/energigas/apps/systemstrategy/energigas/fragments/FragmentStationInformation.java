@@ -241,7 +241,8 @@ public class FragmentStationInformation extends Fragment implements OnMapReadyCa
         map.animateCamera(zoom);
     }
 
-   /* @Override
+
+    /* @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
