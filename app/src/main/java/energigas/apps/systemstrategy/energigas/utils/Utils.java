@@ -77,8 +77,8 @@ public class Utils {
         return aDouble;
     }
 
-    public static Double formatDouble(String format, Double d){
-        return  Double.parseDouble(String.format(Locale.ENGLISH, format, d));
+    public static Double formatDouble(String format, Double d) {
+        return Double.parseDouble(String.format(Locale.ENGLISH, format, d));
     }
 
     public static String getDateDescription(String fecha) {
@@ -206,6 +206,68 @@ public class Utils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static Date getDateFromStringTime(String fecha) {
+
+        DateFormat formatter = new SimpleDateFormat("hh:mm:ss");
+        Date date = null;
+        try {
+            date = formatter.parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d("FECHACONVER", "" + e.getMessage());
+        }
+        return date;
+    }
+
+    public static String getHoursToCheck(String fecha) {
+        /*
+        Date date = getDateFromStringTime(fecha);
+        Log.d("FECHACONVER", "" + getDateFromString(fecha));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.HOUR, date.getHours());
+
+        String nowAsString = new SimpleDateFormat("hh:mm:ss").format(calendar.getTime());
+
+        return nowAsString;*/
+
+        String horasPendientes = "No cuenta con Horario";
+
+        DateFormat df = new java.text.SimpleDateFormat("hh:mm:ss");
+        Date date1, date2;
+        Long diff;
+        int hours, minutes, seconds;
+        try {
+            date1 = df.parse(fecha);
+            date2 = df.parse(getTimeHour());
+            Log.d("FECHACONVER", "" + date2 + "-" + date1);
+            diff = date1.getTime() - date2.getTime();
+
+            int timeInSeconds = diff.intValue() / 1000;
+
+            hours = timeInSeconds / 3600;
+            timeInSeconds = timeInSeconds - (hours * 3600);
+            minutes = timeInSeconds / 60;
+            timeInSeconds = timeInSeconds - (minutes * 60);
+            seconds = timeInSeconds;
+            horasPendientes = hours + ":" + minutes + ":" + seconds;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        }
+
+        return horasPendientes;
+    }
+
+    public static String getTimeHour() {
+
+        Date date = new Date();
+        SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
+        String dateText = df2.format(date);
+        return dateText;
     }
 
     public static String getDateToDocument(String fecha) {
@@ -354,6 +416,7 @@ public class Utils {
                 "CASE  WHEN (SELECT COUNT(*) FROM ORDEN_CARGO ) IS 0 THEN (SELECT COUNT(*) FROM ORDEN_CARGO  ) +1 ELSE MAX(ORDE_CARGA_ID)+1 END AS 'ORDE_CARGA_ID' " +
                 ",FACTOR_CONVERSION,FECHA_GUIA,DENSIDAD,PRO_ID,UN_ID_COMPROBANTE,CANTIDAD_DOC,UN_ID_TRANSFORMADA,CANTIDAD_TRANSFORMADA, USUARIO_CREACION_ID,FECHA_CREACION,ESTADO_ID,USUARIO_ACCION_ID,FECHA_ACCION,PRECIO FROM ORDEN_CARGO  ;";
     }
+
     public static String completaZeros(String numero, int largo) {
         String ceros = "";
         int cantidad = largo - numero.length();
@@ -617,7 +680,7 @@ public class Utils {
         String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  .";
         if (string != null) {
             //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
-            for (int i = 0; i < original.length(); i++ ) {
+            for (int i = 0; i < original.length(); i++) {
                 string = string.replace(original.charAt(i), ascii.charAt(i));
             }
         }

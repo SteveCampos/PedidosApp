@@ -14,26 +14,19 @@ public class Historial {
     private String diaNUmero;
     private String cantidad;
     private String anno;
+    private int semaforo;
 
-    public Historial(int historialId) {
-        this.historialId = historialId;
+    public Historial() {
     }
 
-    public Historial(int historialId, String mes, String dia, String diaNUmero, String cantidad, String anno) {
+    public Historial(int historialId, String mes, String dia, String diaNUmero, String cantidad, String anno, int semaforo) {
         this.historialId = historialId;
         this.mes = mes;
         this.dia = dia;
         this.diaNUmero = diaNUmero;
         this.cantidad = cantidad;
         this.anno = anno;
-    }
-
-    public String getAnno() {
-        return anno;
-    }
-
-    public void setAnno(String anno) {
-        this.anno = anno;
+        this.semaforo = semaforo;
     }
 
     public int getHistorialId() {
@@ -76,13 +69,29 @@ public class Historial {
         this.cantidad = cantidad;
     }
 
+    public String getAnno() {
+        return anno;
+    }
+
+    public void setAnno(String anno) {
+        this.anno = anno;
+    }
+
+    public int getSemaforo() {
+        return semaforo;
+    }
+
+    public void setSemaforo(int semaforo) {
+        this.semaforo = semaforo;
+    }
+
     public static List<Historial> getHistorialList() {
         List<Historial> historials = new ArrayList<>();
-        historials.add(new Historial(1, "Enero", "Lunes", "12", "879", "2016"));
-        historials.add(new Historial(1, "Enero", "Martes", "13", "631", "2016"));
-        historials.add(new Historial(1, "Enero", "Miercoles", "14", "1000", "2016"));
-        historials.add(new Historial(1, "Enero", "Jueves", "15", "127", "2016"));
-        historials.add(new Historial(1, "Enero", "Viernes", "16", "700", "2016"));
+        historials.add(new Historial(1, "Enero", "Lunes", "12", "879", "2016", 1));
+        historials.add(new Historial(1, "Enero", "Martes", "13", "631", "2016", 2));
+        historials.add(new Historial(1, "Enero", "Miercoles", "14", "1000", "2016", 3));
+        historials.add(new Historial(1, "Enero", "Jueves", "15", "127", "2016", 1));
+        historials.add(new Historial(1, "Enero", "Viernes", "16", "700", "2016", 1));
 
         return historials;
     }

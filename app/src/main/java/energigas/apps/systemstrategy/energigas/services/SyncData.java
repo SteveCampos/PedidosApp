@@ -31,6 +31,7 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.InformeGasto;
+import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PlanPago;
 import energigas.apps.systemstrategy.energigas.entities.PlanPagoDetalle;
@@ -82,7 +83,8 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         if (intent != null) {
             final String action = intent.getAction();
             if (Constants.ACTION_EXPORT_SERVICE.equals(action)) {
-                EXPORTAR_CREADOS = 1;
+                EXPORTAR_CREADOS = 1000;
+
                 SugarTransactionHelper.doInTransaction(this);
             }
         }
@@ -96,11 +98,10 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
                 boolean exportar = getExportarCreados(Constants.S_CREADO);
                 Log.d(TAG, "POR EXPORTAR" + String.valueOf(exportar));
                 if (exportar) {
-
-
                     exportCreatedDespacho(Constants.S_CREADO);
                     exportCreatedComprobanteVenta(Constants.S_CREADO);
                     exportCreatedGasto(Constants.S_CREADO);
+                    exportarCreateOrdenCargo(Constants.S_CREADO);
                 } else {
 
                 }
@@ -116,8 +117,9 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         Boolean inAComprobanteVenta = ComprobanteVenta.getComprobanteVentas(new ArrayList<ComprobanteVenta>(Utils.getListForExIn(ComprobanteVenta.class, estado))).size() > 0;
         Boolean beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado))).size() > 0;
         Boolean informeGastoList = CajaMovimiento.getListCajaMovimiento(new ArrayList<CajaMovimiento>(Utils.getListForExIn(CajaMovimiento.class, estado))).size() > 0;
+        Boolean beOrdenCargo = Utils.getListForExIn(OrdenCargo.class, estado).size() > 0;
 
-        if (inIdDespacho || inAComprobanteVenta || beDocElectronicos || informeGastoList) {
+        if (inIdDespacho || inAComprobanteVenta || beDocElectronicos || informeGastoList || beOrdenCargo) {
             return true;
         } else {
             return false;
@@ -427,6 +429,31 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private void exportarCreateOrdenCargo(int estado) {
+        jsonObjectResponse = null;
+        List<OrdenCargo> ordenCargoArrayList = new ArrayList<OrdenCargo>(Utils.getListForExIn(OrdenCargo.class, estado));
+        if (ordenCargoArrayList.size() > 0) {
+            Log.d(TAG, "cantidad gasto: " + ordenCargoArrayList.get(0).getFechaAccion());
+            for (OrdenCargo ordenCargo : ordenCargoArrayList) {
+                try {
+
+                    jsonObjectResponse = restAPI.fins_GuardarOrdenCargo(ordenCargo);
+                    Log.d(TAG, "JSON RESPONSE: " + jsonObjectResponse.toString());
+                    if (Utils.isSuccessful(jsonObjectResponse)) {
+                        mainEstado = jsonObjectResponse.getInt("Value");
+                        if (mainEstado > 0) {
+                            saveEstado(ordenCargo.getId() + "", mainEstado + "", OrdenCargo.class);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

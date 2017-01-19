@@ -186,7 +186,7 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
+        //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
     }
 
 

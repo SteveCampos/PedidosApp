@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/dimen_10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:padding="@dimen/dimen_5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tableLayoutItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_rigth"
+                android:shrinkColumns="*"
+                android:stretchColumns="*" />
+
+            <TextView
+                android:id="@+id/textPrecioIgv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio + IGV : S/. 4.7200" />
+
+            <TextView
+                android:id="@+id/textPrecioSinIgv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio - IGV : S/. 4.0000" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+
+
+</android.support.v4.widget.NestedScrollView>

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -27,7 +28,9 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.Servidores;
+import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.ProgressDialogFragment;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.services.ServiceSync;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -73,6 +76,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         checkLogin();
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        Toast.makeText(this, "Tiene que iniciar session", Toast.LENGTH_SHORT).show();
+    }
 
     private void setToolbar() {
         setSupportActionBar(toolbar);

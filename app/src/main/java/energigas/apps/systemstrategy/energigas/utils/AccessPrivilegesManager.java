@@ -3,6 +3,8 @@ package energigas.apps.systemstrategy.energigas.utils;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -198,7 +200,7 @@ public class AccessPrivilegesManager {
         List<Privilegio> privilegioList = new ArrayList<>();
 
         for (Rol rol : Rol.getRol(usuarioId)) {
-            Log.d("MainActivity",rol.getNombre());
+            Log.d("MainActivity", rol.getNombre());
             List<Acceso> accesosFor = Acceso.getAccesosFor(rol.getIdRol() + "", aClass.getSimpleName());
 
             for (Acceso acceso : accesosFor) {
@@ -242,5 +244,62 @@ public class AccessPrivilegesManager {
 
 
         return this;
+    }
+
+    public void verificarAccesosNavigationView(Menu menu) {
+        List<Privilegio> privilegioList = getPrivilegiosRolNavigation(usuarioId);
+        Log.d("MENUVAGIATION", "PRIVI: " + privilegioList.size());
+
+        if (privilegioList.size() == 0) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem menuItem = menu.getItem(i);
+                menuItem.setVisible(false);
+
+            }
+        }
+
+        for (Privilegio privilegio : privilegioList) {
+
+            if (viewList != null) {
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem menuItem = menu.getItem(i);
+                    Log.d("MENUVAGIATION", "NOMBRE: " + String.valueOf(menuItem.getTitle().toString() + " -- PRIVILEGIO: " + privilegio.getDescripcion()));
+                    if (privilegio.getDescripcion().equals(menuItem.getTitle().toString())) {
+                        menuItem.setVisible(true);
+                    } else {
+
+                        if (!menuItem.isVisible()) {
+                            menuItem.setVisible(false);
+                        }
+
+
+                    }
+                }
+
+            }
+
+
+        }
+
+    }
+
+    private List<Privilegio> getPrivilegiosRolNavigation(String usuarioId) {
+
+        List<Privilegio> privilegioList = new ArrayList<>();
+
+        for (Rol rol : Rol.getRol(usuarioId)) {
+            Log.d("MainActivity", rol.getNombre());
+            List<Acceso> accesosFor = Acceso.getAccesosFor(rol.getIdRol() + "", "MenuNavigationView");
+
+            for (Acceso acceso : accesosFor) {
+                List<Privilegio> privilegios = Privilegio.getPrivilegios(acceso.getIdAcceso() + "");
+                for (Privilegio privilegio : privilegios) {
+                    privilegioList.add(privilegio);
+                }
+            }
+
+        }
+
+        return privilegioList;
     }
 }

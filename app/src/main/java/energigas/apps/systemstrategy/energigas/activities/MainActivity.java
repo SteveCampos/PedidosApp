@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity
 
     ImageView imageView;
 
+    AccessPrivilegesManager accessPrivilegesManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
         if (hideFloatingButton()) {
 
-            new AccessPrivilegesManager(getClass())
+            accessPrivilegesManager = new AccessPrivilegesManager(getClass())
                     .setViews(fab)
                     .setListenerIntent(this)
                     .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
@@ -156,7 +158,9 @@ public class MainActivity extends AppCompatActivity
                                     new EstablecimientoFragment(), R.drawable.ic_calendar, 1),
                             new AccessFragment(getString(R.string.plan_title_name),
                                     new PlanFragment(), R.drawable.ic_heat, 2))
-                    .isFragmentEnable();
+            ;
+
+            accessPrivilegesManager.isFragmentEnable();
 
 
             //new ExportTask(this, this).execute(Constants.TABLA_COMPROBANTE, Constants.S_CREADO);
@@ -166,33 +170,41 @@ public class MainActivity extends AppCompatActivity
         }
 
         initHeaderViewNavigation();
-        if (Session.getImageUsuario(this) != null) {
-            draweeViewPerfil.setImageURI(Session.getImageUsuario(this));
-        }
 
 
     }
 
     private void initHeaderViewNavigation() {
-        DEEntidad deEntidad = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "").getEntidad();
-        DatosEmpresa datosEmpresa = new DatosEmpresa(deEntidad);
-        View view = navigationView.getHeaderView(0);
-        draweeViewPerfil = (SimpleDraweeView) view.findViewById(R.id.imgPerfil);
-        imageView = (ImageView) view.findViewById(R.id.imageView2);
-        TextView textViewInfoEmpresa = (TextView) view.findViewById(R.id.textInforEmpresa);
-        TextView textNombreAgente = (TextView) view.findViewById(R.id.textNombreAgente);
-        TextView textCorreoAgente = (TextView) view.findViewById(R.id.textCorreoAgente);
 
-        String informacionEmpre = String.format(getResources().getString(R.string.header_energigas), datosEmpresa.getEntidad().getRazonSocial(), datosEmpresa.getEntidad().getrUC(), datosEmpresa.getEntidad().getDireccionFiscal());
-        textViewInfoEmpresa.setText(informacionEmpre);
-        textNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
-        textCorreoAgente.setText(usuario.getPersona().getPerVEmail());
-        draweeViewPerfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadImagefromGallery(v);
+        if (CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "") != null) {
+            DEEntidad deEntidad = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "").getEntidad();
+            DatosEmpresa datosEmpresa = new DatosEmpresa(deEntidad);
+            View view = navigationView.getHeaderView(0);
+            draweeViewPerfil = (SimpleDraweeView) view.findViewById(R.id.imgPerfil);
+            imageView = (ImageView) view.findViewById(R.id.imageView2);
+            TextView textViewInfoEmpresa = (TextView) view.findViewById(R.id.textInforEmpresa);
+            TextView textNombreAgente = (TextView) view.findViewById(R.id.textNombreAgente);
+            TextView textCorreoAgente = (TextView) view.findViewById(R.id.textCorreoAgente);
+
+            String informacionEmpre = String.format(getResources().getString(R.string.header_energigas), datosEmpresa.getEntidad().getRazonSocial(), datosEmpresa.getEntidad().getrUC(), datosEmpresa.getEntidad().getDireccionFiscal());
+            textViewInfoEmpresa.setText(informacionEmpre);
+            textNombreAgente.setText(usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno());
+            textCorreoAgente.setText(usuario.getPersona().getPerVEmail());
+            draweeViewPerfil.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadImagefromGallery(v);
+                }
+            });
+
+            if (Session.getImageUsuario(this) != null) {
+                draweeViewPerfil.setImageURI(Session.getImageUsuario(this));
             }
-        });
+
+
+        }
+
+
     }
 
 
@@ -379,6 +391,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "navigationView.getHeaderCount(): " + navigationView.getHeaderCount());
         Log.d(TAG, "navigationView.getMenu().size(): " + navigationView.getMenu().size());
+        accessPrivilegesManager.verificarAccesosNavigationView(navigationView.getMenu());
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             Log.d(TAG, "navigationView.getMenu().getItem(" + i + "): " + navigationView.getMenu().getItem(i));
         }
@@ -447,10 +460,12 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -469,6 +484,7 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -505,12 +521,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_close_account:
                 showToast(item);
-                closeAccount();
-                //startActivity(new Intent(this, LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, CuentaResumenActivity.class));
                 break;
             case R.id.nav_close_session:
                 Toast.makeText(MainActivity.this, R.string.action_close_session, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -522,9 +537,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void closeAccount() {
-
-    }
 
     private void setCurrentItem(int position) {
         if (viewPager.getCurrentItem() != position) {

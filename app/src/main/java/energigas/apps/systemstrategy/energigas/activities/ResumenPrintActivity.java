@@ -15,6 +15,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -58,6 +59,8 @@ import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
 import energigas.apps.systemstrategy.energigas.entities.SummaryIncome;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
+import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -479,9 +482,22 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
+       //    super.onBackPressed();
+        Utils.saveStateLogin(getApplicationContext(), false);
         disconnectPrinter();
+
+        new DialogGeneral(this).setCancelable(false).setMessages("Atencion", "Ha cerrado caja . ¿ Esta seguro de salir ?").setTextButtons("SI", "NO").showDialog(new DialogGeneralListener() {
+            @Override
+            public void onSavePressed(AlertDialog alertDialog) {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                ResumenPrintActivity.this.finish();
+            }
+
+            @Override
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
+            }
+        });
     }
 
 

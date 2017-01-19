@@ -544,8 +544,16 @@ public class Pedido extends SugarRecord {
         this.items = items;
     }
 
-    public static Pedido getPedido(String pedidoId) {
-        List<Pedido> pedidoList = Pedido.find(Pedido.class, "establecimiento_Id=?", new String[]{pedidoId});
+    public static Pedido getPedido(String establecimientoId) {
+        List<Pedido> pedidoList = Pedido.find(Pedido.class, "establecimiento_Id=?", new String[]{establecimientoId});
+        if (pedidoList != null) {
+            return pedidoList.get(0);
+        }
+        return null;
+    }
+
+    public static Pedido getPedidoById(String pedidoId) {
+        List<Pedido> pedidoList = Pedido.find(Pedido.class, "pe_Id=?", new String[]{pedidoId});
         if (pedidoList != null) {
             return pedidoList.get(0);
         }

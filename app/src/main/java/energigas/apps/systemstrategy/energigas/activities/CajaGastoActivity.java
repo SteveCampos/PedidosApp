@@ -464,7 +464,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+       // new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 

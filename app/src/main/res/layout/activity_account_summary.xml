@@ -145,7 +145,8 @@
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
         android:layout_marginRight="@dimen/md_keylines"
-        android:src="@drawable/ic_printer_sync_ok"
+        app:backgroundTint="#E91E63"
+        android:src="@drawable/ic_locked_user"
         android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -70,6 +70,40 @@
             android:textSize="15dp"
             android:textStyle="italic" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@color/background_color"
+            android:padding="@dimen/dimen_5dp">
+
+            <Button
+                android:id="@+id/btnVerde"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/circular_shape"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/btnAmbar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:background="@drawable/circular_shape"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/btnRojo"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:background="@drawable/circular_shape"
+                android:gravity="center" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -84,47 +118,45 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:background="@drawable/circular_shape"
+            android:background="@drawable/circular_shape_mater_indicadores"
             android:text="56%"
             android:textColor="#fff"
             android:textSize="8dp" />
 
         <Button
-            android:layout_marginLeft="25dp"
             android:id="@+id/sh"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:background="@drawable/circular_shape"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/circular_shape_mater_indicadores"
             android:text="56%"
             android:textColor="#fff"
             android:textSize="8dp" />
 
         <Button
-            android:layout_marginLeft="25dp"
             android:id="@+id/rhrt"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:background="@drawable/circular_shape"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/circular_shape_mater_indicadores"
             android:text="56%"
             android:textColor="#fff"
             android:textSize="8dp" />
 
         <Button
-            android:layout_marginLeft="25dp"
             android:id="@+id/btnTorthrhtal"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:background="@drawable/circular_shape"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/circular_shape_mater_indicadores"
             android:text="56%"
             android:textColor="#fff"
             android:textSize="8dp" />
 
     </LinearLayout>
-
-
 
 
 </LinearLayout>

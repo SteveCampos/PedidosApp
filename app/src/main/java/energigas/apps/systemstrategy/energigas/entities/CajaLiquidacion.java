@@ -11,6 +11,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.entities.fe.CertificadoDigital;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 10/08/2016.
@@ -514,6 +515,39 @@ public class CajaLiquidacion extends SugarRecord {
             Log.d("FINENTODAD", "ENTIDAD: " + deEntidad.getrUC());
             return cajaLiquidacion;
         }
+        return null;
+
+
+    }
+
+    public static CajaLiquidacion getCajaLiquidacionCerrarCaja(String liquidacionId,String latitudFinal, String longitudFinal) {
+
+
+        Boolean aBoolean = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).size() > 0;
+        Log.d("FINENTODAD", "" + aBoolean + "-" + liquidacionId);
+        if (aBoolean) {
+            CajaLiquidacion cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id=? ", new String[]{liquidacionId}).get(Constants.CURRENT);
+
+            CajaLiquidacion liquiParam = new CajaLiquidacion();
+            liquiParam.setLiqId(cajaLiquidacion.getLiqId());
+            liquiParam.setUsuarioId(cajaLiquidacion.getUsuarioId());
+            liquiParam.setFechaCierre(Utils.getDatePhone());
+            liquiParam.setEstadoId(cajaLiquidacion.getEstadoId());
+            liquiParam.setIngresos(cajaLiquidacion.getIngresos());
+            liquiParam.setGastos(cajaLiquidacion.getGastos());
+            liquiParam.setKmFinal(cajaLiquidacion.getKmFinal());
+            liquiParam.setPesoFinal(cajaLiquidacion.getPesoFinal());
+            liquiParam.setpFT(cajaLiquidacion.getpFT());
+            liquiParam.setLatitudFinal(latitudFinal);
+            liquiParam.setLongitudFinal(longitudFinal);
+            liquiParam.setSaldoFinal(cajaLiquidacion.getSaldoFinal());
+
+            return liquiParam;
+        }
+
+
+
+
         return null;
 
 

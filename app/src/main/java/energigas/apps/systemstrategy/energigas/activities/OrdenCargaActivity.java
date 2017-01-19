@@ -44,10 +44,12 @@ import energigas.apps.systemstrategy.energigas.adapters.UnidadAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Proveedor;
+import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
@@ -149,9 +151,9 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     private int tipoFecha;
 
-/*
-    @BindView(R.id.recycler)
-    RecyclerView recycler;*/
+    /*
+        @BindView(R.id.recycler)
+        RecyclerView recycler;*/
     OrdenCargaAdapter ordenCargaAdapter;
     private List<OrdenCargo> ordenCargos = new ArrayList<>();
 
@@ -163,7 +165,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         initVies();
 
     }
-    private void initToolbar(){
+
+    private void initToolbar() {
         setSupportActionBar(toolbar);
         setTitle(R.string.collect_title_inventory);
         toolbar.setTitle(R.string.collect_title_inventory);
@@ -234,16 +237,17 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         initSpinnerUnidadMedia();
         initEdittext();
         initToolbar();
-       // initRecycler();
+        // initRecycler();
 
     }
-/*
-    private void initRecycler() {
-        ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ORDER BY id DESC"), this);
-        recycler.setAdapter(ordenCargaAdapter);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-    }
-*/
+
+    /*
+        private void initRecycler() {
+            ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ORDER BY id DESC"), this);
+            recycler.setAdapter(ordenCargaAdapter);
+            recycler.setLayoutManager(new LinearLayoutManager(this));
+        }
+    */
     private void initEdittext() {
         actCompraRuc.addTextChangedListener(watcherCompraRuc);
         etCompraFacturaSerie.addTextChangedListener(watcherCompraFacturaSerie);
@@ -422,12 +426,11 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         String guiaFecha = btnTrasciegoGuiaEmision.getText().toString();
 
 
-
         boolean esGuiaSerieValida = esGuiaTrasciegoSerieValida(serieGuia);
         boolean esGuiaCorrelativoValido = esGuiaTrasciegoCorrelativoValido(correlativoGuia);
         boolean esFechaGuiaValida = esGuiaTrasciegoComprobanteValida(guiaFecha);
         boolean sonCamposGeneralesValidos = validarCamposGenerales();
-        Log.d(TAG,"esGuiaSerieValida:"+esGuiaSerieValida+"esGuiaCorrelativoValido:"+esGuiaCorrelativoValido+"esFechaGuiaValida:"+esFechaGuiaValida+"sonCamposGeneralesValidos:"+sonCamposGeneralesValidos);
+        Log.d(TAG, "esGuiaSerieValida:" + esGuiaSerieValida + "esGuiaCorrelativoValido:" + esGuiaCorrelativoValido + "esFechaGuiaValida:" + esFechaGuiaValida + "sonCamposGeneralesValidos:" + sonCamposGeneralesValidos);
         if (esGuiaSerieValida && esGuiaCorrelativoValido && esFechaGuiaValida &&
                 sonCamposGeneralesValidos) {
 
@@ -476,31 +479,32 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                     Utils.formatDouble(format, precio)
             );
             saveOrdenCargo(ordenCargo);
-        }else{
+        } else {
             Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
-
         }
     }
 
-    private void saveOrdenCargo(OrdenCargo ordenCargo){
+    private void saveOrdenCargo(OrdenCargo ordenCargo) {
         long id = ordenCargo.save();
         Log.d(TAG, "ordenCargo.save : " + id);
-        ordenCargo.setId(id);
+        ordenCargo.setOrdeCargaId(id);
         ordenCargo.save();
-        CajaLiquidacion liquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId()+"");
-        if (liquidacion != null){
+        CajaLiquidacion liquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        if (liquidacion != null) {
             liquidacion.setStockInicial(ordenCargo.getCantidadTransformada());
             liquidacion.save();
 
-            Almacen almacen = Almacen.find(Almacen.class, "alm_Id = ?", ""+liquidacion.getAlmId()).get(0);
+            Almacen almacen = Almacen.find(Almacen.class, "alm_Id = ?", "" + liquidacion.getAlmId()).get(0);
             Double stockActual = almacen.getStockActual();
-            almacen.setStockActual(stockActual+ordenCargo.getCantidadTransformada());
+            almacen.setStockActual(stockActual + ordenCargo.getCantidadTransformada());
             almacen.save();
 
             Snackbar.make(etCantidad, "Guardado", Snackbar.LENGTH_LONG).show();
-        }else{
+        } else {
             Snackbar.make(etCantidad, "Error al guardar Orden de Cargo", Snackbar.LENGTH_LONG).show();
         }
+        //Orden de cargo
+        new SyncEstado(0, Utils.separteUpperCase(OrdenCargo.class.getSimpleName()), Integer.parseInt(ordenCargo.getId() + ""), Constants.S_CREADO).save();
 
         cleanViews();
         //initRecycler();
@@ -565,7 +569,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         String guiaFecha = btnCompraGuiaEmision.getText().toString();
 
 
-
         boolean esProveedorValido = esProveedorValido(ruc);
         boolean esSerieValida = esSerieValida(serieFactura);
         boolean esCorrelativoValido = esCorrelativoValido(correlativoFactura);
@@ -628,8 +631,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                     Utils.formatDouble(format, precio)
             );
             saveOrdenCargo(ordenCargo);
-            Log.d(TAG," getOrdeCarga_Id :"+ordenCargo.getOrdeCargaId() );
-        }else{
+            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
+        } else {
             Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
         }
 
@@ -952,7 +955,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         }
     };
 
-    private void cleanViews(){
+    private void cleanViews() {
         actCompraRuc.setText("");
         actCompraNombreComercial.setText("");
         etCompraFacturaSerie.setText("");
@@ -985,7 +988,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     @Override
     public void onOrdenCargoClickListener(OrdenCargo ordenCargo) {
         Intent intent = new Intent(this, PrintOrdenCarga.class);
-        intent.putExtra("ORDECARGAID", ordenCargo.getOrdeCargaId()+"");
+        intent.putExtra("ORDECARGAID", ordenCargo.getOrdeCargaId() + "");
         startActivity(intent);
     }
 
@@ -1015,8 +1018,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     public void onBackPressed() {
         super.onBackPressed();
     }
-
-
 
 
 }
