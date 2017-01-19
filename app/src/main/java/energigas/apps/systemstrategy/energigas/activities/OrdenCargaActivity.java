@@ -990,6 +990,11 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
     @Override
+    public void onOrdenCargoLongClickListener(int position,OrdenCargo ordenCargo,View view) {
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long

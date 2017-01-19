@@ -1,19 +1,21 @@
 package energigas.apps.systemstrategy.energigas.adapters;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import android.widget.Button;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.holders.OrdenCargoHolder;
 import energigas.apps.systemstrategy.energigas.interfaces.OrdenCargoListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 
 /**
  * Created by Steve on 28/12/2016.
@@ -24,6 +26,7 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private List<OrdenCargo> list = new ArrayList<>();
     private OrdenCargoListener listener;
+    AlertDialog alertDialog;
 
     public OrdenCargaAdapter(Context mContext, List<OrdenCargo> list, OrdenCargoListener listener) {
         this.mContext = mContext;
@@ -41,7 +44,7 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final OrdenCargo ordenCargo = list.get(position);
         OrdenCargoHolder ordenCargoHolder = (OrdenCargoHolder) holder;
 
@@ -53,12 +56,56 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 listener.onOrdenCargoClickListener(ordenCargo);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                final View layout_dialog_ordenCarga = View.inflate(mContext, R.layout.dialog_option_orden_carga, null);
+                final Button btnEdit = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_edit_ordencarga);
+                final Button btnDelete = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_delete_ordencarga);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setView(layout_dialog_ordenCarga);
+
+                btnEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Snackbar.make(holder.itemView,"OnCliclBtnEdit",Snackbar.LENGTH_LONG).show();
+                        listener.onOrdenCargoLongClickListener(Constants.CLICK_EDITAR_CAJA_GASTO,ordenCargo,holder.itemView);
+                        alertDialog.dismiss();
+                    }
+                });
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       // Snackbar.make(holder.itemView,"OnCliclBtnDelete",Snackbar.LENGTH_LONG).show();
+                        listener.onOrdenCargoLongClickListener(Constants.CLICK_ELIMINAR_CAJA_GASTO,ordenCargo,holder.itemView);
+                      //  metDelete(ordenCargo);
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+                //  builder.setTitle("Title");
+                alertDialog = builder.create();
+                alertDialog.getWindow().setLayout(200,40); //Controlling width and height.
+                alertDialog.show();
+
+
+                return false;
+            }
+        });
     }
 
 
     @Override
     public int getItemCount() {
         return list != null ? list.size() : 0;
+    }
+
+
+    public void remove(OrdenCargo ordenCargo, int position) {
+        list.remove(ordenCargo);
+        notifyItemRemoved(position);
     }
 
 }

@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.interfaces;
 
+import android.view.View;
+
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 
 /**
@@ -8,4 +10,5 @@ import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 
 public interface OrdenCargoListener {
     void onOrdenCargoClickListener(OrdenCargo ordenCargo);
+    void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view);
 }

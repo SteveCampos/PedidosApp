@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bluetooth"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="energigas.apps.systemstrategy.energigas.activities.BluetoothActivity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/ordencarga.text.tipocarga" />
+
+                <Spinner
+                    android:id="@+id/spn.tipocarga"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:entries="@array/ordencarga_tipocarga_entries"
+                    android:entryValues="@array/ordencarga_tipocarga_values" />
+            </LinearLayout>
+
+            <include
+                layout="@layout/content_ordencarga_compra"
+                android:visibility="gone" />
+
+            <include
+                layout="@layout/content_ordencarga_trasciego"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/ordencarga.text.producto" />
+
+                    <Spinner
+                        android:id="@+id/spn.producto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:entries="@array/ordencarga_producto_entries"
+                        android:entryValues="@array/ordencarga_producto_values" />
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til.cantidad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/et.cantidad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/ordencarga.text.cantidad"
+                        android:inputType="numberDecimal"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="10" />
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/ordencarga.text.unidadmedida" />
+
+                    <Spinner
+                        android:id="@+id/spn.unidadmedida"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin" /><!--
+                    android:entryValues="@array/ordencarga_unidadmedida_values"
+                    android:entries="@array/ordencarga_unidadmedida_entries"-->
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til.factorconversion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/et.factorconversion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/ordencarga.text.conversion"
+                        android:inputType="numberDecimal"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="10" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til.densidad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/et.densidad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/ordencarga.text.densidad"
+                        android:inputType="numberDecimal"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="10" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til.precio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/et.precio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/ordencarga.text.precio"
+                        android:inputType="numberDecimal"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="10" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!--<android.support.v7.widget.AppCompatButton-->
+                    <!--android:id="@+id/btn.ordencompra.save"-->
+                    <!--style="@style/Base.Widget.AppCompat.Button.Colored"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:text="@string/ordencarga.button.text.save" />-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_aceptar"
+                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                        android:layout_width="@dimen/dimen_12_10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:gravity="center"
+                        android:text="@string/ordencarga.button.text.save" />
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                        android:layout_width="@dimen/dimen_12_10dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/cancel" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:layout_marginTop="@dimen/activity_horizontal_margin"-->
+            <!--android:id="@+id/recycler"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--</android.support.v7.widget.RecyclerView>-->
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

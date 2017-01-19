@@ -1,12 +1,16 @@
 package energigas.apps.systemstrategy.energigas.printingsheets;
 
+import android.graphics.Typeface;
+
 import com.sewoo.jpos.POSPrinterService;
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.ESCPOS;
+import com.sewoo.jpos.command.ESCPOSConst;
 import com.sewoo.jpos.printer.ESCPOSPrinter;
 import com.sewoo.jpos.printer.LKPrint;
 import com.sewoo.jpos.request.RequestQueue;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
@@ -33,6 +37,7 @@ import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 import jpos.JposException;
@@ -138,6 +143,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
+            posPtr.printBarCode(POSPrinterConst.PTR_S_RECEIPT,"1234567890", LKPrint.LK_BCS_Code39, 40, 2, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
 
 
         } catch (JposException e) {
@@ -146,6 +152,198 @@ public class SheetsPrintDispatch {
     }
 
 
+    public void printTipoDoc (Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico, DatosEmpresa datosEmpresa){
+
+
+        // escposPrinter.printText("ENERGIGAS", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD | LKPrint.LK_FNT_FONTB , LKPrint.LK_TXT_5WIDTH);
+           /* escposPrinter.printText("ENERGIGAS                                   \r\n", LKPrint.LK_ALIGNMENT_CENTER,  LKPrint.LK_FNT_BOLD | LKPrint.LK_FNT_FONTB, LKPrint.LK_TXT_5WIDTH);
+            escposPrinter.printText("______________________________              \r\n", LKPrint.LK_HRI_TEXT_BELOW, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT);
+          */
+
+
+
+        String data = "ENERGIGAS";
+        String fecha_N =  String.format("%1$-30s", "Fecha:" + comprobanteVenta.getFechaCreacion()) + String.format("%-6s", "N:") + String.format("%1$12s", comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc()) ;
+        String descripcionHead =  String.format("%1$-5s", "COD") + String.format("%1$-10s", "CANT")+String.format("%1$-10s", "U.M.")+String.format("%1$-10s", "DESCRIP.")+String.format("%1$-5s", "P.U")+ String.format("%1$8s", "IMPORTE") ;
+
+        String codigoVenta = beDocElectronico.getResumenFirma();
+
+        String tipoDocumento = "FACTURA ELECTRONICA";
+        if (comprobanteVenta.getTipoComprobanteId() != Constants.TIPO_DOCUMENTO_FACTURA) {
+            tipoDocumento = "BOLETA ELECTRONICA";
+        }
+        igv = Double.parseDouble(Session.getConceptoIGV().getDescripcion());
+
+        String textTipoVenta = "VENTA AL CONTADO";
+        if (comprobanteVenta.getPlanPago() != null) {
+            textTipoVenta = "VENTA AL CREDITO";
+        }
+        try
+        {
+            escposPrinter.lineFeed(2);
+            escposPrinter.printText(data+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD|LKPrint.LK_FNT_UNDERLINE, LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
+           // escposPrinter.printText("───────────────────────────\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
+            //escposPrinter.printText("------------------------------              \r\n", LKPrint.LK_HRI_TEXT_BELOW, LKPrint.LK_FNT_BOLD,  LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getRazonSocial())+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1HEIGHT|LKPrint.LK_TXT_2WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getDireccionFiscal())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDepartamento())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText("Telf:"+datosEmpresa.getEntidad().getTelefono()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText("R.U.C:"+datosEmpresa.getEntidad().getrUC()+"                 IMEI:012345645\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(tipoDocumento+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            //escposPrinter.printText("----------------------------------------------------\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            //escposPrinter.printText("Fecha:"+datosEmpresa.getEntidad().getrUC()+"                 IMEI:012345645\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(fecha_N+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("CLIENTE  : " + cliente.getPersona().getPerVRazonSocial() +"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("DNI/RUC  : " + cliente.getPersona().getPerVDocIdentidad()+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("DIRECCION: " + cliente.getPersona().getUbicacion().getDescripcion()+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(descripcionHead+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            double importeTotal = 0.0;
+            for (ComprobanteVentaDetalle comprobanteVentaDetalle : comprobanteVenta.getItemsDetalle()) {
+                //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%-5s", "") + String.format("%-9s", Utils.formatDoubleNumber(comprobanteVentaDetalle.getImporte())) + LF + "");
+                String descripcionTotal =  String.format("%1$-5s", comprobanteVentaDetalle.getProId()) + String.format("%1$-10s", comprobanteVentaDetalle.getCantidad())+String.format("%1$-10s", "U.M.")+String.format("%1$-5s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + ""))+String.format("%1$-10s",Utils.formatDoublePrint(comprobanteVentaDetalle.getPrecioUnitario()))+ String.format("%1$8s", Utils.formatDoublePrint(comprobanteVentaDetalle.getImporte())) ;
+                escposPrinter.printText(descripcionTotal+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+                importeTotal = importeTotal + comprobanteVentaDetalle.getImporte();
+            }
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+
+            Double importeIgv = importeTotal * igv;
+            Double importeTotalCIgv = importeIgv + importeTotal;
+
+
+            String gravada =String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) ;
+            String inafecta =  String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
+            String exonerada =  String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
+            String gratuita =  String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
+            String descuentos =  String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
+            String IGV =  String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeIgv)) ;
+            String rayaTotal =   "---------" ;
+            String precioVenta = String.format("%-18s", "IMPORTE TOTAL") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) ;
+            escposPrinter.printText(gravada+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(inafecta+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(exonerada+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(gratuita+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(descuentos+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(IGV+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(rayaTotal+"\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(precioVenta+"\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("SON:"+ NumberToLetterConverter.convertNumberToLetter(importeTotalCIgv)+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printBarCode("0123456789", LKPrint.LK_BCS_Code39, 40, 512, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
+            escposPrinter.printText(Utils.cleanAcentos(tipoDocumento)+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos("AGENTE:"+usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno())+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText(Utils.cleanAcentos(codigoVenta)+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText("REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(1);
+            escposPrinter.printText("Visualice este documento en\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(datosEmpresa.getUrl()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.lineFeed(3);
+
+            //"SON:"+NumberToLetterConverter.convertNumberToLetter(importeTotalIgv)
+
+
+
+
+
+            /*
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, true,true,Utils.cleanAcentos(data),0, 70, ESCPOSConst.LK_ALIGNMENT_CENTER);
+            //escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, true, true, Utils.cleanAcentos(data), 0, 70, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            // escposPrinter.printText("_________________________________\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, false,Utils.cleanAcentos(datosEmpresa.getEntidad().getRazonSocial()), nLineWidth2, 40, ESCPOSConst.LK_ALIGNMENT_CENTER);
+            escposPrinter.lineFeed(3);
+            //escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getDireccionFiscal())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            //escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            //escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDepartamento())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            //escposPrinter.lineFeed(1);
+            //escposPrinter.printAndroidFont(Typeface.SERIF, true, true,"Telf:"+datosEmpresa.getEntidad().getTelefono(), nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_CENTER);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, true,Utils.cleanAcentos(data), 0, 70, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+            //escposPrinter.printText("_________________________________\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, false,Utils.cleanAcentos(datosEmpresa.getEntidad().getRazonSocial()), 0, 40, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+            escposPrinter.lineFeed(1);
+           // escposPrinter.printText("R.U.C:"+datosEmpresa.getEntidad().getrUC()+"              IMEI:01234564564   \r\n", ESCPOSConst.LK_FNT_DEFAULT, LKPrint.LK_FNT_BOLD|LKPrint.LK_HRI_TEXT_BELOW , LKPrint.LK_TXT_1WIDTH);
+*/
+
+/*
+
+
+            escposPrinter.printAndroidFont(data, nLineWidth, 100, ESCPOSConst.LK_ALIGNMENT_CENTER);
+            escposPrinter.lineFeed(2);
+
+            escposPrinter.printAndroidFont("Left Alignment", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont("Center Alignment", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+            escposPrinter.printAndroidFont("Right Alignment", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+
+            escposPrinter.lineFeed(2);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, "SANS_SERIF : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, "SERIF : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, "MONOSPACE : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            escposPrinter.lineFeed(2);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, "SANS : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, "SANS BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, false, "SANS BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, false, true, "SANS ITALIC : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, true, "SANS BOLD ITALIC : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SANS_SERIF, true, true, true, "SANS B/I/U : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            escposPrinter.lineFeed(2);
+            escposPrinter.printAndroidFont(Typeface.SERIF, "SERIF : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, true, "SERIF BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, true, false, "SERIF BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, false, true, "SERIF ITALIC : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, true, true, "SERIF BOLD ITALIC : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.SERIF, true, true, true, "SERIF B/I/U : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            escposPrinter.lineFeed(2);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, "MONOSPACE : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, true, "MONO BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, true, false, "MONO BOLD : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, false, true, "MONO ITALIC : 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, true, true, "MONO BOLD ITALIC: 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            escposPrinter.printAndroidFont(Typeface.MONOSPACE, true, true, true, "MONO B/I/U: 1234iwIW", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+*/
+            escposPrinter.lineFeed(4);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        // escposPrinter.printText("______________________________\n", LKPrint.LK_HRI_TEXT_BELOW, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT);
+            /*escposPrinter.printText("\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(datosEmpresa.getEntidad().getRazonSocial()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(datosEmpresa.getEntidad().getDireccionFiscal() +"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText( datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Receipt\r\n\r\n\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+*/
+          /*  escposPrinter.printText("Receipt\r\n\r\n\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_2WIDTH);
+            escposPrinter.printText("TEL (123)-456-7890\r\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Thank you for coming to our shop!\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Chicken                             $10.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Hamburger                           $20.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Pizza                               $30.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Lemons                              $40.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Drink                               $50.00\r\n\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Excluded tax                       $150.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Tax(5%)                              $7.50\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_UNDERLINE, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Total         $157.50\r\n\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_2WIDTH);
+            escposPrinter.printText("Payment                            $200.00\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Change                              $42.50\r\n\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT, LKPrint.LK_TXT_1WIDTH);
+            */// Reverse print.
+        // escposPrinter.printText("Change                              $42.50\r\n\r\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_DEFAULT | LKPrint.LK_FNT_REVERSE, LKPrint.LK_TXT_1WIDTH);
+        // escposPrinter.printBarCode("0123456789", LKPrint.LK_BCS_Code39, 40, 512, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
+
+    }
     public void printNow(Cliente cliente, Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa,Unidad unidad) {
 
 
@@ -448,5 +646,6 @@ public class SheetsPrintDispatch {
     private void printLineas() throws JposException {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|bC" + lineas + LF);
     }
+
 
 }
