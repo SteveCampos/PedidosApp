@@ -4,40 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <!--<TextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/history_display_no"-->
-    <!--android:layout_weight="0.25"-->
-    <!--android:gravity="center"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:id="@+id/history_display_date"-->
-    <!--android:layout_weight="0.25"-->
-    <!--android:gravity="center"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:id="@+id/history_display_orderid"-->
-    <!--android:layout_weight="0.25"-->
-    <!--android:gravity="center"/>-->
-    <!--<TextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:id="@+id/history_display_quantity"-->
-    <!--android:layout_weight="0.25"-->
-    <!--android:gravity="center"/>-->
-
     <TextView
         android:id="@+id/textviewcodigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
-        android:gravity="left"
         android:layout_weight="0.25"
+        android:gravity="left"
         android:text="COD"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -47,23 +20,13 @@
         android:id="@+id/textviewcantidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="left"
         android:text="CANT"
-        android:layout_weight="1"
         android:textSize="12sp"
         android:textStyle="bold"
         android:typeface="monospace" />
 
-    <TextView
-        android:id="@+id/textviewum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:gravity="left"
-        android:text="U.M."
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:typeface="monospace" />
 
     <TextView
         android:id="@+id/textviewdescr"
@@ -77,12 +40,25 @@
         android:typeface="monospace" />
 
     <TextView
+        android:id="@+id/textviewum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:gravity="right"
+        android:text="U.M."
+        android:layout_marginRight="2dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+    <TextView
         android:id="@+id/textviewpreciouni"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="P.U."
         android:layout_weight="0.25"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:text="P.U."
         android:textSize="12sp"
         android:textStyle="bold"
         android:typeface="monospace" />
@@ -99,5 +75,76 @@
         android:textSize="12sp"
         android:textStyle="bold"
         android:typeface="monospace" />
+
+
+    <!-- <TextView
+         android:id="@+id/textviewcodigo"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginRight="16dp"
+         android:gravity="left"
+         android:layout_weight="0.25"
+         android:text="COD"
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />
+
+     <TextView
+         android:id="@+id/textviewcantidad"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="left"
+         android:text="CANT"
+         android:layout_weight="1"
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />
+
+
+     <TextView
+         android:id="@+id/textviewdescr"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:gravity="left"
+         android:text="DESCRIP."
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />
+
+     <TextView
+         android:id="@+id/textviewum"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:gravity="left"
+         android:text="U.M."
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />
+
+     <TextView
+         android:id="@+id/textviewpreciouni"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="left"
+         android:text="P.U."
+         android:layout_weight="0.25"
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />
+
+
+     <TextView
+         android:id="@+id/textRespPrecioImporte"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:gravity="right"
+         android:paddingRight="4dp"
+         android:text="Importe"
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:typeface="monospace" />-->
 
 </TableRow>

@@ -42,6 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.asyntask.ObtenerLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Agent;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
@@ -170,8 +171,17 @@ public class MainActivity extends AppCompatActivity
         }
 
         initHeaderViewNavigation();
+        importData();
 
+    }
 
+    private void importData() {
+        imageViewAgente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ObtenerLiquidacion().execute(usuario.getUsuIUsuarioId() + "");
+            }
+        });
     }
 
     private void initHeaderViewNavigation() {

@@ -48,8 +48,8 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
         holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + "");
         holder.information.setText(
                 "Tanque: " + almacen.getNombre() + "\n" +
-                        "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialOrigen()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalOrigen()) + "\n" +
-                        "P. Inicial: " + despacho.getpITOrigen() + " - " + "P. Final: " + despacho.getpFTOrigen() + "\n" +
+                        "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialDestino()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalDestino()) + "\n" +
+                        "P. Inicial: " + despacho.getpITDestino() + " - " + "P. Final: " + despacho.getpFTDestino() + "\n" +
                         "Hora de despacho: " + despacho.getHoraFin() + "\n"
         );
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +57,14 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
             public void onClick(View view) {
                 Log.d(TAG, "CLICKED: " + view);
                 listener.onDespachoClickListener(despacho, view);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onLongDespachoClickListener(despacho, v);
+                return false;
             }
         });
 
@@ -69,5 +77,7 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
 
     public interface OnDespachoClickListener {
         void onDespachoClickListener(Despacho despacho, View view);
+
+        void onLongDespachoClickListener(Despacho despacho, View view);
     }
 }

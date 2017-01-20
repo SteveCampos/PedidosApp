@@ -31,6 +31,7 @@ import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
+import energigas.apps.systemstrategy.energigas.services.SyncData;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -288,6 +289,31 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         toolbar();
         setTextField();
         textCantidadValida();
+        progressBarDespacho.setMax(100);
+
+    }
+
+    @OnClick(R.id.imgIniciarDespacho)
+    public void iniciarDespachoAutomatico(View v) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i <= 100; i++) {
+
+
+                    try {
+
+                        Thread.sleep(300);
+                        //1000 milliseconds is one second.
+                        progressBarDespacho.setProgress(i);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        }).start();
+
 
     }
 
@@ -304,7 +330,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                     Double cantidad = Double.parseDouble(s.toString());
                     if (cantidad > almacen.getCapacidadReal()) {
                         editTextCantidadDespachada.setText("");
-                        Toast.makeText(DespachoActivity.this, "La Cantidad supera lo programado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DespachoActivity.this, "La Cantidad supera la capacidad real", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -930,6 +956,8 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         startActivity(new Intent(this, PrintDispatch.class));
         this.finish();
         locationVehiculeListener.stopLocationUpdates();
+
+
     }
 
 

@@ -86,6 +86,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         Concepto concepto = Concepto.getConceptoByCodigo(codigoId + "");
+        Log.d("ERRORCONCEPTO", "" + concepto.getDescripcion() + " - " + codigoId);
         switch (estado) {
             case Constants.ERROR_PROCEDIMIENTO:
                 onAsyntaskListener.onLoadErrorProcedure(concepto.getDescripcion());
@@ -107,8 +108,6 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
     }
 
 
-
-
     @Override
     public void manipulateInTransaction() {
 
@@ -116,7 +115,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
         manipuleData.saveLiquidacion(cajaLiquidacion);
 
         estado = -4;
-        message ="Importancion exitosa.";
+        message = "Importancion exitosa.";
     }
 
     @Override

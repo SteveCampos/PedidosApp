@@ -342,12 +342,12 @@
 
    <string name="print_factura_footer">
 
-        " %2$s \n"
-        "AGENTE: %3$s \n\n"
-        "V. Resumen: %4$s  \n\n"
+        " %1$s \n"
+        "AGENTE: %2$s \n\n"
+        "V. Resumen: %3$s  \n\n"
         "<b>REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA</b>\n"
         "Visualice este documento en:\n"
-        "<u> %5$s </u>"
+        "<u> %4$s </u>"
     </string>
     <!--Factura Electronica Items-->
     <string name="print_factura_telefono">
@@ -360,7 +360,7 @@
         "IMEI:%1$s"
     </string>
     <string name="print_factura_fecha">
-        " Fecha:%1$s"
+        " FECHA:%1$s"
     </string>
     <string name="print_factura_num">
         "Nº:%1$s"
@@ -505,7 +505,7 @@
     <string name="information_date">19/07/2016</string>
     <string name="information_summary">41</string>
     <string name="information_agent">Kelvin Thony Meza Espiritu</string>
-    <string name="title_activity_dispatch">Facturar</string>
+    <string name="title_activity_dispatch">Despachos</string>
     <string name="title_activity_costs">CostsActivity</string>
     <string name="title_activity_print_dispatch">Imprimir Despacho</string>
     <string name="title_activity_print_factura">Imprimir Factura</string>
@@ -546,7 +546,7 @@
     <string name="add_new_expense">Add new Expense</string>
     <string name="optional_description">Descripción (Opcional)</string>
     <string name="total">Total</string>
-    <string name="title_activity_main_station">Estación</string>
+    <string name="title_activity_main_station">Ubigeo</string>
     <string name="selected_count">%1$d Selected</string>
     <!-- #### -->
 
@@ -626,7 +626,6 @@
         "Logo Solicitado : %1$s.\n"
         "Meta GI %2$s.\n"
     </string>
-
 
 
     <string name="main_dialog_title_close">Cerrar caja</string>
@@ -765,5 +764,6 @@
     <string name="ordencarga.trasciego.text.entrega">Fecha entrega</string>
     <string name="title_activity_pruebamaps">Map</string>
     <string name="title_activity_orden_carga_">OrdenCarga_Activity</string>
+    <string name="title_activity_editar_despacho">EditarDespacho</string>
 
 </resources>

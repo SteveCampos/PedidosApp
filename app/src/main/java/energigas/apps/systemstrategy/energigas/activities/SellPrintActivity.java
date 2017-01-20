@@ -52,6 +52,7 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
@@ -194,10 +195,17 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
         String compVar = comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc();
         String clienteVar = cliente.getPersona().getPerVNombres() + " " + cliente.getPersona().getPerVApellidoPaterno();
+
+        if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
+            clienteVar = cliente.getPersona().getPerVRazonSocial();
+        }
+
         String compro = "BOLETA ELECTRONICA";
         if (comprobanteVenta.getTipoComprobanteId() == Constants.TIPO_DOCUMENTO_FACTURA) {
             compro = "FACTURA ELECTRONICA";
         }
+
+
         String text = String.format(res.getString(R.string.print_factura_empresa), "Av. Santo Toribio # 173, cruce con Av. Vía Central, Centro Empresarial, Edificio Real 8 Of. 502", "San Isidro Lima");
         cabecera_empresa.setText(text);
 
@@ -225,56 +233,51 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         venta_cabecera.setText(textVC);
     }
 
+    /*
+        private void setTextItems() {
 
-    private void setTextItems() {
+            String costoUnidad = "";
+            String cantidadNombre = "";
+            double importeTotal = 0.0;
 
-        String costoUnidad = "";
-        String cantidadNombre = "";
-        double importeTotal = 0.0;
+            for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
+                importeTotal = importeTotal + Utils.formatDoubleNumber(comprobanteVentaDetalles.get(i).getImporte());
 
-        for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
-            importeTotal = importeTotal + Utils.formatDoubleNumber(comprobanteVentaDetalles.get(i).getImporte());
+                if (i == (comprobanteVentaDetalles.size() - 1)) {
 
-            if (i == (comprobanteVentaDetalles.size() - 1)) {
-
-                costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte());
-                cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " ";
+                    costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte());
+                    cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " ";
 
 
-            } else {
+                } else {
 
-                costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
-                cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " \n";
+                    costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
+                    cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " \n";
 
+
+                }
 
             }
+            Double importeIgv = importeTotal * igv;
 
+            Double importeTotalIgv = new Double(importeTotal + importeIgv);
+
+            String textImporte = String.format(res.getString(R.string.print_factura_items_importe2), Utils.formatDoublePrint(importeTotalIgv) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
+            textViewImprimirContenidoRight.setText(textImporte);
+
+
+            textViewImprimirContenidoLeft.setText(textCNombre);
+            String textTipoVenta = "VENTA AL CONTADO";
+            if (comprobanteVenta.getPlanPago() != null) {
+                textTipoVenta = "VENTA AL CREDITO";
+            }
+            String codigoVenta = beDocElectronico.getResumenFirma();
+            Log.d("", codigoVenta);
+            textViewImporeString.setText("SON:" + NumberToLetterConverter.convertNumberToLetter(importeTotalIgv));
+            String comproFooter = String.format(res.getString(R.string.print_factura_footer), beDocElectronico.getResumenFirma(), textTipoVenta, usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno(), codigoVenta, "http://www.energigas.com.pe");
+            textViewFooterComp.setText(comproFooter);
         }
-        Double importeIgv = importeTotal * igv;
-
-        Double importeTotalIgv = new Double(importeTotal + importeIgv);
-
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe2), Utils.formatDoublePrint(importeTotalIgv) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
-        textViewImprimirContenidoRight.setText(textImporte);
-
-//        String textCNombre = String.format(res.getString(R.string.print_factura_items), cantidadNombre);
-        String textCNombre = String.format(res.getString(R.string.print_factura_items2) + "");
-        /*textViewCodigo.setText(idProducto);
-        textViewCantidad.setText(CantidProducto);
-        textViewUm.setText();*/
-
-       textViewImprimirContenidoLeft.setText(textCNombre);
-        String textTipoVenta = "VENTA AL CONTADO";
-        if (comprobanteVenta.getPlanPago() != null) {
-            textTipoVenta = "VENTA AL CREDITO";
-        }
-        String codigoVenta = beDocElectronico.getResumenFirma();
-        Log.d("", codigoVenta);
-        textViewImporeString.setText("SON:"+NumberToLetterConverter.convertNumberToLetter(importeTotalIgv));
-        String comproFooter = String.format(res.getString(R.string.print_factura_footer), beDocElectronico.getResumenFirma(), textTipoVenta, usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno(), codigoVenta, "http://www.energigas.com.pe");
-        textViewFooterComp.setText(comproFooter);
-    }
-
+    */
     private void listItems() {
 
         TableRow tableRow1 = new TableRow(getApplicationContext());
@@ -418,22 +421,23 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void ListItemsFactura (){
+    private void ListItemsFactura() {
         String costoUnidad = "";
         String cantidadNombre = "";
         double importeTotal = 0.0;
-        View tableRow = LayoutInflater.from(this).inflate(R.layout.item_facturas,null,false);
-        TextView item_codigo  = (TextView) tableRow.findViewById(R.id.textviewcodigo);
-        TextView item_cant  = (TextView) tableRow.findViewById(R.id.textviewcantidad);
-        TextView item_um  = (TextView) tableRow.findViewById(R.id.textviewum);
+        View tableRow = LayoutInflater.from(this).inflate(R.layout.item_facturas, null, false);
+        TextView item_codigo = (TextView) tableRow.findViewById(R.id.textviewcodigo);
+        TextView item_cant = (TextView) tableRow.findViewById(R.id.textviewcantidad);
+        TextView item_um = (TextView) tableRow.findViewById(R.id.textviewum);
         TextView item_descp = (TextView) tableRow.findViewById(R.id.textviewdescr);
-        TextView item_pu  = (TextView) tableRow.findViewById(R.id.textviewpreciouni);
-        TextView item_importe  = (TextView) tableRow.findViewById(R.id.textRespPrecioImporte);
+        TextView item_pu = (TextView) tableRow.findViewById(R.id.textviewpreciouni);
+        TextView item_importe = (TextView) tableRow.findViewById(R.id.textRespPrecioImporte);
 
 
         for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
             importeTotal = importeTotal + Utils.formatDoubleNumber(comprobanteVentaDetalles.get(i).getImporte());
-
+            Log.d("UNIDAD_MEDIDA_ID", comprobanteVentaDetalles.get(i).getUnidadId() + "");
+            Unidad unidadMedida = Unidad.getUnidadProductobyUnidadMedidaId(comprobanteVentaDetalles.get(i).getUnidadId() + "");
             if (i == (comprobanteVentaDetalles.size() - 1)) {
 
                 costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte());
@@ -445,21 +449,21 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 item_pu.setText(""+(20+(i+1)));
                 item_importe.setText();
 */
-                item_codigo.setText(comprobanteVentaDetalles.get(i).getProId()+"");
-                item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad()+"");
-                item_um.setText("S0"+(i+1));
-                item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+""));
-                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario())+"");
+                item_codigo.setText(comprobanteVentaDetalles.get(i).getProId() + "");
+                item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad() + "");
+                item_um.setText(unidadMedida.getAbreviatura() + "");
+                item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + ""));
+                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario()) + "");
             } else {
 
                 costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
                 cantidadNombre = cantidadNombre + comprobanteVentaDetalles.get(i).getCantidad() + "   " + Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + "") + " \n";
 
-                item_codigo.setText(comprobanteVentaDetalles.get(i).getProId());
-                item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad()+"");
-                item_um.setText("S0"+(i+1));
-                item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId()+""));
-                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario())+"");
+                item_codigo.setText(comprobanteVentaDetalles.get(i).getProId() + "");
+                item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad() + "");
+                item_um.setText(unidadMedida.getAbreviatura() + "");
+                item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + ""));
+                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario()) + "");
 
             }
 
@@ -480,13 +484,10 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         }*/
 
 
-
-
-
         Double importeIgv = importeTotal * igv;
 
         Double importeTotalIgv = new Double(importeTotal + importeIgv);
-        item_importe.setText(importeTotalIgv+"");
+        item_importe.setText(Utils.formatDoublePrint(importeTotalIgv) + "");
         String textImporte = String.format(res.getString(R.string.print_factura_items_importe2), Utils.formatDoublePrint(importeTotalIgv) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
         textViewImprimirContenidoRight.setText(textImporte);
         tableLayoutFactura.addView(tableRow);
@@ -501,12 +502,13 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         if (comprobanteVenta.getPlanPago() != null) {
             textTipoVenta = "VENTA AL CREDITO";
         }
-        String codigoVenta = beDocElectronico.getResumenFirma();
-        Log.d("", codigoVenta);
-        textViewImporeString.setText("SON:"+NumberToLetterConverter.convertNumberToLetter(importeTotalIgv));
-        String comproFooter = String.format(res.getString(R.string.print_factura_footer), beDocElectronico.getResumenFirma(), textTipoVenta, usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno(), codigoVenta, "http://www.energigas.com.pe");
+
+
+        textViewImporeString.setText("SON:" + NumberToLetterConverter.convertNumberToLetter(importeTotalIgv));
+        String comproFooter = String.format(res.getString(R.string.print_factura_footer), textTipoVenta, usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno(), beDocElectronico.getResumenFirma(), "http://www.energigas.com.pe");
         textViewFooterComp.setText(comproFooter);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

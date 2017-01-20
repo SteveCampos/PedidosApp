@@ -72,7 +72,7 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         Cliente cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
         Pedido pedido = Pedido.getPedido(establecimiento.getEstIEstablecimientoId() + "");
         holder.textAtendido.setText(estado.getDescripcion());
-        holder.mname.setText(Utils.capitalize(establecimiento.getEstVDescripcion()));
+        holder.mname.setText(establecimiento.getEstVDescripcion().toUpperCase());
         holder.button.setText(cajaLiquidacionDetalle.getOrden() + "");
         GradientDrawable bgShape = (GradientDrawable) holder.button.getBackground();
         String color = "";
@@ -95,7 +95,7 @@ public class EstablecimientoAdapter extends RecyclerView.Adapter<Establecimiento
         //VALIDAR QUE LOS OBJETOS ANIDADOS, NO SEAN NULOS.
         if (geoUbicacion != null && pedido != null) {
             holder.mubicacion.setText("Hora Entrega: " + pedido.getHoraProgramada());
-            holder.maddress.setText(geoUbicacion.getDescripcion());
+            holder.maddress.setText(Utils.capitalize(geoUbicacion.getDescripcion()));
 
         }
 

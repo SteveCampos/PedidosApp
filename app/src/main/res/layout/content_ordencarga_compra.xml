@@ -96,12 +96,23 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn.compra.factura.fechaemision"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ordencarga.button.text.pickdate" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:text="F.Registro"/>
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn.compra.factura.fechaemision"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ordencarga.button.text.pickdate" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -149,12 +160,24 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn.compra.guia.fechaemision"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ordencarga.button.text.pickdate" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+
+                    android:text="F.Acción"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn.compra.guia.fechaemision"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ordencarga.button.text.pickdate" />
+            </RelativeLayout>
 
         </LinearLayout>
 

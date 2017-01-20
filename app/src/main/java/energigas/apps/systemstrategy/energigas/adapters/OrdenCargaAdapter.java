@@ -59,6 +59,7 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+
                 final View layout_dialog_ordenCarga = View.inflate(mContext, R.layout.dialog_option_orden_carga, null);
                 final Button btnEdit = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_edit_ordencarga);
                 final Button btnDelete = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_delete_ordencarga);

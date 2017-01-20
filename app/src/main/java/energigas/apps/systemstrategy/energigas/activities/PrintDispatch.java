@@ -91,7 +91,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     TextView textInfoDespacho;
     @BindView(R.id.et_resp_body1)
     TextView textresbody1;
-   @BindView(R.id.et_resp_body2)
+    @BindView(R.id.et_resp_body2)
     TextView textresbody2;
 
     @BindView(R.id.textview_title)
@@ -100,7 +100,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
     TextView txtdate;
     @BindView(R.id.et_resp_hora_iniciofin)
     TextView txt_hours_startend;
-//    @BindView(R.id.print_factura_items_importe)
+    //    @BindView(R.id.print_factura_items_importe)
 //    TextView textBody;
     @BindView(R.id.et_dispatch_cant)
     TextView txtCanti_Dispatch;
@@ -118,6 +118,9 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     private DatosEmpresa datosEmpresa;
 
+    @BindView(R.id.text_abreviatura)
+    TextView txtCanti_Abreviatura;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,10 +128,10 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         resources = getResources();
         mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
 
-       // pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " id_Detalle=? ", new String[]{unidad.getUnId() + ""}).get(Constants.CURRENT);
+        // pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " id_Detalle=? ", new String[]{unidad.getUnId() + ""}).get(Constants.CURRENT);
         pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(Session.getPedido(this).getPeId() + "").get(0);
         unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
-        Log.d(TAG,"pedidoDetalle: "+unidad.getDescripcion());
+        Log.d(TAG, "pedidoDetalle: " + unidad.getDescripcion());
         establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ?  ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
         establecimiento.setUbicacion(GeoUbicacion.find(GeoUbicacion.class, " ub_Id = ? ", new String[]{establecimiento.getUbId() + ""}).get(0));
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{mainDispatch.getAlmacenEstId() + ""}).get(Constants.CURRENT);
@@ -189,29 +192,29 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
         textInfoDespacho.setText(textInfo);*/
 
         txtdate.setText(mainDispatch.getFechaDespacho());
-        String texthours= String.format(resources.getString(R.string.print_resp_dispatch_hora_inicio_fin), mainDispatch.getHoraInicio() + "",
+        String texthours = String.format(resources.getString(R.string.print_resp_dispatch_hora_inicio_fin), mainDispatch.getHoraInicio() + "",
                 mainDispatch.getHoraFin());
         txt_hours_startend.setText(texthours);
 
 //        String textInfo = String.format(resources.getString(R.string.print_info_despacho), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
 //                agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", cliente.getPersona().getPerVRazonSocial(), mainDispatch.getSerie() + "-" + mainDispatch.getNumero());
 //        textInfoDespacho.setText(textInfo);
-        String textInfo = String.format(resources.getString(R.string.print_info_despacho),establecimiento.getEstVDescripcion() ,establecimiento.getUbicacion().getDescripcion(),almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
+        String textInfo = String.format(resources.getString(R.string.print_info_despacho), establecimiento.getEstVDescripcion(), establecimiento.getUbicacion().getDescripcion(), almacen.getNombre(), mainDispatch.getLatitud() + ", " + mainDispatch.getLongitud(), almacen.getPlaca() + "",
                 agente.getPerVNombres() + ", " + agente.getPerVApellidoPaterno() + "", cliente.getPersona().getPerVRazonSocial(), mainDispatch.getSerie() + "-" + mainDispatch.getNumero());
         textInfoDespacho.setText(textInfo);
 
-        String textBody1 = String.format(resources.getString(R.string.print_resp_dispatch_body1), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getpITDestino() + "",mainDispatch.getPlaca(),mainDispatch.getVeId()+"");
+        String textBody1 = String.format(resources.getString(R.string.print_resp_dispatch_body1), mainDispatch.getContadorInicialDestino() + "", mainDispatch.getpITDestino() + "", mainDispatch.getPlaca(), mainDispatch.getVeId() + "");
         textresbody1.setText(textBody1);
 
 
-        String textBody2 = String.format(resources.getString(R.string.print_resp_dispatch_body2),  mainDispatch.getContadorFinalDestino() + "", mainDispatch.getpFTDestino()+"",
-                almacen.getCapacidadReal()+"");
+        String textBody2 = String.format(resources.getString(R.string.print_resp_dispatch_body2), mainDispatch.getContadorFinalDestino() + "", mainDispatch.getpFTDestino() + "",
+                almacen.getCapacidadReal() + "");
         textresbody2.setText(textBody2);
 
-        String textCantDispachada = String.format(resources.getString(R.string.print_dispatch_cantidad),unidad.getDescripcion(),mainDispatch.getCantidadDespachada()+"");
-        txtCanti_Dispatch.setText(textCantDispachada);
+        String textCantDispachada = String.format(resources.getString(R.string.print_dispatch_cantidad), unidad.getDescripcion(), mainDispatch.getCantidadDespachada() + "");
+        txtCanti_Dispatch.setText(mainDispatch.getCantidadDespachada() + "");
 
-
+        txtCanti_Abreviatura.setText("Cantidad Despachada " + unidad.getAbreviatura() + " :");
     }
 
 
@@ -286,7 +289,7 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.fabPrint:
                 SheetsPrintDispatch printDispatch = new SheetsPrintDispatch();
-                printDispatch.printNow(cliente, mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa,unidad);
+                printDispatch.printNow(cliente, mainDispatch, almacen, establecimiento, vehiculo, agente, datosEmpresa, unidad);
 
                 break;
             case R.id.fabDisconec:

@@ -110,10 +110,6 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     TextInputLayout tilCompraGuiaCorrelativo;
 
 
-
-
-
-
     /*Item Trasciego*/
     LinearLayout lytTrasCiego;
     /*Fin TrasCiego*/
@@ -171,7 +167,9 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
 
     private void initRecycler() {
-        ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ORDER BY id DESC"), this);
+        List<OrdenCargo> ordenCargoList = OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ");
+
+        ordenCargaAdapter = new OrdenCargaAdapter(this, ordenCargoList, this);
         recycler.setAdapter(ordenCargaAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -189,12 +187,12 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         switch (position) {
 
             case 1:
-                Snackbar.make(textViewPlaca, "ONclickListenerEditar", Snackbar.LENGTH_SHORT).show();
-                metEdit(ordenCargo);
+               /* Snackbar.make(textViewPlaca, "ONclickListenerEditar", Snackbar.LENGTH_SHORT).show();
+                metEdit(ordenCargo);*/
                 break;
             case 2:
                 //metDelete(ordenCargo,view);
-                Snackbar.make(textViewPlaca, "ONclickListenerDelete", Snackbar.LENGTH_SHORT).show();
+              //  Snackbar.make(textViewPlaca, "ONclickListenerDelete", Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -407,10 +405,10 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         boolean esGuiaCorrelativoValido = esGuiaCorrelativoValido(correlativoGuia);
         boolean esFechaComprobanteValida = esFechaComprobanteValida(comprobanteFecha);
         boolean esFechaGuiaValida = esGuiaComprobanteValida(guiaFecha);
-       // boolean sonCamposGeneralesValidos = validarCamposGenerales();
+        // boolean sonCamposGeneralesValidos = validarCamposGenerales();
 
         if (esProveedorValido && esSerieValida && esCorrelativoValido && esGuiaSerieValida &&
-                esGuiaCorrelativoValido && esFechaComprobanteValida && esFechaGuiaValida ) {
+                esGuiaCorrelativoValido && esFechaComprobanteValida && esFechaGuiaValida) {
             //SAVE!
             Proveedor proveedor = getProveedor(ruc);
 
@@ -455,8 +453,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             ordenCargo.setPrecio(Utils.formatDouble(format, precio));
 
             ordenCargo.save();
-            Log.d(TAG," getOrdeCarga_Id :"+ordenCargo.getOrdeCargaId() );
-        }else{
+            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
+        } else {
             Snackbar.make(etCompraFacturaCorrelativo, "Revise los campos", Snackbar.LENGTH_LONG).show();
         }
 
@@ -627,6 +625,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         tilCompraGuiaSerie.setError(null);
         return true;
     }
+
     private boolean esGuiaCorrelativoValido(String correlativoGuia) {
         if (correlativoGuia.length() > 8) {
             tilCompraGuiaCorrelativo.setError("Inválido");

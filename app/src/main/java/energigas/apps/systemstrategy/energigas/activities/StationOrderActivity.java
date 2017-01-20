@@ -104,11 +104,11 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
                 .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
                 .setFragment(
                         new AccessFragment("ITEM",
-                                new OrderDetailFragment(), 0, 1),
+                                new OrderDetailFragment(), R.drawable.ic_tank, 1),
                         new AccessFragment("TANQUES",
-                                new AlmacenFragment(), 0, 2),
+                                new AlmacenFragment(), R.drawable.ic_invoice, 2),
                         new AccessFragment("DESPACHOS",
-                                new DespachoFragment(), 0, 3))
+                                new DespachoFragment(), R.drawable.ic_sell_product_fragment, 3))
                 .isFragmentEnable();
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
@@ -139,7 +139,7 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     private void setTimeText(String timeText) {
 
 
-        textViewHorasPendientes.setText(timeText);
+        textViewHorasPendientes.setText("Atender en: " + timeText + " Hrs.");
     }
 
     Runnable drawRunnable = new Runnable() {
@@ -201,6 +201,18 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
 
 
         viewpager.setAdapter(adapter);
+
+
+        if (tabLayout.getTabAt(0).getPosition() == 0) {
+            tabLayout.getTabAt(0).setIcon(accessFragmentList.get(0).getDrawable());
+        }
+        if (tabLayout.getTabAt(1).getPosition() == 1) {
+            tabLayout.getTabAt(1).setIcon(accessFragmentList.get(1).getDrawable());
+        }
+        if (tabLayout.getTabAt(2).getPosition() == 2) {
+            tabLayout.getTabAt(2).setIcon(accessFragmentList.get(2).getDrawable());
+        }
+
 
     }
 

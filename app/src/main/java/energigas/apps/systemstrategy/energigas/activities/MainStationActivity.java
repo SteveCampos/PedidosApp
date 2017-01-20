@@ -33,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
@@ -58,6 +59,7 @@ import energigas.apps.systemstrategy.energigas.services.ServiceSync;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 public class MainStationActivity extends AppCompatActivity
         implements
@@ -74,6 +76,8 @@ public class MainStationActivity extends AppCompatActivity
     TabLayout tabLayout;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.tv_date)
+    TextView textViewDate;
 
     @BindView(R.id.tv_description)
     TextView textViewDescripcion;
@@ -92,6 +96,9 @@ public class MainStationActivity extends AppCompatActivity
     @BindView(R.id.textViewTel)
     TextView textViewTelefono;
 
+    @BindView(R.id.textViewContacto)
+    TextView textViewContacto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,31 +108,49 @@ public class MainStationActivity extends AppCompatActivity
         liquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablec(establecimiento.getEstIEstablecimientoId() + "");
         ButterKnife.bind(this);
         usuario = Session.getSession(this);
-        new AccessPrivilegesManager(getClass())
-                .setViews(fab)
-                .setListenerIntent(this)
-                .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
-                .setClassIntent(StationOrderActivity.class)
-                .isIntentEnable()
-                .setFragment(
-                        new AccessFragment(getString(R.string.title_activity_main_station),
-                                new FragmentStationInformation(), 0, 1),
-                        new AccessFragment(getString(R.string.order_title_name),
-                                new StationOrderFragment(), 0, 2),
-                        new AccessFragment(getString(R.string.title_activity_dispatch),
-                                new StationDispatchsFragment(), 0, 3),
-                        new AccessFragment(getString(R.string.activity_charges_account),
-                                new CajaPagoFragment(), 0, 4),
-                        new AccessFragment(getString(R.string.activity_charges_fac),
-                                new ComprobanteVentaFragment(), 0, 5))
-                .isFragmentEnable();
         cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
+
+        if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
+            new AccessPrivilegesManager(getClass())
+                    .setViews(fab)
+                    .setListenerIntent(this)
+                    .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                    .setClassIntent(StationOrderActivity.class)
+                    .isIntentEnable()
+                    .setFragment(
+                            new AccessFragment(getString(R.string.title_activity_main_station),
+                                    new FragmentStationInformation(), R.drawable.ic_placeholder, 1),
+                            new AccessFragment(getString(R.string.order_title_name),
+                                    new StationOrderFragment(), R.drawable.ic_filter_and_sort_arrows, 2),
+                            new AccessFragment(getString(R.string.title_activity_dispatch),
+                                    new StationDispatchsFragment(), R.drawable.ic_sell_product_fragment, 3),
+                            new AccessFragment(getString(R.string.activity_charges_account),
+                                    new CajaPagoFragment(), R.drawable.ic_money, 4),
+                            new AccessFragment(getString(R.string.activity_charges_fac),
+                                    new ComprobanteVentaFragment(), R.drawable.ic_approve_invoice, 5))
+                    .isFragmentEnable();
+        } else {
+            new AccessPrivilegesManager(getClass())
+                    .setViews(fab)
+                    .setListenerIntent(this)
+                    .setPrivilegesIsEnable(usuario.getUsuIUsuarioId() + "")
+                    .setClassIntent(StationOrderActivity.class)
+                    .isIntentEnable()
+                    .setFragment(
+                            new AccessFragment(getString(R.string.title_activity_main_station),
+                                    new FragmentStationInformation(), R.drawable.ic_placeholder, 1),
+                            new AccessFragment(getString(R.string.order_title_name),
+                                    new StationOrderFragment(), R.drawable.ic_filter_and_sort_arrows, 2),
+                            new AccessFragment(getString(R.string.title_activity_dispatch),
+                                    new StationDispatchsFragment(), R.drawable.ic_sell_product_fragment, 3)
+                    )
+                    .isFragmentEnable();
+        }
+
+
         setTipoCliente();
 
     }
-
-
-
 
 
     private void setTipoCliente() {
@@ -149,6 +174,9 @@ public class MainStationActivity extends AppCompatActivity
 
             }
         });
+        CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        textViewDate.setText(Utils.getDateDescription(cajaLiquidacion.getFechaApertura()));
+        textViewContacto.setText("Contacto: " + establecimiento.getEstVContacto());
 
     }
 
@@ -190,6 +218,7 @@ public class MainStationActivity extends AppCompatActivity
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
+
     private void setTabsAdapterFragment() {
 
         MainStationActivity.Adapter adapter = new MainStationActivity.Adapter(getSupportFragmentManager());
@@ -206,7 +235,18 @@ public class MainStationActivity extends AppCompatActivity
             }
 
         }
+
+
         viewpager.setAdapter(adapter);
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            int count = i + 1;
+            for (AccessFragment accessFragment : accessFragmentList) {
+                if (count == accessFragment.getOrden()) {
+                    tabLayout.getTabAt(i).setIcon(accessFragmentList.get(i).getDrawable());
+                }
+            }
+        }
         tabLayout.addOnTabSelectedListener(this);
     }
 

@@ -338,8 +338,17 @@ public class ComprobanteVenta extends SugarRecord {
         for (ComprobanteVenta comprobanteVenta : comprobanteVentaList) {
 
             comprobanteVenta.setItemsDetalle(ComprobanteVentaDetalle.comprobanteVentaDetalles(comprobanteVenta.getCompId() + ""));
-            comprobanteVenta.setPlanPago(PlanPago.getPlanPago(comprobanteVenta.getCompId() + ""));
-            comprobanteVenta.setCajaMovimiento(CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId() + ""));
+            PlanPago planPago = PlanPago.getPlanPago(comprobanteVenta.getCompId() + "");
+
+            if (planPago == null) {
+                Log.d("DATOS_NO_DEBEN_ESTAR", "CAJA_MOVIMIENTO");
+                comprobanteVenta.setCajaMovimiento(CajaMovimiento.getCajaMovimiento(comprobanteVenta.getCompId() + ""));
+            } else {
+
+                comprobanteVenta.setPlanPago(planPago);
+                Log.d("DATOS_NO_DEBEN_ESTAR", "PLAN PAGO: " + comprobanteVenta.getPlanPago().getNumDoc());
+            }
+
             comprobanteVentas.add(comprobanteVenta);
         }
 

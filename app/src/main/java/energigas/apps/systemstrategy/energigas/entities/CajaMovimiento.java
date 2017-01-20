@@ -50,10 +50,8 @@ public class CajaMovimiento extends SugarRecord {
 
 
     @Ignore
-    @JsonIgnore
     private InformeGasto infGasto;
     @Ignore
-    @JsonIgnore
     private CajaGasto gasto;
 
 

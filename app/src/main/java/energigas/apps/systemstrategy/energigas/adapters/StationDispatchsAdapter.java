@@ -85,7 +85,7 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder
         holder.information.setText(
                 "Tanque: " + almacen.getNombre() + "\n" +
                         "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialOrigen()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalOrigen()) + "\n" +
-                        "P. Inicial: " + despacho.getpITOrigen() + " - " + "P. Final: " + despacho.getpFTOrigen() + "\n" +
+                        "P. Inicial: " + despacho.getpITDestino() + " - " + "P. Final: " + despacho.getpFTDestino() + "\n" +
                         "Hora de despacho: " + despacho.getHoraFin() + "\n" + facturadoString
         );
 

@@ -78,6 +78,7 @@ import energigas.apps.systemstrategy.energigas.entities.ProductoUnidad;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.UbicacionGeoreferencia;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
@@ -90,6 +91,7 @@ import energigas.apps.systemstrategy.energigas.entities.fe.FirmadoResponse;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.services.SyncData;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NumberToLetterConverter;
@@ -323,8 +325,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 if (Session.getDefineCuotas(getApplicationContext())) {
 
                     if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                        generarVenta();
 
-                        SugarTransactionHelper.doInTransaction(SellActivity.this);
+                        // SugarTransactionHelper.doInTransaction(SellActivity.this);
                         progressDialog.show();
                         documentoElectronico = getDocumentoEletronico();
 
@@ -337,7 +340,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                 } else {
-                    SugarTransactionHelper.doInTransaction(SellActivity.this);
+                    generarVenta();
+                    //SugarTransactionHelper.doInTransaction(SellActivity.this);
                     progressDialog.show();
                     documentoElectronico = getDocumentoEletronico();
                     System.out.println("OBJECTO COMPROBANTE");
@@ -416,6 +420,11 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
+
+       /* Intent intentExportService = new Intent(this, SyncData.class);
+        intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+        startService(intentExportService);*/
+
     }
 
     @Override
@@ -469,7 +478,12 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         comprobanteVenta.setExportado(Constants.NO_EXPORTADO);
         comprobanteVenta.setDocIdentidad(cliente.getPersona().getPerVDocIdentidad());
         comprobanteVenta.setValorResumen(String.valueOf(obtenerCalculos()[Constants.VENTA_TOTAL]));
-        comprobanteVenta.setCliente(cliente.getPersona().getPerVDocIdentidad());
+        String razonNombres = cliente.getPersona().getPerVApellidoPaterno() + " " + cliente.getPersona().getPerVApellidoMaterno() + " " + cliente.getPersona().getPerVNombres();
+        if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
+            razonNombres = cliente.getPersona().getPerVRazonSocial();
+        }
+        comprobanteVenta.setCliente(razonNombres);
+
         comprobanteVenta.setDireccionCliente(cliente.getPersona().getUbicacion().getDescripcion());
         comprobanteVenta.setFechaCreacion(Utils.getDatePhoneWithTime());
 
@@ -666,13 +680,13 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         List<DetalleDocumento> items = new ArrayList<>();
 
         for (ComprobanteVentaDetalle ventaDetalle : comprobanteVentaDetalles) {
-
+            Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(ventaDetalle.getUnidadId() + "");
             DetalleDocumento item1 = new DetalleDocumento();
             item1.setId(ventaDetalle.getCompdId());
             item1.setCantidad(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getCantidad())));
             item1.setUnidadMedida(getUnidadTipo(Constants.DOCUMENTO_ELECTRONICO_NIU).getCodigo());
             item1.setTotalVenta(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getCostoVenta())));
-            item1.setDescripcion(Producto.getNameProducto(ventaDetalle.getProId() + ""));
+            item1.setDescripcion(Producto.getNameProducto(ventaDetalle.getProId() + "") + " en " + unidad.getDescripcion());
             item1.setCodigoItem(ventaDetalle.getProId() + "");
             item1.setPrecioUnitario(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getPrecioUnitario())));
             item1.setTipoPrecio(Constants.DOCUMENTO_ELECTRONICO_TIPO_PRECIO);// buscar
@@ -717,28 +731,13 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                         if (response.isExito()) {
-                            //Genial se ha generado con éxito el firmado
-                            //en la variable tramaXmlFirmado está el xml en un String base64
+
+                            documentoElectronico = getDocumentoEletronico();
                             Toast.makeText(getApplicationContext(), "SHA1: " + response.getResumenFirma(), Toast.LENGTH_SHORT).show();
                             beDocElectronico.setDatosXml(response.getTramaXmlFirmado());
                             beDocElectronico.setResumenFirma(response.getResumenFirma());
+                            SugarTransactionHelper.doInTransaction(SellActivity.this);
 
-                            BeDocElectronico beDocElectronico = generarDocumentoElectronicoFE();
-
-                            Long idDocEletr = beDocElectronico.save();
-                            beDocElectronico.setDocElectronicoId(idDocEletr);
-                            beDocElectronico.save();
-                            for (BeDocElectronicoDetalle beDocElectronicoDetalle : beDocElectronico.getDetalle()) {
-                                beDocElectronicoDetalle.setDocElectronicoId(Integer.parseInt(idDocEletr + ""));
-                                beDocElectronicoDetalle.save();
-                            }
-
-
-                            updatLiqDetalle();
-
-                            new SyncEstado(0, Utils.separteUpperCase(BeDocElectronico.class.getSimpleName()), Integer.parseInt(beDocElectronico.getId() + ""), Constants.S_CREADO).save();
-                            Session.saveComprobanteVenta(this, comprobanteVenta);
-                            intentPrint();
 
                         } else {
                             //Ha habido algún error, en la variable mensajeError de FirmadoResponse estará el error.
@@ -754,6 +753,29 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void guardarbdFe() {
+        //Genial se ha generado con éxito el firmado
+        //en la variable tramaXmlFirmado está el xml en un String base64
+
+
+        BeDocElectronico beDocElectronico = generarDocumentoElectronicoFE();
+
+        Long idDocEletr = beDocElectronico.save();
+        beDocElectronico.setDocElectronicoId(idDocEletr);
+        beDocElectronico.save();
+        for (BeDocElectronicoDetalle beDocElectronicoDetalle : beDocElectronico.getDetalle()) {
+            beDocElectronicoDetalle.setDocElectronicoId(Integer.parseInt(idDocEletr + ""));
+            beDocElectronicoDetalle.save();
+        }
+
+
+        updatLiqDetalle();
+
+        new SyncEstado(0, Utils.separteUpperCase(BeDocElectronico.class.getSimpleName()), Integer.parseInt(beDocElectronico.getId() + ""), Constants.S_CREADO).save();
+        Session.saveComprobanteVenta(this, comprobanteVenta);
+        intentPrint();
+    }
+
     private BeDocElectronico generarDocumentoElectronicoFE() {
 
 
@@ -767,12 +789,16 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
             BeDocElectronicoDetalle electronicoDetalle = new BeDocElectronicoDetalle();
             Log.d(TAG, "DOC ELECTRO DE : " + detalleDocumento.getCantidad().doubleValue());
+
+            Double aDouble = detalleDocumento.getPrecioUnitario().doubleValue() * detalleDocumento.getCantidad().doubleValue();
+
+
             electronicoDetalle.setDocElectronicoId(Integer.parseInt(comprobanteVenta.getCompId() + ""));
             electronicoDetalle.setDocdetalleId(detalleDocumento.getId());
             electronicoDetalle.setCantidad(detalleDocumento.getCantidad().doubleValue());
             electronicoDetalle.setUnidadMedidaId(Integer.parseInt(getUnidadTipo(Constants.DOCUMENTO_ELECTRONICO_NIU).getTipoId() + ""));
             electronicoDetalle.setSuma(detalleDocumento.getSuma().doubleValue());
-            electronicoDetalle.setTotalVenta(detalleDocumento.getTotalVenta().doubleValue());
+            electronicoDetalle.setTotalVenta(Utils.formatDoubleNumber(aDouble));
             electronicoDetalle.setPrecioUnitario(detalleDocumento.getPrecioUnitario().doubleValue());
             electronicoDetalle.setTipoPrecioId(Integer.parseInt(detalleDocumento.getTipoPrecio()));
             electronicoDetalle.setTipoImpuestoId(Integer.parseInt(detalleDocumento.getTipoImpuesto()));
@@ -786,9 +812,11 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             electronicoDetalle.setPrecioReferencial(detalleDocumento.getPrecioReferencial().doubleValue() + "");
             electronicoDetalle.setDescuento(detalleDocumento.getDescuento().doubleValue() + "");
 
+            electronicoDetalle.setTotalVentaBruta(Utils.formatDoublePrint(aDouble) + "");
+
             beDocElectronicoDetalles.add(electronicoDetalle);
         }
-
+        beDocElectronico.setNroDocClienteFacturacion(cliente.getPersona().getPerVDocIdentidad());
         beDocElectronico.setTipoDocCodigo(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getCodigo());
         beDocElectronico.setDocElectronicoId(comprobanteVenta.getCompId());
         beDocElectronico.setTipoDocumentoId(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getTipoId());
@@ -1125,9 +1153,9 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //  Toast.makeText(SellActivity.this, "Count - " + s.toString().length(), Toast.LENGTH_SHORT).show();
-                if (s.toString().length() >= 9) {
+                if (s.toString().length() >= 12) {
                     Log.d(TAG, "onTextChanged > 8 : " + s);
-                    editTextScop.setText(s.toString().substring(0, 8));
+                    editTextScop.setText(s.toString().substring(0, 11));
                     System.out.println(TAG + "   onTextChanged > 8 : " + s);
                     // Toast.makeText(SellActivity.this, ""+TAG+ "   onTextChanged > 8 : "+s, Toast.LENGTH_SHORT).show();
                 } else {
@@ -1264,12 +1292,13 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                             if (cliente.getCliDOCreditoDisponible() >= obtenerCalculos()[Constants.VENTA_TOTAL]) {
                                 Log.d(TAG, "IF: " + 4);
                                 dialogConfirmarVenta();
+                                break;
                             } else {
                                 Log.d(TAG, "IF: " + 5);
                                 Toast.makeText(SellActivity.this, "No cuenta con credito suficiente", Toast.LENGTH_SHORT).show();
                                 break;
                             }
-                            Log.d(TAG, "IF: " + 6);
+                            //Log.d(TAG, "IF: " + 6);
 
                         } else {
                             Log.d(TAG, "IF: " + 7);
@@ -1283,6 +1312,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "No cuenta con credito disponible para realizar la venta", Toast.LENGTH_SHORT).show();
                     }
                     if (cliente.getCliDOCreditoDisponible() >= obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                        Log.d(TAG, "IF: " + 8);
                         dialogConfirmarVenta();
                     }
                     break;
@@ -1292,19 +1322,23 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnDefinirCuotas:
 
-                if (!Session.getDefineCuotas(getApplicationContext()) && validarCampos()) {
-
-                    if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
+                if (cliente.getCliIModalidadCreditoId() > 0) {
 
 
-                        generarVenta();
-                        //  new EstablecerCuotasFragment().setParams(obtenerCalculos()).show(getSupportFragmentManager(), "");
-                        Intent intent = new Intent(getApplicationContext(), DefinirCuotasActivity.class);
-                        intent.putExtra(Constants.OBTENER_CUOTAS, obtenerCalculos());
-                        startActivity(intent);
+                    if (!Session.getDefineCuotas(getApplicationContext()) && validarCampos()) {
 
-                    } else {
-                        Toast.makeText(SellActivity.this, "No Cuenta con credito", Toast.LENGTH_SHORT).show();
+                        if (cliente.getCliDOCreditoDisponible() > obtenerCalculos()[Constants.VENTA_TOTAL]) {
+
+
+                            generarVenta();
+                            //  new EstablecerCuotasFragment().setParams(obtenerCalculos()).show(getSupportFragmentManager(), "");
+                            Intent intent = new Intent(getApplicationContext(), DefinirCuotasActivity.class);
+                            intent.putExtra(Constants.OBTENER_CUOTAS, obtenerCalculos());
+                            startActivity(intent);
+
+                        } else {
+                            Toast.makeText(SellActivity.this, "No Cuenta con credito", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 break;
@@ -1430,7 +1464,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             cajaLiquidacionDetalle.save();
             despachos = new ArrayList<>();
         }
-
+        guardarbdFe();
 
     }
 

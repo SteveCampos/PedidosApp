@@ -27,11 +27,12 @@ public class BeDocElectronicoDetalle extends SugarRecord {
     private String codigoItem;
     private String precioReferencial;
     private String descuento;
+    private String totalVentaBruta;
 
     public BeDocElectronicoDetalle() {
     }
 
-    public BeDocElectronicoDetalle(int docElectronicoId, int docdetalleId, Double cantidad, int unidadMedidaId, Double suma, Double totalVenta, Double precioUnitario, int tipoPrecioId, int tipoImpuestoId, Double impuesto, Double impuestoSelectivo, Double otroImpuesto, int productoId, String descripcion, String codigoItem, String precioReferencial, String descuento) {
+    public BeDocElectronicoDetalle(int docElectronicoId, int docdetalleId, Double cantidad, int unidadMedidaId, Double suma, Double totalVenta, Double precioUnitario, int tipoPrecioId, int tipoImpuestoId, Double impuesto, Double impuestoSelectivo, Double otroImpuesto, int productoId, String descripcion, String codigoItem, String precioReferencial, String descuento, String totalVentaBruta) {
         this.docElectronicoId = docElectronicoId;
         this.docdetalleId = docdetalleId;
         this.cantidad = cantidad;
@@ -49,6 +50,15 @@ public class BeDocElectronicoDetalle extends SugarRecord {
         this.codigoItem = codigoItem;
         this.precioReferencial = precioReferencial;
         this.descuento = descuento;
+        this.totalVentaBruta = totalVentaBruta;
+    }
+
+    public String getTotalVentaBruta() {
+        return totalVentaBruta;
+    }
+
+    public void setTotalVentaBruta(String totalVentaBruta) {
+        this.totalVentaBruta = totalVentaBruta;
     }
 
     public int getDocElectronicoId() {

@@ -62,11 +62,12 @@ public class BeDocElectronico extends SugarRecord {
     private String rucEntidad;
     private Long comprobanteVentaId;
     private String tipoDocCodigo;
+    private String nroDocClienteFacturacion;
 
     public BeDocElectronico() {
     }
 
-    public BeDocElectronico(long docElectronicoId, int tipoDocumentoId, String numeroDoc, String fechaEmision, int monedaId, Double gravadas, Double gratuitas, Double inafectas, Double exoneradas, Double descuentoGlobal, Double totalVenta, Double totalIgv, Double totalIsc, Double totalOtrosTributos, String montoEnLetras, int tipoOperacionId, Double calculoIgv, Double calculoIsc, Double calculoDetraccion, Double montoPercepcion, Double montoDetraccion, int tipoDocAnticipoId, String docAnticipo, int monedaAnticipoId, Double montoAnticipo, int clienteId, String nombreFacturacion, String direccionFacturacion, int corporacionId, int entidadId, int unidadNegocioId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, int estadoTrackId, int estadoId, int sistemaId, Double totalDescuentos, int correlativo, String serie, String resumenFirma, String scop, String placaVehiculo, List<BeDocElectronicoDetalle> detalle, String datosXml, String rucEntidad, Long comprobanteVentaId, String tipoDocCodigo) {
+    public BeDocElectronico(long docElectronicoId, int tipoDocumentoId, String numeroDoc, String fechaEmision, int monedaId, Double gravadas, Double gratuitas, Double inafectas, Double exoneradas, Double descuentoGlobal, Double totalVenta, Double totalIgv, Double totalIsc, Double totalOtrosTributos, String montoEnLetras, int tipoOperacionId, Double calculoIgv, Double calculoIsc, Double calculoDetraccion, Double montoPercepcion, Double montoDetraccion, int tipoDocAnticipoId, String docAnticipo, int monedaAnticipoId, Double montoAnticipo, int clienteId, String nombreFacturacion, String direccionFacturacion, int corporacionId, int entidadId, int unidadNegocioId, int usuarioCreacionId, String fechaCreacion, int usuarioAccionId, String fechaAccion, int estadoTrackId, int estadoId, int sistemaId, Double totalDescuentos, int correlativo, String serie, String resumenFirma, String scop, String placaVehiculo, List<BeDocElectronicoDetalle> detalle, String datosXml, String rucEntidad, Long comprobanteVentaId, String tipoDocCodigo, String nroDocClienteFacturacion) {
         this.docElectronicoId = docElectronicoId;
         this.tipoDocumentoId = tipoDocumentoId;
         this.numeroDoc = numeroDoc;
@@ -116,6 +117,15 @@ public class BeDocElectronico extends SugarRecord {
         this.rucEntidad = rucEntidad;
         this.comprobanteVentaId = comprobanteVentaId;
         this.tipoDocCodigo = tipoDocCodigo;
+        this.nroDocClienteFacturacion = nroDocClienteFacturacion;
+    }
+
+    public String getNroDocClienteFacturacion() {
+        return nroDocClienteFacturacion;
+    }
+
+    public void setNroDocClienteFacturacion(String nroDocClienteFacturacion) {
+        this.nroDocClienteFacturacion = nroDocClienteFacturacion;
     }
 
     public String getTipoDocCodigo() {

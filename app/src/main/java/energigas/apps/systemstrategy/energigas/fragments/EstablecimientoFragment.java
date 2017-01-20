@@ -42,7 +42,8 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
 
 
     private CajaLiquidacion cajaLiquidacion;
-    @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view)
+    RecyclerView recyclerView;
     private View view;
 
     public EstablecimientoFragment() {
@@ -64,7 +65,7 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view =  inflater.inflate(
+        view = inflater.inflate(
                 R.layout.recycler_view, container, false);
         ButterKnife.bind(this, view);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(getActivity()).getLiqId() + "");
@@ -82,15 +83,27 @@ public class EstablecimientoFragment extends Fragment implements Establecimiento
         String query = " select * from Establecimiento where liquidacion_Id_Android=?  order by orden_Atencion_Android "; //GROUP BY cd.establecimiento_Id
 
         List<Establecimiento> list = Establecimiento.findWithQuery(Establecimiento.class, query, new String[]{cajaLiquidacion.getLiqId() + ""});
+        for (int i = 0; i < list.size(); i++) {
+            List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", "" + list.get(i).getUbId());
+            Log.d(TAG, "List<GeoUbicacion> size: " + geoUbicacions.size());
+            //
+            if (geoUbicacions.size() > 0) {
+                Log.d(TAG, "geoUbicacions.get(0).getDescripcion(): " + geoUbicacions.get(0).getDescripcion());
+                list.get(i).setUbicacion(geoUbicacions.get(0));
+            }
+        }
 
-        /*for (int i = 0; i < list.size(); i++) {
+
+
+/*
+        for (int i = 0; i < list.size(); i++) {
             Establecimiento establecimiento = list.get(i);
             for (CajaLiquidacionDetalle liquidacionDetalle : CajaLiquidacionDetalle.getLiquidacionDetalle(Session.getCajaLiquidacion(getActivity()).getLiqId() + "")) {
 
                 if (liquidacionDetalle.getEstablecimientoId() == establecimiento.getEstIEstablecimientoId()) {
                     List<GeoUbicacion> geoUbicacions = GeoUbicacion.find(GeoUbicacion.class, "ub_id = ?", "" + establecimiento.getUbId());
                     Log.d(TAG, "List<GeoUbicacion> size: " + geoUbicacions.size());
-                    //CHECKAR QUE LA LISTA DE OBJETOS ANIDADOS, NO ESTÉ VACÍA.
+                    //
                     if (geoUbicacions.size() > 0) {
                         Log.d(TAG, "geoUbicacions.get(0).getDescripcion(): " + geoUbicacions.get(0).getDescripcion());
                         establecimiento.setUbicacion(geoUbicacions.get(0));

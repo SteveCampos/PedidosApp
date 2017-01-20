@@ -144,25 +144,26 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <LinearLayout
+                <!--<LinearLayout-->
 
-                    android:layout_width="fill_parent"
-                    android:layout_height="44dp"
-                    android:gravity="center"
-                    android:background="@drawable/border_bottom"
-                    android:orientation="horizontal">
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="44dp"-->
+                <!--android:gravity="center"-->
+                <!--android:background="@drawable/border_bottom"-->
+                <!--android:orientation="horizontal">-->
 
-                    <TextView
-                        android:id="@+id/et_dispatch_cant"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/dimen_15dp"
-                        android:textColor="@color/black"
-                        android:text="@string/print_dispatch_cantidad"
-                        android:textStyle="bold" />
+                <!--<TextView-->
+                <!--android:id="@+id/et_dispatch_cant"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="@dimen/dimen_15dp"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:text="@string/print_dispatch_cantidad"-->
+                <!--android:textStyle="bold" />-->
 
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
+
 
 
                 <!--<LinearLayout-->
@@ -187,6 +188,46 @@
                 <!--android:textStyle="bold"-->
                 <!--android:text="@string/print_resp_dispatch_body1" />-->
                 <!--</LinearLayout>-->
+
+                <LinearLayout
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center"
+                    android:background="@drawable/border_bottom"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_abreviatura"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="GLP"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="true"
+                        android:textStyle="bold" />
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/et_dispatch_cant"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="@dimen/dimen_15dp"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:text="@string/print_dispatch_cantidad"-->
+                    <!--android:textStyle="bold" />-->
+
+                    <TextView
+                        android:id="@+id/et_dispatch_cant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="20"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
 
 
 

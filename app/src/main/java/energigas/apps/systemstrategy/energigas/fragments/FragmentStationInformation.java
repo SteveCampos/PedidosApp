@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
@@ -239,6 +241,16 @@ public class FragmentStationInformation extends Fragment implements OnMapReadyCa
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
         map.moveCamera(center);
         map.animateCamera(zoom);
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String uri = "geo: " + marker.getPosition().latitude + "," + marker.getPosition().longitude + "";
+                startActivity(new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse(uri)));
+
+                return false;
+            }
+        });
     }
 
 

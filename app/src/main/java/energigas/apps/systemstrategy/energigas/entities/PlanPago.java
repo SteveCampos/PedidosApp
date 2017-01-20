@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -144,10 +146,17 @@ public class PlanPago extends SugarRecord {
 
     public static PlanPago getPlanPago(String compId) {
 
+        List<PlanPago> planPagoList = PlanPago.listAll(PlanPago.class);
+        for (PlanPago planPago : planPagoList) {
+            Log.d("PLAN_PAGO", "plan_pago" + planPago.getCompId() + "_" + compId);
+        }
+
         if (PlanPago.find(PlanPago.class, " comp_Id=? ", new String[]{compId}).size() > 0) {
 
             PlanPago planPago = PlanPago.find(PlanPago.class, " comp_Id=? ", new String[]{compId}).get(0);
             planPago.setDetalle(PlanPagoDetalle.getPlanPagoDetalles(planPago.getPlanPaId() + ""));
+
+
             return planPago;
         } else {
 

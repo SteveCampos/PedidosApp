@@ -18,14 +18,16 @@ import energigas.apps.systemstrategy.energigas.utils.Constants;
 public class ScreenReceiver extends BroadcastReceiver implements ExportObjectsListener {
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             Log.v("KELVINLOCK", "In Method:  ACTION_SCREEN_OFF");
             // onPause() will be called.
 
-            Intent intentExportService = new Intent(context, SyncData.class);
-            intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
-            context.startService(intentExportService);
+
+                    Intent intentExportService = new Intent(context, SyncData.class);
+                    intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+                    context.startService(intentExportService);
+
 
 
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
@@ -42,6 +44,7 @@ public class ScreenReceiver extends BroadcastReceiver implements ExportObjectsLi
         }
 
     }
+
 
     @Override
     public void onLoadSuccess(String message) {

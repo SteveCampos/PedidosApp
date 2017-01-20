@@ -143,7 +143,7 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + datosEmpresa.getUrl() + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printBarCode(POSPrinterConst.PTR_S_RECEIPT,"1234567890", LKPrint.LK_BCS_Code39, 40, 2, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
+            posPtr.printBarCode(POSPrinterConst.PTR_S_RECEIPT, "1234567890", LKPrint.LK_BCS_Code39, 40, 2, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
 
 
         } catch (JposException e) {
@@ -152,7 +152,7 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printTipoDoc (Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico, DatosEmpresa datosEmpresa){
+    public void printTipoDoc(Cliente cliente, ComprobanteVenta comprobanteVenta, Usuario usuario, BeDocElectronico beDocElectronico, DatosEmpresa datosEmpresa) {
 
 
         // escposPrinter.printText("ENERGIGAS", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD | LKPrint.LK_FNT_FONTB , LKPrint.LK_TXT_5WIDTH);
@@ -161,10 +161,9 @@ public class SheetsPrintDispatch {
           */
 
 
-
         String data = "ENERGIGAS";
-        String fecha_N =  String.format("%1$-30s", "Fecha:" + comprobanteVenta.getFechaCreacion()) + String.format("%-6s", "N:") + String.format("%1$12s", comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc()) ;
-        String descripcionHead =  String.format("%1$-5s", "COD") + String.format("%1$-10s", "CANT")+String.format("%1$-10s", "U.M.")+String.format("%1$-10s", "DESCRIP.")+String.format("%1$-5s", "P.U")+ String.format("%1$8s", "IMPORTE") ;
+        String fecha_N = String.format("%1$-30s", "Fecha:" + comprobanteVenta.getFechaCreacion()) + String.format("%-6s", "N:") + String.format("%1$12s", comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc());
+        String descripcionHead = String.format("%1$-5s", "COD") + String.format("%1$-10s", "CANT") + String.format("%1$-10s", "DESCRIP.") + String.format("%1$-10s", "U.M.") + String.format("%1$-5s", "P.U") + String.format("%1$8s", "IMPORTE");
 
         String codigoVenta = beDocElectronico.getResumenFirma();
 
@@ -178,76 +177,78 @@ public class SheetsPrintDispatch {
         if (comprobanteVenta.getPlanPago() != null) {
             textTipoVenta = "VENTA AL CREDITO";
         }
-        try
-        {
+        try {
             escposPrinter.lineFeed(2);
-            escposPrinter.printText(data+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD|LKPrint.LK_FNT_UNDERLINE, LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
-           // escposPrinter.printText("───────────────────────────\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
+            escposPrinter.printText(data + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD | LKPrint.LK_FNT_UNDERLINE, LKPrint.LK_TXT_3HEIGHT | LKPrint.LK_TXT_3WIDTH);
+            // escposPrinter.printText("───────────────────────────\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
             //escposPrinter.printText("------------------------------              \r\n", LKPrint.LK_HRI_TEXT_BELOW, LKPrint.LK_FNT_BOLD,  LKPrint.LK_TXT_3HEIGHT|LKPrint.LK_TXT_3WIDTH);
-            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getRazonSocial())+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1HEIGHT|LKPrint.LK_TXT_2WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getRazonSocial()) + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1HEIGHT | LKPrint.LK_TXT_2WIDTH);
             escposPrinter.lineFeed(1);
-            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getDireccionFiscal())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDepartamento())+"\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getEntidad().getDireccionFiscal()) + "\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDistrito() + ", " + datosEmpresa.getProvincia()) + "\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(datosEmpresa.getDepartamento()) + "\r\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
-            escposPrinter.printText("Telf:"+datosEmpresa.getEntidad().getTelefono()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("Telf:" + datosEmpresa.getEntidad().getTelefono() + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
-            escposPrinter.printText("R.U.C:"+datosEmpresa.getEntidad().getrUC()+"                 IMEI:012345645\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(tipoDocumento+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("R.U.C:" + datosEmpresa.getEntidad().getrUC() + "                 IMEI:012345645\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(tipoDocumento + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             //escposPrinter.printText("----------------------------------------------------\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             //escposPrinter.printText("Fecha:"+datosEmpresa.getEntidad().getrUC()+"                 IMEI:012345645\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(fecha_N+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText("CLIENTE  : " + cliente.getPersona().getPerVRazonSocial() +"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText("DNI/RUC  : " + cliente.getPersona().getPerVDocIdentidad()+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText("DIRECCION: " + cliente.getPersona().getUbicacion().getDescripcion()+"\n", LKPrint.LK_ALIGNMENT_LEFT,LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(descripcionHead+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(fecha_N + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("CLIENTE  : " + cliente.getPersona().getPerVRazonSocial() + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("DNI/RUC  : " + cliente.getPersona().getPerVDocIdentidad() + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("DIRECCION: " + cliente.getPersona().getUbicacion().getDescripcion() + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(descripcionHead + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             double importeTotal = 0.0;
             for (ComprobanteVentaDetalle comprobanteVentaDetalle : comprobanteVenta.getItemsDetalle()) {
+                Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(comprobanteVentaDetalle.getUnidadId() + "");
                 //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + String.format("%-6s", comprobanteVentaDetalle.getCantidad()) + String.format("%-30s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%-5s", "") + String.format("%-9s", Utils.formatDoubleNumber(comprobanteVentaDetalle.getImporte())) + LF + "");
-                String descripcionTotal =  String.format("%1$-5s", comprobanteVentaDetalle.getProId()) + String.format("%1$-10s", comprobanteVentaDetalle.getCantidad())+String.format("%1$-10s", "U.M.")+String.format("%1$-5s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + ""))+String.format("%1$-10s",Utils.formatDoublePrint(comprobanteVentaDetalle.getPrecioUnitario()))+ String.format("%1$8s", Utils.formatDoublePrint(comprobanteVentaDetalle.getImporte())) ;
-                escposPrinter.printText(descripcionTotal+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+                String descripcionTotal = String.format("%1$-5s", comprobanteVentaDetalle.getProId() + "") + String.format("%1$-10s", comprobanteVentaDetalle.getCantidad() + "") + String.format("%1$-10s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%1$-10s", unidad.getAbreviatura()) + String.format("%1$-5s", comprobanteVentaDetalle.getPrecioUnitario()) + String.format("%1$8s", Utils.formatDoublePrint(comprobanteVentaDetalle.getImporte()));
+
+                //  String descripcionTotal = String.format("%1$-5s", comprobanteVentaDetalle.getProId()) + String.format("%1$-10s", comprobanteVentaDetalle.getCantidad()) + String.format("%1$-10s", "U.M.") + String.format("%1$-5s", Producto.getNameProducto(comprobanteVentaDetalle.getProId() + "")) + String.format("%1$-10s", Utils.formatDoublePrint(comprobanteVentaDetalle.getPrecioUnitario())) + String.format("%1$8s", Utils.formatDoublePrint(comprobanteVentaDetalle.getImporte()));
+                escposPrinter.printText(descripcionTotal + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
                 importeTotal = importeTotal + comprobanteVentaDetalle.getImporte();
             }
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
 
             Double importeIgv = importeTotal * igv;
             Double importeTotalCIgv = importeIgv + importeTotal;
 
 
-            String gravada =String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) ;
-            String inafecta =  String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
-            String exonerada =  String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
-            String gratuita =  String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
-            String descuentos =  String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00)) ;
-            String IGV =  String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeIgv)) ;
-            String rayaTotal =   "---------" ;
-            String precioVenta = String.format("%-18s", "IMPORTE TOTAL") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv)) ;
-            escposPrinter.printText(gravada+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(inafecta+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(exonerada+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(gratuita+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(descuentos+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(IGV+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(rayaTotal+"\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(precioVenta+"\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText("SON:"+ NumberToLetterConverter.convertNumberToLetter(importeTotalCIgv)+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(lineas+"\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            String gravada = String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv));
+            String inafecta = String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00));
+            String exonerada = String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00));
+            String gratuita = String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00));
+            String descuentos = String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(0.00));
+            String IGV = String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeIgv));
+            String rayaTotal = "---------";
+            String precioVenta = String.format("%-18s", "IMPORTE TOTAL") + String.format("%-21s", "S/.") + String.format("%1$9s", Utils.formatDoubleNumber(importeTotalCIgv));
+            escposPrinter.printText(gravada + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(inafecta + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(exonerada + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(gratuita + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(descuentos + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(IGV + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(rayaTotal + "\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(precioVenta + "\n", LKPrint.LK_ALIGNMENT_RIGHT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText("SON:" + NumberToLetterConverter.convertNumberToLetter(importeTotalCIgv) + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(lineas + "\n", LKPrint.LK_ALIGNMENT_LEFT, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
             escposPrinter.printBarCode("0123456789", LKPrint.LK_BCS_Code39, 40, 512, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
-            escposPrinter.printText(Utils.cleanAcentos(tipoDocumento)+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(Utils.cleanAcentos("AGENTE:"+usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno())+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(tipoDocumento) + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos("AGENTE:" + usuario.getPersona().getPerVNombres() + " " + usuario.getPersona().getPerVApellidoPaterno()) + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
-            escposPrinter.printText(Utils.cleanAcentos(codigoVenta)+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(Utils.cleanAcentos(codigoVenta) + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
             escposPrinter.printText("REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(1);
             escposPrinter.printText("Visualice este documento en\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
-            escposPrinter.printText(datosEmpresa.getUrl()+"\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
+            escposPrinter.printText(datosEmpresa.getUrl() + "\n", LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_FNT_BOLD, LKPrint.LK_TXT_1WIDTH);
             escposPrinter.lineFeed(3);
 
             //"SON:"+NumberToLetterConverter.convertNumberToLetter(importeTotalIgv)
@@ -344,7 +345,8 @@ public class SheetsPrintDispatch {
         // escposPrinter.printBarCode("0123456789", LKPrint.LK_BCS_Code39, 40, 512, LKPrint.LK_ALIGNMENT_CENTER, LKPrint.LK_HRI_TEXT_BELOW);
 
     }
-    public void printNow(Cliente cliente, Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa,Unidad unidad) {
+
+    public void printNow(Cliente cliente, Despacho dispatch, Almacen almacen, Establecimiento establecimiento, Vehiculo vehiculo, Persona agente, DatosEmpresa datosEmpresa, Unidad unidad) {
 
 
         try {
@@ -401,7 +403,12 @@ public class SheetsPrintDispatch {
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mNrTransporte);
             printLineas();
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Cantidad Despachada "+unidad.getDescripcion()+": " + dispatch.getCantidadDespachada() + LF);
+            //  posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Cantidad Despachada " + unidad.getAbreviatura() + ": " + dispatch.getCantidadDespachada() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Cantidad Despachada: " + unidad.getAbreviatura() + LF);//RUC
+//posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|3C" + "Cantidad Despachada "+unidad.getAbreviatura()+": " + dispatch.getCantidadDespachada() + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + dispatch.getCantidadDespachada() + LF);
+
+
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "" + LF);
             printLineas();
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, mContadorFinal);
@@ -581,7 +588,7 @@ public class SheetsPrintDispatch {
     }
 
 
-    public void printTrasciego(OrdenCargo ordenCargo,String tipoOrigen,Concepto concepto, Producto producto, Unidad unidad,DatosEmpresa datosEmpresa,Persona persona){
+    public void printTrasciego(OrdenCargo ordenCargo, String tipoOrigen, Concepto concepto, Producto producto, Unidad unidad, DatosEmpresa datosEmpresa, Persona persona) {
         {
             try {
 
@@ -640,7 +647,6 @@ public class SheetsPrintDispatch {
 
         }
     }
-
 
 
     private void printLineas() throws JposException {

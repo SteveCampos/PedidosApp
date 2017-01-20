@@ -163,10 +163,12 @@ public class PlanFragment extends Fragment implements EstablecimientoAdapter.OnE
         return view;
     }
 
+
+
     private void initListeView() {
         listViewHistorial.setAdapter(new AdapterHistorial(getActivity(), 0, Historial.getHistorialList(), this));
-       // View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_cabecera_item, null);
-       // listViewHistorial.addHeaderView(view);
+        // View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_cabecera_item, null);
+        // listViewHistorial.addHeaderView(view);
     }
 
     private void setIndeterminateMode(boolean indeterminate) {

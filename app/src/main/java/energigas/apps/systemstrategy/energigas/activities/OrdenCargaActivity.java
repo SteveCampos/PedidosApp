@@ -394,6 +394,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         switch (concepto.getDescripcion().toLowerCase()) {
             case "compra":
                 guardarCompra();
+                startActivity(new Intent(this, OrdenCargaListActivity.class));
                 break;
             case "trasciego":
                 guardarTrasciego();
@@ -487,10 +488,11 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     private void saveOrdenCargo(OrdenCargo ordenCargo) {
         long id = ordenCargo.save();
         Log.d(TAG, "ordenCargo.save : " + id);
-        ordenCargo.setOrdeCargaId(id);
+        ordenCargo.setOrdenCargaId(id);
         ordenCargo.save();
         CajaLiquidacion liquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
         if (liquidacion != null) {
+
             liquidacion.setStockInicial(ordenCargo.getCantidadTransformada());
             liquidacion.save();
 
@@ -993,7 +995,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
     @Override
-    public void onOrdenCargoLongClickListener(int position,OrdenCargo ordenCargo,View view) {
+    public void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view) {
 
     }
 

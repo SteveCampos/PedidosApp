@@ -90,13 +90,14 @@ public class ManipuleData {
                 }
                 Log.d(TAG, " INSERTO CLIENTE " + cli);
                 /**Insertar Establecimientos**/
-
+                cliente.getPersona().getUbicacion().save();
                 for (Establecimiento establecimiento : cliente.getItemsEstablecimientos()) {
 
 
                     Long est = establecimiento.save();
 
                     Long estGeo = establecimiento.getUbicacion().save();
+
                     if (est < 0 || estGeo < 0) {
                         estadoEst = false;
                         estadoGeo = false;

@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
@@ -72,8 +74,12 @@ public class Unidad extends SugarRecord {
     }
 
     public static Unidad getUnidadProductobyUnidadMedidaId(String unidadMedidaId) {
+        List<Unidad> unidadList = Unidad.find(Unidad.class, " un_Id = ? ", new String[]{unidadMedidaId});
+        Log.d("UNIDAD_MEDIDA_ERROR", unidadList.size() + "");
+        if (unidadList.size() > 0) {
+            return unidadList.get(0);
+        }
 
-
-        return Unidad.find(Unidad.class, "un_Id = ?", new String[]{unidadMedidaId+ ""}).get(0);
+        return null;
     }
 }

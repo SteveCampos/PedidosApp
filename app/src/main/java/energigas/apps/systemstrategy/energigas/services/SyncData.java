@@ -243,7 +243,7 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
                                             ventaDetalle.setCompdId(respuestaCpVentaDetalle.getCompdIdServer());
                                             Long sD = ventaDetalle.save();
                                             saveEstado(ventaDetalle.getId() + "", respuestaCpVentaDetalle.getCompdIdServer() + "", ComprobanteVentaDetalle.class);
-                                            Log.d(TAG, "ComprobanteVentaDetalle " + sD);
+                                            Log.d(TAG, "ComprobanteVentaDetalle " + inAComprobanteVenta.size());
                                         }
                                     }
 
@@ -339,7 +339,7 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         jsonObjectResponse = null;
         List<BeDocElectronico> beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado)));
         if (beDocElectronicos.size() > 0) {
-            Log.d(TAG, "CANTIDAD FE: " + beDocElectronicos.get(0).getDocElectronicoId());
+            Log.d(TAG, "CANTIDAD FE: " + beDocElectronicos.size());
         }
 
         if (beDocElectronicos.size() > 0) {

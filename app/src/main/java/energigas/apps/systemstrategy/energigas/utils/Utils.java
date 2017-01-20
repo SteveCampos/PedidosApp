@@ -235,7 +235,7 @@ public class Utils {
 
         String horasPendientes = "No cuenta con Horario";
 
-        DateFormat df = new java.text.SimpleDateFormat("hh:mm:ss");
+        DateFormat df = new java.text.SimpleDateFormat("HH:mm:ss");
         Date date1, date2;
         Long diff;
         int hours, minutes, seconds;

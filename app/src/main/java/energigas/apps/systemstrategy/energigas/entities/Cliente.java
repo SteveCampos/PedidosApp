@@ -1,5 +1,7 @@
 package energigas.apps.systemstrategy.energigas.entities;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
@@ -10,7 +12,7 @@ import java.util.List;
  * Created by kelvi on 10/08/2016.
  */
 
-public class Cliente extends SugarRecord{
+public class Cliente extends SugarRecord {
 
     @Unique
     private int cliIClienteId;
@@ -50,7 +52,7 @@ public class Cliente extends SugarRecord{
     @Ignore
     private List<Establecimiento> itemsEstablecimientos;
     @Ignore
-    private  Persona persona ;
+    private Persona persona;
 
     public Cliente() {
     }
@@ -229,10 +231,15 @@ public class Cliente extends SugarRecord{
         this.persona = persona;
     }
 
-    public static  Cliente getCliente (String clienteId){
-        Cliente cliente = Cliente.find(Cliente.class,"cli_I_Cliente_Id = ? ",new String[]{clienteId}).get(0);
-        cliente.setPersona(Persona.find(Persona.class,"per_I_Persona_Id = ? ",new String[]{cliente.getCliIPersonaId()+""}).get(0));
-        cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class,"persona_Id=?",new String[]{cliente.getPersona().getPerIPersonaId()+""}).get(0));
+    public static Cliente getCliente(String clienteId) {
+        Cliente cliente = Cliente.find(Cliente.class, "cli_I_Cliente_Id = ? ", new String[]{clienteId}).get(0);
+        cliente.setPersona(Persona.find(Persona.class, "per_I_Persona_Id = ? ", new String[]{cliente.getCliIPersonaId() + ""}).get(0));
+        Log.d("IDPERSONA", cliente.getPersona().getPerIPersonaId() + "");
+
+        for (GeoUbicacion geoUbicacion : GeoUbicacion.listAll(GeoUbicacion.class)) {
+            Log.d("IDGEOUBICACION", "persona: "+ geoUbicacion.getPersonaId() + " ubicacion: " +geoUbicacion.getUgId());
+        }
+        cliente.getPersona().setUbicacion(GeoUbicacion.find(GeoUbicacion.class, "persona_Id=?", new String[]{cliente.getPersona().getPerIPersonaId() + ""}).get(0));
         return cliente;
     }
 }

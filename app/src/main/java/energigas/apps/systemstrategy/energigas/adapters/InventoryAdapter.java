@@ -13,6 +13,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
 import energigas.apps.systemstrategy.energigas.holders.InventoryHolder;
+import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
  * Created by kelvi on 20/07/2016.
@@ -42,9 +43,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryHolder> {
         final Inventory inventory = inventories.get(position);
         //holder.bind(inventories.get(position));
         holder.nameTextView.setText(inventory.getNombre());
-        holder.inicio.setText(inventory.getCantidadInicial() + "");
-        holder.venta.setText(inventory.getCantidadVendida() + "");
-        holder.textFinal.setText(inventory.getCantidadFinal() + "");
+        holder.inicio.setText(Utils.formatDoublePrint(inventory.getCantidadInicial()) + "");
+        holder.venta.setText(Utils.formatDoublePrint(inventory.getCantidadVendida()) + "");
+        holder.textFinal.setText(Utils.formatDoublePrint(inventory.getCantidadFinal()) + "");
     }
 
     @Override
