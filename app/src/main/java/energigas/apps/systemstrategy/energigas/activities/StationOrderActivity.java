@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -168,6 +169,16 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void initViews() {
         initHead();
@@ -220,6 +231,7 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     public void onBackPressed() {
         //super.onBackPressed();
         startActivity(new Intent(getApplicationContext(), MainStationActivity.class));
+        this.finish();
     }
 
     private static class Adapter extends FragmentPagerAdapter {

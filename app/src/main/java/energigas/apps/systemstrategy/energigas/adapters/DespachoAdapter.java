@@ -12,6 +12,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.DespachoHolder;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -43,9 +44,10 @@ public class DespachoAdapter extends RecyclerView.Adapter<DespachoHolder> {
     public void onBindViewHolder(DespachoHolder holder, int position) {
 
         final Despacho despacho = list.get(position);
+        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(despacho.getUnId() + "");
         Almacen almacen = Almacen.getAlmacenById(despacho.getAlmacenEstId() + "");
         holder.title.setText(despacho.getSerie() + "-" + despacho.getNumero());
-        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + "");
+        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + " " + unidad.getAbreviatura());
         holder.information.setText(
                 "Tanque: " + almacen.getNombre() + "\n" +
                         "C. Inicial: " + Utils.formatDoublePrint(despacho.getContadorInicialDestino()) + " - " + " C. Final: " + Utils.formatDoublePrint(despacho.getContadorFinalDestino()) + "\n" +

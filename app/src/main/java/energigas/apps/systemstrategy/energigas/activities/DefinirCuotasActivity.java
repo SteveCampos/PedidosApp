@@ -183,7 +183,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
                     mapper.writeValue(sw, listDetalle);
                     String listObject = sw.toString();
                     Session.setDefineCuotas(this, Constants.ESTADO_TRUE, listObject);
-                    Toast.makeText(this, "" + listObject, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, "" + listObject, Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

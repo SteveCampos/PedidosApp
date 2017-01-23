@@ -244,8 +244,11 @@ public class PrintDispatch extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // super.onBackPressed();
         disconnectPrinter();
+        startActivity(new Intent(getApplicationContext(), StationOrderActivity.class));
+        this.finish();
+
     }
 
 

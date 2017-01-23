@@ -14,6 +14,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.ComprobanteVentaHolder;
 import energigas.apps.systemstrategy.energigas.interfaces.OnComprobanteVentaClickListener;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
@@ -55,9 +56,9 @@ public class ComprobanteVentaAdapter extends RecyclerView.Adapter<ComprobanteVen
 
 
         for (ComprobanteVentaDetalle detalle : ventaDetalles) {
-
+            Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(ventaDetalles.get(0).getUnidadId() + "");
             Producto producto = Producto.find(Producto.class, " pro_Id = ? ", new String[]{detalle.getProId() + ""}).get(0);
-            detalleString = detalleString + " " + producto.getNombre() + " \n";
+            detalleString = detalleString + " " + producto.getNombre() + " " + unidad.getAbreviatura() + " \n";
             Log.d(TAG, "Detalle: " + detalleString);
         }
 

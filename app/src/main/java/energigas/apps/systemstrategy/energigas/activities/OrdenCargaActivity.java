@@ -394,7 +394,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         switch (concepto.getDescripcion().toLowerCase()) {
             case "compra":
                 guardarCompra();
-                startActivity(new Intent(this, OrdenCargaListActivity.class));
                 break;
             case "trasciego":
                 guardarTrasciego();
@@ -500,7 +499,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
             Double stockActual = almacen.getStockActual();
             almacen.setStockActual(stockActual + ordenCargo.getCantidadTransformada());
             almacen.save();
-
+            startActivity(new Intent(this, OrdenCargaListActivity.class));
             Snackbar.make(etCantidad, "Guardado", Snackbar.LENGTH_LONG).show();
         } else {
             Snackbar.make(etCantidad, "Error al guardar Orden de Cargo", Snackbar.LENGTH_LONG).show();

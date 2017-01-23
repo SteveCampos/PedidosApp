@@ -22,6 +22,7 @@ import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
@@ -42,7 +43,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -224,12 +228,22 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     @BindView(R.id.tanq_destino_orden_sugerencia)
     TextView textViewOrdenSugerencia;
 
+    @BindView(R.id.text_unidad_medida)
+    TextView text_unidad_medida;
+
+    Unidad unidad;
+
+    private double factorConvercion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_despacho);
         ButterKnife.bind(this);
+
+
+        factorConvercion = Utils.getFactorConvercion();
         usuario = Usuario.find(Usuario.class, " usu_I_Usuario_Id = ? ", new String[]{Session.getSession(this).getUsuIUsuarioId() + ""}).get(Constants.CURRENT);
         conceptoIGV = Session.getConceptoIGV();
 
@@ -278,12 +292,13 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
             pedidoDetalle = PedidoDetalle.find(PedidoDetalle.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
             cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", pedido.getPeId() + "");
-
+            unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
         } else {
             pedido = Session.getPedido(this);
             pedidoDetalle = Session.getPedidoDetalle(this);
             cajaLiquidacionDetalle = new CajaLiquidacionDetalle();
         }
+        unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
         Log.d(TAG, "POR IMPUESTO: " + conceptoIGV.getDescripcion());
         intanceAnimation();
         toolbar();
@@ -328,10 +343,20 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count > 0) {
                     Double cantidad = Double.parseDouble(s.toString());
-                    if (cantidad > almacen.getCapacidadReal()) {
-                        editTextCantidadDespachada.setText("");
-                        Toast.makeText(DespachoActivity.this, "La Cantidad supera la capacidad real", Toast.LENGTH_SHORT).show();
+                    if (unidad.getAbreviatura().equals("Gl")) {
+                        if (cantidad > almacen.getCapacidadReal()) {
+                            editTextCantidadDespachada.setText("");
+                            Toast.makeText(DespachoActivity.this, "La Cantidad supera la capacidad real", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Double cantidadProgramaConv = pedidoDetalle.getCantidad() / factorConvercion;
+                        if (cantidad > almacen.getCapacidadReal() && cantidad >= cantidadProgramaConv) {
+                            editTextCantidadDespachada.setText("");
+                            Toast.makeText(DespachoActivity.this, "La Cantidad supera la capacidad real", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
+
                 }
             }
 
@@ -479,16 +504,17 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     }
 
     private void setTextField() {
+        //Unidad unidadMeTanque = Unidad.getUnidadProductobyUnidadMedidaId(almace);
 
-
-        textViewDestinoCapacidad.setText(Utils.formatDoublePrint(almacen.getCapacidadReal()) + "");
-        textViewDestinoProgramado.setText(Utils.formatDoublePrint(pedidoDetalle.getCantidad()) + "");
-        textViewOrdenSugerencia.setText(": " + Utils.formatDoublePrint(getCapacidadSugerencia()) + "");
+        textViewDestinoCapacidad.setText(": " + Utils.formatDoublePrint(almacen.getCapacidadReal()) + " GL");
+        textViewDestinoProgramado.setText(": " + Utils.formatDoublePrint(pedidoDetalle.getCantidad()) + " GL");
+        textViewOrdenSugerencia.setText(": " + Utils.formatDoublePrint(getCapacidadSugerencia()) + " GL");
 
         textViewSerieNumero.setText(": " + serie.getCompVSerie() + "-" + Utils.completaZeros(getNumeroDespacho(), serie.getParametro()));
-        textViewTanque.setText(almacen.getPlaca());
-        textViewProducto.setText(Producto.getNameProducto(almacen.getProductoId() + ""));
-        textDespachoEstacion.setText(establecimiento.getEstVDescripcion());
+        textViewTanque.setText(": " + almacen.getPlaca());
+        textViewProducto.setText(": " + Producto.getNameProducto(almacen.getProductoId() + ""));
+        textDespachoEstacion.setText(": " + establecimiento.getEstVDescripcion());
+        text_unidad_medida.setText(": " + unidad.getDescripcion());
 
     }
 
@@ -531,6 +557,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 DespachoActivity.super.onBackPressed();
                 alertDialog.dismiss();
                 locationVehiculeListener.stopLocationUpdates();
+                DespachoActivity.this.finish();
             }
 
             @Override
@@ -585,6 +612,31 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
         if (latAndLong == null) {
             Toast.makeText(this, "Ubicacion desconoida, por favor intente nuevamente", Toast.LENGTH_SHORT).show();
+            setLatAndLong(latAndLong);
+
+            LocationManager mgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+            mgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    latAndLong = location;
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+
             return false;
         }
 
@@ -953,9 +1005,10 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         saveDespacho();
 
         progressDialog.dismiss();
-        startActivity(new Intent(this, PrintDispatch.class));
-        this.finish();
         locationVehiculeListener.stopLocationUpdates();
+        Intent intent = new Intent(getApplicationContext(), PrintDispatch.class);
+        startActivity(intent);
+        this.finish();
 
 
     }
@@ -970,7 +1023,9 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     @Override
     public void setLatAndLong(Location latAndLong) {
+
         this.latAndLong = latAndLong;
+
     }
 
     @Override

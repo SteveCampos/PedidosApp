@@ -150,11 +150,11 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
     private String idProducto = "";
     private String CantidProducto = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comprobante_print);
+
         ButterKnife.bind(this);
         res = getResources();
         comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(Session.getComprobanteVenta(this).getCompId() + "");
@@ -432,12 +432,14 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         TextView item_descp = (TextView) tableRow.findViewById(R.id.textviewdescr);
         TextView item_pu = (TextView) tableRow.findViewById(R.id.textviewpreciouni);
         TextView item_importe = (TextView) tableRow.findViewById(R.id.textRespPrecioImporte);
+        double importaBase = 0.0;
 
 
         for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
             importeTotal = importeTotal + Utils.formatDoubleNumber(comprobanteVentaDetalles.get(i).getImporte());
             Log.d("UNIDAD_MEDIDA_ID", comprobanteVentaDetalles.get(i).getUnidadId() + "");
             Unidad unidadMedida = Unidad.getUnidadProductobyUnidadMedidaId(comprobanteVentaDetalles.get(i).getUnidadId() + "");
+            importaBase = importaBase + comprobanteVentaDetalles.get(i).getImporte();
             if (i == (comprobanteVentaDetalles.size() - 1)) {
 
                 costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte());
@@ -453,7 +455,10 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad() + "");
                 item_um.setText(unidadMedida.getAbreviatura() + "");
                 item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + ""));
-                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario()) + "");
+                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecio()) + "");
+                item_importe.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + "");
+
+
             } else {
 
                 costoUnidad = costoUnidad + Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + " \n";
@@ -463,7 +468,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
                 item_cant.setText(comprobanteVentaDetalles.get(i).getCantidad() + "");
                 item_um.setText(unidadMedida.getAbreviatura() + "");
                 item_descp.setText(Producto.getNameProducto(comprobanteVentaDetalles.get(i).getProId() + ""));
-                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecioUnitario()) + "");
+                item_pu.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getPrecio()) + "");
+                item_importe.setText(Utils.formatDoublePrint(comprobanteVentaDetalles.get(i).getImporte()) + "");
 
             }
 
@@ -487,8 +493,8 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
         Double importeIgv = importeTotal * igv;
 
         Double importeTotalIgv = new Double(importeTotal + importeIgv);
-        item_importe.setText(Utils.formatDoublePrint(importeTotalIgv) + "");
-        String textImporte = String.format(res.getString(R.string.print_factura_items_importe2), Utils.formatDoublePrint(importeTotalIgv) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
+
+        String textImporte = String.format(res.getString(R.string.print_factura_items_importe2), Utils.formatDoublePrint(importaBase) + "", "0.00", "0.00", "0.00", "0.00", Utils.formatDoublePrint(importeIgv), Utils.formatDoublePrint(importeTotalIgv));
         textViewImprimirContenidoRight.setText(textImporte);
         tableLayoutFactura.addView(tableRow);
 //        String textCNombre = String.format(res.getString(R.string.print_factura_items), cantidadNombre);
@@ -535,9 +541,12 @@ public class SellPrintActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //   super.onBackPressed();
 
         disconnectPrinter();
+
+        startActivity(new Intent(getApplicationContext(), MainStationActivity.class));
+        this.finish();
     }
 
 

@@ -20,6 +20,7 @@ import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
+import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.DespachoHolder;
 import energigas.apps.systemstrategy.energigas.holders.StationDispatchsHolder;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
@@ -67,10 +68,10 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder
         final Despacho despacho = stationDispatches.get(position);
         Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
         Log.d(TAG, "produclist" + producto);
-
+        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(despacho.getUnId() + "");
         Almacen almacen = Almacen.getAlmacenById(despacho.getAlmacenEstId() + "");
         holder.title.setText(despacho.getSerie() + "-" + despacho.getNumero());
-        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + "");
+        holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + " " + unidad.getAbreviatura());
         String facturadoString = "";
 
         if (despacho.getCompId() > 0) {

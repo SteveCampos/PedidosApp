@@ -192,6 +192,15 @@ public class MainStationActivity extends AppCompatActivity
         initViews();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @OnClick(R.id.fab)
     public void agregarDespacho(View view) {
@@ -210,12 +219,14 @@ public class MainStationActivity extends AppCompatActivity
         if (getSupportActionBar() != null) //
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
 
     @Override
     public void onBackPressed() {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        this.finish();
     }
 
 

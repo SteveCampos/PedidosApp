@@ -242,7 +242,12 @@ public class Constants {
 
 
     public static final String SHA = "SHA";
-
+    /**
+     * Intent codigos
+     **/
+    public static final String INTENT_COME = "INTENT_COME";
+    public static final int INTENT_COME_DESPACHO = 1;
+    public static final int INTENT_COME_ORDER_STATION = 2;
     /*Cobranza Estados*/
 
     public static final String CONCEPTO_IGV_ID = "93";

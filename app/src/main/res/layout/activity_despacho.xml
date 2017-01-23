@@ -27,7 +27,7 @@
 
             <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:columnCount="2"
-                android:rowCount="4"
+                android:rowCount="5"
                 android:layout_gravity="left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,12 +35,14 @@
                 android:layout_marginTop="65dp"
                 android:layout_marginBottom="10dp">
 
+
+
                 <TextView
                     android:layout_column="0"
                     android:layout_row="0"
                     android:textSize="@dimen/dimen_15dp"
                     style="@style/TextAppearance.AppCompat.Title"
-                    android:text="Estacion:" />
+                    android:text="Estacion" />
 
                 <TextView
                     android:layout_column="1"
@@ -56,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/dimen_15dp"
-                    android:text="Producto:" />
+                    android:text="Producto" />
 
                 <TextView
                     android:layout_column="1"
@@ -104,6 +106,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=": D005-00000008" />
+
+                <TextView
+                    android:layout_column="0"
+                    android:layout_row="4"
+                    android:textSize="@dimen/dimen_15dp"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Unidad" />
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_row="4"
+                    android:id="@+id/text_unidad_medida"
+                    android:textSize="@dimen/dimen_15dp"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=":KILOS" />
+
+
 
 
             </GridLayout>

@@ -84,7 +84,6 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
             final String action = intent.getAction();
             if (Constants.ACTION_EXPORT_SERVICE.equals(action)) {
                 EXPORTAR_CREADOS = 1000;
-
                 SugarTransactionHelper.doInTransaction(this);
             }
         }
@@ -95,34 +94,34 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
     public void manipulateInTransaction() {
         switch (EXPORTAR_CREADOS) {
             case Constants.EXPORTAR_TODO:
-                boolean exportar = getExportarCreados(Constants.S_CREADO);
-                Log.d(TAG, "POR EXPORTAR" + String.valueOf(exportar));
-                if (exportar) {
-                    exportCreatedDespacho(Constants.S_CREADO);
-                    exportCreatedComprobanteVenta(Constants.S_CREADO);
-                    exportCreatedGasto(Constants.S_CREADO);
-                    exportarCreateOrdenCargo(Constants.S_CREADO);
-                } else {
 
-                }
-
+                getExportarCreados(Constants.S_CREADO);
                 break;
 
         }
     }
 
-    private boolean getExportarCreados(int estado) {
+    private void getExportarCreados(int estado) {
 
         Boolean inIdDespacho = new ArrayList<Object>(Utils.getListForExIn(Despacho.class, estado)).size() > 0;
         Boolean inAComprobanteVenta = ComprobanteVenta.getComprobanteVentas(new ArrayList<ComprobanteVenta>(Utils.getListForExIn(ComprobanteVenta.class, estado))).size() > 0;
-        Boolean beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado))).size() > 0;
+        // Boolean beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado))).size() > 0;
         Boolean informeGastoList = CajaMovimiento.getListCajaMovimiento(new ArrayList<CajaMovimiento>(Utils.getListForExIn(CajaMovimiento.class, estado))).size() > 0;
         Boolean beOrdenCargo = Utils.getListForExIn(OrdenCargo.class, estado).size() > 0;
 
-        if (inIdDespacho || inAComprobanteVenta || beDocElectronicos || informeGastoList || beOrdenCargo) {
-            return true;
-        } else {
-            return false;
+        if (inIdDespacho) {
+            exportCreatedDespacho(Constants.S_CREADO);
+        }
+        if (inAComprobanteVenta) {
+            exportCreatedComprobanteVenta(Constants.S_CREADO);
+        }
+
+        if (informeGastoList) {
+
+            exportCreatedGasto(Constants.S_CREADO);
+        }
+        if (beOrdenCargo) {
+            exportarCreateOrdenCargo(Constants.S_CREADO);
         }
 
 

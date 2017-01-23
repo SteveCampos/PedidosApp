@@ -38,6 +38,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 
 /**
@@ -65,6 +66,17 @@ public class Utils {
     public static String formatDouble(Double d) {
         return String.format(Locale.ENGLISH, "%.2f", d);
     }
+
+
+    public static double getFactorConvercion() {
+
+
+        Concepto concepto = Concepto.getConceptoById("91");
+
+
+        return Double.parseDouble(concepto.getDescripcion());
+    }
+
 
     public static String formatDoublePrint(Double d) {
 

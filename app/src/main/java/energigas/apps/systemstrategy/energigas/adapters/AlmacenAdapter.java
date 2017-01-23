@@ -55,14 +55,12 @@ public class AlmacenAdapter extends RecyclerView.Adapter<AlmacenHolder> {
     @Override
     public void onBindViewHolder(AlmacenHolder holder, int position) {
         final Almacen almacen = almacenList.get(position);
-        PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(Session.getPedido(mContext).getPeId() + "").get(0);
-        Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(pedidoDetalle.getUnidadId() + "");
 
         holder.title.setText(almacen.getNombre());
-        holder.programado.setText("Cap. Real : " + Utils.formatDoublePrint(almacen.getCapacidadReal()));
-        holder.capacity.setText("Stock Minimo     : " + almacen.getStockMinimo() + "\nCapacidad Neta :" + almacen.getCapacidadNeta());
+        holder.programado.setText("Cap. Real : " + Utils.formatDoublePrint(almacen.getCapacidadReal()) + " GL");
+        holder.capacity.setText("Stock Minimo     : " + almacen.getStockMinimo() + " GL  \nCapacidad Neta :" + almacen.getCapacidadNeta() + " GL");
         holder.politica.setText("Politica                : " + almacen.getPolitica());
-        holder.capacidadNeta.setText("Cap. Neta: " + almacen.getCapacidadNeta() + " " + unidad.getAbreviatura());
+        holder.capacidadNeta.setText("Cap. Neta: " + almacen.getCapacidadNeta() + "  GL");
 
 
         boolean b = true;
