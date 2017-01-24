@@ -19,26 +19,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
+                <!--android:orientation="horizontal">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/ordencarga.text.tipocarga" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="@string/ordencarga.text.tipocarga" />-->
 
-                <Spinner
-                    android:id="@+id/spn.tipocarga"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:entries="@array/ordencarga_tipocarga_entries"
-                    android:entryValues="@array/ordencarga_tipocarga_values" />
-            </LinearLayout>
+                <!--<Spinner-->
+                    <!--android:id="@+id/spn.tipocarga"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+                    <!--android:entries="@array/ordencarga_tipocarga_entries"-->
+                    <!--android:entryValues="@array/ordencarga_tipocarga_values" />-->
+            <!--</LinearLayout>-->
 
             <include
                 layout="@layout/content_ordencarga_compra"
@@ -175,7 +175,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/btn_aceptar"
+                        android:id="@+id/btn_order_guardar"
                         style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
                         android:layout_width="@dimen/dimen_12_10dp"
                         android:layout_height="wrap_content"

@@ -627,6 +627,11 @@
         "Meta GI %2$s.\n"
     </string>
 
+         <string name="adapter_caja_gasto">
+        " Tipo de Concepto: %1$s \n"
+        "Fecha de Acción: %2$s \n"
+        "Nro Comprobante: %3$s \n"
+    </string>
 
     <string name="main_dialog_title_close">Cerrar caja</string>
     <string name="main_dialog_text_km_end">Kilometraje Final</string>

@@ -44,9 +44,9 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final OrdenCargo ordenCargo = list.get(position);
-        OrdenCargoHolder ordenCargoHolder = (OrdenCargoHolder) holder;
+        final OrdenCargoHolder ordenCargoHolder = (OrdenCargoHolder) holder;
 
         ordenCargoHolder.bind(ordenCargo, mContext, listener);
 
@@ -71,7 +71,7 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View view) {
                         //Snackbar.make(holder.itemView,"OnCliclBtnEdit",Snackbar.LENGTH_LONG).show();
-                        listener.onOrdenCargoLongClickListener(Constants.CLICK_EDITAR_CAJA_GASTO,ordenCargo,holder.itemView);
+                        listener.onOrdenCargoLongClickListener(Constants.CLICK_EDITAR_CAJA_GASTO,ordenCargo,holder.itemView,alertDialog);
                         alertDialog.dismiss();
                     }
                 });
@@ -79,9 +79,10 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View view) {
                        // Snackbar.make(holder.itemView,"OnCliclBtnDelete",Snackbar.LENGTH_LONG).show();
-                        listener.onOrdenCargoLongClickListener(Constants.CLICK_ELIMINAR_CAJA_GASTO,ordenCargo,holder.itemView);
+                       listener.onOrdenCargoLongClickListener(Constants.CLICK_ELIMINAR_CAJA_GASTO,ordenCargo,holder.itemView,alertDialog);
                       //  metDelete(ordenCargo);
-                        alertDialog.dismiss();
+                        //removeAt(position);
+                       // alertDialog.dismiss();
                     }
                 });
 
@@ -104,9 +105,22 @@ public class OrdenCargaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    public void remove(OrdenCargo ordenCargo, int position) {
-        list.remove(ordenCargo);
+
+    /*
+    private void removeItem(Information infoData) {
+
+        int currPosition = data.indexOf(infoData);
+        data.remove(currPosition);
+        notifyItemRemoved(currPosition);
+    }*/
+    public void removeAt(int position) {
+        list.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, list.size());
+    }
+
+    public void updateOrder(int position){
+        notifyItemRangeChanged(position, list.size());
     }
 
 }

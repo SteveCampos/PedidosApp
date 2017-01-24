@@ -22,48 +22,60 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_category"
+                android:id="@+id/tv_referencia"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Medium"
                 android:text="Categories" />
 
-            <TextView
-                android:id="@+id/tv_descriptionc"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="description" />
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="description" />
+            <!--<TextView-->
+                <!--android:id="@+id/tv_descriptionc"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--style="@style/TextAppearance.AppCompat.Small"-->
+                <!--android:layout_marginTop="@dimen/dimen_5dp"-->
+                <!--android:text="description" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/tv_date"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--style="@style/TextAppearance.AppCompat.Small"-->
+                <!--android:layout_marginTop="@dimen/dimen_5dp"-->
+                <!--android:text="description" />-->
             <TextView
                 android:id="@+id/tv_ruc"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:textSize="8dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Small"
-                android:layout_marginTop="@dimen/dimen_5dp"
                 android:text="description" />
             <TextView
                 android:id="@+id/tv_razonSocial"
+                android:textSize="8dp"
+                android:textStyle="bold"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Small"
-                android:layout_marginTop="@dimen/dimen_5dp"
                 android:text="description" />
 
+            <!--<TextView-->
+                <!--android:id="@+id/tv_nm_comprobante"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--style="@style/TextAppearance.AppCompat.Small"-->
+                <!--android:layout_marginTop="@dimen/dimen_5dp"-->
+                <!--android:text="N°Comprobante" />-->
+
             <TextView
-                android:id="@+id/tv_nm_comprobante"
-                android:layout_height="wrap_content"
+                android:id="@+id/txt_info_cajagasto"
                 android:layout_width="wrap_content"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="N°Comprobante" />
+                android:layout_height="wrap_content"
+                android:text="@string/adapter_caja_gasto"
+                android:textSize="8dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView

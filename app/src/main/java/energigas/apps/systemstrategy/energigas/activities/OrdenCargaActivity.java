@@ -5,6 +5,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
@@ -117,6 +118,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     AppCompatButton btnCompraFacturaEmision;
     @BindView(R.id.btn_compra_guia_fechaemision)
     AppCompatButton btnCompraGuiaEmision;
+
+
     @BindView(R.id.btn_trasciego_guia_fechaemision)
     AppCompatButton btnTrasciegoGuiaEmision;
 
@@ -190,7 +193,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         createTimePicker();
     }
 
-    @OnClick(R.id.btn_trasciego_guia_fechaemision)
+   @OnClick(R.id.btn_trasciego_guia_fechaemision)
     public void selectTrasciegoGuiaFechaEmision() {
         tipoFecha = TRASCIEGO_FECHA_GUIA;
         createTimePicker();
@@ -994,7 +997,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
     @Override
-    public void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view) {
+    public void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view, AlertDialog alertDialog) {
 
     }
 

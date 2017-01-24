@@ -25,10 +25,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.orm.SugarTransactionHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
@@ -76,6 +79,23 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     TextView textViewNombreAgente;
     @BindView(R.id.textViewPlaca)
     TextView textViewPlaca;
+
+    /*Spinner*/
+    private Spinner sp_TipoDoc;
+    private Spinner sp_tiposgastos;
+    private Spinner sp_catTGasto;
+    /*Fin Spinner*/
+
+    private AutoCompleteTextView et_nameautoCompleteRuc;
+    private AutoCompleteTextView et_nameautoCompleteRazon;
+
+    private EditText txtdgdescription;
+    private EditText et_num_comprob;
+    private EditText et_num_serie;
+    private EditText txtttotal;
+
+
+
 
 
     private CustomTabsAdapter tabsAdapter;
@@ -225,16 +245,16 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
 
     private String date = "";
-    private String converSerie ="";
+    private String converSerie = "";
     private String positioniItem = "";
 
     /*Tipo Doc:*/
 
-    private String tip_docfactura="F00";
-    private String tip_docboleta="B00";
+    private String tip_docfactura = "F00";
+    private String tip_docboleta = "B00";
 
     private int idProveedor;
-    String tipo_doc= "";
+    String tipo_doc = "";
 
     public void inflate_dialog() {
 
@@ -242,21 +262,21 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
         final Button btnsave = (Button) layout_dialog_expenses.findViewById(R.id.btn_save);
         final Button btn_cancel = (Button) layout_dialog_expenses.findViewById(R.id.btn_cancel);
-        final EditText txtttotal = (EditText) layout_dialog_expenses.findViewById(R.id.et_total);
-        final EditText txtdgdescription = (EditText) layout_dialog_expenses.findViewById(R.id.et_description);
-        final Spinner sp_tiposgastos = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tiposgastos);
-        final Spinner sp_catTGasto = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tcGasto);
-        final Spinner sp_TipoDoc = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tipoDoc);
+        txtttotal = (EditText) layout_dialog_expenses.findViewById(R.id.et_total);
+        txtdgdescription = (EditText) layout_dialog_expenses.findViewById(R.id.et_description);
+        sp_tiposgastos = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tiposgastos);
+        sp_catTGasto = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tcGasto);
+        sp_TipoDoc = (Spinner) layout_dialog_expenses.findViewById(R.id.sp_tipoDoc);
         final TextView btndate = (TextView) layout_dialog_expenses.findViewById(R.id.btndate);
         final LinearLayout viewLinerLayout = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura);
         final LinearLayout viewLinerLayout2 = (LinearLayout) layout_dialog_expenses.findViewById(R.id.LinearFactura2);
-        final EditText et_num_comprob = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_comprob);
-        final EditText et_num_serie = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_serie);
+        et_num_comprob = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_comprob);
+        et_num_serie = (EditText) layout_dialog_expenses.findViewById(R.id.et_num_serie);
 
 
         /*AutoComplete*/
-        final AutoCompleteTextView et_nameautoCompleteRuc = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRuc);
-        final AutoCompleteTextView et_nameautoCompleteRazon = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRazon);
+        et_nameautoCompleteRuc = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRuc);
+        et_nameautoCompleteRazon = (AutoCompleteTextView) layout_dialog_expenses.findViewById(R.id.et_nameautoCompleteRazon);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
@@ -312,6 +332,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
         conceptoTipoDocument = Concepto.find(Concepto.class, "OBJETO = ? AND  CONCEPTO = ? AND  ESTADO = ? ", new String[]{Constants.CONCEPTO_CAJA_GASTO, Constants.CONCEPTO_CATEGORIA_TIPO_COMPROBANTE, String.valueOf(Constants.CLICK_EDITAR_CAJA_GASTO)});
         sp_TipoDoc.setAdapter(new ConceptoAdapter(this, 0, conceptoTipoDocument));
 
+
         sp_TipoDoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -321,6 +342,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         viewLinerLayout.setVisibility(View.VISIBLE);
                         viewLinerLayout2.setVisibility(View.VISIBLE);
                         positioniItem = String.valueOf(position);
+                        Log.d(TAG, "PositionItem: ");
                         //  et_num_serie.setText(tip_docfactura);
 
                         break;
@@ -376,82 +398,22 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onClick(View view) {
+                Concepto concepto = (Concepto) sp_TipoDoc.getSelectedItem();
+                switch (concepto.getDescripcion().toLowerCase()) {
+                    case "factura":
+                        guardarfactura();
+                        break;
+                    case "boleta":
+                        guardarboleta();
 
-                String description = txtdgdescription.getText().toString();
-                // String txtnumbcomprobante = et_num_serie.getText().toString() + "-" + et_num_comprob.getText().toString();
-                String txtnumbcomprobante =  et_num_comprob.getText().toString();
-                String txtserie = et_num_serie.getText().toString();
-                tipoDocumento = (Concepto) sp_TipoDoc.getSelectedItem();
-                conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
-                conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
-
-                Log.d(TAG, "Concepto: " + conceptoTipoGasto.getId() + "-" + conceptoTipoGasto.getDescripcion());
-                Log.d(TAG, "Concepto: " + conceptoTipoCateGasto.getId() + "-" + conceptoTipoCateGasto.getDescripcion());
-                final String cbConceptoTipoGasto = String.valueOf(conceptoTipoGasto.getDescripcion());
-                final String cbConceptoCateTipoGasto = String.valueOf(conceptoTipoCateGasto.getDescripcion());
-
-                Log.d(TAG, "cbConceptoTipoGasto: " + cbConceptoTipoGasto);
-                Log.d(TAG, "cbConceptoCateTipoGasto: " + cbConceptoCateTipoGasto);
-
-                //   listcombo(cbConceptoTipoGasto,cbConceptoCateTipoGasto);
-                Fragment expensesFragment = getFragment(0);
-                if (txtttotal.getText().toString().equals("")) {
-                    txtttotal.setError("Ingrese Total");
-                } else {
-                    double impporte = Double.valueOf(txtttotal.getText().toString());
-                    double igv = impporte * Double.parseDouble(conceptoIgv.getDescripcion());
-                    double valor = impporte - igv;
-
-                    idCajagasto = idCajagasto + 1;
-                    expenses = new CajaGasto(idCajagasto,
-                            idCajagasto,
-                            Utils.formatDoubleNumber(igv),
-                            Utils.formatDoubleNumber(valor),
-                            Utils.formatDoubleNumber(impporte),
-                            conceptoTipoGasto.getIdConcepto(),
-                            usuario.getUsuIUsuarioId(),
-                            usuario.getUsuIUsuarioId(),
-                            Utils.getDatePhoneTime(),
-                            Utils.getDatePhoneTime(), tipoDocumento.getIdConcepto()
-                    );
-                    save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
-                    Log.d(TAG, "CountID: " + idCajagasto);
-//                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
-                    if (expensesFragment != null) {
-
-                        ((CajaGastoFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
-                    }
-                    alertDialog.dismiss();
-                    //  expenses.save();
-
-
-/*
-                    if(positioniItem=="0"){
-                        mSerieFact = mSerieFact + 1;
-                        converSerie = "F00"+mSerieFact;
-                        //globalSerie = String.valueOf(mSerie);
-                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
-                        Log.d(TAG,"positioniItem"+converSerie);
-                    }else if (positioniItem =="1"){
-                        mSerieBol = mSerieBol + 1;
-                        //globalSerie = String.valueOf(mSerie);
-                        converSerie = "B00"+mSerieBol;
-                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
-                        Log.d(TAG,"positioniItem"+converSerie);
-                    } else if (positioniItem == "2"){
-                        mSerieBol = mSerieBol + 1;
-                        converSerie = "B00"+mSerieBol;
-                        //globalSerie = String.valueOf(mSerie);
-                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
-                        Log.d(TAG,"positioniItem"+converSerie);
-                    }
-
-*/
-
-                    //globalSerie = String.valueOf(mSerie);
-                    //save(expenses, description,txtnumbcomprobante,converSerie);
-                    // save(expenses, description, txtnumbcomprobante);
+                        break;
+                    case "recibo":
+                       // guardarrecibo();
+                        guardarfactura();
+                        break;
                 }
+
+
             }
 
 
@@ -473,7 +435,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     }
 
     //private void save(final CajaGasto mcajaGasto, final String mDescription, final String txtnumbcomprobante) {
-    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante,final String converSerie,final String txtserie) {
+    private void save(final CajaGasto mcajaGasto, final String mDescription, final String txtnumbcomprobante, final String converSerie, final String txtserie) {
 
 
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
@@ -497,7 +459,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         Utils.getDatePhoneTimeSQLSERVER(),
                         mDescription,
                         conceptoTipoCateGasto.getIdConcepto(),
-                        Constants.GASTO_ESTADO_CREADO,txtserie+"-"+txtnumbcomprobante,date,idProveedor);
+                        Constants.GASTO_ESTADO_CREADO, txtserie + "-" + txtnumbcomprobante, date, idProveedor);
                 long idInformeGasto = informeGasto.save();
                 informeGasto.setCajGasId(idCajaGasto);
                 informeGasto.setInfGasId(idInformeGasto);
@@ -693,5 +655,101 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     }
 
 
+    private void guardarfactura() {
+
+        String description = txtdgdescription.getText().toString();
+        String txtnumbcomprobante = et_num_comprob.getText().toString();
+        String txtserie = et_num_serie.getText().toString();
+        tipoDocumento = (Concepto) sp_TipoDoc.getSelectedItem();
+        conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
+        conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
+
+        Log.d(TAG, "Concepto: " + conceptoTipoGasto.getId() + "-" + conceptoTipoGasto.getDescripcion());
+        Log.d(TAG, "Concepto: " + conceptoTipoCateGasto.getId() + "-" + conceptoTipoCateGasto.getDescripcion());
+        final String cbConceptoTipoGasto = String.valueOf(conceptoTipoGasto.getDescripcion());
+        final String cbConceptoCateTipoGasto = String.valueOf(conceptoTipoCateGasto.getDescripcion());
+
+        Log.d(TAG, "cbConceptoTipoGasto: " + cbConceptoTipoGasto);
+        Log.d(TAG, "cbConceptoCateTipoGasto: " + cbConceptoCateTipoGasto);
+
+        Fragment expensesFragment = getFragment(0);
+        if (txtttotal.getText().toString().equals("")) {
+            txtttotal.setError("Ingrese Total");
+        } else {
+            double impporte = Double.valueOf(txtttotal.getText().toString());
+            double igv = impporte * Double.parseDouble(conceptoIgv.getDescripcion());
+            double valor = impporte - igv;
+
+            idCajagasto = idCajagasto + 1;
+            expenses = new CajaGasto(idCajagasto,
+                    idCajagasto,
+                    Utils.formatDoubleNumber(igv),
+                    Utils.formatDoubleNumber(valor),
+                    Utils.formatDoubleNumber(impporte),
+                    conceptoTipoGasto.getIdConcepto(),
+                    usuario.getUsuIUsuarioId(),
+                    usuario.getUsuIUsuarioId(),
+                    Utils.getDatePhoneTime(),
+                    Utils.getDatePhoneTime(), tipoDocumento.getIdConcepto()
+            );
+            save(expenses, description, txtnumbcomprobante, converSerie, txtserie);
+            Log.d(TAG, "CountID: " + idCajagasto);
+            if (expensesFragment != null) {
+
+                ((CajaGastoFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
+            }
+            alertDialog.dismiss();
+
+        }
+    }
+
+
+    private void guardarboleta() {
+
+        String description = txtdgdescription.getText().toString();
+        String txtnumbcomprobante = et_num_comprob.getText().toString();
+        String txtserie = et_num_serie.getText().toString();
+        tipoDocumento = (Concepto) sp_TipoDoc.getSelectedItem();
+        conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
+        conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
+
+        Log.d(TAG, "Concepto: " + conceptoTipoGasto.getId() + "-" + conceptoTipoGasto.getDescripcion());
+        Log.d(TAG, "Concepto: " + conceptoTipoCateGasto.getId() + "-" + conceptoTipoCateGasto.getDescripcion());
+        final String cbConceptoTipoGasto = String.valueOf(conceptoTipoGasto.getDescripcion());
+        final String cbConceptoCateTipoGasto = String.valueOf(conceptoTipoCateGasto.getDescripcion());
+
+        Log.d(TAG, "cbConceptoTipoGasto: " + cbConceptoTipoGasto);
+        Log.d(TAG, "cbConceptoCateTipoGasto: " + cbConceptoCateTipoGasto);
+
+        Fragment expensesFragment = getFragment(0);
+        if (txtttotal.getText().toString().equals("")) {
+            txtttotal.setError("Ingrese Total");
+        } else {
+            double impporte = Double.valueOf(txtttotal.getText().toString());
+            double igv = impporte * Double.parseDouble(conceptoIgv.getDescripcion());
+            double valor = impporte - igv;
+
+            idCajagasto = idCajagasto + 1;
+            expenses = new CajaGasto(idCajagasto,
+                    idCajagasto,
+                    Utils.formatDoubleNumber(igv),
+                    Utils.formatDoubleNumber(valor),
+                    Utils.formatDoubleNumber(impporte),
+                    conceptoTipoGasto.getIdConcepto(),
+                    usuario.getUsuIUsuarioId(),
+                    usuario.getUsuIUsuarioId(),
+                    Utils.getDatePhoneTime(),
+                    Utils.getDatePhoneTime(), tipoDocumento.getIdConcepto()
+            );
+            save(expenses, description, txtnumbcomprobante, converSerie, txtserie);
+            Log.d(TAG, "CountID: " + idCajagasto);
+            if (expensesFragment != null) {
+
+                ((CajaGastoFragment) expensesFragment).addnewExpenses(expenses); //obtenemos la instancia del fragmento
+            }
+            alertDialog.dismiss();
+
+        }
+    }
 
 }

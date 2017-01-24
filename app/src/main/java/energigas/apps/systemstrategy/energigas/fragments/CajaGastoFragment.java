@@ -71,7 +71,7 @@ public class CajaGastoFragment extends Fragment implements CajaGastoAdapter.OnCa
         cajaGastoList=getCajaGastoList();
         if(booleanHashMap!=null) {
             Log.d(TAG,"booleanHashMap"+booleanHashMap.get("CajaGastoAdapter")+"");
-            adapter = new CajaGastoAdapter(cajaGastoList, getActivity(), this,booleanHashMap.get("CajaGastoAdapter"));
+            adapter = new CajaGastoAdapter(cajaGastoList, getActivity(), this,booleanHashMap.get("CajaGastoAdapter"),getActivity());
         }
         //adapter = new CajaGastoAdapter(CajaGasto.getListCajaGastos(),getActivity(),this,this); //
         recyclerView.setAdapter(adapter);

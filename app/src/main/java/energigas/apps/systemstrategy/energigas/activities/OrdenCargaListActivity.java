@@ -17,6 +17,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -39,14 +41,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import energigas.apps.systemstrategy.energigas.R;
+import energigas.apps.systemstrategy.energigas.adapters.ConceptoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.OrdenCargaAdapter;
+import energigas.apps.systemstrategy.energigas.adapters.ProductoAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.ProveedorAdapter;
 import energigas.apps.systemstrategy.energigas.adapters.UnidadAdapter;
+import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Proveedor;
+import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
@@ -83,38 +90,50 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     private Vehiculo mVehiculo;
     AlertDialog alertDialog;
     /*Item Compra*/
-    LinearLayout lytCompra;
-    AutoCompleteTextView tilCompraRuc;
-    AutoCompleteTextView tilRazonSocial;
-    EditText etCompraFacturaSerie;
-    EditText etCompraFacturaCorrelativo;
-    EditText etCompraGuiaSerie;
-    EditText etCompraGuiaCorrelativo;
+    private LinearLayout lytCompra;
+    private AutoCompleteTextView tilCompraRuc;
+    private AutoCompleteTextView tilRazonSocial;
+    private EditText etCompraFacturaSerie;
+    private EditText etCompraFacturaCorrelativo;
+    private EditText etCompraGuiaSerie;
+    private EditText etCompraGuiaCorrelativo;
     /*Fin Compra*/
-    Spinner spnProduto;
-    Spinner spnUnidadMedida;
-    Spinner spnTipoCarga;
+    private Spinner spnProduto;
+    private Spinner spnUnidadMedida;
+    private Spinner spnTipoOrigen;
 
-    TextView txtfconversion;
-    TextView txtdensidad;
-    TextView txtprecio;
-    TextView txtcantidad;
-    AppCompatButton btnCompraFacturaEmision;
-    AppCompatButton btnCompraGuiaEmision;
-    AppCompatButton btnTrasciegoGuiaEmision;
+    private TextView txtfconversion;
+    private TextView txtdensidad;
+    private TextView txtprecio;
+    private TextView txtcantidad;
+    private Button btAceptar;
+    private Button btCancelar;
+    private AppCompatButton btnCompraFacturaEmision;
+    private AppCompatButton btnCompraGuiaEmision;
 
 
-    TextInputLayout tilCompraFacturaSerie;
-    TextInputLayout tilCompraFacturaCorrelativo;
-    TextInputLayout tilCompraGuiaSerie;
-    TextInputLayout tilCompraGuiaCorrelativo;
+    private TextInputLayout tilCompraFacturaSerie;
+    private TextInputLayout tilCompraFacturaCorrelativo;
+
+    private TextInputLayout tilCompraGuiaSerie;
+    private TextInputLayout tilCompraGuiaCorrelativo;
+
+    private TextInputLayout tilCantidad;
+    private TextInputLayout tilFactorconversion;
+    private TextInputLayout tilDensidad;
+    private TextInputLayout tilPrecio;
 
 
     /*Item Trasciego*/
-    LinearLayout lytTrasCiego;
+    private LinearLayout lytTrasCiego;
+    private TextInputLayout til_trasciego_guia_serie;
+    private EditText et_trasciego_guia_serie;
+    private TextInputLayout til_trasciego_guia_correlativo;
+    private EditText et_trasciego_guia_correlativo;
+    private AppCompatButton btnTrasciegoGuiaEmision;
     /*Fin TrasCiego*/
 
-    OrdenCargaAdapter adapter;
+    private OrdenCargaAdapter adapter;
 
 
     private int tipoFecha;
@@ -124,8 +143,9 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     private final static int TRASCIEGO_FECHA_GUIA = 102;
 
 
-    ProveedorAdapter proveedorAdapterRuc;
-    ProveedorAdapter proveedorAdapterNombreComercial;
+    private ProveedorAdapter proveedorAdapterRuc;
+    private ProveedorAdapter proveedorAdapterNombreComercial;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,9 +187,9 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
 
     private void initRecycler() {
-        List<OrdenCargo> ordenCargoList = OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ");
-
-        ordenCargaAdapter = new OrdenCargaAdapter(this, ordenCargoList, this);
+//        ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo ORDER BY id DESC"), this);
+        ordenCargaAdapter = new OrdenCargaAdapter(this, OrdenCargo.findWithQuery(OrdenCargo.class, "select * from orden_Cargo where estado_id=69 ORDER BY id DESC"), this);
+        Log.d(TAG, "CountList: " + ordenCargaAdapter.getItemCount());
         recycler.setAdapter(ordenCargaAdapter);
         recycler.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -183,16 +203,23 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     }
 
     @Override
-    public void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view) {
+    public void onOrdenCargoLongClickListener(int position, OrdenCargo ordenCargo, View view, AlertDialog alertDialog) {
         switch (position) {
-
             case 1:
-               /* Snackbar.make(textViewPlaca, "ONclickListenerEditar", Snackbar.LENGTH_SHORT).show();
-                metEdit(ordenCargo);*/
+                metEdit(ordenCargo, view);
                 break;
             case 2:
-                //metDelete(ordenCargo,view);
-              //  Snackbar.make(textViewPlaca, "ONclickListenerDelete", Snackbar.LENGTH_SHORT).show();
+                if (ordenCargo!=null) {
+                    ordenCargo.setEstadoId(70);
+                    Log.d(TAG, "OrdenCargoESTADOID: "+ ordenCargo.getEstadoId());
+                    ordenCargo.save();
+                    int position2 = recycler.getChildAdapterPosition(view);
+                    ((OrdenCargaAdapter) recycler.getAdapter()).removeAt(position2);
+                    alertDialog.dismiss();
+                    Snackbar.make(textViewPlaca, "Eliminado Exitosamente!", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(textViewPlaca, "Error al Eliminar", Snackbar.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;
@@ -256,13 +283,13 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         });
     }
 
-    private void metEdit(OrdenCargo ordenCargo) {
+    private void metEdit(final OrdenCargo ordenCargo, final View viewposition) {
 
         View layout_dialog_ordenCarga = View.inflate(this, R.layout.dialog_edit_ordencarga, null);
 
         spnProduto = (Spinner) layout_dialog_ordenCarga.findViewById(R.id.spn_producto);
         spnUnidadMedida = (Spinner) layout_dialog_ordenCarga.findViewById(R.id.spn_unidadmedida);
-        spnTipoCarga = (Spinner) layout_dialog_ordenCarga.findViewById(R.id.spn_tipocarga);
+        spnTipoOrigen = (Spinner) layout_dialog_ordenCarga.findViewById(R.id.spn_trasciego_tipoorigen);
         /*Items Compra*/
         lytCompra = (LinearLayout) layout_dialog_ordenCarga.findViewById(R.id.container_compra);
         tilCompraRuc = (AutoCompleteTextView) layout_dialog_ordenCarga.findViewById(R.id.et_compra_ruc);
@@ -276,12 +303,24 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
         tilCompraFacturaSerie = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_compra_factura_serie);
         tilCompraFacturaCorrelativo = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_compra_factura_correlativo);
+
+        tilCantidad = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_cantidad);
+        tilFactorconversion = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_factorconversion);
+        tilDensidad = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_densidad);
+        tilPrecio = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_precio);
+
+
         tilCompraGuiaSerie = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_compra_guia_serie);
         tilCompraGuiaCorrelativo = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_compra_guia_correlativo);
+        /*items TrasCiego*/
+        til_trasciego_guia_serie = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_trasciego_guia_serie);
+        et_trasciego_guia_serie = (EditText) layout_dialog_ordenCarga.findViewById(R.id.et_trasciego_guia_serie);
+        til_trasciego_guia_correlativo = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_trasciego_guia_correlativo);
+        et_trasciego_guia_correlativo = (EditText) layout_dialog_ordenCarga.findViewById(R.id.et_trasciego_guia_serie);
+        btnTrasciegoGuiaEmision = (AppCompatButton) layout_dialog_ordenCarga.findViewById(R.id.btn_trasciego_guia_fechaemision);
 
-
-        Button btAceptar = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_aceptar);
-        Button btCancel = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_cancel);
+        btAceptar = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_order_guardar);
+        btCancelar = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_cancel);
 
 
         lytTrasCiego = (LinearLayout) layout_dialog_ordenCarga.findViewById(R.id.container_trasciego);
@@ -293,20 +332,22 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         txtcantidad = (TextView) layout_dialog_ordenCarga.findViewById(R.id.et_cantidad);
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        final Dialog d = adb.setView(layout_dialog_ordenCarga).create();
+        final Dialog alertDialog = adb.setView(layout_dialog_ordenCarga).create();
         // (That new View is just there to have something inside the dialog that can grow big enough to cover the whole screen.)
 
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(d.getWindow().getAttributes());
+        lp.copyFrom(alertDialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        d.show();
-        d.getWindow().setAttributes(lp);
+        alertDialog.show();
+        alertDialog.getWindow().setAttributes(lp);
 
-        Concepto mconceptoTipoCarga = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
-        switch (mconceptoTipoCarga.getDescripcion().toLowerCase()) {
+        Concepto concepto = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
+        // mconceptoTipoCarga = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
+        switch (concepto.getDescripcion().toLowerCase()) {
             case "compra":
+                Proveedor mproveedor = Proveedor.getProveedorById(ordenCargo.getProveedorId());
                 lytCompra.setVisibility(View.VISIBLE);
                 lytTrasCiego.setVisibility(View.GONE);
                 //seteamos
@@ -326,9 +367,13 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                         selectCompraGuiaFechaEmision();
                     }
                 });
-                initSpinnerUnidadMedia(spnUnidadMedida);
+                initSpinnerUnidadMedia();
+                initSpinnerProducto();
+                tilCompraRuc.setText(mproveedor.getPersona().getPerVDocIdentidad());
+                tilRazonSocial.setText(mproveedor.getPersona().getNombreComercial());
+                initAutocompleteRuc();
                 //guardarCompra(ordenCargo, spnProduto, spnUnidadMedida, spnTipoCarga, tilCompraRuc, tilRazonSocial);
-                guardarCompra(ordenCargo);
+                initEdittextCompra();
                 break;
             case "trasciego":
 
@@ -339,56 +384,49 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                 txtdensidad.setText(Utils.formatDouble(ordenCargo.getDensidad()));
                 txtprecio.setText(Utils.formatDouble(ordenCargo.getPrecio()));
                 txtcantidad.setText(ordenCargo.getCantidadDoc() + "");
-                initSpinnerUnidadMedia(spnUnidadMedida);
+                initSpinnerProducto();
+                initSpinnerUnidadMedia();
+                initSpinnerTipoOrigen();
+                initEdittextTrasciego();
+                btnTrasciegoGuiaEmision.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectTrasciegoGuiaFechaEmision();
+                    }
+                });
                 break;
         }
 
         btAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Concepto mconceptoTipoCarga = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
+                switch (mconceptoTipoCarga.getDescripcion().toLowerCase()) {
+                    case "compra":
+                        guardarCompra(ordenCargo, viewposition, alertDialog);
+                        break;
+                    case "trasciego":
+                        guardarTrasciego(ordenCargo, viewposition, alertDialog);
+                        break;
+                }
             }
         });
-        btCancel.setOnClickListener(new View.OnClickListener() {
+        btCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                d.dismiss();
+                alertDialog.dismiss();
             }
         });
 
 
     }
 
-    private void metDelete(OrdenCargo ordenCargo, View view) {
-        int position = recycler.getChildAdapterPosition(view);
-        adapter.remove(ordenCargo, position);
 
-    }
+    public void guardarCompra(OrdenCargo ordenCargo, View view, Dialog alertDialog) {
 
-
-    //public void guardarCompra(OrdenCargo ordenCargo, Spinner spnUnidadMedida, Spinner spnTipoCarga, Spinner spnProduto, final AutoCompleteTextView tilCompraRuc, final AutoCompleteTextView tilRazonSocial) {
-    public void guardarCompra(OrdenCargo ordenCargo) {
-        Proveedor mproveedor = Proveedor.getProveedorById(ordenCargo.getProveedorId());
-
-        Concepto tipoCarga = (Concepto) spnTipoCarga.getSelectedItem();
         Producto producto = (Producto) spnProduto.getSelectedItem();
         Unidad unidad = (Unidad) spnUnidadMedida.getSelectedItem();
 
-        // String ruc2 = ordenCargo.setimporte(Double.parseDouble(txtttotal.getText().toString()));
-        tilCompraRuc.setText(mproveedor.getPersona().getPerVDocIdentidad());
-        tilRazonSocial.setText(mproveedor.getPersona().getNombreComercial());
-        proveedorAdapterRuc = new ProveedorAdapter(this, ProveedorAdapter.DOCUMENTO_IDENTIDAD, Proveedor.getProveedorList());
-        tilCompraRuc.setAdapter(proveedorAdapterRuc);
-        tilCompraRuc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tilCompraRuc.setText("");
-                tilCompraRuc.setOnItemClickListener(proveedorItemSelectedListener);
-                /// tilCompraRuc.setText("");
-
-            }
-
-        });
         String ruc = tilCompraRuc.getText().toString();
         String correlativoFactura = etCompraFacturaCorrelativo.getText().toString();
         String serieFactura = etCompraFacturaSerie.getText().toString();
@@ -405,10 +443,10 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         boolean esGuiaCorrelativoValido = esGuiaCorrelativoValido(correlativoGuia);
         boolean esFechaComprobanteValida = esFechaComprobanteValida(comprobanteFecha);
         boolean esFechaGuiaValida = esGuiaComprobanteValida(guiaFecha);
-        // boolean sonCamposGeneralesValidos = validarCamposGenerales();
+        boolean sonCamposGeneralesValidos = validarCamposGenerales();
 
         if (esProveedorValido && esSerieValida && esCorrelativoValido && esGuiaSerieValida &&
-                esGuiaCorrelativoValido && esFechaComprobanteValida && esFechaGuiaValida) {
+                esGuiaCorrelativoValido && esFechaComprobanteValida && esFechaGuiaValida && sonCamposGeneralesValidos) {
             //SAVE!
             Proveedor proveedor = getProveedor(ruc);
 
@@ -420,14 +458,18 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             String strPrecio = txtprecio.getText().toString();
             String strFactor = txtfconversion.getText().toString();
 
-            Double cantidad = Double.parseDouble(strCantidad);
+           /* Double cantidad = Double.parseDouble(strCantidad);
             Double densidad = Double.parseDouble(strDensidad);
             Double precio = Double.parseDouble(strPrecio);
-            Double factor = Double.parseDouble(strFactor);
+           */// Double factor = Double.parseDouble(strFactor);
 
+            Double factor = Double.parseDouble(txtfconversion.getText().toString());
+            Double precio = Double.parseDouble(txtprecio.getText().toString());
+            Double densidad = Double.parseDouble(txtdensidad.getText().toString());
+            Double cantidad = Double.parseDouble(txtcantidad.getText().toString());
+            //cajaGasto.setImporte(Double.parseDouble(txtttotal.getText().toString()));
 
             Double cantidadTransformada = cantidad / factor;
-
             String format = "%.4f";
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
@@ -437,9 +479,82 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             ordenCargo.setProveedorId(proveedor.getProveedorId());
             ordenCargo.setNroComprobante(serieFactura + "-" + correlativoFactura);
             ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
-            ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
+            //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
+           // ordenCargo.setFactorConversion(Double.parseDouble());
+            ordenCargo.setFactorConversion(Utils.formatDouble(format,factor));
+            ordenCargo.setFechaGuia(guiaFecha);
+            ordenCargo.setDensidad(Utils.formatDouble(format,densidad));
+            ordenCargo.setProId(producto.getProId());
+            ordenCargo.setUnIdComprobante(unidad.getUnId());
+            ordenCargo.setCantidadDoc(Utils.formatDouble(format,cantidad));
+            ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
+            ordenCargo.setUsuarioCreacionId(usuarioId);
+            ordenCargo.setFechaCreacion(datetime);
+            //ordenCargo.setEstadoId();
+            ordenCargo.setUsuarioAccionId(usuarioId);
+            ordenCargo.setFechaAccion(datetime);
+            ordenCargo.setPrecio(Utils.formatDouble(format, precio));
+/*
+            ordenCargo.save();
+
+
+            int position = recycler.getChildAdapterPosition(view);
+            ((OrdenCargaAdapter) recycler.getAdapter()).updateOrder(position);
+            alertDialog.dismiss();
+            Snackbar.make(textViewPlaca, "Editado Exitosamente!", Snackbar.LENGTH_SHORT).show();
+            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
+  */
+            saveOrdenCargo(ordenCargo, alertDialog, view);
+        } else {
+            Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    public void guardarTrasciego(OrdenCargo ordenCargo, View view, Dialog alertDialog) {
+
+        Producto producto = (Producto) spnProduto.getSelectedItem();
+        Unidad unidad = (Unidad) spnUnidadMedida.getSelectedItem();
+        Concepto tipoOrigen = (Concepto) spnTipoOrigen.getSelectedItem();
+
+
+        String serieGuia = et_trasciego_guia_serie.getText().toString();
+        String correlativoGuia = et_trasciego_guia_correlativo.getText().toString();
+        String guiaFecha = btnTrasciegoGuiaEmision.getText().toString();
+
+
+        boolean esGuiaSerieValida = esGuiaTrasciegoSerieValida(serieGuia);
+        boolean esGuiaCorrelativoValido = esGuiaTrasciegoCorrelativoValido(correlativoGuia);
+        boolean esFechaGuiaValida = esGuiaTrasciegoComprobanteValida(guiaFecha);
+        boolean sonCamposGeneralesValidos = validarCamposGenerales();
+
+        if (esGuiaSerieValida && esGuiaCorrelativoValido && esFechaGuiaValida && sonCamposGeneralesValidos ) {
+
+            String strCantidad = txtfconversion.getText().toString();
+            String strDensidad = txtdensidad.getText().toString();
+            String strPrecio = txtprecio.getText().toString();
+            String strFactor = txtfconversion.getText().toString();
+
+            Double factor = Double.parseDouble(txtfconversion.getText().toString());
+            Double precio = Double.parseDouble(txtprecio.getText().toString());
+            Double densidad = Double.parseDouble(txtdensidad.getText().toString());
+            Double cantidad = Double.parseDouble(txtcantidad.getText().toString());
+
+            String datetime = Utils.getDatePhoneWithTime();
+            Double cantidadTransformada = cantidad / factor;
+
+            String format = "%.4f";
+
+            int usuarioId = Session.getSession(this).getUsuIUsuarioId();
+
+
+            ordenCargo.setFechaRegistro(datetime);
+            ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
+            //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
             ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
             ordenCargo.setFechaGuia(guiaFecha);
+            ordenCargo.setTipoOrigenId(tipoOrigen.getIdConcepto());
             ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
             ordenCargo.setProId(producto.getProId());
             ordenCargo.setUnIdComprobante(unidad.getUnId());
@@ -452,42 +567,61 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             ordenCargo.setFechaAccion(datetime);
             ordenCargo.setPrecio(Utils.formatDouble(format, precio));
 
-            ordenCargo.save();
-            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
-        } else {
-            Snackbar.make(etCompraFacturaCorrelativo, "Revise los campos", Snackbar.LENGTH_LONG).show();
-        }
+            //ordenCargo.save();
 
+          /*  int position = recycler.getChildAdapterPosition(view);
+            ((OrdenCargaAdapter) recycler.getAdapter()).updateOrder(position);
+            alertDialog.dismiss();
+            Snackbar.make(textViewPlaca, "Editado Exitosamente!", Snackbar.LENGTH_SHORT).show();
+           */
+            saveOrdenCargo(ordenCargo, alertDialog, view);
+        } else {
+            Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
+        }
     }
 
-    AdapterView.OnItemClickListener proveedorItemSelectedListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    private void saveOrdenCargo(OrdenCargo ordenCargo, Dialog alertDialog, View view) {
+        long id = ordenCargo.save();
+        Log.d(TAG, "ordenCargo.save : " + id);
+        ordenCargo.setOrdenCargaId(id);
+        ordenCargo.save();
+        CajaLiquidacion liquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        if (liquidacion != null) {
 
-            Proveedor proveedor = proveedorAdapterRuc.getItem(i);
-            tilCompraRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
-            tilRazonSocial.setText(proveedor.getPersona().getNombreComercial());
+            liquidacion.setStockInicial(ordenCargo.getCantidadTransformada());
+            liquidacion.save();
+
+            Almacen almacen = Almacen.find(Almacen.class, "alm_Id = ?", "" + liquidacion.getAlmId()).get(0);
+            Double stockActual = almacen.getStockActual();
+            almacen.setStockActual(stockActual + ordenCargo.getCantidadTransformada());
+            almacen.save();
+            int position = recycler.getChildAdapterPosition(view);
+            ((OrdenCargaAdapter) recycler.getAdapter()).updateOrder(position);
+            alertDialog.dismiss();
+            Snackbar.make(textViewPlaca, "Editado Exitosamente!", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(textViewPlaca, "Error al guardar Orden de Cargo", Snackbar.LENGTH_LONG).show();
         }
+        //Orden de cargo
+        // new SyncEstado(0, Utils.separteUpperCase(OrdenCargo.class.getSimpleName()), Integer.parseInt(ordenCargo.getId() + ""), Constants.S_CREADO).save();
 
-    };
-
-
-    public void initSpinnerTipoCarga() {
-
+        //initRecycler();
     }
 
 
     public void initSpinnerTipoOrigen() {
-
+        ConceptoAdapter conceptoAdapter = new ConceptoAdapter(this, 0, Concepto.getConceptos("Orden Cargo", "Tipo Origen"));
+        spnTipoOrigen.setAdapter(conceptoAdapter);
     }
 
 
     public void initSpinnerProducto() {
-
+        ProductoAdapter productoAdapter = new ProductoAdapter(this, 0, Producto.getAllProducto());
+        spnProduto.setAdapter(productoAdapter);
     }
 
 
-    public void initSpinnerUnidadMedia(Spinner spnUnidadMedida) {
+    public void initSpinnerUnidadMedia() {
         UnidadAdapter adapter = new UnidadAdapter(this, 0, Unidad.getAllUnidad());
         spnUnidadMedida.setAdapter(adapter);
         spnUnidadMedida.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -519,27 +653,48 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
     public void initAutocompleteRuc() {
 
+        proveedorAdapterRuc = new ProveedorAdapter(this, ProveedorAdapter.DOCUMENTO_IDENTIDAD, Proveedor.getProveedorList());
+        tilCompraRuc.setAdapter(proveedorAdapterRuc);
+
+        tilCompraRuc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                tilCompraRuc.setText("");
+                tilCompraRuc.setOnItemClickListener(proveedorItemSelectedListener);
+                /// tilCompraRuc.setText("");
+
+            }
+
+        });
     }
 
+    AdapterView.OnItemClickListener proveedorItemSelectedListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-    public void initAutoCumpleteNombreComercial() {
+            Proveedor proveedor = proveedorAdapterRuc.getItem(i);
+            tilCompraRuc.setText(proveedor.getPersona().getPerVDocIdentidad());
+            tilRazonSocial.setText(proveedor.getPersona().getNombreComercial());
+        }
+
+    };
+
+
+    public void initEdittextTrasciego() {
+        /*TrasCiego*/
+        et_trasciego_guia_serie.addTextChangedListener(watcherTrasciegoGuiaSerie);
+        et_trasciego_guia_correlativo.addTextChangedListener(watcherTrasciegoGuiaCorrelativo);
 
     }
 
-
-    public void mostrarCompraView() {
-
-    }
-
-
-    public void mostrarTrasciegoView() {
+    public void initEdittextCompra() {
+        etCompraFacturaSerie.addTextChangedListener(watcherCompraFacturaSerie);
+        etCompraFacturaCorrelativo.addTextChangedListener(watcherCompraFacturaCorrelativo);
+        etCompraGuiaSerie.addTextChangedListener(watcherCompraGuiaSerie);
+        etCompraGuiaCorrelativo.addTextChangedListener(watcherCompraGuiaCorrelativo);
 
     }
 
-
-    public void guardarOrdenCarga() {
-
-    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -560,19 +715,18 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         }
     }
 
-    // @OnClick(R.id.btn_compra_factura_fechaemision)
+
     public void selectCompraFacturaFechaEmision() {
         tipoFecha = COMPRA_FECHA_COMPROBANTE;
         createTimePicker();
     }
 
-    // @OnClick(R.id.btn_compra_guia_fechaemision)
+
     public void selectCompraGuiaFechaEmision() {
         tipoFecha = COMPRA_FECHA_GUIA;
         createTimePicker();
     }
 
-    // @OnClick(R.id.btn_trasciego_guia_fechaemision)
     public void selectTrasciegoGuiaFechaEmision() {
         tipoFecha = TRASCIEGO_FECHA_GUIA;
         createTimePicker();
@@ -658,5 +812,214 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         Persona persona = personas.get(0);
         return Proveedor.find(Proveedor.class, "persona_id = ?", "" + persona.getPerIPersonaId()).get(0);
     }
+
+
+    private boolean esGuiaTrasciegoSerieValida(String serieGuia) {
+        if (serieGuia.length() != 4) {
+            til_trasciego_guia_serie.setError("Inválido");
+            return false;
+        }
+        til_trasciego_guia_serie.setError(null);
+        return true;
+    }
+
+    private boolean esGuiaTrasciegoCorrelativoValido(String correlativoGuia) {
+        if (correlativoGuia.length() > 8) {
+            til_trasciego_guia_correlativo.setError("Inválido");
+            return false;
+        }
+        til_trasciego_guia_correlativo.setError(null);
+        return true;
+    }
+
+    private boolean esGuiaTrasciegoComprobanteValida(String guiaFecha) {
+        if (guiaFecha.toLowerCase().contains("fecha")) {
+            btnTrasciegoGuiaEmision.setError("Inválido");
+            return false;
+        }
+        btnTrasciegoGuiaEmision.setError(null);
+        return true;
+    }
+
+
+    TextWatcher watcherTrasciegoGuiaSerie = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherTrasciegoGuiaSerie charSequence: " + charSequence);
+            esGuiaTrasciegoSerieValida(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+
+    TextWatcher watcherTrasciegoGuiaCorrelativo = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherTrasciegoGuiaCorrelativo charSequence: " + charSequence);
+            esGuiaTrasciegoCorrelativoValido(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+
+    TextWatcher watcherCompraFacturaSerie = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherCompraFacturaSerie charSequence: " + charSequence);
+            esSerieValida(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    TextWatcher watcherCompraFacturaCorrelativo = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherCompraFacturaCorrelativo charSequence: " + charSequence);
+            esCorrelativoValido(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    TextWatcher watcherCompraGuiaSerie = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherCompraGuiaSerie charSequence: " + charSequence);
+            esGuiaSerieValida(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    TextWatcher watcherCompraGuiaCorrelativo = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "watcherCompraGuiaCorrelativo charSequence: " + charSequence);
+            esGuiaCorrelativoValido(charSequence.toString());
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    private boolean validarCamposGenerales() {
+        String cantidad = txtcantidad.getText().toString();
+        String densidad = txtdensidad.getText().toString();
+        String precio = txtprecio.getText().toString();
+        String factor = txtfconversion.getText().toString();
+
+
+        boolean esCantidadValido = esCantidadValido(cantidad);
+        boolean esDensidadValido = esDensidadValido(densidad);
+        boolean esPrecioValido = esPrecioValido(precio);
+        boolean esFactorValido = esFactorValido(factor);
+        return (esCantidadValido && esDensidadValido && esPrecioValido && esFactorValido);
+
+    }
+
+    private boolean esFactorValido(String factor) {
+        Double x = 0.00;
+        try {
+            x = Double.parseDouble(factor);
+        } catch (Exception e) {
+            tilFactorconversion.setError("Inválido");
+            return false;
+        }
+        tilFactorconversion.setError(null);
+        return true;
+    }
+
+    private boolean esPrecioValido(String precio) {
+        Double x = 0.00;
+        try {
+            x = Double.parseDouble(precio);
+        } catch (Exception e) {
+            tilPrecio.setError("Inválido");
+            return false;
+        }
+        tilPrecio.setError(null);
+        return true;
+    }
+
+    private boolean esDensidadValido(String densidad) {
+        Double x = 0.00;
+        try {
+            x = Double.parseDouble(densidad);
+        } catch (Exception e) {
+            tilDensidad.setError("Inválido");
+            return false;
+        }
+        tilDensidad.setError(null);
+        return true;
+    }
+
+    private boolean esCantidadValido(String cantidad) {
+        Double x = 0.00;
+        try {
+            x = Double.parseDouble(cantidad);
+        } catch (Exception e) {
+            tilCantidad.setError("Inválido");
+            return false;
+        }
+        tilCantidad.setError(null);
+        return true;
+    }
+
 
 }

@@ -104,8 +104,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
-                    android:text="F.Registro"/>
+                    android:text="F.Registro"
+                    android:textSize="12dp" />
+
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn.compra.factura.fechaemision"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -167,9 +168,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
+                    android:text="F.Acción"
 
-                    android:text="F.Acción"/>
+                    android:textSize="12dp" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn.compra.guia.fechaemision"
@@ -181,27 +182,6 @@
 
         </LinearLayout>
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text.compra.entrega"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ordencarga.compra.text.entrega" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn.compra.fechaentrega"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ordencarga.button.text.pickdate" />
-
-
-        </LinearLayout>-->
 
     </LinearLayout>
 </LinearLayout>
