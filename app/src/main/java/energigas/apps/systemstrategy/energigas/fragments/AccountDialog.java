@@ -71,6 +71,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     private AccountDialog.ListenerOpenAccount listener;
     private DatabaseReference mDatabase;
     private DatabaseReference myRef;
+    private DatabaseReference myRefFondos;
 
     public AccountDialog setFloating(FloatingActionButton fab) {
         this.fab = fab;
@@ -239,11 +240,13 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
             myRef.child(cajaLiquidacion.getLiqId() + "-" + liquidacionDetalle.getLidId()).setValue(notificacionCajaDetalle, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                   // Log.d("FIREBASE_CREATE", " ERROR: " + databaseError.getMessage() + "");
-                   // Log.d("FIREBASE_CREATE", databaseReference.getKey());
+                    // Log.d("FIREBASE_CREATE", " ERROR: " + databaseError.getMessage() + "");
+                    // Log.d("FIREBASE_CREATE", databaseReference.getKey());
                 }
             });
         }
+        myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacion.getLiqId() + "");
+        myRefFondos.setValue(cajaLiquidacion);
         listener.onSuccessOpenAccount();
         dismiss();
     }

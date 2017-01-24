@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,6 +132,9 @@ public class MainActivity extends AppCompatActivity
 
     AccessPrivilegesManager accessPrivilegesManager;
 
+    private DatabaseReference mDatabase;
+    private DatabaseReference myRefFondos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -139,6 +144,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "Usuario: " + Session.getSession(this).getUsuIUsuarioId() + "");
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
+
         if (!Utils.getGpsEnable(this)) {
             Intent intent = new Intent(this, ModalActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -365,6 +371,13 @@ public class MainActivity extends AppCompatActivity
         List<CajaLiquidacion> cajaLiquidacions = CajaLiquidacion.find(CajaLiquidacion.class, "estado_Id=?", new String[]{Constants.CAJA_ABIERTA + ""});
         if (cajaLiquidacions.size() > 0) {
             fab.hide();
+
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            // myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacions.get(0).getLiqId() + "");
+            myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacions.get(0).getLiqId() + "");
+
+            CajaLiquidacion cajaLiquidacionFirebase = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+            myRefFondos.setValue(cajaLiquidacionFirebase);
             return true;
         } else {
             showDialogAccount();

@@ -234,6 +234,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
     private String tip_docboleta="B00";
 
     private int idProveedor;
+    String tipo_doc= "";
 
     public void inflate_dialog() {
 
@@ -320,7 +321,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         viewLinerLayout.setVisibility(View.VISIBLE);
                         viewLinerLayout2.setVisibility(View.VISIBLE);
                         positioniItem = String.valueOf(position);
-                        et_num_serie.setText(tip_docfactura);
+                        //  et_num_serie.setText(tip_docfactura);
 
                         break;
 
@@ -328,13 +329,13 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         viewLinerLayout.setVisibility(View.GONE);
                         viewLinerLayout2.setVisibility(View.GONE);
                         positioniItem = String.valueOf(position);
-                        et_num_serie.setText(tip_docboleta);
+                        // et_num_serie.setText(tip_docboleta);
                         break;
                     case 2:
                         viewLinerLayout.setVisibility(View.GONE);
                         viewLinerLayout2.setVisibility(View.GONE);
                         positioniItem = String.valueOf(position);
-                        et_num_serie.setText(tip_docboleta);
+                        // et_num_serie.setText(tip_docboleta);
                 }
             }
 
@@ -377,7 +378,9 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View view) {
 
                 String description = txtdgdescription.getText().toString();
-                String txtnumbcomprobante = et_num_serie.getText().toString() + "-" + et_num_comprob.getText().toString();
+                // String txtnumbcomprobante = et_num_serie.getText().toString() + "-" + et_num_comprob.getText().toString();
+                String txtnumbcomprobante =  et_num_comprob.getText().toString();
+                String txtserie = et_num_serie.getText().toString();
                 tipoDocumento = (Concepto) sp_TipoDoc.getSelectedItem();
                 conceptoTipoGasto = (Concepto) sp_tiposgastos.getSelectedItem();
                 conceptoTipoCateGasto = (Concepto) sp_catTGasto.getSelectedItem();
@@ -411,6 +414,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                             Utils.getDatePhoneTime(),
                             Utils.getDatePhoneTime(), tipoDocumento.getIdConcepto()
                     );
+                    save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
                     Log.d(TAG, "CountID: " + idCajagasto);
 //                        Log.d(TAG, "CountID: " +  mMovimiento.getCajMovId());
                     if (expensesFragment != null) {
@@ -421,39 +425,39 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                     //  expenses.save();
 
 
-
+/*
                     if(positioniItem=="0"){
                         mSerieFact = mSerieFact + 1;
                         converSerie = "F00"+mSerieFact;
                         //globalSerie = String.valueOf(mSerie);
-                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
                         Log.d(TAG,"positioniItem"+converSerie);
                     }else if (positioniItem =="1"){
                         mSerieBol = mSerieBol + 1;
                         //globalSerie = String.valueOf(mSerie);
                         converSerie = "B00"+mSerieBol;
-                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
                         Log.d(TAG,"positioniItem"+converSerie);
                     } else if (positioniItem == "2"){
                         mSerieBol = mSerieBol + 1;
                         converSerie = "B00"+mSerieBol;
                         //globalSerie = String.valueOf(mSerie);
-                        save(expenses, description,txtnumbcomprobante,converSerie);
+                        save(expenses, description,txtnumbcomprobante,converSerie,txtserie);
                         Log.d(TAG,"positioniItem"+converSerie);
                     }
 
-
+*/
 
                     //globalSerie = String.valueOf(mSerie);
                     //save(expenses, description,txtnumbcomprobante,converSerie);
-                   // save(expenses, description, txtnumbcomprobante);
+                    // save(expenses, description, txtnumbcomprobante);
                 }
             }
 
 
         });
 
-       // int globatipodoc=mSerie+1;
+        // int globatipodoc=mSerie+1;
 //        et_num_serie.setText(converSerie+globatipodoc);
         // create alert dialog
         alertDialog = alertDialogBuilder.create();
@@ -464,12 +468,12 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-       // new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
+        // new ExportTask(this, this).execute(Constants.TABLA_GASTO, Constants.S_CREADO);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     //private void save(final CajaGasto mcajaGasto, final String mDescription, final String txtnumbcomprobante) {
-    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante,final String converSerie) {
+    private void save(final CajaGasto mcajaGasto, final String mDescription,final String txtnumbcomprobante,final String converSerie,final String txtserie) {
 
 
         SugarTransactionHelper.doInTransaction(new SugarTransactionHelper.Callback() {
@@ -493,7 +497,7 @@ public class CajaGastoActivity extends AppCompatActivity implements View.OnClick
                         Utils.getDatePhoneTimeSQLSERVER(),
                         mDescription,
                         conceptoTipoCateGasto.getIdConcepto(),
-                        Constants.GASTO_ESTADO_CREADO,converSerie+txtnumbcomprobante,date,idProveedor);
+                        Constants.GASTO_ESTADO_CREADO,txtserie+"-"+txtnumbcomprobante,date,idProveedor);
                 long idInformeGasto = informeGasto.save();
                 informeGasto.setCajGasId(idCajaGasto);
                 informeGasto.setInfGasId(idInformeGasto);

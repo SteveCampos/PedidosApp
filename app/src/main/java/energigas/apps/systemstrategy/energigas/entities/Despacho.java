@@ -491,13 +491,20 @@ public class Despacho extends SugarRecord {
         return null;
     }
 
-    public static Despacho getDespachoByCompro(String compId) {
+    public static List<Despacho> getDespachoByCompro(String compId) {
         List<Despacho> despachoList = Despacho.find(Despacho.class, "comp_Id=? ", new String[]{compId});
+        if (despachoList.size() > 0) {
+            return despachoList;
+        }
+        return null;
+    }
+
+    public static Despacho getDespachoByDespachoId(String despachoId) {
+        List<Despacho> despachoList = Despacho.find(Despacho.class, "despacho_Id=? ", new String[]{despachoId});
         if (despachoList.size() > 0) {
             return despachoList.get(0);
         }
         return null;
     }
-
 
 }

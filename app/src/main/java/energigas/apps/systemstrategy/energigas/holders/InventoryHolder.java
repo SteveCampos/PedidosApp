@@ -14,13 +14,15 @@ import energigas.apps.systemstrategy.energigas.R;
 
 public class InventoryHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textNameProduct)
-    public TextView nameTextView;
+    public TextView textNameProduct;
     @BindView(R.id.inicio)
     public TextView inicio;
-    @BindView(R.id.venta)
-    public TextView venta;
-    @BindView(R.id.textfinal)
-    public TextView textFinal;
+    @BindView(R.id.carga)
+    public TextView carga;
+    @BindView(R.id.despacho)
+    public TextView despacho;
+    @BindView(R.id.inFinal)
+    public TextView inFinal;
 
     public InventoryHolder(View itemView) {
         super(itemView);

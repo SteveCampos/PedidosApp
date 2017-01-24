@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.entities;
 import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class ComprobanteVentaDetalle extends SugarRecord {
     private int usuarioActualizacion;
 
     private String fechaActualizacion;
+
     private Long despachoId;
 
     public ComprobanteVentaDetalle() {
@@ -150,6 +152,22 @@ public class ComprobanteVentaDetalle extends SugarRecord {
     }
 
     public static List<ComprobanteVentaDetalle> comprobanteVentaDetalles(String compdId) {
-        return ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class, " comp_Id=? ", new String[]{compdId});
+
+        List<ComprobanteVentaDetalle> ventaDetalles = new ArrayList<>();
+
+        ventaDetalles = ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class, " comp_Id=? ", new String[]{compdId});
+
+
+
+       for (int i = 0; i < ventaDetalles.size(); i++) {
+            Despacho despacho = Despacho.getDespachoByDespachoId(ventaDetalles.get(i).getDespachoId() + "");
+            if (despacho !=null){
+                ventaDetalles.get(i).setDespachoId(despacho.getDespachoId());
+            }
+
+        }
+
+
+        return ventaDetalles;
     }
 }

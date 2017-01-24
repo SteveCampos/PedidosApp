@@ -207,9 +207,10 @@ public class ExportTask extends AsyncTask<Integer, String, String> implements Su
                                 Pedido pedido = Pedido.getPedidobyCompId(comprobanteVenta.getId() + "");
                                 pedido.setCompId(beRespuestaCpVenta.getCompIdServer());
                                 pedido.save();
-                                Despacho despacho = Despacho.getDespachoByCompro(comprobanteVenta.getId() + "");
-                                despacho.setCompId(beRespuestaCpVenta.getCompIdServer());
-                                despacho.save();
+                                for (Despacho despacho : Despacho.getDespachoByCompro(comprobanteVenta.getId() + "")) {
+                                    despacho.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                    despacho.save();
+                                }
                                 saveEstado(comprobanteVenta.getId() + "", beRespuestaCpVenta.getCompIdServer() + "", ComprobanteVenta.class);
                                 comprobanteVenta.setCompId(beRespuestaCpVenta.getCompIdServer());
                                 Long aLong = comprobanteVenta.save();

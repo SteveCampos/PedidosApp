@@ -161,6 +161,17 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
                                     syncEstado.setSyncIdRemoto(Integer.parseInt(respuestaDespacho.getDespachoIdServer() + ""));
                                     syncEstado.setEstadoSync(Constants.S_IMPORTADO);
                                     syncEstado.save();
+
+                                    ComprobanteVenta comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(despacho.getCompId() + "");
+                                    if (comprobanteVenta != null) {
+                                        List<ComprobanteVentaDetalle> ventaDetalles = ComprobanteVentaDetalle.find(ComprobanteVentaDetalle.class, "comp_Id=?", new String[]{comprobanteVenta.getCompId() + ""});
+                                        for (ComprobanteVentaDetalle ventaDetalle : ventaDetalles) {
+                                            ventaDetalle.setDespachoId(respuestaDespacho.getDespachoIdServer());
+                                            ventaDetalle.save();
+                                        }
+                                    }
+
+
                                     despacho.setDespachoId(respuestaDespacho.getDespachoIdServer());
                                     despacho.save();
                                     Log.d(TAG, "" + despacho.getId() + "---" + Session.getDespacho(context).getId());
@@ -224,9 +235,13 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
                                 Pedido pedido = Pedido.getPedidobyCompId(comprobanteVenta.getId() + "");
                                 pedido.setCompId(beRespuestaCpVenta.getCompIdServer());
                                 pedido.save();
-                                Despacho despacho = Despacho.getDespachoByCompro(comprobanteVenta.getId() + "");
-                                despacho.setCompId(beRespuestaCpVenta.getCompIdServer());
-                                despacho.save();
+
+
+                                for (Despacho despacho : Despacho.getDespachoByCompro(comprobanteVenta.getId() + "")) {
+                                    despacho.setCompId(beRespuestaCpVenta.getCompIdServer());
+                                    despacho.save();
+                                }
+
                                 saveEstado(comprobanteVenta.getId() + "", beRespuestaCpVenta.getCompIdServer() + "", ComprobanteVenta.class);
                                 comprobanteVenta.setCompId(beRespuestaCpVenta.getCompIdServer());
                                 Long aLong = comprobanteVenta.save();
@@ -435,7 +450,7 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         jsonObjectResponse = null;
         List<OrdenCargo> ordenCargoArrayList = new ArrayList<OrdenCargo>(Utils.getListForExIn(OrdenCargo.class, estado));
         if (ordenCargoArrayList.size() > 0) {
-            Log.d(TAG, "cantidad gasto: " + ordenCargoArrayList.get(0).getFechaAccion());
+            Log.d(TAG, "cantidad orden cargo: " + ordenCargoArrayList.get(0).getFechaAccion());
             for (OrdenCargo ordenCargo : ordenCargoArrayList) {
                 try {
 

@@ -21,6 +21,7 @@ public class Constants {
     public static final String URL_POST_DISTRIBUCION = "/ServiceDistribucion.ashx";
     public static final String URL_POST_FACTURACION = "/RestfulApi.ashx";
     public static final String FIREBASE_CHILD_NOTIFICACIONES = "NOTIFICACIONES";
+    public static final String FIREBASE_CHILD_FONDOS = "FONDOS";
     public static final String FIREBASE_CHILD_ATEN_PEDIDO = "ATEN_PEDIDO";
     public static final String FIREBASE_CHILD_ATENCION_PEDIDO = "ATENCION_PEDIDO";
 

@@ -1,5 +1,6 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
+import android.app.Service;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,16 +20,27 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.SummaryAdapter;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
 import energigas.apps.systemstrategy.energigas.entities.SummaryIncome;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
+import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
 /**
@@ -75,6 +87,10 @@ public class ResumentFragment extends Fragment {
     @BindView(R.id.tablayoutGastos)
     TableLayout tableLayoutGastos;
 
+    private DatabaseReference mDatabase;
+    private DatabaseReference myRefFondos;
+
+
 /*
     @BindView(R.id.list)
     ListView listView;*/
@@ -83,6 +99,7 @@ public class ResumentFragment extends Fragment {
     private Resources res;
 
     private static final String TAG = "ResumentFragment";
+    CajaLiquidacion cajaLiquidacion;
 
     public static ResumentFragment newInstance() {
         ResumentFragment summary = new ResumentFragment();
@@ -102,6 +119,38 @@ public class ResumentFragment extends Fragment {
         setResumen();
         setIngresos();
         setCostos();
+        cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(getActivity()).getLiqId() + "");
+
+        if (cajaLiquidacion != null) {
+            if (FirebaseApp.getApps(getActivity()).isEmpty()) {
+                FirebaseApp.initializeApp(getActivity().getApplicationContext(), FirebaseOptions.fromResource(getActivity().getApplicationContext()));
+
+            }
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacion.getLiqId() + "");
+            myRefFondos.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("ServiceSync", "RESUMEN_FRAGMENT: " + cajaLiquidacion.getLiqId());
+                   /*  CajaLiquidacion liquidacion = dataSnapshot.getValue(CajaLiquidacion.class);
+                    CajaLiquidacion liquidacionGuardar = CajaLiquidacion.getCajaLiquidacion(liquidacion.getLiqId() + "");
+                    liquidacionGuardar.setSaldoInicial(liquidacion.getSaldoInicial());
+                    Long aLong = liquidacionGuardar.save();
+                    Log.d(TAG, "ACTUALIZO: " + aLong);*/
+                    setResumen();
+                    setIngresos();
+                    setCostos();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
         return rootView;
     }
 

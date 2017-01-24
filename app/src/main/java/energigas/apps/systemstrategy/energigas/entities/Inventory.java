@@ -13,20 +13,39 @@ import energigas.apps.systemstrategy.energigas.utils.Session;
  */
 
 public class Inventory {
-    public String nombre;
-    public double cantidadInicial;
-    public double cantidadVendida;
-    public double cantidadFinal;
-    List<Inventory> inventoriesList;
+    private String nombre;
+    private double cantidadInicial;
+    private double cantidadDespachada;
+    private double cantidadFinal;
+    private double cantidadOrden;
+    private List<Inventory> inventoriesList;
 
     public Inventory() {
     }
 
-    public Inventory(String nombre, double cantidadInicial, double cantidadVendida, double cantidadFinal) {
+    public double getCantidadOrden() {
+        return cantidadOrden;
+    }
+
+    public void setCantidadOrden(double cantidadOrden) {
+        this.cantidadOrden = cantidadOrden;
+    }
+
+    public List<Inventory> getInventoriesList() {
+        return inventoriesList;
+    }
+
+    public void setInventoriesList(List<Inventory> inventoriesList) {
+        this.inventoriesList = inventoriesList;
+    }
+
+    public Inventory(String nombre, double cantidadInicial, double cantidadDespachada, double cantidadFinal, double cantidadOrden, List<Inventory> inventoriesList) {
         this.nombre = nombre;
         this.cantidadInicial = cantidadInicial;
-        this.cantidadVendida = cantidadVendida;
+        this.cantidadDespachada = cantidadDespachada;
         this.cantidadFinal = cantidadFinal;
+        this.cantidadOrden = cantidadOrden;
+        this.inventoriesList = inventoriesList;
     }
 
     public String getNombre() {
@@ -45,12 +64,12 @@ public class Inventory {
         this.cantidadInicial = cantidadInicial;
     }
 
-    public double getCantidadVendida() {
-        return cantidadVendida;
+    public double getCantidadDespachada() {
+        return cantidadDespachada;
     }
 
-    public void setCantidadVendida(double cantidadVendida) {
-        this.cantidadVendida = cantidadVendida;
+    public void setCantidadDespachada(double cantidadDespachada) {
+        this.cantidadDespachada = cantidadDespachada;
     }
 
     public double getCantidadFinal() {
@@ -78,8 +97,19 @@ public class Inventory {
         for (Producto producto : productoList) {
             Log.d("InventarioFragment", producto.getProId() + "-" + almacen.getProductoId());
             if (producto.getProId() == almacen.getProductoId()) {
-                double stockVenta = (cajaLiquidacion.getStockInicial() + almacen.getStockActual()) - almacen.getStockActual();
-                Inventory inventory = new Inventory(producto.getNombre(), cajaLiquidacion.getStockInicial() + almacen.getStockActual(), stockVenta, almacen.getStockActual());
+
+
+                double cantidadDespachada = 0.0;
+                for (Despacho despacho : Despacho.find(Despacho.class, "liq_Id=?", new String[]{cajaLiquidacion.getLiqId() + ""})) {
+                    cantidadDespachada = cantidadDespachada + despacho.getCantidadDespachada();
+                }
+                double cantidadOrdenCargo = 0.0;
+                //OrdenCargo.find(OrdenCargo.class, "", new String[]{""})
+                for (OrdenCargo ordenCargo : OrdenCargo.listAll(OrdenCargo.class)) {
+                    cantidadOrdenCargo = cantidadOrdenCargo + ordenCargo.getCantidadTransformada();
+                }
+                double cantidadFinal = cantidadOrdenCargo - cantidadDespachada;
+                Inventory inventory = new Inventory(producto.getNombre(), cajaLiquidacion.getStockInicial(), cantidadDespachada, cantidadFinal, cantidadOrdenCargo, null);
                 inventoryList.add(inventory);
             }
         }

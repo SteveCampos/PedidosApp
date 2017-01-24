@@ -197,7 +197,6 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
     TextView textDespachoEstacion;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -636,7 +635,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         doc.setTipoDocumento(getTipoDocumentoFE(comprobanteVenta.getTipoComprobanteId()).getCodigo());
         doc.setMoneda(Constants.DOCUMENTO_ELECTRONICO_PEN);
         doc.setMontoEnLetras(NumberToLetterConverter.convertNumberToLetter(comprobanteVenta.getTotal()));
-        doc.setGravadas(new BigDecimal(comprobanteVenta.getTotal()));
+        doc.setGravadas(new BigDecimal(comprobanteVenta.getBaseImponible()));
         doc.setInafectas(new BigDecimal(0.00));
         doc.setExoneradas(new BigDecimal(0.00));
         doc.setGratuitas(new BigDecimal(0.00));
@@ -684,17 +683,18 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         doc.setTotalIgv(new BigDecimal(comprobanteVenta.getIgv()));
 
         List<DetalleDocumento> items = new ArrayList<>();
-
+        int count = 1;
         for (ComprobanteVentaDetalle ventaDetalle : comprobanteVentaDetalles) {
+
             Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(ventaDetalle.getUnidadId() + "");
             DetalleDocumento item1 = new DetalleDocumento();
-            item1.setId(ventaDetalle.getCompdId());
+            item1.setId(count);
             item1.setCantidad(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getCantidad())));
             item1.setUnidadMedida(getUnidadTipo(Constants.DOCUMENTO_ELECTRONICO_NIU).getCodigo());
             item1.setTotalVenta(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getCostoVenta())));
             item1.setDescripcion(Producto.getNameProducto(ventaDetalle.getProId() + "") + " en " + unidad.getDescripcion());
             item1.setCodigoItem(ventaDetalle.getProId() + "");
-            item1.setPrecioUnitario(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getPrecioUnitario())));
+            item1.setPrecioUnitario(new BigDecimal(Utils.formatDoubleNumber(ventaDetalle.getPrecio())));
             item1.setTipoPrecio(Constants.DOCUMENTO_ELECTRONICO_TIPO_PRECIO);// buscar
             item1.setImpuesto(new BigDecimal(Utils.formatDouble(comprobanteVenta.getPorImpuesto())));
             item1.setTipoImpuesto(getTipoDocumentoFE(Constants.DOCUMENTO_ELECTRONICO_OPERACION_ONEROSA).getCodigo());
@@ -704,6 +704,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             item1.setPrecioReferencial(new BigDecimal(0.00));
             item1.setDescuento(new BigDecimal(0.00));
             items.add(item1);
+            count = count + 1;
 
         }
         doc.setMontoAnticipo(new BigDecimal(0.0));
@@ -797,8 +798,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "DOC ELECTRO DE : " + detalleDocumento.getCantidad().doubleValue());
 
             Double aDouble = detalleDocumento.getPrecioUnitario().doubleValue() * detalleDocumento.getCantidad().doubleValue();
-
-
+            int orden = i + 1;
+            electronicoDetalle.setId(Long.parseLong(orden + ""));
             electronicoDetalle.setDocElectronicoId(Integer.parseInt(comprobanteVenta.getCompId() + ""));
             electronicoDetalle.setDocdetalleId(detalleDocumento.getId());
             electronicoDetalle.setCantidad(detalleDocumento.getCantidad().doubleValue());
@@ -829,7 +830,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         beDocElectronico.setNumeroDoc(comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc());
         beDocElectronico.setFechaEmision(documentoElectronico.getFechaEmision());
         beDocElectronico.setMonedaId(getTipoMoneda(documentoElectronico.getMoneda()));
-        beDocElectronico.setGravadas(comprobanteVenta.getTotal());
+        beDocElectronico.setGravadas(comprobanteVenta.getBaseImponible());
         beDocElectronico.setGratuitas(0.00);
         beDocElectronico.setInafectas(0.00);
         beDocElectronico.setExoneradas(0.00);
@@ -1062,7 +1063,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
             ProductoUnidad productoUnidad = ProductoUnidad.find(ProductoUnidad.class, " pro_Id=? ", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
 
-            double baseImponibleUnidad = despacho.getPrecioUnitarioSIGV() * despacho.getCantidadDespachada();
+            double baseImponibleUnidad = despacho.getPrecioUnitarioSIGV() * despacho.getCantidadDespachada(); // sin con
 
             comprobanteVentaDetalles.add(new ComprobanteVentaDetalle(0, comprobanteVenta.getCompId(), despacho.getProId(), despacho.getUnId(), despacho.getCantidadDespachada(), despacho.getPrecioUnitarioSIGV(), despacho.getPrecioUnitarioCIGV(), Utils.formatDoubleNumber(despacho.getCostoVenta()), Utils.formatDoubleNumber(baseImponibleUnidad), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), despacho.getDespachoId()));
 

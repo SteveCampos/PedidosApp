@@ -30,8 +30,8 @@ public class CargarInventarioActivity extends AppCompatActivity {
     @BindView(R.id.layout_not_found)
     LinearLayout layout_not_found;
     private CollapsingToolbarLayout collapsingToolbar;
-    LoadInventoryAdapter loadInventoryAdapter ;
-    Inventory inventory ;
+    LoadInventoryAdapter loadInventoryAdapter;
+    Inventory inventory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class CargarInventarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_load_inventory);
         ButterKnife.bind(this);
         inventory = new Inventory();
-        loadInventoryAdapter = new LoadInventoryAdapter(inventory.instanceListInventory(),this);
+        loadInventoryAdapter = new LoadInventoryAdapter(inventory.instanceListInventory(), this);
 
         showEmptyView();
 
@@ -66,18 +66,17 @@ public class CargarInventarioActivity extends AppCompatActivity {
 
     }
 
-    private void setLoadInventory(){
+    private void setLoadInventory() {
         new LoadInventoryAsync(this).execute();
-        loadInventoryAdapter.addNewItem(new Inventory("Gas licuado de petroleo", 2000, 500, 1500));
+        loadInventoryAdapter.addNewItem(new Inventory("Gas licuado de petroleo", 2000, 500, 1500, 455, null));
         showEmptyView();
     }
 
     private void showEmptyView() {
-        if (loadInventoryAdapter.getItemCount()>0){
+        if (loadInventoryAdapter.getItemCount() > 0) {
             layout_not_found.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
 
             layout_not_found.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
@@ -90,6 +89,7 @@ public class CargarInventarioActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.activity_menu_accountsummary, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -106,7 +106,6 @@ public class CargarInventarioActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

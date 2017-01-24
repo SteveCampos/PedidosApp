@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -42,10 +41,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryHolder> {
     public void onBindViewHolder(InventoryHolder holder, int position) {
         final Inventory inventory = inventories.get(position);
         //holder.bind(inventories.get(position));
-        holder.nameTextView.setText(inventory.getNombre());
+        holder.textNameProduct.setText(inventory.getNombre());
         holder.inicio.setText(Utils.formatDoublePrint(inventory.getCantidadInicial()) + "");
-        holder.venta.setText(Utils.formatDoublePrint(inventory.getCantidadVendida()) + "");
-        holder.textFinal.setText(Utils.formatDoublePrint(inventory.getCantidadFinal()) + "");
+        holder.carga.setText(Utils.formatDoublePrint(inventory.getCantidadOrden()) + "");
+        holder.despacho.setText(Utils.formatDoublePrint(inventory.getCantidadDespachada()) + "");
+        holder.inFinal.setText(Utils.formatDoublePrint(inventory.getCantidadFinal()) + "");
     }
 
     @Override

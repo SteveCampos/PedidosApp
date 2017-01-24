@@ -2,70 +2,78 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 
 
-    android:layout_marginLeft="@dimen/card_margin"
-    android:layout_marginRight="@dimen/card_margin"
-    android:layout_marginBottom="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin">
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:background="@color/greem_background_item"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:background="@color/greem_background_item"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textNameProduct"
-                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="GAS LICUADO DE PETROLEO"
                 android:textColor="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="@dimen/card_margin_top"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/card_margin_top"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_layout">
 
                 <TextView
-                    android:textStyle="bold"
-                    android:text="Inicio"
-                    android:gravity="center"
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="I. Inicial"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:textStyle="bold"
-                    android:text="Venta"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:text="O. Carga"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:textStyle="bold"
-                    android:text="Final"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:text="Despacho"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="I. Final"
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
@@ -74,42 +82,48 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_layout">
 
                 <TextView
                     android:id="@+id/inicio"
-                    android:textStyle="bold"
-                    android:text="10"
-                    android:gravity="center"
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="10" />
 
                 <TextView
-                    android:id="@+id/venta"
-                    android:textStyle="bold"
-                    android:text="50"
+                    android:id="@+id/carga"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:text="50" />
 
                 <TextView
-                    android:id="@+id/textfinal"
-                    android:textStyle="bold"
-                    android:text="50"
+                    android:id="@+id/despacho"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:text="50" />
+
+
+                <TextView
+                    android:id="@+id/inFinal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="50" />
 
 
             </LinearLayout>

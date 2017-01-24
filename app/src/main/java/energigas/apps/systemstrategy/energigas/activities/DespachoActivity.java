@@ -24,6 +24,7 @@ import energigas.apps.systemstrategy.energigas.entities.Serie;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
@@ -194,6 +195,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
     private CajaLiquidacion cajaLiquidacion;
     private CajaLiquidacionDetalle cajaLiquidacionDetalle;
     private Almacen almacenDistribuidor;
+    private Vehiculo vehiculo;
 
 
     @BindView(R.id.btnGuardar)
@@ -287,6 +289,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, Constants.TIPO_ID_COMPROBANTE_DESPACHO), null).get(Constants.CURRENT);
         almacenDistribuidor = Almacen.findWithQuery(Almacen.class, Utils.getQuerDespachoVehiculo(usuario.getUsuIUsuarioId()), null).get(Constants.CURRENT);
         almacen = Almacen.find(Almacen.class, " alm_Id = ?  ", new String[]{Session.getAlmacen(this).getAlmId() + ""}).get(Constants.CURRENT);
+        vehiculo = Vehiculo.getVehiculo(usuario.getUsuIUsuarioId() + "");
         if (!Session.getTipoDespachoSN(this)) {
 
             pedido = Pedido.find(Pedido.class, " pe_Id = ? ", new String[]{Session.getPedido(this).getPeId() + ""}).get(Constants.CURRENT);
@@ -412,6 +415,13 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         for (Despacho despacho : despachoList) {
             sumDespachado = sumDespachado + despacho.getCantidadDespachada();
         }
+
+        double cantidadFinal = almacenDistribuidor.getStockActual() - sumDespachado;
+        almacenDistribuidor.setStockActual(cantidadFinal);
+        almacenDistribuidor.save();
+        cajaLiquidacion.setStockFinal(cantidadFinal);
+        cajaLiquidacion.save();
+
         if (pedidoDetalle.getAlmId() == 0) {
             Integer[] integers = new Integer[CajaLiquidacionDetalle.listAll(CajaLiquidacionDetalle.class).size()];
             for (int i = 0; i < CajaLiquidacionDetalle.listAll(CajaLiquidacionDetalle.class).size(); i++) {
@@ -698,7 +708,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 Utils.getDatePhoneWithTime(),
                 usuario.getUsuIUsuarioId(),
                 Constants.DESPACHO_CREADO,
-                almacenDistribuidor.getVehiculoId(),
+                vehiculo.getVeId(),
                 pedido.getGuiaRemision(),
                 cajaLiquidacion.getLiqId(),
                 pedidoDetalle.getPrecio(),

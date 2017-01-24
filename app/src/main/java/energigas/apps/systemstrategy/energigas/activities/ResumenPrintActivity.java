@@ -38,24 +38,17 @@ import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.FABScrollBehavior;
-import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
-import energigas.apps.systemstrategy.energigas.entities.Cliente;
-import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
-import energigas.apps.systemstrategy.energigas.entities.ComprobanteVentaDetalle;
-import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Costs;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Inventory;
-import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
 import energigas.apps.systemstrategy.energigas.entities.SummaryIncome;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
@@ -63,7 +56,6 @@ import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.printingsheets.SheetsPrintDispatch;
-import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -182,7 +174,7 @@ public class ResumenPrintActivity extends AppCompatActivity implements View.OnCl
 
         textViewInvetarioInicio.setText("" + inventoryList.getCantidadInicial());
 
-        textViewInvetarioVenta.setText("" + inventoryList.getCantidadVendida());
+        textViewInvetarioVenta.setText("" + inventoryList.getCantidadDespachada());
 
         textViewInvetarioFinal.setText("" + inventoryList.getCantidadFinal());
     }
