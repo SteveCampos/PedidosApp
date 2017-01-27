@@ -45,6 +45,8 @@ public class Acceso extends SugarRecord {
     private boolean movil;
 
 
+
+
     @Ignore
     private List<Privilegio> itemsPrivielgios;
 

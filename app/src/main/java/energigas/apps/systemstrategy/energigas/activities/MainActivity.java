@@ -52,6 +52,7 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
 import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionSaldoInicial;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.fragments.AccountDialog;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         colorInicial = R.color.colorAccent;
+        mDatabase =  FirebaseDatabase.getInstance().getReference();
         Log.d(TAG, "Usuario: " + Session.getSession(this).getUsuIUsuarioId() + "");
         usuario = Session.getSession(this);
         ButterKnife.bind(this);
@@ -372,12 +374,17 @@ public class MainActivity extends AppCompatActivity
         if (cajaLiquidacions.size() > 0) {
             fab.hide();
 
-            mDatabase = FirebaseDatabase.getInstance().getReference();
+            // mDatabase = FirebaseDatabase.getInstance().getReference();
             // myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacions.get(0).getLiqId() + "");
-            myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacions.get(0).getLiqId() + "");
+            /*myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacions.get(0).getLiqId() + "");
 
             CajaLiquidacion cajaLiquidacionFirebase = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
-            myRefFondos.setValue(cajaLiquidacionFirebase);
+            myRefFondos.setValue(cajaLiquidacionFirebase);*/
+            CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+            NotificacionSaldoInicial notificacionSaldoInicial = new NotificacionSaldoInicial(cajaLiquidacion.getLiqId(), cajaLiquidacion.getSaldoInicial());
+            myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacion.getLiqId() + "");
+            myRefFondos.setValue(notificacionSaldoInicial);
+
             return true;
         } else {
             showDialogAccount();

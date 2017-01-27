@@ -7,7 +7,6 @@ import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.asyntask.AtencionesAsyntask;
 import energigas.apps.systemstrategy.energigas.asyntask.ConectarDispositivoAsyn;
-import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
@@ -15,7 +14,6 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.FBRegistroPedido;
 import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
@@ -26,14 +24,11 @@ import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
 import energigas.apps.systemstrategy.energigas.fragments.DialogGeneral;
-import energigas.apps.systemstrategy.energigas.fragments.EstablecimientoFragment;
-import energigas.apps.systemstrategy.energigas.fragments.PlanFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.BluetoothConnectionListener;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.interfaces.OnLocationListener;
-import energigas.apps.systemstrategy.energigas.services.SyncData;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -44,7 +39,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -73,8 +67,6 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.orm.SugarTransactionHelper;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -280,7 +272,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Cargando...");
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO).child(cajaLiquidacion.getLiqId() + "");
         locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         cajaLiquidacion = CajaLiquidacion.find(CajaLiquidacion.class, " liq_Id = ? ", new String[]{Session.getCajaLiquidacion(this).getLiqId() + ""}).get(Constants.CURRENT);
 
@@ -383,9 +375,19 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private void notificarAtencionPedido() {
 
-        myRef.child(cajaLiquidacion.getLiqId() + "-" + cajaLiquidacionDetalle.getLidId()).setValue(new NotificacionCajaDetalle(establecimiento.getEstIEstablecimientoId(),
-                Constants.NO_FACTURADO, cajaLiquidacionDetalle.getEstadoId(), cajaLiquidacion.getFechaApertura(), Integer.parseInt(cajaLiquidacion.getLiqId() + ""), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""),
-                cajaLiquidacionDetalle.getOrdenAtencion(), Integer.parseInt(pedido.getId() + ""), cajaLiquidacionDetalle.getPorDespacho(), cajaLiquidacionDetalle.getPorEntrega(), cajaLiquidacionDetalle.getPorFacturado()));
+        myRef.child(cajaLiquidacion.getLiqId() + "-" + cajaLiquidacionDetalle.getLidId()).setValue(
+                new NotificacionCajaDetalle(establecimiento.getEstIEstablecimientoId(),
+                        Constants.NO_FACTURADO,
+                        cajaLiquidacionDetalle.getEstadoId(),
+                        cajaLiquidacion.getFechaApertura(),
+                        Integer.parseInt(cajaLiquidacion.getLiqId() + ""),
+                        Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""),
+                        cajaLiquidacionDetalle.getOrdenAtencion(),
+                        Integer.parseInt(pedido.getPeId() + ""),
+                        cajaLiquidacionDetalle.getPorDespacho(),
+                        cajaLiquidacionDetalle.getPorEntrega(),
+                        cajaLiquidacionDetalle.getPorFacturado(),
+                        pedidoDetalle.getPrecio()));
 
         new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
 
@@ -458,7 +460,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
             cajaLiquidacionDetalle.setEstadoFactId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.setPorFacturado(0.0);
             cajaLiquidacionDetalle.setEstadoId(42);
-            cajaLiquidacionDetalle.setEstadoFacId(Constants.NO_FACTURADO);
+            //cajaLiquidacionDetalle.setEstadoFacId(Constants.NO_FACTURADO);
             cajaLiquidacionDetalle.save();
         }
 
@@ -610,6 +612,12 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private boolean validateField() {
 
+        Log.d(TAG, "STOCK ALMACEN" + almacenDistribuidor.getStockActual());
+        if (almacenDistribuidor.getStockActual() < Double.parseDouble(editTextCantidadDespachada.getText().toString())) {
+            Toast.makeText(this, "No cuenta con capacidad para despachar esta cantidad, por favor registre orden de cargo", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (TextUtils.isEmpty(editTextCantidadDespachada.getText().toString())) {
             Toast.makeText(this, "Ingrese cantidad", Toast.LENGTH_SHORT).show();
             return false;
@@ -673,13 +681,6 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
 
     private void saveDespacho() {
 
-        if (latAndLong == null) {
-            errorInTransaction("Update no Location");
-            return;
-        }
-
-        almacenDistribuidor = Almacen.find(Almacen.class, "", new String[]{}).get(Constants.CURRENT);
-
 
         despacho = new Despacho(
                 0,
@@ -707,7 +708,7 @@ public class DespachoActivity extends AppCompatActivity implements BluetoothConn
                 Utils.completaZeros(getNumeroDespacho(), serie.getParametro()),
                 Utils.getDatePhoneWithTime(),
                 usuario.getUsuIUsuarioId(),
-                Constants.DESPACHO_CREADO,
+                Constants.ESTADO_DESPACHO_CREADO,
                 vehiculo.getVeId(),
                 pedido.getGuiaRemision(),
                 cajaLiquidacion.getLiqId(),

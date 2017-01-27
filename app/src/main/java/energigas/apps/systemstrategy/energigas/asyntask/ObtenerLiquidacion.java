@@ -3,6 +3,7 @@ package energigas.apps.systemstrategy.energigas.asyntask;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orm.SugarTransactionHelper;
 
@@ -31,6 +32,7 @@ public class ObtenerLiquidacion extends AsyncTask<String, String, String> implem
         mapper = new ObjectMapper();
         try {
             jsonObject = restAPI.fobj_ObtenerLiquidacion(Integer.parseInt(params[0]));
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             Log.d(TAG, "" + jsonObject.toString());
             if (Utils.isSuccessful(jsonObject)) {
 

@@ -37,7 +37,7 @@ import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass.1
  */
 public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmacenClickListener, IntentListenerAccess {
 

@@ -263,7 +263,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         buttonVender.setOnClickListener(this);
         hideLinear(getFormaPago());
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO).child(cajaLiquidacion.getLiqId() + "");
         serie = Serie.findWithQuery(Serie.class, Utils.getQueryForSerie(usuario.getUsuIUsuarioId(), Constants.TIPO_ID_DEVICE_CELULAR, getTipoComprobante().getIdConcepto()), null).get(Constants.CURRENT);
 
         setTextDescripcion();
@@ -283,6 +283,7 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
 
         new SyncEstado(0, Utils.separteUpperCase(CajaLiquidacionDetalle.class.getSimpleName()), Integer.parseInt(cajaLiquidacionDetalle.getLidId() + ""), Constants.S_ACTUALIZADO).save();
         new AtencionesAsyntask().execute();
+        PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "").get(0);
 
         myRef.child(cajaLiquidacion.getLiqId() + "-" + cajaLiquidacionDetalle.getLidId()).setValue(new NotificacionCajaDetalle(establecimiento.getEstIEstablecimientoId(),
                 cajaLiquidacionDetalle.getEstadoFacId(), cajaLiquidacionDetalle.getEstadoId(), Utils.getDatePhone(),
@@ -292,7 +293,8 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 Integer.parseInt(pedido.getPeId() + ""),
                 cajaLiquidacionDetalle.getPorDespacho(),
                 cajaLiquidacionDetalle.getPorEntrega(),
-                cajaLiquidacionDetalle.getPorFacturado()));
+                cajaLiquidacionDetalle.getPorFacturado(),
+                pedidoDetalle.getPrecio()));
     }
 
 
@@ -308,11 +310,17 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
                 estadoFacturado = Constants.FACTURADO_TOTAL;
             }
 
-            cajaLiquidacionDetalle.setEstadoFacId(estadoFacturado);
-            cajaLiquidacionDetalle.setPorFacturado(porcentaje);
+            for (Despacho despacho : despachoListFacturado) {
+                cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByPedido(despacho.getPeId() + "");
+
+                cajaLiquidacionDetalle.setEstadoFacId(estadoFacturado);
+                cajaLiquidacionDetalle.setPorFacturado(porcentaje);
 
 
-            cajaLiquidacionDetalle.save();
+                cajaLiquidacionDetalle.save();
+            }
+
+
         }
 
         notificarAtencionPedido();
@@ -1445,13 +1453,15 @@ public class SellActivity extends AppCompatActivity implements View.OnClickListe
         HashMap<Long, Long> integerList = new HashMap<>();
         for (Despacho despacho : getDespachos()) {
             integerList.put(despacho.getPeId(), despacho.getPeId());
+            despacho.setEstadoId(Constants.ESTADO_DESPACHO_FACTURADO);
+            despacho.save();
         }
         HashMap<Long, List<Despacho>> despachoHashMap = new HashMap<>();
         List<Long> longList = new ArrayList<>(integerList.values());
         List<Despacho> despachos = new ArrayList<>();
         for (Long aLong : longList) {
             List<Despacho> despachoList = Despacho.getListDespachoByPedido(aLong + "");
-            CajaLiquidacionDetalle cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(establecimiento.getEstIEstablecimientoId() + "", aLong + "");
+            CajaLiquidacionDetalle cajaLiquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablecAndPedido(Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + "", aLong + "");
             double sumTotal = 0.0;
             double sumAgrupado = 0.0;
             for (Despacho despacho : despachoList) {

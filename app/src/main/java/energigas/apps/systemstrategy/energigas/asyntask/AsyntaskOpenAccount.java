@@ -48,6 +48,7 @@ public class AsyntaskOpenAccount extends AsyncTask<String, Void, Void> implement
 
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             jsonObject = restAPI.fins_GuardarLiquidacion(strings[0]);
             Log.d(TAG, " :" + strings[0]);
             Log.d(TAG, ": " + jsonObject.toString());

@@ -17,11 +17,12 @@ public class NotificacionCajaDetalle {
     private double PorDespacho;
     private double PorEntrega;
     private double PorFacturado;
+    private double precio;
 
     public NotificacionCajaDetalle() {
     }
 
-    public NotificacionCajaDetalle(int establecimientoId, int estadoFacId, int estadoId, String fecha, int liId, int lidId, int ordenAtencion, int peId, double porDespacho, double porEntrega, double porFacturado) {
+    public NotificacionCajaDetalle(int establecimientoId, int estadoFacId, int estadoId, String fecha, int liId, int lidId, int ordenAtencion, int peId, double porDespacho, double porEntrega, double porFacturado, double precio) {
         EstablecimientoId = establecimientoId;
         EstadoFacId = estadoFacId;
         EstadoId = estadoId;
@@ -33,6 +34,7 @@ public class NotificacionCajaDetalle {
         PorDespacho = porDespacho;
         PorEntrega = porEntrega;
         PorFacturado = porFacturado;
+        this.precio = precio;
     }
 
     public int getEstablecimientoId() {
@@ -121,5 +123,13 @@ public class NotificacionCajaDetalle {
 
     public void setPorFacturado(double porFacturado) {
         PorFacturado = porFacturado;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 }

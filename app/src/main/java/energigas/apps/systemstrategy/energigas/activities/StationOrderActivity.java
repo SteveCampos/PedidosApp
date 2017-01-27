@@ -90,11 +90,27 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
         super.onCreate(savedInstanceState);
         //
         setContentView(R.layout.activity_station_order);
+        long idPedido;
+        long idEstablecimiento;
+        if (getIntent().getExtras() == null) {
+            idPedido = Session.getPedido(this).getPeId();
+            idEstablecimiento = Session.getSessionEstablecimiento(this).getEstIEstablecimientoId();
+
+        } else {
+            idPedido = getIntent().getExtras().getLong("PEDIDO");
+            idEstablecimiento = getIntent().getExtras().getLong("ESTABLECIMIENTO");
+
+        }
 
 
-        pedido = Pedido.find(Pedido.class, " pe_Id = ?  ", new String[]{Session.getPedido(this).getPeId() + ""}).get(0);
+        pedido = Pedido.find(Pedido.class, " pe_Id = ?  ", new String[]{idPedido + ""}).get(0);
         usuario = Session.getSession(this);
-        establecimiento = Establecimiento.getEstablecimientoById(Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + "");
+        establecimiento = Establecimiento.getEstablecimientoById(idEstablecimiento + "");
+
+        Session.savePedido(this, pedido);
+        Session.saveEstablecimiento(this, establecimiento);
+
+
         cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
 
         ButterKnife.bind(this);

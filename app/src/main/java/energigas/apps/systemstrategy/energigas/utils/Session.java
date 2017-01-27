@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +20,6 @@ import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
-import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
@@ -362,7 +359,6 @@ public class Session {
     }
 
 
-
     public static Usuario getSession(Context context) {
 
         Usuario usuario = new Usuario();
@@ -399,6 +395,7 @@ public class Session {
         return cajaLiquidacion;
     }
 
+
     public static boolean saveComprobanteVenta(Context context, ComprobanteVenta comprobanteVenta) {
         try {
 
@@ -426,5 +423,52 @@ public class Session {
         SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_COMPROBANTE_VENTA, Context.MODE_PRIVATE);
 
         return prefs.getString(Constants.SHA, null);
+    }
+
+    public static boolean isAddPedido(Context context, int cantidad) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_PEDIDO_AGREGADO, Context.MODE_PRIVATE);
+
+        int cantidadPref = prefs.getInt(Constants.SESSION_PEDIDO_AGREGADO_CANTIDAD, 0);
+
+        if (cantidadPref != cantidad) {
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO_AGREGADO, Context.MODE_PRIVATE).edit();
+            editor.putInt(Constants.SESSION_PEDIDO_AGREGADO_CANTIDAD, cantidad);
+            editor.commit();
+            return false;
+        }
+        return true;
+
+
+    }
+
+    public static boolean isUpdatePrecing(Context context, String cantidad) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_PEDIDO_PRECIO, Context.MODE_PRIVATE);
+
+        String montoRef = prefs.getString(Constants.SESSION_PEDIDO_PRECIO_MODIFICADO, "");
+
+        if (!montoRef.equals(cantidad)) {
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_PEDIDO_PRECIO, Context.MODE_PRIVATE).edit();
+            editor.putString(Constants.SESSION_PEDIDO_PRECIO_MODIFICADO, cantidad);
+            editor.commit();
+            return false;
+        }
+        return true;
+
+
+    }
+
+    public static boolean isCantidadSaldoInicial(Context context, String cantidad) {
+
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SESSION_CANTIDAD_SALDO_INICIAL, Context.MODE_PRIVATE);
+        String cantidadGuardada = prefs.getString(Constants.SESSION_CANTIDAD_SALDO_CANTIDAD, "");
+        if (!cantidad.equals(cantidadGuardada)) {
+            SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SESSION_CANTIDAD_SALDO_INICIAL, Context.MODE_PRIVATE).edit();
+            editor.putString(Constants.SESSION_CANTIDAD_SALDO_CANTIDAD, cantidad);
+            editor.commit();
+            return false;
+        }
+        return true;
+
+
     }
 }

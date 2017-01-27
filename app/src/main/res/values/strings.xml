@@ -769,6 +769,6 @@
     <string name="ordencarga.trasciego.text.entrega">Fecha entrega</string>
     <string name="title_activity_pruebamaps">Map</string>
     <string name="title_activity_orden_carga_">OrdenCarga_Activity</string>
-    <string name="title_activity_editar_despacho">EditarDespacho</string>
+    <string name="title_activity_editar_despacho">Editar despacho</string>
 
 </resources>

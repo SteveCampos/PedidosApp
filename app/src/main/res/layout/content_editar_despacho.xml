@@ -1,16 +1,440 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_editar_despacho"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="energigas.apps.systemstrategy.energigas.activities.EditarDespacho"
+
     tools:showIn="@layout/activity_editar_despacho">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_5dp">
+
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:text="Tanque de Origen"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold|italic" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextContadorInicial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Contador Inicial"
+                            android:inputType="numberDecimal"
+                            android:tag="editTextContadorInicial"
+                            android:textSize="@dimen/dimen_12dp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editTextPorcentajeIncial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Porcentaje Inicial"
+                            android:inputType="numberDecimal"
+                            android:tag="editTextPorcentajeIncial"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greem_background_item" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:columnCount="2"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_5dp"
+                    android:rowCount="6">
+
+                    <TextView
+                        android:id="@+id/textViewa"
+                        android:layout_width="match_parent"
+                        android:layout_columnSpan="2"
+                        android:gravity="center"
+                        android:text="Tanque de Destino"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold|italic" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_columnSpan="2">
+
+                        <EditText
+                            android:id="@+id/editTextDestinoContIncial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Contador Inicial"
+                            android:inputType="numberDecimal"
+                            android:tag="editTextDestinoContIncial"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_columnSpan="2">
+
+                        <EditText
+                            android:id="@+id/editDestinoPorcentajeInicial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Porcentaje Inicial"
+                            android:inputType="numberDecimal"
+                            android:tag="editDestinoPorcentajeInicial"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/tanq_destino_capacidad"
+                        android:layout_column="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="3"
+                        android:text=": 300 GL" />
+
+                    <TextView
+                        android:layout_column="0"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="4"
+                        android:text="Programado"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tanq_destino_programado"
+                        android:layout_column="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="4"
+                        android:text=": 200GL" />
+
+                    <TextView
+                        android:layout_column="0"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="5"
+                        android:text="Orden Sugerida"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tanq_destino_orden_sugerencia"
+                        android:layout_column="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="5"
+                        android:text=": 2500GL" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_column="0"
+                        android:layout_marginTop="2dp"
+                        android:layout_row="3"
+                        android:text="Capacidad"
+                        android:textStyle="bold" />
+
+                </GridLayout>
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greem_background_item" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_10dp">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <EditText
+
+                        android:id="@+id/editCantidadDespachada"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Orden despacho"
+                        android:inputType="numberDecimal"
+                        android:tag="editCantidadDespachada"
+                        android:textColor="@color/white" />
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greem_background_item" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_5dp">
+
+
+                    <TextView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:text="Tanque de Origen"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold|italic" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editOrigen2CF"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Contador Final"
+                            android:inputType="numberDecimal"
+                            android:tag="editOrigen2CF"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/editOrigen2PF"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Porcentaje Final"
+                            android:inputType="numberDecimal"
+                            android:tag="editOrigen2PF"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greem_background_item" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:columnCount="2"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_5dp"
+                    android:rowCount="6">
+
+                    <TextView
+
+                        android:layout_width="match_parent"
+                        android:layout_columnSpan="2"
+                        android:gravity="center"
+                        android:text="Tanque de Destino"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold|italic" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_columnSpan="2">
+
+                        <EditText
+                            android:id="@+id/editDestino2CF"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Contador Final"
+                            android:inputType="numberDecimal"
+                            android:tag="editDestino2CF"
+                            android:textSize="@dimen/dimen_12dp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_columnSpan="2">
+
+                        <EditText
+                            android:id="@+id/editDestino2PF"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:hint="Porcentaje Final"
+                            android:inputType="numberDecimal"
+                            android:tag="editDestino2PF"
+                            android:textSize="@dimen/dimen_12dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </GridLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/btnGuardar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="btnGuardar"
+                    android:text="Guardar"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btnSincronizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="btnSincronizar"
+                    android:text="Sincronizar"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnImprimir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="btnImprimir"
+                    android:text="Imprimir"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

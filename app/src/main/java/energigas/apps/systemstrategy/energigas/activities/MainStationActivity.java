@@ -22,6 +22,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +39,17 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.adapters.CustomTabsAdapter;
 import energigas.apps.systemstrategy.energigas.asyntask.ExportTask;
 import energigas.apps.systemstrategy.energigas.entities.AccessFragment;
+import energigas.apps.systemstrategy.energigas.entities.AlertaEntity;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AgregarDespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
@@ -87,7 +96,7 @@ public class MainStationActivity extends AppCompatActivity
 
     private Establecimiento establecimiento;
 
-    private CajaLiquidacionDetalle liquidacionDetalle;
+
     private Usuario usuario;
     private HashMap<String, Boolean> booleanHashMap;
     private List<AccessFragment> accessFragmentList;
@@ -99,13 +108,28 @@ public class MainStationActivity extends AppCompatActivity
     @BindView(R.id.textViewContacto)
     TextView textViewContacto;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_station);
 
-        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", new String[]{Session.getSessionEstablecimiento(this).getEstIEstablecimientoId() + ""}).get(Constants.CURRENT);
-        liquidacionDetalle = CajaLiquidacionDetalle.getLiquidacionDetalleByEstablec(establecimiento.getEstIEstablecimientoId() + "");
+
+        long idEstablecimiento;
+        if (getIntent().getExtras() == null) {
+            idEstablecimiento = Session.getSessionEstablecimiento(this).getEstIEstablecimientoId();
+
+        } else {
+            idEstablecimiento = getIntent().getExtras().getLong("ESTABLECIMIENTO");
+
+        }
+
+        establecimiento = Establecimiento.find(Establecimiento.class, " est_I_Establecimiento_Id = ? ", new String[]{idEstablecimiento + ""}).get(Constants.CURRENT);
+
+        Session.saveEstablecimiento(this, establecimiento);
+
+
         ButterKnife.bind(this);
         usuario = Session.getSession(this);
         cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
@@ -151,6 +175,7 @@ public class MainStationActivity extends AppCompatActivity
         setTipoCliente();
 
     }
+
 
 
     private void setTipoCliente() {

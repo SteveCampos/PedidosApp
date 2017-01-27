@@ -7,6 +7,5 @@ import energigas.apps.systemstrategy.energigas.entities.Historial;
  */
 
 public interface ListenerClickItemHistorial {
-
     void OnItemClick(Historial historial);
 }

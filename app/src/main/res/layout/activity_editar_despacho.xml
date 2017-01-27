@@ -5,30 +5,144 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="energigas.apps.systemstrategy.energigas.activities.EditarDespacho">
+    tools:context="energigas.apps.systemstrategy.energigas.activities.OrderActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="65dp"
+                android:columnCount="2"
+                android:padding="@dimen/dimen_10dp"
+                android:rowCount="5">
+
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_column="0"
+                    android:layout_row="0"
+                    android:text="Estacion"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/text_despacho_estacion"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_column="1"
+                    android:layout_row="0"
+                    android:text=": Javier Prado"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="1"
+                    android:text="Producto"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/textViewProducto"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="1"
+                    android:text=": GLP"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="2"
+                    android:text="Tanque"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/textViewTanque"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="2"
+                    android:text=": Tanq001-2005"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="3"
+                    android:text="Despacho"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/text_despacho_serie_numero"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="3"
+                    android:text=": D005-00000008"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="4"
+                    android:text="Unidad"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/text_unidad_medida"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="4"
+                    android:text=":KILOS"
+                    android:textSize="@dimen/dimen_15dp" />
+
+
+            </GridLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
 
     </android.support.design.widget.AppBarLayout>
 
+
     <include layout="@layout/content_editar_despacho" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>

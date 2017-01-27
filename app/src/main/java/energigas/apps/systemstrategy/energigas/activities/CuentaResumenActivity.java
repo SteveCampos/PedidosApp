@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.ComparisonChain;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import energigas.apps.systemstrategy.energigas.LocationVehiculeListener;
@@ -182,6 +184,13 @@ public class CuentaResumenActivity extends AppCompatActivity implements OnAsynta
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        this.finish();
+        //super.onBackPressed();
     }
 
     @Override

@@ -85,7 +85,7 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         setCancelable(true);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
         establecimiento = Establecimiento.getEstablecimientoById(Session.getSessionEstablecimiento(getActivity()).getEstIEstablecimientoId() + "");
-        establecimiento.setUbicacion(GeoUbicacion.getGeoUbicacion(establecimiento.getUbId()+""));
+        establecimiento.setUbicacion(GeoUbicacion.getGeoUbicacion(establecimiento.getUbId() + ""));
         cliente = Cliente.getCliente(establecimiento.getEstIClienteId() + "");
         usuario = Usuario.getUsuario(Session.getSession(getActivity()).getUsuIUsuarioId() + "");
         return dialog;
@@ -212,7 +212,7 @@ public class AgregarDespachoFragment extends DialogFragment implements TextWatch
         Session.saveAlmacen(getActivity(), getTanque());
         Session.savePedido(getActivity(), new Pedido(-1, "", 0, 0, 0, cliente.getCliIClienteId(), Utils.getDatePhoneWithTime(), Utils.getDatePhoneWithTime(), "", 0, mainValuesCost.getTotal(), false, usuario.getUsuIUsuarioId(),
                 Utils.getDatePhoneWithTime(), establecimiento.getEstIEstablecimientoId(), establecimiento.getUbicacion().getDescripcion(), Utils.getDatePhoneWithTime(), usuario.getUsuIUsuarioId(),
-                Utils.getDatePhoneWithTime(), 0, mainValuesCost.getTotal(), mainValuesCost.getIgv(), 0, 0, "", "", "", "", false, 0, "", "", "", 0, "", "", false, "", "", "", 0, false, -1, -1, 0.0, null));
+                Utils.getDatePhoneWithTime(), 0, mainValuesCost.getTotal(), mainValuesCost.getIgv(), 0, 0, "", "", "", "", false, 0, "", "", "", 0, "", "", false, "", "", "", 0, false, -1, -1, 0.0, null, null, new Long(0)));
         Session.savePedidoDetalle(getActivity(), new PedidoDetalle("", 0, 0, getProducto().getProId(), Double.parseDouble(editCantidad.getText().toString()), Double.parseDouble(editCantidad.getText().toString()),
                 mainValuesCost.getTotal(), usuario.getUsuIUsuarioId(), Utils.getDatePhoneWithTime(), mainValuesCost.getPrecioUnitario(), mainValuesCost.getPrecioUnitario(), getUnidad().getUnId(), 0, mainValuesCost.getPrecioUnitario(), "", 0));
         iniciarDespacho();

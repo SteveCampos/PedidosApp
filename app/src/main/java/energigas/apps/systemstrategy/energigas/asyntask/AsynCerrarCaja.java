@@ -10,6 +10,7 @@ import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Summary;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NetworkUtil;
 import energigas.apps.systemstrategy.energigas.utils.Utils;
 
@@ -44,6 +45,7 @@ public class AsynCerrarCaja extends AsyncTask<String, String, String> {
             return null;
         }
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacionCerrarCaja(params[0], params[1], params[2]);
+        cajaLiquidacion.setEstadoId(Constants.CAJA_LIQUIDACION_CERRADO);
         Summary summary = Summary.getListSummary(context);
         cajaLiquidacion.setIngresos(summary.getIngresosTotales());
         cajaLiquidacion.setGastos(summary.getGastos());
@@ -56,7 +58,7 @@ public class AsynCerrarCaja extends AsyncTask<String, String, String> {
         }
 
         try {
-
+            cajaLiquidacion.save();
             jsonObject = restAPI.fupd_CajaLiquidacion(cajaLiquidacion);
             Log.d(TAG, "DATO: " + jsonObject);
             if (Utils.isSuccessful(jsonObject)) {

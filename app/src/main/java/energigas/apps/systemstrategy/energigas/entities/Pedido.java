@@ -115,10 +115,12 @@ public class Pedido extends SugarRecord {
     @Ignore
     private Estado estado;
 
+    private Long cajaLiquidacionId;
+
     public Pedido() {
     }
 
-    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId, double porImpuesto, List<PedidoDetalle> items) {
+    public Pedido(long peId, String serie, int numero, int tipoId, int prioridadId, int clienteId, String fechaPedido, String fechaEntrega, String fechaEntregaProgramada, int estadoId, double total, boolean consolidado, int usuarioAccion, String fechaAccion, int establecimientoId, String direccionEntrega, String fechaRealEntrega, int usuarioEntrega, String fechaCreacion, int usuarioCreacion, double baseImponible, double iGV, int modalidadCreditoId, int veId, String scop, String horaInicio, String horaFin, String horaEntrega, boolean horario, int vehiculoId, String motivoCancelado, String motivoRevertido, String fechaAsignacionVehiculo, int usuarioAsignacionVehiculo, String horaLlegada, String horaSalida, boolean inclusion, String comprobanteVenta, String guiaRemision, String horaProgramada, int agenteId, boolean scopCerrado, long compId, long greId, double porImpuesto, List<PedidoDetalle> items, Estado estado, Long cajaLiquidacionId) {
         this.peId = peId;
         this.serie = serie;
         this.numero = numero;
@@ -165,6 +167,16 @@ public class Pedido extends SugarRecord {
         this.greId = greId;
         this.porImpuesto = porImpuesto;
         this.items = items;
+        this.estado = estado;
+        this.cajaLiquidacionId = cajaLiquidacionId;
+    }
+
+    public Long getCajaLiquidacionId() {
+        return cajaLiquidacionId;
+    }
+
+    public void setCajaLiquidacionId(Long cajaLiquidacionId) {
+        this.cajaLiquidacionId = cajaLiquidacionId;
     }
 
     public Estado getEstado() {
@@ -555,6 +567,8 @@ public class Pedido extends SugarRecord {
     public static Pedido getPedidoById(String pedidoId) {
         List<Pedido> pedidoList = Pedido.find(Pedido.class, "pe_Id=?", new String[]{pedidoId});
         if (pedidoList != null) {
+            List<PedidoDetalle> pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(pedidoId);
+            pedidoList.get(0).setItems(pedidoDetalle);
             return pedidoList.get(0);
         }
         return null;
@@ -564,6 +578,14 @@ public class Pedido extends SugarRecord {
         List<Pedido> pedidoList = Pedido.find(Pedido.class, "comp_Id=?", new String[]{comprobanteVentaId});
         if (pedidoList != null) {
             return pedidoList.get(0);
+        }
+        return null;
+    }
+
+    public static List<Pedido> getPedidosByLiqui(String liquidacionId) {
+        List<Pedido> pedidoList = Pedido.find(Pedido.class, "caja_Liquidacion_Id=?", new String[]{liquidacionId});
+        if (pedidoList != null) {
+            return pedidoList;
         }
         return null;
     }

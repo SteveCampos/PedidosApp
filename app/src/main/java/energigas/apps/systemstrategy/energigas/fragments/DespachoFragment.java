@@ -10,7 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +34,7 @@ import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.DialogGeneralListener;
 import energigas.apps.systemstrategy.energigas.interfaces.IntentListenerAccess;
 import energigas.apps.systemstrategy.energigas.utils.AccessPrivilegesManager;
+import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.Session;
 
 /**
@@ -90,7 +96,7 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
 
     @Override
     public void onLongDespachoClickListener(Despacho despacho, View view) {
-        //  initDialogOptions(despacho, view);
+        initDialogOptions(despacho, view);
     }
 
     @Override
@@ -103,16 +109,63 @@ public class DespachoFragment extends Fragment implements DespachoAdapter.OnDesp
 //Only for fragment
     }
 
-    private void initDialogOptions(Despacho despacho, View view) {
+    private void initDialogOptions(Despacho des, View view) {
+        final Despacho despacho = des;
+        if (despacho.getCompId() > 0) {
+            Toast.makeText(getActivity(), "Despacho ya facturado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new DialogOptions(getActivity()).setCancelable(true).showDialog(new DialogOptions.OnDialogOpetions() {
             @Override
-            public void onEditItemClickListener(Object object) {
-                getActivity().startActivity(new Intent(getActivity(), EditarDespacho.class));
+            public void onEditItemClickListener(AlertDialog alertDialog) {
+
+                String listStrings = "";
+
+                ObjectMapper mapper = new ObjectMapper();
+                StringWriter sw = new StringWriter();
+
+
+                try {
+                    mapper.writeValue(sw, despacho);
+                    listStrings = sw.toString();
+                    Intent intent = new Intent(getActivity(), EditarDespacho.class);
+                    intent.putExtra("PEDIDO", listStrings);
+                    getActivity().startActivity(intent);
+                    alertDialog.dismiss();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+
+
             }
 
             @Override
-            public void onDeleteItemClickListener(Object object) {
+            public void onDeleteItemClickListener(AlertDialog alertDialog) {
+                alertDialog.dismiss();
+                eliminarDespacho(despacho);
 
+
+            }
+        });
+    }
+
+    private void eliminarDespacho(final Despacho despacho) {
+        new DialogGeneral(getActivity()).setCancelable(false).setTextButtons("SI", "NO").setMessages("Atencion", "¿Esta seguro de eliminar el despacho " + despacho.getSerie() + "-" + despacho.getNumero() + "?").showDialog(new DialogGeneralListener() {
+            @Override
+            public void onSavePressed(AlertDialog alertDialog) {
+
+                despacho.setEstadoId(Constants.ESTADO_ELIMINAR_DESPACHO);
+                despacho.save();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelPressed(AlertDialog alertDialog) {
+                alertDialog.dismiss();
             }
         });
     }

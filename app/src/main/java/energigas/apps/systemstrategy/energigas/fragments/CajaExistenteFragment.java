@@ -87,6 +87,7 @@ public class CajaExistenteFragment extends DialogFragment {
 
             try {
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 jsonObject = restAPI.fobj_ObtenerLiquidacion(Integer.parseInt(strings[0]));
                 Log.d(TAG, " :" + strings[0]);
                 Log.d(TAG, ": " + jsonObject.toString());

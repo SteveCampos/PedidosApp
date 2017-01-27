@@ -68,8 +68,8 @@ public class DialogOptions {
     }
 
     public interface OnDialogOpetions {
-        void onEditItemClickListener(Object object);
+        void onEditItemClickListener(AlertDialog alertDialog);
 
-        void onDeleteItemClickListener(Object object);
+        void onDeleteItemClickListener(AlertDialog alertDialog);
     }
 }

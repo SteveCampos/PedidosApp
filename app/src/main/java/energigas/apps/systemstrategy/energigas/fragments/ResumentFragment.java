@@ -1,6 +1,7 @@
 package energigas.apps.systemstrategy.energigas.fragments;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -106,16 +107,15 @@ public class ResumentFragment extends Fragment {
         return summary;
     }
 
+    Context context;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_fragment_summary, container, false);
         ButterKnife.bind(this, rootView);
-        textViewDetalleItemsTotales.setVisibility(View.GONE);
-        //SummaryAdapter adapter = new SummaryAdapter(getActivity(), 0, Summary.getListSummary(getActivity()));
-        summary = Summary.getListSummary(getActivity());
-        res = getActivity().getResources();
-        // listView.setAdapter(adapter);
+        context = getActivity();
+        init(context);
         setResumen();
         setIngresos();
         setCostos();
@@ -133,14 +133,22 @@ public class ResumentFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("ServiceSync", "RESUMEN_FRAGMENT: " + cajaLiquidacion.getLiqId());
-                   /*  CajaLiquidacion liquidacion = dataSnapshot.getValue(CajaLiquidacion.class);
+                    CajaLiquidacion liquidacion = dataSnapshot.getValue(CajaLiquidacion.class);
                     CajaLiquidacion liquidacionGuardar = CajaLiquidacion.getCajaLiquidacion(liquidacion.getLiqId() + "");
                     liquidacionGuardar.setSaldoInicial(liquidacion.getSaldoInicial());
                     Long aLong = liquidacionGuardar.save();
-                    Log.d(TAG, "ACTUALIZO: " + aLong);*/
-                    setResumen();
-                    setIngresos();
-                    setCostos();
+                    Log.d(TAG, "ACTUALIZO: " + aLong);
+
+                    try {
+
+                        init(context);
+
+
+                    } catch (NullPointerException e) {
+
+                    }
+
+
                 }
 
                 @Override
@@ -154,16 +162,25 @@ public class ResumentFragment extends Fragment {
         return rootView;
     }
 
+    private void init(Context context) {
+        textViewDetalleItemsTotales.setVisibility(View.GONE);
+        //SummaryAdapter adapter = new SummaryAdapter(getActivity(), 0, Summary.getListSummary(getActivity()));
+        summary = Summary.getListSummary(getActivity());
+        res = getActivity().getResources();
+        // listView.setAdapter(adapter);
+        setResumen();
+    }
+
     private void setResumen() {
-        if (summary == null || summary.getEfectivoRendir() <= 0.00) {
+        /*if (summary == null || summary.getEfectivoRendir() <= 0.00) {
             return;
-        }
+        }*/
         cardViewResumen.setVisibility(View.VISIBLE);
 
-        textEfectivoRendir.setText(summary.getEfectivoRendir() + "");
-        textViewTotalGastos.setText(summary.getGastos() + "");
-        textIngresosTotales.setText(summary.getIngresosTotales() + "");
-        textViewSaldoInicial.setText(summary.getSaldoInicial() + "");
+        textEfectivoRendir.setText(Utils.formatDoublePrint(summary.getEfectivoRendir()) + "");
+        textViewTotalGastos.setText(Utils.formatDoublePrint(summary.getGastos()) + "");
+        textIngresosTotales.setText(Utils.formatDoublePrint(summary.getIngresosTotales()) + "");
+        textViewSaldoInicial.setText(Utils.formatDoublePrint(summary.getSaldoInicial()) + "");
 
         String detalleStrings = "";
         for (Concepto concepto : summary.getIncome().keySet()) {
@@ -185,6 +202,7 @@ public class ResumentFragment extends Fragment {
 
     }
 
+
     private void setIngresos() {
         Log.d(TAG, "" + summary.getSummaryIncomeList().size());
 
@@ -193,13 +211,13 @@ public class ResumentFragment extends Fragment {
         }
         cardViewIngreso.setVisibility(View.VISIBLE);
 
-        TableRow tableRow1 = new TableRow(getContext());
+        TableRow tableRow1 = new TableRow(getActivity());
 
-        TextView textDescripcion1 = new TextView(getContext());
-        TextView textCantidad1 = new TextView(getContext());
-        TextView textTotalEmitidos1 = new TextView(getContext());
-        TextView textTotalPagados1 = new TextView(getContext());
-        TextView textTotalCobrados1 = new TextView(getContext());
+        TextView textDescripcion1 = new TextView(getActivity());
+        TextView textCantidad1 = new TextView(getActivity());
+        TextView textTotalEmitidos1 = new TextView(getActivity());
+        TextView textTotalPagados1 = new TextView(getActivity());
+        TextView textTotalCobrados1 = new TextView(getActivity());
 
         textDescripcion1.setGravity(Gravity.CENTER);
         textCantidad1.setGravity(Gravity.CENTER);
@@ -253,14 +271,14 @@ public class ResumentFragment extends Fragment {
             sumaTotalPagados = sumaTotalPagados + Double.parseDouble(income.getPagados());
             sumaTotalCobradas = sumaTotalCobradas + Double.parseDouble(income.getCobrados());
 
-            TableRow tableRow = new TableRow(getContext());
+            TableRow tableRow = new TableRow(getActivity());
             //tableRow.removeAllViews();
 
-            TextView textDescripcion = new TextView(getContext());
-            TextView textCantidad = new TextView(getContext());
-            TextView textTotalEmitidos = new TextView(getContext());
-            TextView textTotalPagados = new TextView(getContext());
-            TextView textTotalCobrados = new TextView(getContext());
+            TextView textDescripcion = new TextView(getActivity());
+            TextView textCantidad = new TextView(getActivity());
+            TextView textTotalEmitidos = new TextView(getActivity());
+            TextView textTotalPagados = new TextView(getActivity());
+            TextView textTotalCobrados = new TextView(getActivity());
 
             textDescripcion.setGravity(Gravity.CENTER);
             textCantidad.setGravity(Gravity.CENTER);
@@ -284,23 +302,23 @@ public class ResumentFragment extends Fragment {
 
             Double aCantidad = (Double.parseDouble(income.getCantidad()));
             textDescripcion.setText(income.getConcepto());
-            textCantidad.setText(aCantidad.intValue() + "");
-            textTotalEmitidos.setText(Utils.formatDouble(Double.parseDouble(income.getEmitidos())));
-            textTotalPagados.setText(Utils.formatDouble(Double.parseDouble(income.getPagados())));
-            textTotalCobrados.setText(Utils.formatDouble(Double.parseDouble(income.getCobrados())));
+            textCantidad.setText(Utils.formatDoublePrint(Double.parseDouble(aCantidad.intValue() + "")) + "");
+            textTotalEmitidos.setText(Utils.formatDoublePrint(Double.parseDouble(income.getEmitidos())));
+            textTotalPagados.setText(Utils.formatDoublePrint(Double.parseDouble(income.getPagados())));
+            textTotalCobrados.setText(Utils.formatDoublePrint(Double.parseDouble(income.getCobrados())));
 
 
             tableLayoutIngresos.addView(tableRow, count);
         }
 
 
-        TableRow tableRow = new TableRow(getContext());
+        TableRow tableRow = new TableRow(getActivity());
         tableRow.setBackgroundColor(Color.parseColor("#bdbdbd"));
-        TextView textDescripcion = new TextView(getContext());
-        TextView textCantidad = new TextView(getContext());
-        TextView textTotalEmitidos = new TextView(getContext());
-        TextView textTotalPagados = new TextView(getContext());
-        TextView textTotalCobrados = new TextView(getContext());
+        TextView textDescripcion = new TextView(getActivity());
+        TextView textCantidad = new TextView(getActivity());
+        TextView textTotalEmitidos = new TextView(getActivity());
+        TextView textTotalPagados = new TextView(getActivity());
+        TextView textTotalCobrados = new TextView(getActivity());
 
         textDescripcion.setGravity(Gravity.CENTER);
         textCantidad.setGravity(Gravity.CENTER);
@@ -322,9 +340,9 @@ public class ResumentFragment extends Fragment {
 
         textDescripcion.setText("Total");
         textCantidad.setText("" + sumaCantidad.intValue());
-        textTotalEmitidos.setText(Utils.formatDouble(sumaTotalEmitidos));
-        textTotalPagados.setText(Utils.formatDouble(sumaTotalPagados));
-        textTotalCobrados.setText(Utils.formatDouble(sumaTotalCobradas));
+        textTotalEmitidos.setText(Utils.formatDoublePrint(sumaTotalEmitidos));
+        textTotalPagados.setText(Utils.formatDoublePrint(sumaTotalPagados));
+        textTotalCobrados.setText(Utils.formatDoublePrint(sumaTotalCobradas));
 
         tableLayoutIngresos.addView(tableRow, sumaCount + 1);
     }
@@ -335,11 +353,11 @@ public class ResumentFragment extends Fragment {
         }
         cardViewCostos.setVisibility(View.VISIBLE);
 
-        TableRow tableRow2 = new TableRow(getContext());
+        TableRow tableRow2 = new TableRow(getActivity());
 
-        TextView textDescrip = new TextView(getContext());
-        TextView textRuta = new TextView(getContext());
-        TextView textImporte = new TextView(getContext());
+        TextView textDescrip = new TextView(getActivity());
+        TextView textRuta = new TextView(getActivity());
+        TextView textImporte = new TextView(getActivity());
 
         textDescrip.setGravity(Gravity.CENTER);
         textRuta.setGravity(Gravity.CENTER);
@@ -375,11 +393,11 @@ public class ResumentFragment extends Fragment {
             int count = i + 1;
             sumaCountGastos = count;
 
-            TableRow tableRow3 = new TableRow(getContext());
+            TableRow tableRow3 = new TableRow(getActivity());
 
-            TextView textViewDES = new TextView(getContext());
-            TextView textViewRUTA = new TextView(getContext());
-            TextView textViewIMPORTE = new TextView(getContext());
+            TextView textViewDES = new TextView(getActivity());
+            TextView textViewRUTA = new TextView(getActivity());
+            TextView textViewIMPORTE = new TextView(getActivity());
 
             textViewDES.setGravity(Gravity.CENTER);
             textViewRUTA.setGravity(Gravity.CENTER);
@@ -392,7 +410,7 @@ public class ResumentFragment extends Fragment {
 
             textViewDES.setText(costs.getDescripcion());
             textViewRUTA.setText(costs.getEnRuta());
-            textViewIMPORTE.setText(Utils.formatDouble(costs.getTotal()));
+            textViewIMPORTE.setText(Utils.formatDoublePrint(costs.getTotal()));
 
             tableRow3.addView(textViewDES);
             tableRow3.addView(textViewRUTA);
@@ -401,11 +419,11 @@ public class ResumentFragment extends Fragment {
             tableLayoutGastos.addView(tableRow3, count);
         }
 
-        TableRow tableRow3 = new TableRow(getContext());
+        TableRow tableRow3 = new TableRow(getActivity());
         tableRow3.setBackgroundColor(Color.parseColor("#bdbdbd"));
-        TextView textDescrip3 = new TextView(getContext());
-        TextView textRuta3 = new TextView(getContext());
-        TextView textImporte3 = new TextView(getContext());
+        TextView textDescrip3 = new TextView(getActivity());
+        TextView textRuta3 = new TextView(getActivity());
+        TextView textImporte3 = new TextView(getActivity());
 
         textDescrip3.setGravity(Gravity.CENTER);
         textRuta3.setGravity(Gravity.CENTER);
@@ -422,7 +440,7 @@ public class ResumentFragment extends Fragment {
 
         textDescrip3.setText("Total");
         textRuta3.setText("");
-        textImporte3.setText(Utils.formatDouble(sumaImporte));
+        textImporte3.setText(Utils.formatDoublePrint(sumaImporte));
 
         tableRow3.addView(textDescrip3);
         tableRow3.addView(textRuta3);

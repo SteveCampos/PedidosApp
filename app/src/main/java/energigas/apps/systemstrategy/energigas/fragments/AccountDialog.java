@@ -32,6 +32,10 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionPedido;
+import energigas.apps.systemstrategy.energigas.entities.NotificacionSaldoInicial;
+import energigas.apps.systemstrategy.energigas.entities.Pedido;
+import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
 import energigas.apps.systemstrategy.energigas.entities.PlanDistribucion;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.OnAsyntaskListener;
@@ -72,6 +76,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
     private DatabaseReference mDatabase;
     private DatabaseReference myRef;
     private DatabaseReference myRefFondos;
+    private DatabaseReference myRefPedidos;
 
     public AccountDialog setFloating(FloatingActionButton fab) {
         this.fab = fab;
@@ -89,7 +94,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         setCancelable(false);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
+        //myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO);
         locationVehiculeListener = new LocationVehiculeListener(this, Constants.MIN_TIME_BW_UPDATES, new Long(0));
         return dialog;
     }
@@ -223,7 +228,9 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
         setMessage(message);
         Session.saveCajaLiquidacion(getActivity(), cajaLiquidacion);
         fab.hide();
+        myRef = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_PEDIDO).child(cajaLiquidacion.getLiqId() + "");
         for (CajaLiquidacionDetalle liquidacionDetalle : cajaLiquidacion.getItemsLiquidacion()) {
+            PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(liquidacionDetalle.getPeId() + "").get(0);
             NotificacionCajaDetalle notificacionCajaDetalle = new NotificacionCajaDetalle(
                     liquidacionDetalle.getEstablecimientoId(),
                     Constants.NO_FACTURADO,
@@ -235,18 +242,25 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
                     Integer.parseInt(liquidacionDetalle.getPeId() + ""),
                     0.00,
                     0.00,
-                    0.00
+                    0.00,
+                    pedidoDetalle.getPrecio()
             );
             myRef.child(cajaLiquidacion.getLiqId() + "-" + liquidacionDetalle.getLidId()).setValue(notificacionCajaDetalle, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     // Log.d("FIREBASE_CREATE", " ERROR: " + databaseError.getMessage() + "");
-                    // Log.d("FIREBASE_CREATE", databaseReference.getKey());
                 }
             });
         }
+        NotificacionSaldoInicial notificacionSaldoInicial = new NotificacionSaldoInicial(cajaLiquidacion.getLiqId(), cajaLiquidacion.getSaldoInicial());
         myRefFondos = mDatabase.child(Constants.FIREBASE_CHILD_FONDOS).child(cajaLiquidacion.getLiqId() + "");
-        myRefFondos.setValue(cajaLiquidacion);
+        myRefFondos.setValue(notificacionSaldoInicial);
+
+
+        myRefPedidos = mDatabase.child(Constants.FIREBASE_CHILD_ATEN_ADD_PEDIDO).child(cajaLiquidacion.getLiqId() + "");
+        myRefPedidos.setValue(new NotificacionPedido(cajaLiquidacion.getLiqId(), Pedido.getPedidosByLiqui(cajaLiquidacion.getLiqId() + "").size(), 0));
+
+
         listener.onSuccessOpenAccount();
         dismiss();
     }

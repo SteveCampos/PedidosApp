@@ -17,8 +17,10 @@ import java.util.List;
 
 import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
+import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
 import energigas.apps.systemstrategy.energigas.entities.Despacho;
+import energigas.apps.systemstrategy.energigas.entities.Estado;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.holders.DespachoHolder;
@@ -66,10 +68,12 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder
     @Override
     public void onBindViewHolder(DespachoHolder holder, int position) {
         final Despacho despacho = stationDispatches.get(position);
+        final Cliente cliente = Cliente.getCliente(despacho.getClienteId() + "");
         Producto producto = Producto.find(Producto.class, " pro_Id = ?", new String[]{despacho.getProId() + ""}).get(Constants.CURRENT);
         Log.d(TAG, "produclist" + producto);
         Unidad unidad = Unidad.getUnidadProductobyUnidadMedidaId(despacho.getUnId() + "");
         Almacen almacen = Almacen.getAlmacenById(despacho.getAlmacenEstId() + "");
+        Estado estado = Estado.getEstado(despacho.getEstadoId() + "");
         holder.title.setText(despacho.getSerie() + "-" + despacho.getNumero());
         holder.quantity.setText(Utils.formatDoublePrint(despacho.getCantidadDespachada()) + " " + unidad.getAbreviatura());
         String facturadoString = "";
@@ -77,9 +81,19 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder
         if (despacho.getCompId() > 0) {
             ComprobanteVenta comprobanteVenta = ComprobanteVenta.getComprobanteVentaId(despacho.getCompId() + "");
             facturadoString = "Factura: " + comprobanteVenta.getSerie() + "-" + comprobanteVenta.getNumDoc();
-            holder.state.setText("Facturado");
-        } else {
-            holder.state.setText("Despachado");
+
+        }
+        holder.state.setText(estado.getDescripcion());
+
+
+        if (despacho.getEstadoId() == Constants.ESTADO_DESPACHO_CREADO) {
+
+        }
+        if (despacho.getEstadoId() == Constants.ESTADO_ELIMINAR_DESPACHO) {
+
+        }
+        if (despacho.getEstadoId() == Constants.ESTADO_DESPACHO_FACTURADO) {
+
         }
 
 
@@ -99,26 +113,21 @@ public class StationDispatchsAdapter extends RecyclerView.Adapter<DespachoHolder
         holder.quantity.setTextColor(mSelectedItemsIds.get(position, false) ? colorWhite : colorAccent);
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (despacho.getCompId() > 0) {
-                    Toast.makeText(mContext, "Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    listener.onStationDispatchClickListener(despacho, view, 0);
-                }
-
-            }
-        });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (despacho.getCompId() > 0) {
-                    Toast.makeText(mContext, "Despacho con comprobante ya generado", Toast.LENGTH_SHORT).show();
-                } else {
 
+                if (cliente.getCliITipoClienteId() != Constants.ESTABLECIMIENTO_EXTERNO) {
+
+                    return true;
+                }
+
+                if (despacho.getEstadoId() == Constants.ESTADO_DESPACHO_CREADO) {
                     listener.onStationDispatchClickListener(despacho, view, 1);
+
+                } else {
+                    Toast.makeText(mContext, "No puede realizar la factura para este despacho", Toast.LENGTH_SHORT).show();
+
                 }
 
                 return true;

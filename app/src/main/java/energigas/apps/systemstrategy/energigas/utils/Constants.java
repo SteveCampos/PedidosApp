@@ -12,6 +12,7 @@ public class Constants {
 
 
     public static final String ACTION_EXPORT_SERVICE = "ACTION_EXPORT_SERVICE";
+    public static final String ACTION_IMPORT_SERVICE = "ACTION_IMPORT_SERVICE";
     public static final Long LONG_DISTANCE_0 = new Long(0);
     public static final String _CLMEXPORT = "CLMEXPORT";
 
@@ -23,6 +24,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_NOTIFICACIONES = "NOTIFICACIONES";
     public static final String FIREBASE_CHILD_FONDOS = "FONDOS";
     public static final String FIREBASE_CHILD_ATEN_PEDIDO = "ATEN_PEDIDO";
+    public static final String FIREBASE_CHILD_ATEN_ADD_PEDIDO = "PEDIDOS_AGREGADOS";
     public static final String FIREBASE_CHILD_ATENCION_PEDIDO = "ATENCION_PEDIDO";
 
     public static final int _CREADO = 2;
@@ -32,7 +34,7 @@ public class Constants {
     public static final int TIPO_MONEDA_DOLARES = 37;
     public static final int PEDIDO_CREADO = -1;
 
-    public static final int DESPACHO_CREADO = 38;
+    public static final int ESTADO_DESPACHO_CREADO = 38;
 
     /**
      * Estados AsyntaskListener
@@ -218,6 +220,9 @@ public class Constants {
     public static final int CLICK_EDITAR = 100;
     public static final int CLICK_ELIMINAR = 101;
 
+
+    public static final int ESTADO_ELIMINAR_DESPACHO = 40;
+
     public static final int TABLA_DESPACHO = 1;
     public static final int TABLA_COMPROBANTE = 2;
     public static final int TABLA_GASTO = 3;
@@ -241,8 +246,21 @@ public class Constants {
     public static final String SESSION_COMPROBANTE_VENTA = "SESSION_COMPROBANTE_VENTA";
     public static final String SESSION_COMPROBANTE_VENTA_ID = "SESSION_COMPROBANTE_VENTA_ID";
 
+    public static final String SESSION_PEDIDO_AGREGADO = "SESSION_PEDIDO_AGREGADO";
+    public static final String SESSION_PEDIDO_AGREGADO_CANTIDAD = "SESSION_PEDIDO_AGREGADO_CANTIDAD";
+
+
+    public static final String SESSION_PEDIDO_PRECIO = "SESSION_PEDIDO_PRECIO";
+    public static final String SESSION_PEDIDO_PRECIO_MODIFICADO = "SESSION_PEDIDO_PRECIO_MODIFICADO";
+
 
     public static final String SHA = "SHA";
+
+
+    public static final String SESSION_CANTIDAD_SALDO_INICIAL = "SESSION_CANTIDAD_SALDO_INICIAL";
+    public static final String SESSION_CANTIDAD_SALDO_CANTIDAD = "SESSION_CANTIDAD_SALDO_CANTIDAD";
+
+
     /**
      * Intent codigos
      **/
@@ -262,6 +280,10 @@ public class Constants {
     public static final int ESTADO_ESTABLECIMIENTO_NO_ATENDIDO = 43;
     public static final int ESTADO_ESTABLECIMIENTO_PENDIENTE = 41;
     public static final int ESTADO_DESPACHO_ATENDIDO = 18;
+    public static final int ESTADO_DESPACHO_FACTURADO = 39;
+
+
+    public static final int CAJA_LIQUIDACION_CERRADO = 32;
 
     /**
      * ESTADO FACTURADO

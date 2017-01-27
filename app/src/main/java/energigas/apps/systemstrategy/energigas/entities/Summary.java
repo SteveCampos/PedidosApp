@@ -249,7 +249,7 @@ public class Summary {
         double efectivoRendir = ingresosImporte - importeGastos;
         double saldoInicialMain = (cajaLiquidacion.getSaldoInicial() + ingresosImporte) - importeGastos;
 
-        Summary sumaryResumen = new Summary(Utils.formatDoubleNumber(saldoInicialMain),
+        Summary sumaryResumen = new Summary(Utils.formatDoubleNumber(cajaLiquidacion.getSaldoInicial()),
                 Utils.formatDoubleNumber(ingresosImporte),
                 Utils.formatDoubleNumber(importeGastos),
                 Utils.formatDoubleNumber(efectivoRendir),

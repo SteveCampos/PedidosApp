@@ -253,4 +253,17 @@ public class CajaLiquidacionDetalle extends SugarRecord {
         }
         return aLong.intValue();
     }
+
+
+    public static CajaLiquidacionDetalle getLiquidacionDetalleByPedido(String pedidoId) {
+        Log.d("ESTABLECIMIENTOID", pedidoId);
+        List<CajaLiquidacionDetalle> liquidacionDetalleList = CajaLiquidacionDetalle.find(CajaLiquidacionDetalle.class, "pe_Id=?", new String[]{pedidoId});
+        if (liquidacionDetalleList != null) {
+            return liquidacionDetalleList.get(0);
+        }
+        return null;
+
+    }
+
+
 }
