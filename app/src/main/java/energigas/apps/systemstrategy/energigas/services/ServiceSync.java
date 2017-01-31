@@ -1,12 +1,21 @@
 package energigas.apps.systemstrategy.energigas.services;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -24,6 +33,7 @@ import energigas.apps.systemstrategy.energigas.R;
 import energigas.apps.systemstrategy.energigas.activities.CuentaResumenActivity;
 import energigas.apps.systemstrategy.energigas.activities.MainStationActivity;
 import energigas.apps.systemstrategy.energigas.activities.StationOrderActivity;
+import energigas.apps.systemstrategy.energigas.asyntask.AsynTaskUbicacion;
 import energigas.apps.systemstrategy.energigas.broadcast.ScreenReceiver;
 import energigas.apps.systemstrategy.energigas.entities.AlertaEntity;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
@@ -34,7 +44,9 @@ import energigas.apps.systemstrategy.energigas.entities.NotificacionPedido;
 import energigas.apps.systemstrategy.energigas.entities.NotificacionSaldoInicial;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.interfaces.ExportObjectsListener;
+import energigas.apps.systemstrategy.energigas.interfaces.MyLocationListener;
 import energigas.apps.systemstrategy.energigas.utils.Constants;
 import energigas.apps.systemstrategy.energigas.utils.NotificacionManagerUtils;
 import energigas.apps.systemstrategy.energigas.utils.Session;
@@ -44,7 +56,7 @@ import energigas.apps.systemstrategy.energigas.utils.Session;
  */
 
 
-public class ServiceSync extends Service {
+public class ServiceSync extends Service implements MyLocationListener.mUbicacionLT {
 
     private BroadcastReceiver mReceiver;
 
@@ -61,6 +73,16 @@ public class ServiceSync extends Service {
 
     private Concepto conceptoIGV;
 
+
+    /*Variables Gps*/
+    private LocationManager mlocManager;
+    private MyLocationListener mlocListener;
+    String mLatitud;
+    String mLong;
+    private Context context;
+    /**/
+
+
     @Override
     public void onCreate() {
 
@@ -73,6 +95,7 @@ public class ServiceSync extends Service {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
+
 
     @Nullable
     @Override
@@ -89,6 +112,9 @@ public class ServiceSync extends Service {
             listenerFirebaseFondos();
             listenerFirebasePrecios();
             listenerPedidosAgregados();
+            hasPermissions(context);
+            positionLocation();
+            //initServiceLocation(context);
         }
 
 
@@ -269,6 +295,42 @@ public class ServiceSync extends Service {
         notificar = new NotificacionManagerUtils(alertaEntity);
         notificar.showNotificationCustom();
     }
+
+
+    /*Services Position*/
+
+
+    private void positionLocation() {
+        int handler = 1000 * 60 * 5;//15000 seconds
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener(this);
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, handler, 0, mlocListener);
+    }
+
+    @Override
+    public void onLocalPosition(Location location) {
+        Usuario usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
+        mLatitud = String.valueOf(location.getLatitude());
+        mLong = String.valueOf(location.getLongitude());
+        new AsynTaskUbicacion().execute(String.valueOf(usuario.getUsuIUsuarioId()), mLatitud, mLong);
+    }
+
+
+
+    /*PERMISOS ANDROID6.0 API(23)*/
+    public static boolean hasPermissions(Context context) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+
 
 
 }
