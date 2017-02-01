@@ -120,7 +120,7 @@ public class StationOrderFragment extends Fragment implements StationOrdersAdapt
                 PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "").get(0);
                 double precioUnitario = (Double.parseDouble(conceptoIGV.getDescripcion()) * notificacionCajaDetalle.getPrecio()) + notificacionCajaDetalle.getPrecio();
                 pedidoDetalle.setPrecio(notificacionCajaDetalle.getPrecio());
-                pedidoDetalle.setPrecio(precioUnitario);
+                pedidoDetalle.setPrecioUnitario(precioUnitario);
                 pedidoDetalle.save();
                 initView();
 

@@ -217,7 +217,7 @@ public class ServiceSync extends Service implements MyLocationListener.mUbicacio
                     double precioUnitario = (Double.parseDouble(conceptoIGV.getDescripcion()) * notificacionCajaDetalle.getPrecio()) + notificacionCajaDetalle.getPrecio();
                     PedidoDetalle pedidoDetalle = PedidoDetalle.getPedidoDetalleByPedido(pedido.getPeId() + "").get(0);
                     pedidoDetalle.setPrecio(notificacionCajaDetalle.getPrecio());
-                    pedidoDetalle.setPrecio(precioUnitario);
+                    pedidoDetalle.setPrecioUnitario(precioUnitario);
                     Long estadoPedidoDetalle = pedidoDetalle.save();
                     // bundle.putLong("PEDIDO", pedido.getPeId());
                     if (estadoPedidoDetalle > 0) {

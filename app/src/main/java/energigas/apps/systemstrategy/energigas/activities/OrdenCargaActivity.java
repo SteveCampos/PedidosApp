@@ -154,6 +154,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     private int tipoFecha;
 
+    private CajaLiquidacion cajaLiquidacion;
+
     /*
         @BindView(R.id.recycler)
         RecyclerView recycler;*/
@@ -165,6 +167,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orden_carga);
         ButterKnife.bind(this);
+        cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
         initVies();
 
     }
@@ -193,7 +196,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         createTimePicker();
     }
 
-   @OnClick(R.id.btn_trasciego_guia_fechaemision)
+    @OnClick(R.id.btn_trasciego_guia_fechaemision)
     public void selectTrasciegoGuiaFechaEmision() {
         tipoFecha = TRASCIEGO_FECHA_GUIA;
         createTimePicker();
@@ -479,7 +482,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                     69,
                     usuarioId,
                     datetime,
-                    Utils.formatDouble(format, precio)
+                    Utils.formatDouble(format, precio),
+                    cajaLiquidacion.getLiqId()
             );
             saveOrdenCargo(ordenCargo);
         } else {
@@ -632,7 +636,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                     69,
                     usuarioId,
                     datetime,
-                    Utils.formatDouble(format, precio)
+                    Utils.formatDouble(format, precio),
+                    cajaLiquidacion.getLiqId()
             );
             saveOrdenCargo(ordenCargo);
             Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());

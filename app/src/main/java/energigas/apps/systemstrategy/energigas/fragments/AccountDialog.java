@@ -245,6 +245,7 @@ public class AccountDialog extends DialogFragment implements View.OnClickListene
                     0.00,
                     pedidoDetalle.getPrecio()
             );
+            Session.isUpdatePrecing(getActivity(), pedidoDetalle.getPrecio() + "");
             myRef.child(cajaLiquidacion.getLiqId() + "-" + liquidacionDetalle.getLidId()).setValue(notificacionCajaDetalle, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

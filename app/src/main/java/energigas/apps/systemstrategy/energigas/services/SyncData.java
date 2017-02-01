@@ -17,6 +17,7 @@ import java.util.List;
 import energigas.apps.systemstrategy.energigas.apiRest.RestAPI;
 import energigas.apps.systemstrategy.energigas.apiRest.RestFEAPI;
 import energigas.apps.systemstrategy.energigas.entities.BERespFacturaM;
+import energigas.apps.systemstrategy.energigas.entities.BERespuestaAtencion;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCajaEgreso;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVenta;
 import energigas.apps.systemstrategy.energigas.entities.BERespuestaCpVentaDetalle;
@@ -25,6 +26,7 @@ import energigas.apps.systemstrategy.energigas.entities.BERespuestaPlanPagoDetal
 import energigas.apps.systemstrategy.energigas.entities.BeDocElectronico;
 import energigas.apps.systemstrategy.energigas.entities.CajaComprobante;
 import energigas.apps.systemstrategy.energigas.entities.CajaGasto;
+import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.CajaMovimiento;
 import energigas.apps.systemstrategy.energigas.entities.CajaPago;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
@@ -108,6 +110,7 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         // Boolean beDocElectronicos = BeDocElectronico.beDocElectronicoList(new ArrayList<BeDocElectronico>(Utils.getListForExInFE(BeDocElectronico.class, estado))).size() > 0;
         Boolean informeGastoList = CajaMovimiento.getListCajaMovimiento(new ArrayList<CajaMovimiento>(Utils.getListForExIn(CajaMovimiento.class, estado))).size() > 0;
         Boolean beOrdenCargo = Utils.getListForExIn(OrdenCargo.class, estado).size() > 0;
+        Boolean beEstadoAtendido = Utils.getListForExIn(CajaLiquidacionDetalle.class, Constants.S_ACTUALIZADO).size() > 0;
 
         if (inIdDespacho) {
             exportCreatedDespacho(Constants.S_CREADO);
@@ -122,6 +125,9 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         }
         if (beOrdenCargo) {
             exportarCreateOrdenCargo(Constants.S_CREADO);
+        }
+        if (beEstadoAtendido) {
+            exportarAtenciones();
         }
 
 
@@ -476,6 +482,47 @@ public class SyncData extends IntentService implements SugarTransactionHelper.Ca
         estado.setSyncIdRemoto(Integer.parseInt(idRemoto));
         estado.setEstadoSync(Constants.S_IMPORTADO);
         estado.save();
+    }
+
+
+    private void exportarAtenciones() {
+        jsonObjectResponse = null;
+        List<CajaLiquidacionDetalle> mCajaLiquidacionDetalle;
+        mCajaLiquidacionDetalle = Utils.getListForExIn(CajaLiquidacionDetalle.class, Constants.S_ACTUALIZADO);
+        Log.d(TAG, "mCajaLiquidacionDetalle" + mCajaLiquidacionDetalle.size());
+        if (mCajaLiquidacionDetalle.size() > 0) {
+            for (CajaLiquidacionDetalle liquidacion : mCajaLiquidacionDetalle) {
+                Log.d(TAG, "CajaLiquidacionDetalle liquidacion: " + liquidacion.getLidId());
+            }
+
+            try {
+                jsonObjectResponse = restAPI.flst_UpdateDetalleLiquidacion(new ArrayList<Object>(mCajaLiquidacionDetalle));
+                Log.d(TAG, "JSON jsonObjectResponse: " + jsonObjectResponse.toString());
+                List<BERespuestaAtencion> beRespuestaAtencions = mapper.readValue(Utils.getJsonArResult(jsonObjectResponse), TypeFactory.defaultInstance().constructCollectionType(List.class,
+                        BERespuestaAtencion.class));
+                Log.d(TAG, "JSON LIQUIDACION: " + jsonObjectResponse);
+
+                for (BERespuestaAtencion beRespuestaAtencion : beRespuestaAtencions) {
+
+                    for (CajaLiquidacionDetalle cajaLiquidacionDetalle : mCajaLiquidacionDetalle) {
+
+
+                        Log.d(TAG, "CajaLiq: " + cajaLiquidacionDetalle.getLidId() + "- respuesta : " + beRespuestaAtencion.getIdLiqDetalle());
+
+                        if (new Long(cajaLiquidacionDetalle.getLidId()).equals(beRespuestaAtencion.getIdLiqDetalle())) {
+
+                            Log.d(TAG, "ORDEN: " + cajaLiquidacionDetalle.getOrden() + "");
+                            if (beRespuestaAtencion.getRespuesta() > 0) {
+                                saveEstado(cajaLiquidacionDetalle.getLidId() + "", cajaLiquidacionDetalle.getLidId() + "", CajaLiquidacionDetalle.class);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                Log.d(TAG, "EXEPTION: " + ex.getMessage());
+            }
+
+        }
     }
 
 

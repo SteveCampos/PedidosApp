@@ -102,9 +102,9 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
         }
 
         String message = "REDIRECT";
-        boolean redirect = false;
+        boolean redirect = true;
         Class clase = DispatchActivity.class;
-        switch (position) {
+        /*switch (position) {
             case 0://DESPACHADO, REDIRECT TO PRINT
                 message = "";
                 redirect = true;
@@ -119,11 +119,11 @@ public class AlmacenFragment extends Fragment implements AlmacenAdapter.OnAlmace
                 //NO PROGRAMADO
                 message = "No Programado, mantenga presionado para Autoprogramar";
                 break;
-        }
+        }*/
         clase = DespachoActivity.class;
         Session.saveTipoDespachoSN(getActivity(), false);
         Session.saveAlmacen(getActivity(), almacen);
-        Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
+       // Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
 
         if (booleanHashMap != null) {
             if (booleanHashMap.get(DespachoActivity.class.getSimpleName())) {

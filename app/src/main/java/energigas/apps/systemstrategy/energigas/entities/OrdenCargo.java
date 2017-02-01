@@ -56,6 +56,8 @@ public class OrdenCargo extends SugarRecord {
 
     private Double precio;
 
+    private Long liqId;
+
     public OrdenCargo() {
     }
 
@@ -67,7 +69,7 @@ public class OrdenCargo extends SugarRecord {
         this.ordeCargaId = ordeCargaId;
     }
 
-    public OrdenCargo(long ordenCargaId, long ordeCargaId, String fechaRegistro, String fechaComprobante, int proveedorId, String nroComprobante, String nroGuia, int tipoCargaId, int tipoOrigenId, double factorConversion, String fechaGuia, double densidad, int proId, int unIdComprobante, double cantidadDoc, int unIdTransformada, double cantidadTransformada, int usuarioCreacionId, String fechaCreacion, int estadoId, int usuarioAccionId, String fechaAccion, Double precio) {
+    public OrdenCargo(long ordenCargaId, long ordeCargaId, String fechaRegistro, String fechaComprobante, int proveedorId, String nroComprobante, String nroGuia, int tipoCargaId, int tipoOrigenId, double factorConversion, String fechaGuia, double densidad, int proId, int unIdComprobante, double cantidadDoc, int unIdTransformada, double cantidadTransformada, int usuarioCreacionId, String fechaCreacion, int estadoId, int usuarioAccionId, String fechaAccion, Double precio, Long liqId) {
         this.ordenCargaId = ordenCargaId;
         this.ordeCargaId = ordeCargaId;
         this.fechaRegistro = fechaRegistro;
@@ -91,6 +93,15 @@ public class OrdenCargo extends SugarRecord {
         this.usuarioAccionId = usuarioAccionId;
         this.fechaAccion = fechaAccion;
         this.precio = precio;
+        this.liqId = liqId;
+    }
+
+    public Long getLiqId() {
+        return liqId;
+    }
+
+    public void setLiqId(Long liqId) {
+        this.liqId = liqId;
     }
 
     public Double getPrecio() {
