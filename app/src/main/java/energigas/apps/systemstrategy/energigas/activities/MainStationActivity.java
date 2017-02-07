@@ -44,12 +44,16 @@ import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacionDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Cliente;
 import energigas.apps.systemstrategy.energigas.entities.ComprobanteVenta;
+import energigas.apps.systemstrategy.energigas.entities.DEEntidad;
+import energigas.apps.systemstrategy.energigas.entities.DatosEmpresa;
 import energigas.apps.systemstrategy.energigas.entities.Establecimiento;
 import energigas.apps.systemstrategy.energigas.entities.NotificacionCajaDetalle;
 import energigas.apps.systemstrategy.energigas.entities.Pedido;
 import energigas.apps.systemstrategy.energigas.entities.OrderDispatch;
 import energigas.apps.systemstrategy.energigas.entities.OrderProduct;
 import energigas.apps.systemstrategy.energigas.entities.PedidoDetalle;
+import energigas.apps.systemstrategy.energigas.entities.Persona;
+import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
 import energigas.apps.systemstrategy.energigas.fragments.AgregarDespachoFragment;
 import energigas.apps.systemstrategy.energigas.fragments.CajaPagoFragment;
@@ -107,6 +111,9 @@ public class MainStationActivity extends AppCompatActivity
 
     @BindView(R.id.textViewContacto)
     TextView textViewContacto;
+
+    @BindView(R.id.main_station_ruc)
+    TextView textViewRuc;
 
 
 
@@ -181,7 +188,7 @@ public class MainStationActivity extends AppCompatActivity
     private void setTipoCliente() {
 
         if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
-            setTitle("Cliente");
+            setTitle("Punto de Despacho");
         } else {
             setTitle("Estación");
         }
@@ -202,6 +209,7 @@ public class MainStationActivity extends AppCompatActivity
         CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
         textViewDate.setText(Utils.getDateDescription(cajaLiquidacion.getFechaApertura()));
         textViewContacto.setText("Contacto: " + establecimiento.getEstVContacto());
+        textViewRuc.setText("Ruc: "+cliente.getPersona().getPerVDocIdentidad());
 
     }
 

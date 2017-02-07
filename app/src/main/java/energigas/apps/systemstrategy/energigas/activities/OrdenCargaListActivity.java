@@ -49,6 +49,7 @@ import energigas.apps.systemstrategy.energigas.adapters.UnidadAdapter;
 import energigas.apps.systemstrategy.energigas.entities.Almacen;
 import energigas.apps.systemstrategy.energigas.entities.CajaLiquidacion;
 import energigas.apps.systemstrategy.energigas.entities.Concepto;
+import energigas.apps.systemstrategy.energigas.entities.Despacho;
 import energigas.apps.systemstrategy.energigas.entities.OrdenCargo;
 import energigas.apps.systemstrategy.energigas.entities.Persona;
 import energigas.apps.systemstrategy.energigas.entities.Producto;
@@ -75,6 +76,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     TextView textViewAgente;
     @BindView(R.id.TView_placa)
     TextView textViewPlaca;
+    @BindView(R.id.ordencargo_serie_tanque)
+    TextView textViewSerieTanque;
     OrdenCargaAdapter ordenCargaAdapter;
 
 //    @BindView(R.id.container_compra)
@@ -88,6 +91,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     private Persona mAgente;
     private Usuario mUsuario;
     private Vehiculo mVehiculo;
+    private Despacho mainDispatch;
     AlertDialog alertDialog;
     /*Item Compra*/
     private LinearLayout lytCompra;
@@ -154,6 +158,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         mAgente = Persona.findWithQuery(Persona.class, "SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = " + Session.getSession(this).getUsuIUsuarioId() + " ;", null).get(Constants.CURRENT);
         mUsuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         mVehiculo = Vehiculo.getVehiculo(mUsuario.getUsuIUsuarioId() + "");
+//        mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
+
         resources = getResources();
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -171,6 +177,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
         textViewAgente.setText(mAgente.getPerVNombres() + " " + mAgente.getPerVApellidoPaterno() + " " + mAgente.getPerVApellidoMaterno());
         textViewPlaca.setText(Utils.getDateDescription(Utils.getDatePhone()));
+        textViewSerieTanque.setText("Serie");
         initRecycler();
         //toolBarImageBack();
         collapSingTitle();
@@ -209,9 +216,9 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                 metEdit(ordenCargo, view);
                 break;
             case 2:
-                if (ordenCargo!=null) {
+                if (ordenCargo != null) {
                     ordenCargo.setEstadoId(70);
-                    Log.d(TAG, "OrdenCargoESTADOID: "+ ordenCargo.getEstadoId());
+                    Log.d(TAG, "OrdenCargoESTADOID: " + ordenCargo.getEstadoId());
                     ordenCargo.save();
                     int position2 = recycler.getChildAdapterPosition(view);
                     ((OrdenCargaAdapter) recycler.getAdapter()).removeAt(position2);
@@ -238,17 +245,17 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-            onBackPressed();
+            startActivity(new Intent(this, MainActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+  /*  @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
+    }*/
 
     @Override
     protected void onResume() {
@@ -271,7 +278,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                     toolBarImageBack();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("Orden Carga");
+                    collapsingToolbarLayout.setTitle("Orden de Carga");
                     toolBarImageBack();
                     isShow = true;
                 } else if (isShow) {
@@ -480,13 +487,13 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             ordenCargo.setNroComprobante(serieFactura + "-" + correlativoFactura);
             ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
             //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
-           // ordenCargo.setFactorConversion(Double.parseDouble());
-            ordenCargo.setFactorConversion(Utils.formatDouble(format,factor));
+            // ordenCargo.setFactorConversion(Double.parseDouble());
+            ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
             ordenCargo.setFechaGuia(guiaFecha);
-            ordenCargo.setDensidad(Utils.formatDouble(format,densidad));
+            ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
             ordenCargo.setProId(producto.getProId());
             ordenCargo.setUnIdComprobante(unidad.getUnId());
-            ordenCargo.setCantidadDoc(Utils.formatDouble(format,cantidad));
+            ordenCargo.setCantidadDoc(Utils.formatDouble(format, cantidad));
             ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
             ordenCargo.setUsuarioCreacionId(usuarioId);
             ordenCargo.setFechaCreacion(datetime);
@@ -529,7 +536,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         boolean esFechaGuiaValida = esGuiaTrasciegoComprobanteValida(guiaFecha);
         boolean sonCamposGeneralesValidos = validarCamposGenerales();
 
-        if (esGuiaSerieValida && esGuiaCorrelativoValido && esFechaGuiaValida && sonCamposGeneralesValidos ) {
+        if (esGuiaSerieValida && esGuiaCorrelativoValido && esFechaGuiaValida && sonCamposGeneralesValidos) {
 
             String strCantidad = txtfconversion.getText().toString();
             String strDensidad = txtdensidad.getText().toString();

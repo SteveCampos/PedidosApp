@@ -393,6 +393,11 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
 
+
+    @OnClick(R.id.btn_ordencompra_cancelar)
+    public void cancelar(){
+        startActivity(new Intent(this,OrdenCargaListActivity.class));
+    }
     @OnClick(R.id.btn_ordencompra_save)
     @Override
     public void guardarOrdenCarga() {
@@ -1006,7 +1011,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     }
 
-    @Override
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -1016,17 +1021,18 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-            onBackPressed();
+            startActivity(new Intent(this,OrdenCargaListActivity.class));
+            //onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
+    }*/
 
 
 }
