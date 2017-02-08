@@ -22,6 +22,7 @@ public class EstablecimientoPedidoHolder extends RecyclerView.ViewHolder {
     //@BindView(R.id.text_station_order_programed_date) public TextView programedDate;
     @BindView(R.id.textPrecio) public TextView textPrecio;
     @BindView(R.id.horarioAtencion) public TextView textHorarioAtencion;
+    @BindView(R.id.text_station_numero_pedidos) public TextView textNumeroPedidos;
 
     @BindView(R.id.text_station_fecha_entrega) public TextView fechaProgramed;
 

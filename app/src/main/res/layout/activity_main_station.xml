@@ -59,6 +59,7 @@
                         android:textSize="24sp" />
                     <TextView
                         android:id="@+id/main.station.ruc"
+                        android:visibility="gone"
                         style="@style/ExpenseTrackerTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

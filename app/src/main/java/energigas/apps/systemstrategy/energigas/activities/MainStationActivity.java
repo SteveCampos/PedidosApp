@@ -189,7 +189,10 @@ public class MainStationActivity extends AppCompatActivity
 
         if (cliente.getCliITipoClienteId() == Constants.ESTABLECIMIENTO_EXTERNO) {
             setTitle("Punto de Despacho");
+            textViewRuc.setVisibility(View.VISIBLE);
+            textViewRuc.setText("Ruc: "+cliente.getPersona().getPerVDocIdentidad());
         } else {
+            textViewRuc.setVisibility(View.GONE);
             setTitle("Estación");
         }
 
@@ -209,7 +212,7 @@ public class MainStationActivity extends AppCompatActivity
         CajaLiquidacion cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
         textViewDate.setText(Utils.getDateDescription(cajaLiquidacion.getFechaApertura()));
         textViewContacto.setText("Contacto: " + establecimiento.getEstVContacto());
-        textViewRuc.setText("Ruc: "+cliente.getPersona().getPerVDocIdentidad());
+
 
     }
 

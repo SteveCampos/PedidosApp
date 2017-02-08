@@ -76,8 +76,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     TextView textViewAgente;
     @BindView(R.id.TView_placa)
     TextView textViewPlaca;
-    @BindView(R.id.ordencargo_serie_tanque)
-    TextView textViewSerieTanque;
+    /*@BindView(R.id.ordencargo_serie_tanque)
+    TextView textViewSerieTanque;*/
     OrdenCargaAdapter ordenCargaAdapter;
 
 //    @BindView(R.id.container_compra)
@@ -177,7 +177,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
         textViewAgente.setText(mAgente.getPerVNombres() + " " + mAgente.getPerVApellidoPaterno() + " " + mAgente.getPerVApellidoMaterno());
         textViewPlaca.setText(Utils.getDateDescription(Utils.getDatePhone()));
-        textViewSerieTanque.setText("Serie");
+        //textViewSerieTanque.setText("Serie");
         initRecycler();
         //toolBarImageBack();
         collapSingTitle();

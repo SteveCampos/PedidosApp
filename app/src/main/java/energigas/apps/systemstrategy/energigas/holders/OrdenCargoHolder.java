@@ -72,7 +72,7 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
             case "compra":
 
                 Proveedor mproveedor = Proveedor.getProveedorById(ordenCargo.getProveedorId());
-                txtCantidad.setText(Utils.formatDouble(ordenCargo.getCantidadTransformada()) + " " + Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura());
+                txtCantidad.setText(Utils.formatDoublePrint(ordenCargo.getCantidadTransformada()) + " " + Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura());
                 txtNombre.setText(mconceptoTipoCarga.getDescripcion());
                 relativeLayoutCompra.setVisibility(View.VISIBLE);
                 relativeLayoutTrasciego.setVisibility(View.GONE);
@@ -84,7 +84,7 @@ public class OrdenCargoHolder extends RecyclerView.ViewHolder {
                 txtTrasciego.setText(mconceptoTipoCarga.getDescripcion());
                // imageView2.setImageDrawable(context.getResources().getDrawable(getImage(mconceptoTipoCarga.getDescripcion().toLowerCase())));
                 Concepto mconcepto = Concepto.find(Concepto.class, " id_Concepto= ? ", new String[]{ ordenCargo.getTipoOrigenId()+ ""}).get(Constants.CURRENT);
-                txtCantidadTrasciego.setText(Utils.formatDouble(ordenCargo.getCantidadTransformada()) + " " + Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura());
+                txtCantidadTrasciego.setText(Utils.formatDoublePrint(ordenCargo.getCantidadTransformada()) + " " + Unidad.find(Unidad.class, "un_Id = ? ", ordenCargo.getUnIdTransformada() + "").get(0).getAbreviatura());
                 relativeLayoutCompra.setVisibility(View.GONE);
                 relativeLayoutTrasciego.setVisibility(View.VISIBLE);
                 String tetextinfTrasciego = String.format(context.getString(R.string.string_info_orden_trasciego),mconcepto.getDescripcion(),

@@ -64,9 +64,10 @@ public class StationOrdersAdapter extends RecyclerView.Adapter<EstablecimientoPe
         holder.quantity.setText(Utils.formatDoublePrint(pedidoDetalle.getCantidad()) + " " + unidad.getAbreviatura());
         holder.title.setText(producto.getNombre() + "");
 //        holder.programedDate.setText(Utils.getNameOfDay(new Date(pedido.getFechaEntregaProgramada())));
-        holder.textPrecio.setText("P.U. " + Utils.formatDouble(pedidoDetalle.getPrecioUnitario()) + " \n P.V. " + Utils.formatDouble(pedidoDetalle.getPrecio()));
+        holder.textPrecio.setText("Precio+IGV : " + Utils.formatDouble(pedidoDetalle.getPrecioUnitario()) + " \n Precio-IGV : " + Utils.formatDouble(pedidoDetalle.getPrecio()));
         holder.textHorarioAtencion.setText("Horario Entrega: " + pedido.getHoraEntrega());
         holder.fechaProgramed.setText("Fecha de Entrega: "+pedido.getFechaEntrega());
+        holder.textNumeroPedidos.setText("Nro de Pedidos: " +pedido.getNumero());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
