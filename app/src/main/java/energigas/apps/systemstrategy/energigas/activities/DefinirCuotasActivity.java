@@ -54,11 +54,11 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.textViewDeuda)
     TextView textViewDeuda;
 
-    CuotasAdapter cuotasAdapter;
-    Cliente cliente;
-    Establecimiento establecimiento;
-    Concepto conceptoCredito;
-    double[] params;
+    private CuotasAdapter cuotasAdapter;
+    private Cliente cliente;
+    private Establecimiento establecimiento;
+    private Concepto conceptoCredito;
+    private double[] params;
 
     private List<PlanPagoDetalle> listDetalle;
 
@@ -189,7 +189,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
                 }
 
                 onBackPressed();
-                this.finish();
+
                 break;
         }
     }
@@ -285,6 +285,7 @@ public class DefinirCuotasActivity extends AppCompatActivity implements View.OnC
             public void onSavePressed(AlertDialog alertDialog) {
                 DefinirCuotasActivity.super.onBackPressed();
                 alertDialog.dismiss();
+                DefinirCuotasActivity.this.finish();
             }
 
             @Override

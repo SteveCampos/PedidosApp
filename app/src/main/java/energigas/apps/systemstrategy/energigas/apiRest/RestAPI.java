@@ -341,4 +341,21 @@ public class RestAPI {
         return result;
     }
 
+
+    public JSONObject fupd_ActualizarRecorrido(int vint_AgenteId,String vstr_Latitud,String vstr_Longitud) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fupd_ActualizarRecorrido");
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        p.put("vstr_Latitud",mapObject(vstr_Latitud));
+        p.put("vstr_Longitud",mapObject(vstr_Longitud));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

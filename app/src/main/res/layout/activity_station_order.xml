@@ -38,19 +38,6 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textHorasPendientes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginBottom="2dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorAccent"
-                        android:gravity="right"
-                        android:padding="2dp"
-                        android:text="ENTREGAR EN :   4:23:54  HORAS"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textClienteEstacion"
@@ -124,10 +111,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:gravity="top"
+
                 android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:titleMarginTop="15dp" />
+                app:titleMarginTop="15dp">
+
+
+                <LinearLayout
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="right"
+                        android:padding="2dp"
+                        android:text="Atender en:"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textHorasPendientes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:padding="2dp"
+                        android:text="4:23:54  HORAS"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tablayout"

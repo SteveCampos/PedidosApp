@@ -156,7 +156,7 @@ public class StationOrderActivity extends AppCompatActivity implements IntentLis
     private void setTimeText(String timeText) {
 
 
-        textViewHorasPendientes.setText("Atender en: " + timeText + " Hrs.");
+        textViewHorasPendientes.setText("" + timeText + " Hrs.");
     }
 
     Runnable drawRunnable = new Runnable() {

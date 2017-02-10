@@ -190,7 +190,7 @@
                         style="@style/Base.Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/ordencarga.button.text.cancelar" />
+                        android:text="Cancelar" />
                 </LinearLayout>
             </LinearLayout>
             <!--<android.support.v7.widget.RecyclerView-->
