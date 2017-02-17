@@ -92,6 +92,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
     private Usuario mUsuario;
     private Vehiculo mVehiculo;
     private Despacho mainDispatch;
+    private Almacen almacenes;
     AlertDialog alertDialog;
     /*Item Compra*/
     private LinearLayout lytCompra;
@@ -158,6 +159,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         mAgente = Persona.findWithQuery(Persona.class, "SELECT P.* FROM PERSONA P, USUARIO U WHERE P.PER_I_PERSONA_ID = U.USU_I_PERSONA_ID AND U.USU_I_USUARIO_ID = " + Session.getSession(this).getUsuIUsuarioId() + " ;", null).get(Constants.CURRENT);
         mUsuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
         mVehiculo = Vehiculo.getVehiculo(mUsuario.getUsuIUsuarioId() + "");
+        almacenes = almacenes.getAlmacenByUser(mUsuario.getUsuIUsuarioId()+"");
+        Log.d(TAG, "VEHICULOID: " + almacenes.getVehiculoId());
 //        mainDispatch = Despacho.find(Despacho.class, " despacho_Id=? ", new String[]{Session.getDespacho(this).getDespachoId() + ""}).get(Constants.CURRENT);
 
         resources = getResources();
@@ -323,7 +326,7 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         til_trasciego_guia_serie = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_trasciego_guia_serie);
         et_trasciego_guia_serie = (EditText) layout_dialog_ordenCarga.findViewById(R.id.et_trasciego_guia_serie);
         til_trasciego_guia_correlativo = (TextInputLayout) layout_dialog_ordenCarga.findViewById(R.id.til_trasciego_guia_correlativo);
-        et_trasciego_guia_correlativo = (EditText) layout_dialog_ordenCarga.findViewById(R.id.et_trasciego_guia_serie);
+        et_trasciego_guia_correlativo = (EditText) layout_dialog_ordenCarga.findViewById(R.id.et_trasciego_guia_correlativo);
         btnTrasciegoGuiaEmision = (AppCompatButton) layout_dialog_ordenCarga.findViewById(R.id.btn_trasciego_guia_fechaemision);
 
         btAceptar = (Button) layout_dialog_ordenCarga.findViewById(R.id.btn_order_guardar);
@@ -351,23 +354,64 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         alertDialog.getWindow().setAttributes(lp);
 
         Concepto concepto = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
-        // mconceptoTipoCarga = Concepto.getConcepto(ordenCargo.getTipoCargaId() + "");
+
+        String nmrGuia = ordenCargo.getNroGuia();
+        String[] parts2 = nmrGuia.split("-");
+        String nmr_guia = parts2[0]; // 004
+        String nmr_relativo = parts2[1]; // 034556
+
+
+        String CutDateCreacion = ordenCargo.getFechaCreacion();
+        String [] cutcreacion2=CutDateCreacion.split(":");
+        String part100 = cutcreacion2[0]; // 004
+//
+        String Date2= part100.substring(0,11);
+
         switch (concepto.getDescripcion().toLowerCase()) {
             case "compra":
                 Proveedor mproveedor = Proveedor.getProveedorById(ordenCargo.getProveedorId());
                 lytCompra.setVisibility(View.VISIBLE);
                 lytTrasCiego.setVisibility(View.GONE);
                 //seteamos
+                String nmroComprobante = ordenCargo.getNroComprobante();
+                String[] parts = nmroComprobante.split("-");
+                String comproS = parts[0]; // 004
+                String comproRela = parts[1]; // 034556
+
+                /*String nmrGuia = ordenCargo.getNroGuia();
+                String[] parts2 = nmrGuia.split("-");
+                String nmr_guia = parts2[0]; // 004
+                String nmr_relativo = parts2[1]; // 034556
+
+
+                String CutDateCreacion = ordenCargo.getFechaCreacion();
+                String [] cutcreacion2=CutDateCreacion.split(":");
+                String part100 = cutcreacion2[0]; // 004*/
+
+               // String Date2= part100.substring(0,11);
+                etCompraGuiaSerie.setText(nmr_guia);
+                etCompraGuiaCorrelativo.setText(nmr_relativo);
+
+                etCompraFacturaSerie.setText(comproS);
+                etCompraFacturaCorrelativo.setText(comproRela);
+
                 txtfconversion.setText(Utils.formatDouble(ordenCargo.getFactorConversion()));
                 txtdensidad.setText(Utils.formatDouble(ordenCargo.getDensidad()));
                 txtprecio.setText(Utils.formatDouble(ordenCargo.getPrecio()));
                 txtcantidad.setText(ordenCargo.getCantidadDoc() + "");
+                //etCompraFacturaSerie.setText(ordenCargo.getFechaAccion());
+                String cutDateAccion= ordenCargo.getFechaAccion();
+                String [] cutDates=cutDateAccion.split(":");
+                String part12 = cutDates[0]; // 004
+                String Date= part12.substring(0,11);
+                btnCompraFacturaEmision.setText(Date2);
                 btnCompraFacturaEmision.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         selectCompraFacturaFechaEmision();
                     }
                 });
+                btnCompraGuiaEmision.setText(Date);
                 btnCompraGuiaEmision.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -387,6 +431,21 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                 lytTrasCiego.setVisibility(View.VISIBLE);
                 lytCompra.setVisibility(View.GONE);
                 //seteamos
+           /*     String nmrGuiaTras = ordenCargo.getNroGuia();
+
+                String[] parts2Tras = nmrGuiaTras.split("-");
+                String nmr_guiaTras = parts2Tras[0]; // 004
+                String nmr_relativoTras = parts2Tras[1]; // 034556
+                Log.d(TAG, "nmr_guiaTras: "+nmr_guiaTras+ "nmr_relativoTras"+ nmr_relativoTras);
+
+                String CutDateCreacionTras = ordenCargo.getFechaCreacion();
+                String [] cutcreacion2Tras=CutDateCreacionTras.split(":");
+                String part100Tras = cutcreacion2Tras[0]; // 004
+
+                String Date2Tras= part100Tras.substring(0,11);
+                */
+                et_trasciego_guia_serie.setText(nmr_guia);
+                et_trasciego_guia_correlativo.setText(nmr_relativo);
                 txtfconversion.setText(Utils.formatDouble(ordenCargo.getFactorConversion()));
                 txtdensidad.setText(Utils.formatDouble(ordenCargo.getDensidad()));
                 txtprecio.setText(Utils.formatDouble(ordenCargo.getPrecio()));
@@ -395,6 +454,8 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
                 initSpinnerUnidadMedia();
                 initSpinnerTipoOrigen();
                 initEdittextTrasciego();
+
+                btnTrasciegoGuiaEmision.setText(Date2);
                 btnTrasciegoGuiaEmision.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -480,45 +541,39 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
             String format = "%.4f";
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
+            Double stockMaximo = almacenes.getCapacidadReal() - almacenes.getStockMinimo();
+            if (cantidadTransformada < stockMaximo) {
+                ordenCargo.setFechaRegistro(datetime);
+                ordenCargo.setFechaComprobante(comprobanteFecha);
+                ordenCargo.setProveedorId(proveedor.getProveedorId());
+                ordenCargo.setNroComprobante(serieFactura + "-" + correlativoFactura);
+                ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
+                //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
+                // ordenCargo.setFactorConversion(Double.parseDouble());
+                ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
+                ordenCargo.setFechaGuia(guiaFecha);
+                ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
+                ordenCargo.setProId(producto.getProId());
+                ordenCargo.setUnIdComprobante(unidad.getUnId());
+                ordenCargo.setCantidadDoc(Utils.formatDouble(format, cantidad));
+                ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
+                ordenCargo.setUsuarioCreacionId(usuarioId);
+                ordenCargo.setFechaCreacion(datetime);
+                //ordenCargo.setEstadoId();
+                ordenCargo.setUsuarioAccionId(usuarioId);
+                ordenCargo.setFechaAccion(datetime);
+                ordenCargo.setPrecio(Utils.formatDouble(format, precio));
 
-            ordenCargo.setFechaRegistro(datetime);
-            ordenCargo.setFechaComprobante(comprobanteFecha);
-            ordenCargo.setProveedorId(proveedor.getProveedorId());
-            ordenCargo.setNroComprobante(serieFactura + "-" + correlativoFactura);
-            ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
-            //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
-            // ordenCargo.setFactorConversion(Double.parseDouble());
-            ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
-            ordenCargo.setFechaGuia(guiaFecha);
-            ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
-            ordenCargo.setProId(producto.getProId());
-            ordenCargo.setUnIdComprobante(unidad.getUnId());
-            ordenCargo.setCantidadDoc(Utils.formatDouble(format, cantidad));
-            ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
-            ordenCargo.setUsuarioCreacionId(usuarioId);
-            ordenCargo.setFechaCreacion(datetime);
-            //ordenCargo.setEstadoId();
-            ordenCargo.setUsuarioAccionId(usuarioId);
-            ordenCargo.setFechaAccion(datetime);
-            ordenCargo.setPrecio(Utils.formatDouble(format, precio));
-/*
-            ordenCargo.save();
+                saveOrdenCargo(ordenCargo, alertDialog, view);
+            }else if (cantidadTransformada>stockMaximo){
+                txtcantidad.setError("Stock Maximo");
+            } else {
+                Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            }
 
-
-            int position = recycler.getChildAdapterPosition(view);
-            ((OrdenCargaAdapter) recycler.getAdapter()).updateOrder(position);
-            alertDialog.dismiss();
-            Snackbar.make(textViewPlaca, "Editado Exitosamente!", Snackbar.LENGTH_SHORT).show();
-            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
-  */
-            saveOrdenCargo(ordenCargo, alertDialog, view);
-        } else {
-            Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
         }
 
     }
-
-
     public void guardarTrasciego(OrdenCargo ordenCargo, View view, Dialog alertDialog) {
 
         Producto producto = (Producto) spnProduto.getSelectedItem();
@@ -555,38 +610,42 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
 
+            Double stockMaximo = almacenes.getCapacidadReal() - almacenes.getStockMinimo();
+            //200 <500
+            if (cantidadTransformada < stockMaximo) {
+                ordenCargo.setFechaRegistro(datetime);
+                ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
+                //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
+                ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
+                ordenCargo.setFechaGuia(guiaFecha);
+                ordenCargo.setTipoOrigenId(tipoOrigen.getIdConcepto());
+                ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
+                ordenCargo.setProId(producto.getProId());
+                ordenCargo.setUnIdComprobante(unidad.getUnId());
+                ordenCargo.setCantidadDoc(Utils.formatDouble(format, cantidad));
+                ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
+                ordenCargo.setUsuarioCreacionId(usuarioId);
+                ordenCargo.setFechaCreacion(datetime);
+                //ordenCargo.setEstadoId();
+                ordenCargo.setUsuarioAccionId(usuarioId);
+                ordenCargo.setFechaAccion(datetime);
+                ordenCargo.setPrecio(Utils.formatDouble(format, precio));
 
-            ordenCargo.setFechaRegistro(datetime);
-            ordenCargo.setNroGuia(serieGuia + "-" + correlativoGuia);
-            //ordenCargo.setTipoCargaId(tipoCarga.getIdConcepto());
-            ordenCargo.setFactorConversion(Utils.formatDouble(format, factor));
-            ordenCargo.setFechaGuia(guiaFecha);
-            ordenCargo.setTipoOrigenId(tipoOrigen.getIdConcepto());
-            ordenCargo.setDensidad(Utils.formatDouble(format, densidad));
-            ordenCargo.setProId(producto.getProId());
-            ordenCargo.setUnIdComprobante(unidad.getUnId());
-            ordenCargo.setCantidadDoc(Utils.formatDouble(format, cantidad));
-            ordenCargo.setCantidadTransformada(Utils.formatDouble(format, cantidadTransformada));
-            ordenCargo.setUsuarioCreacionId(usuarioId);
-            ordenCargo.setFechaCreacion(datetime);
-            //ordenCargo.setEstadoId();
-            ordenCargo.setUsuarioAccionId(usuarioId);
-            ordenCargo.setFechaAccion(datetime);
-            ordenCargo.setPrecio(Utils.formatDouble(format, precio));
-
-            //ordenCargo.save();
+                //ordenCargo.save();
 
           /*  int position = recycler.getChildAdapterPosition(view);
             ((OrdenCargaAdapter) recycler.getAdapter()).updateOrder(position);
             alertDialog.dismiss();
             Snackbar.make(textViewPlaca, "Editado Exitosamente!", Snackbar.LENGTH_SHORT).show();
            */
-            saveOrdenCargo(ordenCargo, alertDialog, view);
-        } else {
-            Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
+                saveOrdenCargo(ordenCargo, alertDialog, view);
+            } else if (cantidadTransformada>stockMaximo){
+                txtcantidad.setError("Stock Maximo");
+            }else {
+                Snackbar.make(textViewPlaca, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
-
     private void saveOrdenCargo(OrdenCargo ordenCargo, Dialog alertDialog, View view) {
         long id = ordenCargo.save();
         Log.d(TAG, "ordenCargo.save : " + id);
@@ -1027,6 +1086,5 @@ public class OrdenCargaListActivity extends AppCompatActivity implements OrdenCa
         tilCantidad.setError(null);
         return true;
     }
-
 
 }

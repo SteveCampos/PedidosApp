@@ -53,6 +53,8 @@ import energigas.apps.systemstrategy.energigas.entities.Proveedor;
 import energigas.apps.systemstrategy.energigas.entities.SyncEstado;
 import energigas.apps.systemstrategy.energigas.entities.Unidad;
 import energigas.apps.systemstrategy.energigas.entities.Usuario;
+import energigas.apps.systemstrategy.energigas.entities.Vehiculo;
+import energigas.apps.systemstrategy.energigas.entities.VehiculoUsuario;
 import energigas.apps.systemstrategy.energigas.fragments.CajaGastoFragment;
 import energigas.apps.systemstrategy.energigas.interfaces.OrdenCargoListener;
 import energigas.apps.systemstrategy.energigas.ordencarga.OrdenCargaView;
@@ -155,6 +157,8 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     private int tipoFecha;
 
     private CajaLiquidacion cajaLiquidacion;
+    private Almacen almacenes;
+    private Usuario usuario;
 
     /*
         @BindView(R.id.recycler)
@@ -168,6 +172,9 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         setContentView(R.layout.activity_orden_carga);
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
+        usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
+        almacenes = almacenes.getAlmacenByUser(usuario.getUsuIUsuarioId()+"");
+        Log.d(TAG, "VEHICULOID: " + almacenes.getVehiculoId());
         initVies();
 
     }
@@ -393,11 +400,11 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
     }
 
 
-
     @OnClick(R.id.btn_ordencompra_cancelar)
-    public void cancelar(){
-        startActivity(new Intent(this,OrdenCargaListActivity.class));
+    public void cancelar() {
+        startActivity(new Intent(this, OrdenCargaListActivity.class));
     }
+
     @OnClick(R.id.btn_ordencompra_save)
     @Override
     public void guardarOrdenCarga() {
@@ -462,37 +469,45 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
             String format = "%.4f";
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
+            Double StockMaximo = almacenes.getCapacidadReal() - almacenes.getStockMinimo();
+            Log.d(TAG, "StockMaximo : " + StockMaximo);
+            if (cantidadTransformada < StockMaximo) {
 
-            Long getOrdeCarga_Id = OrdenCargo.findWithQuery(OrdenCargo.class, Utils.getQueryNumberOrderCargo(), null).get(Constants.CURRENT).getOrdeCargaId();
-            OrdenCargo ordenCargo = new OrdenCargo(
-                    0,
-                    getOrdeCarga_Id,
-                    datetime,
-                    "",
-                    0,
-                    "",
-                    serieGuia + "-" + correlativoGuia,
-                    tipoCarga.getIdConcepto(),
-                    tipoOrigen.getIdConcepto(),
-                    Utils.formatDouble(format, factor),
-                    guiaFecha,
-                    Utils.formatDouble(format, densidad),
-                    producto.getProId(),
-                    unidad.getUnId(),
-                    Utils.formatDouble(format, cantidad),
-                    1,
-                    cantidadTransformada,
-                    usuarioId,
-                    datetime,
-                    69,
-                    usuarioId,
-                    datetime,
-                    Utils.formatDouble(format, precio),
-                    cajaLiquidacion.getLiqId()
-            );
-            saveOrdenCargo(ordenCargo);
-        } else {
-            Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+
+                Long getOrdeCarga_Id = OrdenCargo.findWithQuery(OrdenCargo.class, Utils.getQueryNumberOrderCargo(), null).get(Constants.CURRENT).getOrdeCargaId();
+                OrdenCargo ordenCargo = new OrdenCargo(
+                        0,
+                        getOrdeCarga_Id,
+                        datetime,
+                        "",
+                        0,
+                        "",
+                        serieGuia + "-" + correlativoGuia,
+                        tipoCarga.getIdConcepto(),
+                        tipoOrigen.getIdConcepto(),
+                        Utils.formatDouble(format, factor),
+                        guiaFecha,
+                        Utils.formatDouble(format, densidad),
+                        producto.getProId(),
+                        unidad.getUnId(),
+                        Utils.formatDouble(format, cantidad),
+                        1,
+                        cantidadTransformada,
+                        usuarioId,
+                        datetime,
+                        69,
+                        usuarioId,
+                        datetime,
+                        Utils.formatDouble(format, precio),
+                        cajaLiquidacion.getLiqId()
+                );
+                saveOrdenCargo(ordenCargo);
+            }else if (cantidadTransformada>StockMaximo){
+                etCantidad.setError("Stock Maximo");
+            }
+            else {
+                    Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -652,6 +667,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
 
     }
+
 
     private Proveedor getProveedor(String ruc) {
         List<Persona> personas = Persona.find(Persona.class, "per_V_Doc_Identidad = ?", ruc);
@@ -1011,7 +1027,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
     }
 
-   @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -1021,7 +1037,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-            startActivity(new Intent(this,OrdenCargaListActivity.class));
+            startActivity(new Intent(this, OrdenCargaListActivity.class));
             //onBackPressed();
             return true;
         }
@@ -1029,10 +1045,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }*/
+
 
 
 }
