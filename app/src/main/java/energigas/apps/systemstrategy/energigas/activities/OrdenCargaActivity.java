@@ -173,7 +173,7 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
         ButterKnife.bind(this);
         cajaLiquidacion = CajaLiquidacion.getCajaLiquidacion(Session.getCajaLiquidacion(this).getLiqId() + "");
         usuario = Usuario.getUsuario(Session.getSession(this).getUsuIUsuarioId() + "");
-        almacenes = almacenes.getAlmacenByUser(usuario.getUsuIUsuarioId()+"");
+        almacenes = almacenes.getAlmacenByUser(usuario.getUsuIUsuarioId() + "");
         Log.d(TAG, "VEHICULOID: " + almacenes.getVehiculoId());
         initVies();
 
@@ -502,11 +502,10 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
                         cajaLiquidacion.getLiqId()
                 );
                 saveOrdenCargo(ordenCargo);
-            }else if (cantidadTransformada>StockMaximo){
+            } else if (cantidadTransformada > StockMaximo) {
                 etCantidad.setError("Stock Maximo");
-            }
-            else {
-                    Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -633,39 +632,42 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
             int usuarioId = Session.getSession(this).getUsuIUsuarioId();
             long getOrdeCarga_Id = OrdenCargo.findWithQuery(OrdenCargo.class, Utils.getQueryNumberOrderCargo(), null).get(Constants.CURRENT).getOrdeCargaId();
-            OrdenCargo ordenCargo = new OrdenCargo(
-                    0,
-                    getOrdeCarga_Id,
-                    datetime,
-                    comprobanteFecha,
-                    proveedor.getProveedorId(),
-                    serieFactura + "-" + correlativoFactura,
-                    serieGuia + "-" + correlativoGuia,
-                    tipoCarga.getIdConcepto(),
-                    0,
-                    Utils.formatDouble(format, factor),
-                    guiaFecha,
-                    Utils.formatDouble(format, densidad),
-                    producto.getProId(),
-                    unidad.getUnId(),
-                    Utils.formatDouble(format, cantidad),
-                    1,
-                    Utils.formatDouble(format, cantidadTransformada),
-                    usuarioId,
-                    datetime,
-                    69,
-                    usuarioId,
-                    datetime,
-                    Utils.formatDouble(format, precio),
-                    cajaLiquidacion.getLiqId()
-            );
-            saveOrdenCargo(ordenCargo);
-            Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
-        } else {
-            Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            Double stockMaximo = almacenes.getCapacidadReal() - almacenes.getStockMinimo();
+            if (cantidadTransformada < stockMaximo) {
+                OrdenCargo ordenCargo = new OrdenCargo(
+                        0,
+                        getOrdeCarga_Id,
+                        datetime,
+                        comprobanteFecha,
+                        proveedor.getProveedorId(),
+                        serieFactura + "-" + correlativoFactura,
+                        serieGuia + "-" + correlativoGuia,
+                        tipoCarga.getIdConcepto(),
+                        0,
+                        Utils.formatDouble(format, factor),
+                        guiaFecha,
+                        Utils.formatDouble(format, densidad),
+                        producto.getProId(),
+                        unidad.getUnId(),
+                        Utils.formatDouble(format, cantidad),
+                        1,
+                        Utils.formatDouble(format, cantidadTransformada),
+                        usuarioId,
+                        datetime,
+                        69,
+                        usuarioId,
+                        datetime,
+                        Utils.formatDouble(format, precio),
+                        cajaLiquidacion.getLiqId()
+                );
+                saveOrdenCargo(ordenCargo);
+                Log.d(TAG, " getOrdeCarga_Id :" + ordenCargo.getOrdeCargaId());
+            } else if (cantidadTransformada > stockMaximo) {
+                etCantidad.setError("Stock Maximo");
+            } else {
+                Snackbar.make(etCantidad, "Revise los campos", Snackbar.LENGTH_LONG).show();
+            }
         }
-
-
     }
 
 
@@ -1044,8 +1046,6 @@ public class OrdenCargaActivity extends AppCompatActivity implements DatePickerD
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
 }
